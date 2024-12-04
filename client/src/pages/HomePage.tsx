@@ -37,7 +37,7 @@ export default function HomePage() {
       
       <main className="flex-1 p-6 overflow-auto">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl font-bold">Welcome back, {user?.username}</h1>
+          <h1 className="text-2xl font-bold">Welcome back, {user?.displayName || user?.username}</h1>
           <Button onClick={() => setUploadOpen(true)} className="gap-2">
             <Plus size={16} />
             Add Content
