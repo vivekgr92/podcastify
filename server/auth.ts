@@ -12,7 +12,13 @@ import { eq } from "drizzle-orm";
 // Extend express User type
 declare global {
   namespace Express {
-    interface User extends User {}
+    interface User {
+      id: number;
+      username: string;
+      displayName: string;
+      password: string;
+      createdAt: Date | null;
+    }
   }
 }
 
@@ -128,6 +134,7 @@ export function setupAuth(app: Express) {
         .insert(users)
         .values({
           username,
+          displayName: username, // Use username as display name if not provided
           password: hashedPassword
         })
         .returning();
