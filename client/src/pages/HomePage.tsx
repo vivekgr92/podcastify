@@ -59,7 +59,7 @@ export default function HomePage() {
             ${isDragActive ? 'border-[#4CAF50] bg-[#4CAF50]/10' : 'border-gray-700 hover:border-[#4CAF50]'}`}
         >
           <input {...getInputProps()} />
-          <Button variant="outline" className="mb-4">Choose File to Upload</Button>
+          <Button className="mb-4">Choose File to Upload</Button>
           <p className="text-sm text-gray-400">or drag and drop your file here</p>
           <p className="text-xs text-gray-500 mt-2">Supported formats: PDF, DOC, DOCX, TXT</p>
         </div>
