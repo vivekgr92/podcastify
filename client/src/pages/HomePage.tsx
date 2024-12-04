@@ -46,8 +46,8 @@ export default function HomePage() {
           <Button variant="ghost">Home</Button>
           <Button variant="ghost">Library</Button>
           <Button variant="ghost">About</Button>
-          <Button variant="outline" onClick={() => setLocation('/auth?mode=signup')}>Sign Up</Button>
-          <Button onClick={() => setLocation('/auth?mode=login')}>Login</Button>
+          <Button variant="outline" onClick={() => setLocation('/auth/signup')}>Sign Up</Button>
+          <Button onClick={() => setLocation('/auth')}>Login</Button>
         </div>
       </nav>
 
