@@ -69,9 +69,12 @@ export default function LibraryPage() {
                   <p className="text-sm text-gray-400">This is a sample podcast to help you get started. Try out the buttons below!</p>
                 </div>
                 <div className="flex gap-3">
-                  <Button variant="default" size="sm" className="flex items-center gap-2">
-                    <Play size={16} />
-                    Play Sample
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    className="rounded-full bg-[#4CAF50] hover:bg-[#45a049] h-10 w-10 p-0 flex items-center justify-center"
+                  >
+                    <Play className="h-5 w-5 text-black" />
                   </Button>
                   <Button variant="default" size="sm" className="flex items-center gap-2">
                     <Upload size={16} />
