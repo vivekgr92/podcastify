@@ -89,7 +89,7 @@ export default function UploadDialog({ open, onOpenChange }: UploadDialogProps) 
                     <FormItem>
                       <FormLabel>Description</FormLabel>
                       <FormControl>
-                        <Textarea {...field} />
+                        <Textarea {...field} value={field.value || ''} />
                       </FormControl>
                     </FormItem>
                   )}

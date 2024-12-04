@@ -1,13 +1,20 @@
 import passport from "passport";
-import { Strategy as LocalStrategy } from "passport-local";
+import { Strategy as LocalStrategy, IVerifyOptions } from "passport-local";
 import { type Express } from "express";
 import session from "express-session";
 import createMemoryStore from "memorystore";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
-import { users, insertUserSchema } from "@db/schema";
+import { users, insertUserSchema, type User } from "@db/schema";
 import { db } from "../db";
 import { eq } from "drizzle-orm";
+
+// Extend express User type
+declare global {
+  namespace Express {
+    interface User extends User {}
+  }
+}
 
 const scryptAsync = promisify(scrypt);
 
@@ -75,7 +82,7 @@ export function setupAuth(app: Express) {
     })
   );
 
-  passport.serializeUser((user: SelectUser, done) => {
+  passport.serializeUser((user: User, done) => {
     done(null, user.id);
   });
 
@@ -136,7 +143,7 @@ export function setupAuth(app: Express) {
   });
 
   app.post("/api/login", (req, res, next) => {
-    passport.authenticate("local", (err: any, user: SelectUser | false, info: IVerifyOptions) => {
+    passport.authenticate("local", (err: any, user: User | false, info: IVerifyOptions) => {
       if (err) return next(err);
       if (!user) return res.status(400).send(info?.message || "Login failed");
 
