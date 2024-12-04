@@ -19,7 +19,7 @@ import { useToast } from "@/hooks/use-toast";
 export default function AuthPage() {
   const { login, register } = useUser();
   const [location] = useLocation();
-  const [isLogin, setIsLogin] = useState(!location.includes("signup"));
+  const [isLogin, setIsLogin] = useState(!location.includes("/signup"));
   const { toast } = useToast();
 
   const form = useForm<InsertUser>({
