@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useTTS } from "../hooks/use-tts";
@@ -6,6 +7,7 @@ import { FileText, Upload, Headphones, Play } from "lucide-react";
 import { useDropzone } from "react-dropzone";
 
 export default function HomePage() {
+  const [, setLocation] = useLocation();
   const [file, setFile] = useState<File | null>(null);
   const { toast } = useToast();
   const { convertToSpeech, isConverting } = useTTS();
@@ -44,8 +46,8 @@ export default function HomePage() {
           <Button variant="ghost">Home</Button>
           <Button variant="ghost">Library</Button>
           <Button variant="ghost">About</Button>
-          <Button variant="outline">Sign Up</Button>
-          <Button>Login</Button>
+          <Button variant="outline" onClick={() => setLocation('/auth?mode=signup')}>Sign Up</Button>
+          <Button onClick={() => setLocation('/auth?mode=login')}>Login</Button>
         </div>
       </nav>
 
