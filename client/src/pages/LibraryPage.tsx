@@ -70,11 +70,11 @@ export default function LibraryPage() {
                 </div>
                 <div className="flex gap-3">
                   <Button 
-                    variant="outline" 
+                    variant="default" 
                     size="icon" 
-                    className="rounded-full bg-[#4CAF50] hover:bg-[#45a049] h-10 w-10 p-0 flex items-center justify-center"
+                    className="rounded-full bg-black hover:bg-gray-900 h-10 w-10 p-0 flex items-center justify-center"
                   >
-                    <Play className="h-5 w-5 text-black" />
+                    <Play className="h-5 w-5 text-[#4CAF50]" />
                   </Button>
                   <Button variant="default" size="sm" className="flex items-center gap-2">
                     <Upload size={16} />
