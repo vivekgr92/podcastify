@@ -5,20 +5,14 @@ import session from "express-session";
 import createMemoryStore from "memorystore";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
-import { users, insertUserSchema, type User } from "@db/schema";
+import { users, insertUserSchema, type User as SelectUser } from "@db/schema";
 import { db } from "../db";
 import { eq } from "drizzle-orm";
 
 // Extend express User type
 declare global {
   namespace Express {
-    interface User {
-      id: number;
-      username: string;
-      displayName: string;
-      password: string;
-      createdAt: Date | null;
-    }
+    interface User extends SelectUser {}
   }
 }
 
@@ -88,7 +82,7 @@ export function setupAuth(app: Express) {
     })
   );
 
-  passport.serializeUser((user: User, done) => {
+  passport.serializeUser((user: Express.User, done) => {
     done(null, user.id);
   });
 
@@ -115,9 +109,9 @@ export function setupAuth(app: Express) {
         );
       }
 
-      const { username, password } = result.data;
+      const { username, email, password } = result.data;
 
-      // Check if username already exists
+      // Check if username or email already exists
       const [existingUser] = await db
         .select()
         .from(users)
@@ -128,13 +122,24 @@ export function setupAuth(app: Express) {
         return res.status(400).send("Username already exists");
       }
 
+      const [existingEmail] = await db
+        .select()
+        .from(users)
+        .where(eq(users.email, email))
+        .limit(1);
+
+      if (existingEmail) {
+        return res.status(400).send("Email already exists");
+      }
+
       // Hash password and create user
       const hashedPassword = await crypto.hash(password);
       const [newUser] = await db
         .insert(users)
         .values({
           username,
-          displayName: username, // Use username as display name if not provided
+          email,
+          displayName: result.data.displayName || username,
           password: hashedPassword
         })
         .returning();
