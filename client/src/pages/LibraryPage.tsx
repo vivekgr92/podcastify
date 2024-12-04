@@ -35,32 +35,37 @@ export default function LibraryPage() {
       <main className="max-w-4xl mx-auto px-6 py-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-2xl font-bold">Your Library</h1>
-          <Button onClick={() => setLocation('/upload')} className="bg-[#4CAF50] hover:bg-[#45a049]">
-            Upload New Podcast
+          <Button onClick={() => setLocation('/')} className="bg-[#4CAF50] hover:bg-[#45a049]">
+            Convert New Podcast
           </Button>
         </div>
 
         <div className="space-y-4">
           {podcasts?.map((podcast) => (
             <div key={podcast.id} className="bg-gray-900 rounded-lg p-4">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="font-medium mb-2">{podcast.title}</h3>
-                  <p className="text-sm text-gray-400 mb-4">{podcast.description}</p>
+              <div className="flex flex-col">
+                <div className="mb-4">
+                  <h3 className="text-lg font-medium mb-2">{podcast.title}</h3>
+                  <p className="text-sm text-gray-400">{podcast.description}</p>
                 </div>
-                <div className="flex gap-2">
-                  <Button variant="outline" size="sm" className="flex items-center gap-2">
+                <div className="flex gap-3">
+                  <Button variant="default" size="sm" className="flex items-center gap-2">
                     <Upload size={16} />
                     Upload to Spotify
                   </Button>
                   <Button variant="outline" size="sm" className="flex items-center gap-2">
                     <Share2 size={16} />
-                    Share
+                    Share with Friends
                   </Button>
                 </div>
               </div>
             </div>
           ))}
+          {(!podcasts || podcasts.length === 0) && (
+            <div className="text-center py-8">
+              <p className="text-gray-400">No podcasts yet. Start by converting your first article!</p>
+            </div>
+          )}
         </div>
       </main>
     </div>
