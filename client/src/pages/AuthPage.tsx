@@ -18,9 +18,8 @@ import { useToast } from "@/hooks/use-toast";
 
 export default function AuthPage() {
   const { login, register } = useUser();
-  const [, params] = useLocation();
-  const urlParams = new URLSearchParams(params);
-  const [isLogin, setIsLogin] = useState(urlParams.get('mode') !== 'signup');
+  const [location] = useLocation();
+  const [isLogin, setIsLogin] = useState(!location.includes("signup"));
   const { toast } = useToast();
 
   const form = useForm<InsertUser>({
@@ -31,6 +30,7 @@ export default function AuthPage() {
       password: "",
       displayName: "",
     },
+    mode: "onChange"
   });
 
   async function onSubmit(data: InsertUser) {
@@ -42,11 +42,17 @@ export default function AuthPage() {
           description: result.message,
           variant: "destructive",
         });
+      } else {
+        toast({
+          title: "Success",
+          description: isLogin ? "Logged in successfully" : "Account created successfully",
+        });
       }
     } catch (error) {
+      console.error('Auth error:', error);
       toast({
         title: "Error",
-        description: "An unexpected error occurred",
+        description: "An unexpected error occurred. Please try again.",
         variant: "destructive",
       });
     }
