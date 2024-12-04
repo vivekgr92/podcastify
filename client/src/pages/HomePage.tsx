@@ -44,8 +44,7 @@ export default function HomePage() {
         <h1 className="text-xl font-bold text-[#4CAF50]">Podcastify</h1>
         <div className="flex gap-4">
           <Button variant="ghost">Home</Button>
-          <Button variant="ghost">Library</Button>
-          <Button variant="ghost">About</Button>
+          <Button variant="ghost" onClick={() => setLocation('/library')}>Library</Button>
           <Button variant="outline" onClick={() => setLocation('/auth/signup')}>Sign Up</Button>
           <Button onClick={() => setLocation('/auth')}>Login</Button>
         </div>

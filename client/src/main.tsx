@@ -7,6 +7,7 @@ import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
 import HomePage from "./pages/HomePage";
 import AuthPage from "./pages/AuthPage";
+import LibraryPage from "./pages/LibraryPage";
 import { Loader2 } from "lucide-react";
 import { useUser } from "./hooks/use-user";
 
@@ -30,6 +31,7 @@ function Router() {
       <Route path="/" component={HomePage} />
       <Route path="/auth" component={AuthPage} />
       <Route path="/auth/signup" component={AuthPage} />
+      <Route path="/library" component={LibraryPage} />
       <Route>404 Page Not Found</Route>
     </Switch>
   );
