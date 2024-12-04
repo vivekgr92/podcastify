@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import type { Podcast } from "@db/schema";
-import { Share2, Upload } from "lucide-react";
+import { Share2, Upload, Play } from "lucide-react";
 import { useLocation } from "wouter";
 
 export default function LibraryPage() {
@@ -62,8 +62,27 @@ export default function LibraryPage() {
             </div>
           ))}
           {(!podcasts || podcasts.length === 0) && (
-            <div className="text-center py-8">
-              <p className="text-gray-400">No podcasts yet. Start by converting your first article!</p>
+            <div className="bg-gray-900 rounded-lg p-4">
+              <div className="flex flex-col">
+                <div className="mb-4">
+                  <h3 className="text-lg font-medium mb-2">Welcome to Your Podcast Library</h3>
+                  <p className="text-sm text-gray-400">This is a sample podcast to help you get started. Try out the buttons below!</p>
+                </div>
+                <div className="flex gap-3">
+                  <Button variant="default" size="sm" className="flex items-center gap-2">
+                    <Play size={16} />
+                    Play Sample
+                  </Button>
+                  <Button variant="default" size="sm" className="flex items-center gap-2">
+                    <Upload size={16} />
+                    Upload to Spotify
+                  </Button>
+                  <Button variant="outline" size="sm" className="flex items-center gap-2">
+                    <Share2 size={16} />
+                    Share with Friends
+                  </Button>
+                </div>
+              </div>
             </div>
           )}
         </div>
