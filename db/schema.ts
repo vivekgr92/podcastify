@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import { pgTable, text, integer, timestamp, jsonb, boolean } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
@@ -6,7 +7,7 @@ export const users = pgTable("users", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   username: text("username").unique().notNull(),
   email: text("email").unique().notNull(),
-  displayName: text("display_name").notNull(),
+  displayName: text("display_name").notNull().default(sql`username`),
   password: text("password").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
 });
