@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useTTS } from "../hooks/use-tts";
-import { FileText, Upload, Headphones } from "lucide-react";
+import { FileText, Upload, Headphones, Play } from "lucide-react";
 import { useDropzone } from "react-dropzone";
 
 export default function HomePage() {
