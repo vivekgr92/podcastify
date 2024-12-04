@@ -13,11 +13,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useState } from "react";
+import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 
 export default function AuthPage() {
   const { login, register } = useUser();
-  const [isLogin, setIsLogin] = useState(true);
+  const [, params] = useLocation();
+  const urlParams = new URLSearchParams(params);
+  const [isLogin, setIsLogin] = useState(urlParams.get('mode') !== 'signup');
   const { toast } = useToast();
 
   const form = useForm<InsertUser>({

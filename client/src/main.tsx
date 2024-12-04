@@ -28,6 +28,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={HomePage} />
+      <Route path="/auth" component={AuthPage} />
       <Route>404 Page Not Found</Route>
     </Switch>
   );
