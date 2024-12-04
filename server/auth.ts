@@ -110,6 +110,7 @@ export function setupAuth(app: Express) {
       }
 
       const { username, email, password } = result.data;
+      const displayName = username; // Set displayName equal to username
 
       // Check if username or email already exists
       const [existingUser] = await db
@@ -139,7 +140,7 @@ export function setupAuth(app: Express) {
         .values({
           username,
           email,
-          displayName: result.data.displayName || username,
+          displayName,
           password: hashedPassword
         })
         .returning();

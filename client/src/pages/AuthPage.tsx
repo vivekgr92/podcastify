@@ -25,7 +25,6 @@ export default function AuthPage() {
     defaultValues: {
       username: "",
       email: "",
-      displayName: "",
       password: "",
     },
   });
@@ -89,19 +88,7 @@ export default function AuthPage() {
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="displayName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Display Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Your Name" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                
               </>
             )}
             <FormField
