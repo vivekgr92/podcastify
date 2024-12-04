@@ -26,6 +26,7 @@ export default function AuthPage() {
       username: "",
       email: "",
       password: "",
+      displayName: "",
     },
   });
 
