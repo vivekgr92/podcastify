@@ -47,8 +47,8 @@ export default function AuthPage() {
           title: "Success",
           description: isLogin ? "Logged in successfully" : "Account created successfully",
         });
-        // Redirect to home page after successful login/registration
-        window.location.href = "/";
+        // Use setLocation for client-side routing
+        setLocation("/library");
       }
     } catch (error) {
       console.error('Auth error:', error);

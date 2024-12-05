@@ -22,16 +22,20 @@ function Router() {
     );
   }
 
-  if (!user) {
-    return <AuthPage />;
-  }
-
   return (
     <Switch>
-      <Route path="/" component={HomePage} />
-      <Route path="/auth" component={AuthPage} />
-      <Route path="/auth/signup" component={AuthPage} />
-      <Route path="/library" component={LibraryPage} />
+      <Route path="/auth">
+        {user ? <Route path="/">Redirecting...</Route> : <AuthPage />}
+      </Route>
+      <Route path="/auth/signup">
+        {user ? <Route path="/">Redirecting...</Route> : <AuthPage />}
+      </Route>
+      <Route path="/">
+        {!user ? <AuthPage /> : <HomePage />}
+      </Route>
+      <Route path="/library">
+        {!user ? <AuthPage /> : <LibraryPage />}
+      </Route>
       <Route>404 Page Not Found</Route>
     </Switch>
   );
