@@ -1,15 +1,6 @@
-import { TextToSpeechClient } from '@google-cloud/text-to-speech';
 import axios from 'axios';
 import path from 'path';
 import fs from 'fs/promises';
-
-interface TTSOptions {
-  text: string;
-  voice?: {
-    languageCode?: string;
-    name?: string;
-  };
-}
 
 interface ElevenLabsOptions {
   text: string;
@@ -23,11 +14,7 @@ const VOICE_IDS = {
 };
 
 export class TTSService {
-  private client: TextToSpeechClient;
-  
-  constructor() {
-    this.client = new TextToSpeechClient();
-  }
+  constructor() {}
 
   async synthesizeWithElevenLabs({ text, voiceId }: ElevenLabsOptions): Promise<Buffer> {
     const response = await axios.post(
