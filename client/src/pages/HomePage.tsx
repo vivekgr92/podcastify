@@ -12,11 +12,41 @@ export default function HomePage() {
   const { toast } = useToast();
   const { convertToSpeech, isConverting } = useTTS();
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (file) {
       if (["application/pdf", "text/plain", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"].includes(file.type)) {
         setFile(file);
+        
+        // Create form data and append file
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        try {
+          const response = await fetch('/api/tts', {
+            method: 'POST',
+            body: formData
+          });
+          
+          if (!response.ok) {
+            throw new Error('Failed to convert file');
+          }
+          
+          const podcast = await response.json();
+          toast({
+            title: "Success",
+            description: "Your file has been converted successfully!",
+          });
+          
+          // Redirect to library to see the converted podcast
+          setLocation('/library');
+        } catch (error) {
+          toast({
+            title: "Error",
+            description: "Failed to convert your file. Please try again.",
+            variant: "destructive",
+          });
+        }
       } else {
         toast({
           title: "Invalid file type",
@@ -25,7 +55,7 @@ export default function HomePage() {
         });
       }
     }
-  }, [toast]);
+  }, [toast, setLocation]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
