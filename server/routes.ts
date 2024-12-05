@@ -29,6 +29,36 @@ const upload = multer({ storage });
 export function registerRoutes(app: Express) {
   // Serve static files from uploads directory
   app.use('/uploads', express.static('uploads'));
+
+  // Delete podcast
+  app.delete("/api/podcasts/:id", async (req, res) => {
+    try {
+      if (!req.user) return res.status(401).send("Not authenticated");
+      
+      const podcastId = parseInt(req.params.id);
+      const [podcast] = await db.select()
+        .from(podcasts)
+        .where(eq(podcasts.id, podcastId))
+        .limit(1);
+
+      if (!podcast) {
+        return res.status(404).send("Podcast not found");
+      }
+
+      if (podcast.userId !== req.user.id) {
+        return res.status(403).send("Not authorized to delete this podcast");
+      }
+
+      // Delete the podcast
+      await db.delete(podcasts)
+        .where(eq(podcasts.id, podcastId));
+
+      res.json({ message: "Podcast deleted successfully" });
+    } catch (error) {
+      console.error('Delete podcast error:', error);
+      res.status(500).send("Failed to delete podcast");
+    }
+  });
   
   // Set up authentication routes
   setupAuth(app);
