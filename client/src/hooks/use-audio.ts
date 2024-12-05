@@ -18,15 +18,22 @@ export function useAudio() {
     if (!audioRef.current) {
       audioRef.current = new Audio();
       
-      const audioContext = new AudioContext();
-      const source = audioContext.createMediaElementSource(audioRef.current);
-      const analyzer = audioContext.createAnalyser();
-      
-      source.connect(analyzer);
-      analyzer.connect(audioContext.destination);
-      
-      analyzer.fftSize = 256;
-      analyzerRef.current = analyzer;
+      try {
+        const audioContext = new AudioContext();
+        const source = audioContext.createMediaElementSource(audioRef.current);
+        const analyzer = audioContext.createAnalyser();
+        
+        source.connect(analyzer);
+        analyzer.connect(audioContext.destination);
+        
+        analyzer.fftSize = 256;
+        analyzerRef.current = analyzer;
+
+        // Set initial volume
+        audioRef.current.volume = 1.0;
+      } catch (error) {
+        console.error('Error setting up audio context:', error);
+      }
     }
 
     return () => {
@@ -137,6 +144,12 @@ export function useAudio() {
     }
   };
 
+  const setVolume = (value: number) => {
+    if (audioRef.current) {
+      audioRef.current.volume = value / 100;
+    }
+  };
+
   return {
     isPlaying,
     currentTime,
@@ -146,5 +159,6 @@ export function useAudio() {
     play,
     togglePlay,
     setPosition,
+    setVolume,
   };
 }

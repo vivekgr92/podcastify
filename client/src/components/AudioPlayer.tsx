@@ -24,9 +24,16 @@ export default function AudioPlayer() {
     if (volume > 0) {
       setPrevVolume(volume);
       setVolume(0);
+      setAudioVolume(0);
     } else {
       setVolume(prevVolume);
+      setAudioVolume(prevVolume);
     }
+  };
+
+  const setAudioVolume = (value: number) => {
+    setVolume(value);
+    setVolume(value);
   };
 
   const VolumeIcon = volume === 0 ? VolumeX : volume < 50 ? Volume1 : Volume2;
@@ -116,7 +123,7 @@ export default function AudioPlayer() {
             value={[volume]}
             max={100}
             step={1}
-            onValueChange={([value]) => setVolume(value)}
+            onValueChange={([value]) => setAudioVolume(value)}
             className="w-24"
           />
         </div>
