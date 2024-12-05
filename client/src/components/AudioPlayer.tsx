@@ -19,11 +19,6 @@ export default function AudioPlayer() {
   const [volume, setVolume] = useState(100);
   const [prevVolume, setPrevVolume] = useState(100);
 
-  // Only render if there's audio data and audio is loaded
-  if (!audioData) {
-    return null;
-  }
-
   const toggleMute = () => {
     if (volume > 0) {
       setPrevVolume(volume);
@@ -44,30 +39,32 @@ export default function AudioPlayer() {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-lg border-t border-border z-50">
+    <div className="fixed bottom-0 left-0 right-0 bg-gray-900 border-t-2 border-[#4CAF50] shadow-lg z-50">
       <canvas
         ref={canvasRef}
-        className="absolute top-0 left-0 right-0 h-1 opacity-50"
+        className="absolute top-0 left-0 right-0 h-1 bg-[#4CAF50]/20"
       />
-      <div className="container mx-auto px-4 py-3">
+      <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between gap-4">
           {/* Track Info */}
           <div className="flex items-center gap-4 min-w-[200px] max-w-[300px]">
-            <div className="w-12 h-12 bg-muted rounded flex items-center justify-center">
-              {audioData.coverImage ? (
+            <div className="w-12 h-12 bg-[#4CAF50]/20 rounded-lg flex items-center justify-center">
+              {audioData?.coverImage ? (
                 <img
                   src={audioData.coverImage}
                   alt={audioData.title}
-                  className="w-full h-full rounded object-cover"
+                  className="w-full h-full rounded-lg object-cover"
                 />
               ) : (
-                <Volume2 className="h-6 w-6 text-muted-foreground" />
+                <Volume2 className="h-6 w-6 text-[#4CAF50]" />
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="font-medium truncate">{audioData.title}</h3>
-              <p className="text-sm text-muted-foreground truncate">
-                {audioData.description}
+              <h3 className="font-medium truncate text-white">
+                {audioData?.title || "No track selected"}
+              </h3>
+              <p className="text-sm text-gray-400 truncate">
+                {audioData?.description || "Select a podcast to play"}
               </p>
             </div>
           </div>
@@ -78,7 +75,8 @@ export default function AudioPlayer() {
               <Button 
                 variant="ghost" 
                 size="icon"
-                className="text-muted-foreground hover:text-foreground"
+                className="text-gray-400 hover:text-white hover:bg-[#4CAF50]/20"
+                disabled={!audioData}
               >
                 <SkipBack className="h-5 w-5" />
               </Button>
@@ -87,7 +85,8 @@ export default function AudioPlayer() {
                 onClick={togglePlay}
                 variant="outline"
                 size="icon"
-                className="h-10 w-10 rounded-full"
+                disabled={!audioData}
+                className="h-10 w-10 rounded-full bg-[#4CAF50] hover:bg-[#45a049] border-none text-white"
               >
                 {isPlaying ? (
                   <Pause className="h-5 w-5" />
@@ -99,25 +98,27 @@ export default function AudioPlayer() {
               <Button 
                 variant="ghost" 
                 size="icon"
-                className="text-muted-foreground hover:text-foreground"
+                className="text-gray-400 hover:text-white hover:bg-[#4CAF50]/20"
+                disabled={!audioData}
               >
                 <SkipForward className="h-5 w-5" />
               </Button>
             </div>
 
             <div className="flex items-center gap-2 w-full">
-              <span className="text-sm text-muted-foreground w-12 text-right">
+              <span className="text-sm text-gray-400 w-12 text-right">
                 {formatTime(currentTime)}
               </span>
               <Slider
                 value={[currentTime]}
-                max={duration}
+                max={duration || 100}
                 step={1}
                 onValueChange={([value]) => setPosition(value)}
                 className="flex-1"
+                disabled={!audioData}
               />
-              <span className="text-sm text-muted-foreground w-12">
-                {formatTime(duration)}
+              <span className="text-sm text-gray-400 w-12">
+                {formatTime(duration || 0)}
               </span>
             </div>
           </div>
@@ -128,7 +129,7 @@ export default function AudioPlayer() {
               variant="ghost"
               size="icon"
               onClick={toggleMute}
-              className="text-muted-foreground hover:text-foreground"
+              className="text-gray-400 hover:text-white hover:bg-[#4CAF50]/20"
             >
               <VolumeIcon className="h-5 w-5" />
             </Button>
