@@ -68,7 +68,7 @@ export default function LibraryPage() {
                   <h3 className="text-lg font-medium mb-2">Welcome to Your Podcast Library</h3>
                   <p className="text-sm text-gray-400">This is a sample podcast to help you get started. Try out the buttons below!</p>
                 </div>
-                <div className="flex gap-3">
+                <div className="flex items-center gap-3">
                   <Button 
                     variant="default" 
                     size="icon" 
@@ -76,11 +76,11 @@ export default function LibraryPage() {
                   >
                     <Play className="h-6 w-6 text-black fill-black" />
                   </Button>
-                  <Button variant="default" size="sm" className="flex items-center gap-2">
+                  <Button variant="default" size="sm" className="h-12 flex items-center gap-2">
                     <Upload size={16} />
                     Upload to Spotify
                   </Button>
-                  <Button variant="outline" size="sm" className="flex items-center gap-2">
+                  <Button variant="outline" size="sm" className="h-12 flex items-center gap-2">
                     <Share2 size={16} />
                     Share with Friends
                   </Button>
