@@ -9,51 +9,67 @@ export function useAudio() {
   const [duration, setDuration] = useState(0);
   const { toast } = useToast();
   
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // Initialize audio element once
   useEffect(() => {
-    audioRef.current = new Audio();
-    
-    // Set up audio event listeners
-    audioRef.current.addEventListener('timeupdate', () => {
-      setCurrentTime(audioRef.current?.currentTime || 0);
-    });
+    if (!audioRef.current) {
+      audioRef.current = new Audio();
+      
+      const audio = audioRef.current;
+      
+      // Set up audio event listeners
+      const onTimeUpdate = () => {
+        setCurrentTime(audio.currentTime);
+      };
 
-    audioRef.current.addEventListener('loadedmetadata', () => {
-      setDuration(audioRef.current?.duration || 0);
-    });
+      const onLoadedMetadata = () => {
+        setDuration(audio.duration);
+        console.log('Audio loaded, duration:', audio.duration);
+      };
 
-    audioRef.current.addEventListener('ended', () => {
-      setIsPlaying(false);
-    });
+      const onEnded = () => {
+        setIsPlaying(false);
+      };
 
-    audioRef.current.addEventListener('error', (e) => {
-      console.error('Audio error:', e);
-      toast({
-        title: "Error",
-        description: "Failed to load audio",
-        variant: "destructive",
-      });
-      setIsPlaying(false);
-    });
+      const onError = (e: ErrorEvent) => {
+        console.error('Audio error:', e);
+        toast({
+          title: "Error",
+          description: "Failed to load audio",
+          variant: "destructive",
+        });
+        setIsPlaying(false);
+      };
 
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.src = '';
-      }
-    };
+      audio.addEventListener('timeupdate', onTimeUpdate);
+      audio.addEventListener('loadedmetadata', onLoadedMetadata);
+      audio.addEventListener('ended', onEnded);
+      audio.addEventListener('error', onError);
+
+      return () => {
+        audio.removeEventListener('timeupdate', onTimeUpdate);
+        audio.removeEventListener('loadedmetadata', onLoadedMetadata);
+        audio.removeEventListener('ended', onEnded);
+        audio.removeEventListener('error', onError);
+        audio.pause();
+        audio.src = '';
+      };
+    }
   }, []);
 
   const play = async (podcast: Podcast) => {
     try {
-      if (!audioRef.current) return;
+      if (!audioRef.current) {
+        console.error('Audio element not initialized');
+        return;
+      }
 
       const isSamePodcast = audioData?.id === podcast.id;
+      const audio = audioRef.current;
       
-      // Update audio data immediately
+      // Update audio data
       setAudioData(podcast);
 
       // Construct audio URL
@@ -61,20 +77,33 @@ export function useAudio() {
         ? podcast.audioUrl 
         : `${window.location.origin}${podcast.audioUrl}`;
 
+      console.log('Playing audio from:', audioSrc);
+
       // Only update source if it's a different podcast
       if (!isSamePodcast) {
-        audioRef.current.src = audioSrc;
-        audioRef.current.load();
+        audio.src = audioSrc;
+        await audio.load();
+      }
+
+      // Reset time if it's a new podcast
+      if (!isSamePodcast) {
+        audio.currentTime = 0;
       }
 
       // Play the audio
-      await audioRef.current.play();
-      setIsPlaying(true);
+      try {
+        await audio.play();
+        setIsPlaying(true);
+        console.log('Audio playback started');
+      } catch (playError) {
+        console.error('Playback error:', playError);
+        throw playError;
+      }
     } catch (error) {
       console.error('Error playing audio:', error);
       toast({
         title: "Error",
-        description: "Failed to play audio",
+        description: "Failed to play audio. Please try again.",
         variant: "destructive",
       });
       setIsPlaying(false);
@@ -82,18 +111,30 @@ export function useAudio() {
   };
 
   const togglePlay = async () => {
-    if (!audioRef.current || !audioData) return;
+    if (!audioRef.current || !audioData) {
+      console.warn('Cannot toggle play - no audio loaded');
+      return;
+    }
 
     try {
+      const audio = audioRef.current;
+      
       if (isPlaying) {
-        audioRef.current.pause();
+        console.log('Pausing audio');
+        audio.pause();
         setIsPlaying(false);
       } else {
-        await audioRef.current.play();
+        console.log('Resuming audio');
+        await audio.play();
         setIsPlaying(true);
       }
     } catch (error) {
       console.error('Error toggling playback:', error);
+      toast({
+        title: "Error",
+        description: "Failed to toggle playback. Please try again.",
+        variant: "destructive",
+      });
       setIsPlaying(false);
     }
   };
