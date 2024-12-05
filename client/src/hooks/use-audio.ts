@@ -9,7 +9,7 @@ export function useAudio() {
   const [duration, setDuration] = useState(0);
   const { toast } = useToast();
   
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioRef = useRef<HTMLAudioElement>(new Audio());
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>();
   const analyzerRef = useRef<AnalyserNode | null>(null);
