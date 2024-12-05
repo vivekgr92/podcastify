@@ -64,12 +64,22 @@ export function useAudio() {
     animate();
   }, [isPlaying]);
 
-  const play = (podcast: Podcast) => {
+  const play = async (podcast: Podcast) => {
     if (audioRef.current) {
-      audioRef.current.src = podcast.audioUrl;
-      audioRef.current.play();
-      setAudioData(podcast);
-      setIsPlaying(true);
+      try {
+        const audioSrc = podcast.audioUrl.startsWith('http') 
+          ? podcast.audioUrl 
+          : `${window.location.origin}${podcast.audioUrl}`;
+        audioRef.current.src = audioSrc;
+        await audioRef.current.play();
+        setAudioData(podcast);
+        setIsPlaying(true);
+      } catch (error) {
+        console.error('Error playing audio:', error);
+        // Reset the audio state
+        setIsPlaying(false);
+        setAudioData(null);
+      }
     }
   };
 
