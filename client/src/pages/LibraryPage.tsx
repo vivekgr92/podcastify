@@ -10,7 +10,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 export default function LibraryPage() {
   const [, setLocation] = useLocation();
-  const { play, isPlaying, audioData } = useAudio();
+  const { play, isPlaying, audioData, togglePlay } = useAudio();
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -60,7 +60,13 @@ export default function LibraryPage() {
                     variant="default" 
                     size="icon" 
                     className="rounded-full bg-[#4CAF50] hover:bg-[#45a049] h-10 w-10 p-0 flex items-center justify-center"
-                    onClick={() => play(podcast)}
+                    onClick={() => {
+                      if (isPlaying && audioData?.id === podcast.id) {
+                        togglePlay();
+                      } else {
+                        play(podcast);
+                      }
+                    }}
                   >
                     {isPlaying && audioData?.id === podcast.id ? (
                       <Pause className="h-5 w-5 text-black fill-black" />
