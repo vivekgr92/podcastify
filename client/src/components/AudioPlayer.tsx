@@ -56,7 +56,7 @@ export default function AudioPlayer() {
                   className="w-full h-full rounded-lg object-cover"
                 />
               ) : (
-                <Volume2 className="h-6 w-6 text-[#4CAF50]" />
+                <Volume2 className="h-6 w-6 text-white" />
               )}
             </div>
             <div className="flex-1 min-w-0">
