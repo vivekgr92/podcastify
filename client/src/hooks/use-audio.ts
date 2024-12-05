@@ -80,25 +80,24 @@ export function useAudio() {
       const isSamePodcast = audioData?.id === podcast.id;
       const currentPosition = isSamePodcast ? audioRef.current.currentTime : 0;
 
+      // Set audio data immediately
+      setAudioData(podcast);
+      setIsPlaying(true);
+
       const audioSrc = podcast.audioUrl.startsWith('http') 
         ? podcast.audioUrl 
         : `${window.location.origin}${podcast.audioUrl}`;
       
       console.log('Attempting to play audio from:', audioSrc);
 
-      // Set audio source and load if it's a different podcast
-      if (!isSamePodcast) {
-        audioRef.current.src = audioSrc;
-        audioRef.current.load();
-      }
-
-      // Set audio data before playing
-      setAudioData(podcast);
-
-      // Configure event listeners
+      // Configure event listeners before loading audio
       audioRef.current.onloadedmetadata = () => {
+        console.log('Audio metadata loaded:', {
+          duration: audioRef.current?.duration,
+          currentTime: currentPosition
+        });
         setDuration(audioRef.current?.duration || 0);
-        if (isSamePodcast) {
+        if (isSamePodcast && currentPosition > 0) {
           audioRef.current!.currentTime = currentPosition;
         }
       };
@@ -156,18 +155,28 @@ export function useAudio() {
     
     try {
       if (isPlaying) {
+        console.log('Pausing audio');
         audioRef.current.pause();
         setIsPlaying(false);
       } else {
+        console.log('Attempting to play audio');
+        // Ensure audio source is set
         if (!audioRef.current.src) {
           const audioSrc = audioData.audioUrl.startsWith('http') 
             ? audioData.audioUrl 
             : `${window.location.origin}${audioData.audioUrl}`;
+          console.log('Setting audio source:', audioSrc);
           audioRef.current.src = audioSrc;
           audioRef.current.load();
         }
-        await audioRef.current.play();
-        setIsPlaying(true);
+        
+        // Add event listener for any errors
+        const playPromise = audioRef.current.play();
+        if (playPromise !== undefined) {
+          await playPromise;
+          console.log('Audio playback started successfully');
+          setIsPlaying(true);
+        }
       }
     } catch (error) {
       console.error('Error toggling playback:', error);
