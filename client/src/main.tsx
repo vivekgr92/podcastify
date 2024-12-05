@@ -25,16 +25,16 @@ function Router() {
   return (
     <Switch>
       <Route path="/auth">
-        {user ? <Route path="/">Redirecting...</Route> : <AuthPage />}
+        {user ? <HomePage /> : <AuthPage />}
       </Route>
       <Route path="/auth/signup">
-        {user ? <Route path="/">Redirecting...</Route> : <AuthPage />}
-      </Route>
-      <Route path="/">
-        {!user ? <AuthPage /> : <HomePage />}
+        {user ? <HomePage /> : <AuthPage />}
       </Route>
       <Route path="/library">
         {!user ? <AuthPage /> : <LibraryPage />}
+      </Route>
+      <Route path="/">
+        {!user ? <AuthPage /> : <HomePage />}
       </Route>
       <Route>404 Page Not Found</Route>
     </Switch>
