@@ -9,183 +9,91 @@ export function useAudio() {
   const [duration, setDuration] = useState(0);
   const { toast } = useToast();
   
-  const audioRef = useRef<HTMLAudioElement>(new Audio());
+  const audioRef = useRef<HTMLAudioElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationRef = useRef<number>();
-  const analyzerRef = useRef<AnalyserNode | null>(null);
 
+  // Initialize audio element once
   useEffect(() => {
-    if (!audioRef.current) {
-      audioRef.current = new Audio();
-      
-      try {
-        const audioContext = new AudioContext();
-        const source = audioContext.createMediaElementSource(audioRef.current);
-        const analyzer = audioContext.createAnalyser();
-        
-        source.connect(analyzer);
-        analyzer.connect(audioContext.destination);
-        
-        analyzer.fftSize = 256;
-        analyzerRef.current = analyzer;
+    audioRef.current = new Audio();
+    
+    // Set up audio event listeners
+    audioRef.current.addEventListener('timeupdate', () => {
+      setCurrentTime(audioRef.current?.currentTime || 0);
+    });
 
-        // Set initial volume
-        audioRef.current.volume = 1.0;
-      } catch (error) {
-        console.error('Error setting up audio context:', error);
-      }
-    }
+    audioRef.current.addEventListener('loadedmetadata', () => {
+      setDuration(audioRef.current?.duration || 0);
+    });
+
+    audioRef.current.addEventListener('ended', () => {
+      setIsPlaying(false);
+    });
+
+    audioRef.current.addEventListener('error', (e) => {
+      console.error('Audio error:', e);
+      toast({
+        title: "Error",
+        description: "Failed to load audio",
+        variant: "destructive",
+      });
+      setIsPlaying(false);
+    });
 
     return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = '';
       }
     };
   }, []);
 
-  useEffect(() => {
-    if (!audioRef.current || !canvasRef.current || !analyzerRef.current) return;
-
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d")!;
-    const analyzer = analyzerRef.current;
-    const bufferLength = analyzer.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLength);
-
-    function animate() {
-      animationRef.current = requestAnimationFrame(animate);
-      analyzer.getByteFrequencyData(dataArray);
-
-      ctx.fillStyle = "rgb(23, 23, 23)";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      const barWidth = (canvas.width / bufferLength) * 2.5;
-      let x = 0;
-
-      for (let i = 0; i < bufferLength; i++) {
-        const barHeight = dataArray[i] / 2;
-        ctx.fillStyle = `hsl(280, 100%, ${50 + (barHeight / 2)}%)`;
-        ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-        x += barWidth + 1;
-      }
-    }
-
-    animate();
-  }, [isPlaying]);
-
   const play = async (podcast: Podcast) => {
-    if (!audioRef.current) return;
-
     try {
+      if (!audioRef.current) return;
+
       const isSamePodcast = audioData?.id === podcast.id;
-      const currentPosition = isSamePodcast ? audioRef.current.currentTime : 0;
-
-      // Set audio data immediately
+      
+      // Update audio data immediately
       setAudioData(podcast);
-      setIsPlaying(true);
 
+      // Construct audio URL
       const audioSrc = podcast.audioUrl.startsWith('http') 
         ? podcast.audioUrl 
         : `${window.location.origin}${podcast.audioUrl}`;
-      
-      console.log('Attempting to play audio from:', audioSrc);
 
-      // Configure event listeners before loading audio
-      audioRef.current.onloadedmetadata = () => {
-        console.log('Audio metadata loaded:', {
-          duration: audioRef.current?.duration,
-          currentTime: currentPosition
-        });
-        setDuration(audioRef.current?.duration || 0);
-        if (isSamePodcast && currentPosition > 0) {
-          audioRef.current!.currentTime = currentPosition;
-        }
-      };
-      
-      audioRef.current.ontimeupdate = () => {
-        setCurrentTime(audioRef.current?.currentTime || 0);
-      };
-      
-      audioRef.current.onerror = (e) => {
-        console.error('Audio loading error:', e);
-        if (audioRef.current) {
-          toast({
-            title: "Error",
-            description: `Failed to load audio file: ${audioRef.current.error?.message || 'Unknown error'}`,
-            variant: "destructive",
-          });
-        }
-        setIsPlaying(false);
-        setAudioData(null);
-      };
-
-      // Load and play audio
+      // Only update source if it's a different podcast
       if (!isSamePodcast) {
         audioRef.current.src = audioSrc;
         audioRef.current.load();
       }
-      
+
+      // Play the audio
       await audioRef.current.play();
       setIsPlaying(true);
-      
-      console.log('Audio started playing:', {
-        src: audioSrc,
-        podcast,
-        isPlaying: true
-      });
-      console.log('Audio playback started successfully');
-    } catch (error: any) {
-      console.error('Error playing audio:', error.message);
+    } catch (error) {
+      console.error('Error playing audio:', error);
       toast({
         title: "Error",
-        description: `Failed to play audio: ${error.message}`,
+        description: "Failed to play audio",
         variant: "destructive",
       });
-      // Reset the audio state
       setIsPlaying(false);
-      setAudioData(null);
     }
   };
 
   const togglePlay = async () => {
-    if (!audioRef.current || !audioData) {
-      console.warn('Cannot toggle play - no audio loaded');
-      return;
-    }
-    
+    if (!audioRef.current || !audioData) return;
+
     try {
       if (isPlaying) {
-        console.log('Pausing audio');
         audioRef.current.pause();
         setIsPlaying(false);
       } else {
-        console.log('Attempting to play audio');
-        // Ensure audio source is set
-        if (!audioRef.current.src) {
-          const audioSrc = audioData.audioUrl.startsWith('http') 
-            ? audioData.audioUrl 
-            : `${window.location.origin}${audioData.audioUrl}`;
-          console.log('Setting audio source:', audioSrc);
-          audioRef.current.src = audioSrc;
-          audioRef.current.load();
-        }
-        
-        // Add event listener for any errors
-        const playPromise = audioRef.current.play();
-        if (playPromise !== undefined) {
-          await playPromise;
-          console.log('Audio playback started successfully');
-          setIsPlaying(true);
-        }
+        await audioRef.current.play();
+        setIsPlaying(true);
       }
     } catch (error) {
       console.error('Error toggling playback:', error);
-      toast({
-        title: "Error",
-        description: "Failed to toggle playback. Please try again.",
-        variant: "destructive",
-      });
-      // Reset playing state on error
       setIsPlaying(false);
     }
   };
