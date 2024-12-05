@@ -47,6 +47,43 @@ export function registerRoutes(app: Express) {
       res.status(500).send("Failed to fetch podcasts");
     }
   });
+  // Delete podcast
+  app.delete("/api/podcasts/:id", async (req, res) => {
+    try {
+      if (!req.user) return res.status(401).send("Not authenticated");
+      
+      // Only allow users to delete their own podcasts
+      const [podcast] = await db
+        .delete(podcasts)
+        .where(
+          and(
+            eq(podcasts.id, parseInt(req.params.id)),
+            eq(podcasts.userId, req.user.id)
+          )
+        )
+        .returning();
+      
+      if (!podcast) {
+        return res.status(404).send("Podcast not found or unauthorized");
+      }
+
+      // Delete the audio file if it exists
+      if (podcast.audioUrl) {
+        const filePath = path.join(".", podcast.audioUrl);
+        try {
+          await fs.unlink(filePath);
+        } catch (error) {
+          console.error('Error deleting audio file:', error);
+        }
+      }
+      
+      res.json({ message: "Podcast deleted successfully" });
+    } catch (error) {
+      console.error('Delete podcast error:', error);
+      res.status(500).send("Failed to delete podcast");
+    }
+  });
+
 
   // Upload new podcast
   app.post("/api/podcasts", upload.fields([
