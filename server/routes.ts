@@ -3,8 +3,10 @@ import { setupAuth } from "./auth";
 import { db } from "../db";
 import multer from "multer";
 import path from "path";
+import { promises as fs } from "fs";
 import { podcasts, playlists, playlistItems, progress } from "@db/schema";
 import { eq, and } from "drizzle-orm";
+import { ttsService } from "./services/tts";
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
@@ -149,7 +151,7 @@ export function registerRoutes(app: Express) {
   });
 
   // Text-to-speech conversion
-  app.post("/api/tts", upload.single('file'), async (req, res) => {
+  app.post("/api/podcast", upload.single('file'), async (req, res) => {
     try {
       if (!req.user) return res.status(401).send("Not authenticated");
       
@@ -157,29 +159,34 @@ export function registerRoutes(app: Express) {
       if (!file) {
         return res.status(400).send("No file uploaded");
       }
+
+      // Read the file content
+      const fileContent = await fs.readFile(file.path, 'utf-8');
       
-      // Mock API response - in real implementation this would call an external TTS service
-      const mockResponse = {
-        audioUrl: `/uploads/${file.filename}`,
-        title: file.originalname.replace(/\.[^/.]+$/, ""),
-        description: "Converted from uploaded document",
-        duration: 180 // mock duration in seconds
-      };
+      // Generate audio using TTS service
+      const { audioBuffer, duration } = await ttsService.generateConversation(fileContent);
       
+      // Save the audio file
+      const audioFileName = `${Date.now()}-${file.originalname}.mp3`;
+      const audioPath = path.join('./uploads', audioFileName);
+      await fs.writeFile(audioPath, audioBuffer);
+      
+      // Create podcast entry
       const [newPodcast] = await db.insert(podcasts)
         .values({
           userId: req.user.id,
-          title: mockResponse.title,
-          description: mockResponse.description,
-          audioUrl: mockResponse.audioUrl,
-          duration: mockResponse.duration,
+          title: file.originalname.replace(/\.[^/.]+$/, ""),
+          description: "Generated from uploaded document using AI voices",
+          audioUrl: `/uploads/${audioFileName}`,
+          duration,
           type: 'tts'
         })
         .returning();
 
       res.json(newPodcast);
     } catch (error) {
-      res.status(500).send("Failed to convert text to speech");
+      console.error('Podcast generation error:', error);
+      res.status(500).send("Failed to generate podcast");
     }
   });
 }
