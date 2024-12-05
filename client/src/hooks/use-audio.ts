@@ -67,37 +67,53 @@ export function useAudio() {
   }, [isPlaying]);
 
   const play = async (podcast: Podcast) => {
-    if (audioRef.current) {
-      try {
-        // Add event listeners for loading
-        audioRef.current.onloadedmetadata = () => {
-          setDuration(audioRef.current?.duration || 0);
-        };
-        
-        audioRef.current.ontimeupdate = () => {
-          setCurrentTime(audioRef.current?.currentTime || 0);
-        };
+    if (!audioRef.current) return;
 
-        const audioSrc = podcast.audioUrl.startsWith('http') 
-          ? podcast.audioUrl 
-          : `${window.location.origin}${podcast.audioUrl}`;
-          
-        audioRef.current.src = audioSrc;
-        audioRef.current.load(); // Explicitly load the audio
-        await audioRef.current.play();
-        setAudioData(podcast);
-        setIsPlaying(true);
-      } catch (error) {
-        console.error('Error playing audio:', error);
+    try {
+      // Add event listeners for loading
+      audioRef.current.onloadedmetadata = () => {
+        setDuration(audioRef.current?.duration || 0);
+      };
+      
+      audioRef.current.ontimeupdate = () => {
+        setCurrentTime(audioRef.current?.currentTime || 0);
+      };
+
+      const audioSrc = podcast.audioUrl.startsWith('http') 
+        ? podcast.audioUrl 
+        : `${window.location.origin}${podcast.audioUrl}`;
+      
+      console.log('Attempting to play audio from:', audioSrc);
+      
+      // Add error handler for loading errors
+      audioRef.current.onerror = (e) => {
+        console.error('Audio loading error:', e);
         toast({
           title: "Error",
-          description: "Failed to play audio. Please try again.",
+          description: `Failed to load audio file: ${(e.target as HTMLAudioElement).error?.message || 'Unknown error'}`,
           variant: "destructive",
         });
-        // Reset the audio state
         setIsPlaying(false);
         setAudioData(null);
-      }
+      };
+      
+      audioRef.current.src = audioSrc;
+      audioRef.current.load(); // Explicitly load the audio
+      
+      await audioRef.current.play();
+      console.log('Audio playback started successfully');
+      setAudioData(podcast);
+      setIsPlaying(true);
+    } catch (error: any) {
+      console.error('Error playing audio:', error.message);
+      toast({
+        title: "Error",
+        description: `Failed to play audio: ${error.message}`,
+        variant: "destructive",
+      });
+      // Reset the audio state
+      setIsPlaying(false);
+      setAudioData(null);
     }
   };
 

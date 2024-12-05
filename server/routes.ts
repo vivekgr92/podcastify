@@ -1,4 +1,5 @@
 import type { Express } from "express";
+import express from "express";
 import { setupAuth } from "./auth";
 import { db } from "../db";
 import multer from "multer";
@@ -26,6 +27,9 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 export function registerRoutes(app: Express) {
+  // Serve static files from uploads directory
+  app.use('/uploads', express.static('uploads'));
+  
   // Set up authentication routes
   setupAuth(app);
 
