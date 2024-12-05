@@ -40,7 +40,7 @@ function Router() {
         </Route>
         <Route>404 Page Not Found</Route>
       </Switch>
-      {user && <AudioPlayer />}
+      <AudioPlayer />
     </>
   );
 }

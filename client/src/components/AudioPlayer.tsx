@@ -18,7 +18,7 @@ export default function AudioPlayer() {
   const [volume, setVolume] = useState(100);
   const [prevVolume, setPrevVolume] = useState(100);
 
-  if (!audioData || !isPlaying) return null;
+  if (!audioData) return null;
 
   const toggleMute = () => {
     if (volume > 0) {
