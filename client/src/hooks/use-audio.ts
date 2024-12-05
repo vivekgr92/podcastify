@@ -1,11 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import type { Podcast } from "@db/schema";
+import { useToast } from "@/hooks/use-toast";
 
 export function useAudio() {
   const [audioData, setAudioData] = useState<Podcast | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const { toast } = useToast();
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -67,15 +69,31 @@ export function useAudio() {
   const play = async (podcast: Podcast) => {
     if (audioRef.current) {
       try {
+        // Add event listeners for loading
+        audioRef.current.onloadedmetadata = () => {
+          setDuration(audioRef.current?.duration || 0);
+        };
+        
+        audioRef.current.ontimeupdate = () => {
+          setCurrentTime(audioRef.current?.currentTime || 0);
+        };
+
         const audioSrc = podcast.audioUrl.startsWith('http') 
           ? podcast.audioUrl 
           : `${window.location.origin}${podcast.audioUrl}`;
+          
         audioRef.current.src = audioSrc;
+        audioRef.current.load(); // Explicitly load the audio
         await audioRef.current.play();
         setAudioData(podcast);
         setIsPlaying(true);
       } catch (error) {
         console.error('Error playing audio:', error);
+        toast({
+          title: "Error",
+          description: "Failed to play audio. Please try again.",
+          variant: "destructive",
+        });
         // Reset the audio state
         setIsPlaying(false);
         setAudioData(null);
