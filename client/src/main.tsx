@@ -22,16 +22,18 @@ function Router() {
     );
   }
 
+  if (!user) {
+    return <AuthPage />;
+  }
+
   return (
-    <div className="min-h-screen">
-      <Switch>
-        <Route path="/" component={HomePage} />
-        <Route path="/auth" component={AuthPage} />
-        <Route path="/auth/signup" component={AuthPage} />
-        <Route path="/library" component={user ? LibraryPage : AuthPage} />
-        <Route>404 Page Not Found</Route>
-      </Switch>
-    </div>
+    <Switch>
+      <Route path="/" component={HomePage} />
+      <Route path="/auth" component={AuthPage} />
+      <Route path="/auth/signup" component={AuthPage} />
+      <Route path="/library" component={LibraryPage} />
+      <Route>404 Page Not Found</Route>
+    </Switch>
   );
 }
 
