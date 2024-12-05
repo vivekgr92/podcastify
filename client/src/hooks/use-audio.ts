@@ -66,12 +66,9 @@ export function useAudio() {
         return;
       }
 
-      const isSamePodcast = audioData?.id === podcast.id;
       const audio = audioRef.current;
+      const isSamePodcast = audioData?.id === podcast.id;
       
-      // Update audio data
-      setAudioData(podcast);
-
       // Construct audio URL
       const audioSrc = podcast.audioUrl.startsWith('http') 
         ? podcast.audioUrl 
@@ -79,26 +76,45 @@ export function useAudio() {
 
       console.log('Playing audio from:', audioSrc);
 
-      // Only update source if it's a different podcast
-      if (!isSamePodcast) {
-        audio.src = audioSrc;
-        await audio.load();
-      }
+      // Always set audio source and load
+      audio.src = audioSrc;
+      
+      // Set up event listeners for this specific load/play attempt
+      const loadPromise = new Promise((resolve, reject) => {
+        const onCanPlay = () => {
+          audio.removeEventListener('canplay', onCanPlay);
+          audio.removeEventListener('error', onError);
+          resolve(undefined);
+        };
+        
+        const onError = (e: Event) => {
+          audio.removeEventListener('canplay', onCanPlay);
+          audio.removeEventListener('error', onError);
+          reject(new Error('Failed to load audio'));
+        };
 
-      // Reset time if it's a new podcast
+        audio.addEventListener('canplay', onCanPlay);
+        audio.addEventListener('error', onError);
+      });
+
+      // Load the audio
+      audio.load();
+      
+      // Wait for the audio to be ready
+      await loadPromise;
+      
+      // Update state after successful load
+      setAudioData(podcast);
+      
       if (!isSamePodcast) {
         audio.currentTime = 0;
       }
 
       // Play the audio
-      try {
-        await audio.play();
-        setIsPlaying(true);
-        console.log('Audio playback started');
-      } catch (playError) {
-        console.error('Playback error:', playError);
-        throw playError;
-      }
+      await audio.play();
+      setIsPlaying(true);
+      console.log('Audio playback started');
+
     } catch (error) {
       console.error('Error playing audio:', error);
       toast({
@@ -125,8 +141,26 @@ export function useAudio() {
         setIsPlaying(false);
       } else {
         console.log('Resuming audio');
-        await audio.play();
-        setIsPlaying(true);
+        // Ensure audio source is still valid
+        if (!audio.src) {
+          const audioSrc = audioData.audioUrl.startsWith('http') 
+            ? audioData.audioUrl 
+            : `${window.location.origin}${audioData.audioUrl}`;
+          audio.src = audioSrc;
+          audio.load();
+        }
+        
+        // Play with error handling
+        try {
+          const playPromise = audio.play();
+          if (playPromise !== undefined) {
+            await playPromise;
+            setIsPlaying(true);
+          }
+        } catch (playError) {
+          console.error('Playback error:', playError);
+          throw playError;
+        }
       }
     } catch (error) {
       console.error('Error toggling playback:', error);
