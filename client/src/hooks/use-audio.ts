@@ -120,7 +120,9 @@ export function useAudio() {
         audioRef.current.src = audioSrc;
         audioRef.current.load(); // Explicitly load the audio
       }
+      
       await audioRef.current.play();
+      setIsPlaying(true);
       
       console.log('Audio started playing:', {
         src: audioSrc,
