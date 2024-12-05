@@ -25,26 +25,28 @@ function Router() {
 
   return (
     <>
-      <div className="flex flex-col min-h-screen">
-        <div className="flex-1">
-          <Switch>
-            <Route path="/auth">
-              {user ? <HomePage /> : <AuthPage />}
-            </Route>
-            <Route path="/auth/signup">
-              {user ? <HomePage /> : <AuthPage />}
-            </Route>
-            <Route path="/library">
-              {!user ? <AuthPage /> : <LibraryPage />}
-            </Route>
-            <Route path="/">
-              {!user ? <AuthPage /> : <HomePage />}
-            </Route>
-            <Route>404 Page Not Found</Route>
-          </Switch>
+      <>
+        <div className="flex flex-col min-h-screen pb-24">
+          <div className="flex-1">
+            <Switch>
+              <Route path="/auth">
+                {user ? <HomePage /> : <AuthPage />}
+              </Route>
+              <Route path="/auth/signup">
+                {user ? <HomePage /> : <AuthPage />}
+              </Route>
+              <Route path="/library">
+                {!user ? <AuthPage /> : <LibraryPage />}
+              </Route>
+              <Route path="/">
+                {!user ? <AuthPage /> : <HomePage />}
+              </Route>
+              <Route>404 Page Not Found</Route>
+            </Switch>
+          </div>
         </div>
         <AudioPlayer />
-      </div>
+      </>
     </>
   );
 }
