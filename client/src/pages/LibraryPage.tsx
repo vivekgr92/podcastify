@@ -5,10 +5,14 @@ import { Share2, Upload, Play } from "lucide-react";
 import { useLocation } from "wouter";
 import { useAudio } from "../hooks/use-audio";
 import AudioPlayer from "../components/AudioPlayer";
+import { useToast } from "@/hooks/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function LibraryPage() {
   const [, setLocation] = useLocation();
   const { play, isPlaying, audioData } = useAudio();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const { data: podcasts, isLoading } = useQuery<Podcast[]>({
     queryKey: ["podcasts"],
@@ -67,6 +71,38 @@ export default function LibraryPage() {
                   <Button variant="outline" size="sm" className="flex items-center gap-2">
                     <Share2 size={16} />
                     Share with Friends
+                  </Button>
+                  <Button 
+                    variant="destructive" 
+                    size="sm"
+                    onClick={async () => {
+                      try {
+                        const response = await fetch(`/api/podcasts/${podcast.id}`, {
+                          method: 'DELETE',
+                          credentials: 'include'
+                        });
+                        
+                        if (!response.ok) {
+                          throw new Error('Failed to delete podcast');
+                        }
+                        
+                        toast({
+                          title: "Success",
+                          description: "Podcast deleted successfully"
+                        });
+                        
+                        // Invalidate and refetch podcasts
+                        await queryClient.invalidateQueries({ queryKey: ['podcasts'] });
+                      } catch (error) {
+                        toast({
+                          title: "Error",
+                          description: "Failed to delete podcast",
+                          variant: "destructive"
+                        });
+                      }
+                    }}
+                  >
+                    Delete
                   </Button>
                 </div>
               </div>
