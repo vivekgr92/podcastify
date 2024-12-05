@@ -61,10 +61,10 @@ export default function AudioPlayer() {
             </div>
             <div className="flex-1 min-w-0">
               <h3 className="font-medium truncate text-white">
-                {audioData?.title || "No track selected"}
+                {audioData ? audioData.title : "No track selected"}
               </h3>
               <p className="text-sm text-gray-400 truncate">
-                {audioData?.description || "Select a podcast to play"}
+                {audioData ? audioData.description : "Select a podcast to play"}
               </p>
             </div>
           </div>
