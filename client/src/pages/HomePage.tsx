@@ -23,7 +23,7 @@ export default function HomePage() {
         formData.append('file', file);
         
         try {
-          const response = await fetch('/api/tts', {
+          const response = await fetch('/api/podcast', {
             method: 'POST',
             body: formData
           });

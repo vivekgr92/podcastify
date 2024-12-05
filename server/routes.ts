@@ -10,7 +10,13 @@ import { ttsService } from "./services/tts";
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
-  destination: "./uploads",
+  destination: (req, file, cb) => {
+    // Create uploads directory if it doesn't exist
+    const dir = "./uploads";
+    fs.mkdir(dir, { recursive: true })
+      .then(() => cb(null, dir))
+      .catch(err => cb(err, dir));
+  },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
     cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
