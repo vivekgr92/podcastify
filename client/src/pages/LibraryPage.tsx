@@ -1,14 +1,16 @@
 import { Button } from "@/components/ui/button";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import type { Podcast } from "@db/schema";
 import { Share2, Upload, Play, Trash2 } from "lucide-react";
 import { useLocation } from "wouter";
 import { useAudio } from "../hooks/use-audio";
 import AudioPlayer from "../components/AudioPlayer";
+import { useToast } from "@/hooks/use-toast";
 
 export default function LibraryPage() {
   const [, setLocation] = useLocation();
   const { play, isPlaying, audioData } = useAudio();
+  const { toast } = useToast();
 
   const queryClient = useQueryClient();
   const { data: podcasts, isLoading } = useQuery<Podcast[]>({
