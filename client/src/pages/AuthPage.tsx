@@ -48,7 +48,7 @@ export default function AuthPage() {
           description: isLogin ? "Logged in successfully" : "Account created successfully",
         });
         // Redirect to home page after successful login/registration
-        window.location.href = "/";
+        setLocation("/");
       }
     } catch (error) {
       console.error('Auth error:', error);
