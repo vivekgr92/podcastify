@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import type { Podcast } from "@db/schema";
-import { Share2, Upload, Play } from "lucide-react";
+import { Share2, Upload, Play, Trash2 } from "lucide-react";
 import { useLocation } from "wouter";
 import { useAudio } from "../hooks/use-audio";
 import AudioPlayer from "../components/AudioPlayer";
@@ -10,12 +10,30 @@ export default function LibraryPage() {
   const [, setLocation] = useLocation();
   const { play, isPlaying, audioData } = useAudio();
 
+  const queryClient = useQueryClient();
   const { data: podcasts, isLoading } = useQuery<Podcast[]>({
     queryKey: ["podcasts"],
     queryFn: async () => {
       const res = await fetch("/api/podcasts");
       if (!res.ok) throw new Error("Failed to fetch podcasts");
       return res.json();
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (podcastId: number) => {
+      const res = await fetch(`/api/podcasts/${podcastId}`, {
+        method: 'DELETE',
+      });
+      if (!res.ok) throw new Error("Failed to delete podcast");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["podcasts"] });
+      toast({
+        title: "Success",
+        description: "Podcast deleted successfully",
+      });
     },
   });
 
@@ -67,6 +85,19 @@ export default function LibraryPage() {
                   <Button variant="outline" size="sm" className="flex items-center gap-2">
                     <Share2 size={16} />
                     Share with Friends
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="flex items-center gap-2 text-red-500 hover:text-red-600 hover:bg-red-100/10"
+                    onClick={() => {
+                      if (window.confirm('Are you sure you want to delete this podcast?')) {
+                        deleteMutation.mutate(podcast.id);
+                      }
+                    }}
+                  >
+                    <Trash2 size={16} />
+                    Delete
                   </Button>
                 </div>
               </div>
