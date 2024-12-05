@@ -75,7 +75,7 @@ export default function AudioPlayer() {
               <Button 
                 variant="ghost" 
                 size="icon"
-                className="text-gray-400 hover:text-white hover:bg-[#4CAF50]/20"
+                className="text-white hover:text-white hover:bg-[#4CAF50]/20"
                 disabled={!audioData}
               >
                 <SkipBack className="h-5 w-5" />
@@ -98,7 +98,7 @@ export default function AudioPlayer() {
               <Button 
                 variant="ghost" 
                 size="icon"
-                className="text-gray-400 hover:text-white hover:bg-[#4CAF50]/20"
+                className="text-white hover:text-white hover:bg-[#4CAF50]/20"
                 disabled={!audioData}
               >
                 <SkipForward className="h-5 w-5" />
@@ -106,7 +106,7 @@ export default function AudioPlayer() {
             </div>
 
             <div className="flex items-center gap-2 w-full">
-              <span className="text-sm text-gray-400 w-12 text-right">
+              <span className="text-sm text-white w-12 text-right">
                 {formatTime(currentTime)}
               </span>
               <Slider
@@ -117,7 +117,7 @@ export default function AudioPlayer() {
                 className="flex-1"
                 disabled={!audioData}
               />
-              <span className="text-sm text-gray-400 w-12">
+              <span className="text-sm text-white w-12">
                 {formatTime(duration || 0)}
               </span>
             </div>
@@ -129,7 +129,7 @@ export default function AudioPlayer() {
               variant="ghost"
               size="icon"
               onClick={toggleMute}
-              className="text-gray-400 hover:text-white hover:bg-[#4CAF50]/20"
+              className="text-white hover:text-white hover:bg-[#4CAF50]/20"
             >
               <VolumeIcon className="h-5 w-5" />
             </Button>
