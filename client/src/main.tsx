@@ -10,6 +10,7 @@ import AuthPage from "./pages/AuthPage";
 import LibraryPage from "./pages/LibraryPage";
 import { Loader2 } from "lucide-react";
 import { useUser } from "./hooks/use-user";
+import AudioPlayer from "./components/AudioPlayer";
 
 function Router() {
   const { user, isLoading } = useUser();
@@ -23,21 +24,24 @@ function Router() {
   }
 
   return (
-    <Switch>
-      <Route path="/auth">
-        {user ? <HomePage /> : <AuthPage />}
-      </Route>
-      <Route path="/auth/signup">
-        {user ? <HomePage /> : <AuthPage />}
-      </Route>
-      <Route path="/library">
-        {!user ? <AuthPage /> : <LibraryPage />}
-      </Route>
-      <Route path="/">
-        {!user ? <AuthPage /> : <HomePage />}
-      </Route>
-      <Route>404 Page Not Found</Route>
-    </Switch>
+    <>
+      <Switch>
+        <Route path="/auth">
+          {user ? <HomePage /> : <AuthPage />}
+        </Route>
+        <Route path="/auth/signup">
+          {user ? <HomePage /> : <AuthPage />}
+        </Route>
+        <Route path="/library">
+          {!user ? <AuthPage /> : <LibraryPage />}
+        </Route>
+        <Route path="/">
+          {!user ? <AuthPage /> : <HomePage />}
+        </Route>
+        <Route>404 Page Not Found</Route>
+      </Switch>
+      {user && <AudioPlayer />}
+    </>
   );
 }
 

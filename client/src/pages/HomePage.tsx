@@ -5,12 +5,14 @@ import { useToast } from "@/hooks/use-toast";
 import { useTTS } from "../hooks/use-tts";
 import { FileText, Upload, Headphones, Play, Plus } from "lucide-react";
 import { useDropzone } from "react-dropzone";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function HomePage() {
   const [, setLocation] = useLocation();
   const [file, setFile] = useState<File | null>(null);
   const { toast } = useToast();
   const { convertToSpeech, isConverting } = useTTS();
+  const queryClient = useQueryClient();
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -37,6 +39,9 @@ export default function HomePage() {
             title: "Success",
             description: "Your file has been converted successfully!",
           });
+          
+          // Invalidate podcasts query to refresh library
+          await queryClient.invalidateQueries({ queryKey: ['podcasts'] });
           
           // Redirect to library to see the converted podcast
           setLocation('/library');
