@@ -86,9 +86,10 @@ export function useAudio() {
       console.log('Attempting to play audio from:', audioSrc);
       
       // Add error handler for loading errors
-      audioRef.current.onerror = (e: Event) => {
+      audioRef.current.onerror = (e: Event | string) => {
         console.error('Audio loading error:', e);
-        const audioElement = e.currentTarget as HTMLAudioElement;
+        const audioElement = audioRef.current;
+        if (!audioElement) return;
         toast({
           title: "Error",
           description: `Failed to load audio file: ${audioElement.error?.message || 'Unknown error'}`,
