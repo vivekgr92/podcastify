@@ -13,6 +13,24 @@ const VOICE_IDS = {
   "Sarah": "21m00Tcm4TlvDq8ikWAM"
 };
 
+const SYSTEM_PROMPT = `You are generating a podcast conversation between Joe and Sarah.
+
+**Guidelines**:
+1. Joe provides detailed technical insights but avoids overusing analogies. Instead, focus on straightforward, clear explanations.
+2. Sarah asks probing, thoughtful questions, occasionally offers her own insights, and challenges Joe to explain concepts simply and conversationally.
+3. Both speakers use natural human speech patterns, including filler words like "um," "ah," "you know," and short pauses.
+4. Conclude with a visionary statement highlighting the broader impact of the discussion on science and society.
+
+**Focus**:
+- Avoid excessive use of analogies. Use one or two if necessary for clarity but prioritize clear, direct explanations.
+- Include natural conversational flow with interruptions, backtracking, and filler words to make the dialogue feel authentic.
+- Encourage a natural dialogue with varied contributions from both speakers.
+
+**Tone**:
+- Engaging, relatable, and spontaneous.
+- Emphasize human-like emotions, with occasional humor or lighthearted moments.
+- Balance technical depth with conversational relatability, avoiding overly formal language.`;
+
 export class TTSService {
   constructor() {}
 
@@ -65,20 +83,46 @@ export class TTSService {
     console.log('Split text into', chunks.length, 'chunks');
     
     const conversationParts: Buffer[] = [];
+    let lastResponse = "";
+    const speakers = ["Joe", "Sarah"];
+    let speakerIndex = 0;
     
     for (let index = 0; index < chunks.length; index++) {
       const chunk = chunks[index];
-      const speaker = index % 2 === 0 ? "Joe" : "Sarah";
-      console.log(`Processing chunk ${index + 1}/${chunks.length} with speaker ${speaker}`);
-      console.log('Chunk length:', chunk.length);
+      const currentSpeaker = speakers[speakerIndex];
+      const nextSpeaker = speakers[(speakerIndex + 1) % 2];
+      
+      console.log(`Processing chunk ${index + 1}/${chunks.length}`);
+      console.log('Current speaker:', currentSpeaker);
       
       try {
+        // Generate conversation prompt
+        let prompt = `${SYSTEM_PROMPT}\n${currentSpeaker}: ${chunk}\n${nextSpeaker}:`;
+        if (lastResponse) {
+          prompt = `${SYSTEM_PROMPT}\nPrevious response: ${lastResponse}\n${prompt}`;
+        }
+        
+        // Here we would make the API call to an LLM (e.g., Vertex AI/Gemini)
+        // For now, we'll simulate the response based on the speakers
+        let response = "";
+        if (currentSpeaker === "Joe") {
+          response = `Um, let me explain this in a straightforward way. ${chunk} You know, the key thing to understand here is the technical implementation.`;
+        } else {
+          response = `That's interesting! Could you elaborate more on how this impacts ${chunk.split(' ').slice(0, 3).join(' ')}? I'm curious about the practical implications.`;
+        }
+        lastResponse = response;
+        
+        // Generate audio for the response
         const audioBuffer = await this.synthesizeWithElevenLabs({
-          text: chunk,
-          voiceId: VOICE_IDS[speaker as keyof typeof VOICE_IDS]
+          text: response,
+          voiceId: VOICE_IDS[currentSpeaker as keyof typeof VOICE_IDS]
         });
+        
         console.log(`Successfully generated audio for chunk ${index + 1}, buffer size:`, audioBuffer.length);
         conversationParts.push(audioBuffer);
+        
+        // Switch speaker for next iteration
+        speakerIndex = (speakerIndex + 1) % 2;
       } catch (error) {
         console.error(`Error generating audio for chunk ${index + 1}:`, error);
         throw error;
