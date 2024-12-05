@@ -3,9 +3,12 @@ import { useQuery } from "@tanstack/react-query";
 import type { Podcast } from "@db/schema";
 import { Share2, Upload, Play } from "lucide-react";
 import { useLocation } from "wouter";
+import { useAudio } from "../hooks/use-audio";
+import AudioPlayer from "../components/AudioPlayer";
 
 export default function LibraryPage() {
   const [, setLocation] = useLocation();
+  const { play, isPlaying, audioData } = useAudio();
 
   const { data: podcasts, isLoading } = useQuery<Podcast[]>({
     queryKey: ["podcasts"],
@@ -48,7 +51,15 @@ export default function LibraryPage() {
                   <h3 className="text-lg font-medium mb-2">{podcast.title}</h3>
                   <p className="text-sm text-gray-400">{podcast.description}</p>
                 </div>
-                <div className="flex gap-3">
+                <div className="flex items-center gap-3">
+                  <Button 
+                    variant="default" 
+                    size="icon" 
+                    className="rounded-full bg-[#4CAF50] hover:bg-[#45a049] h-10 w-10 p-0 flex items-center justify-center"
+                    onClick={() => play(podcast)}
+                  >
+                    <Play className="h-5 w-5 text-black fill-black" />
+                  </Button>
                   <Button variant="default" size="sm" className="flex items-center gap-2">
                     <Upload size={16} />
                     Upload to Spotify
@@ -90,6 +101,7 @@ export default function LibraryPage() {
           )}
         </div>
       </main>
+      <AudioPlayer />
     </div>
   );
 }
