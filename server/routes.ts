@@ -149,20 +149,30 @@ export function registerRoutes(app: Express) {
   });
 
   // Text-to-speech conversion
-  app.post("/api/tts", async (req, res) => {
+  app.post("/api/tts", upload.single('file'), async (req, res) => {
     try {
       if (!req.user) return res.status(401).send("Not authenticated");
       
-      // In a real implementation, this would call a TTS service
-      // For now, we'll return a mock response
-      const mockAudioUrl = "/uploads/tts-" + Date.now() + ".mp3";
+      const file = req.file;
+      if (!file) {
+        return res.status(400).send("No file uploaded");
+      }
+      
+      // Mock API response - in real implementation this would call an external TTS service
+      const mockResponse = {
+        audioUrl: `/uploads/${file.filename}`,
+        title: file.originalname.replace(/\.[^/.]+$/, ""),
+        description: "Converted from uploaded document",
+        duration: 180 // mock duration in seconds
+      };
       
       const [newPodcast] = await db.insert(podcasts)
         .values({
           userId: req.user.id,
-          title: "TTS: " + req.body.title,
-          description: "Generated from text",
-          audioUrl: mockAudioUrl,
+          title: mockResponse.title,
+          description: mockResponse.description,
+          audioUrl: mockResponse.audioUrl,
+          duration: mockResponse.duration,
           type: 'tts'
         })
         .returning();
