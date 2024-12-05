@@ -77,9 +77,16 @@ export function useAudio() {
     if (!audioRef.current) return;
 
     try {
+      const isSamePodcast = audioData?.id === podcast.id;
+      const currentPosition = isSamePodcast ? audioRef.current.currentTime : 0;
+
       // Add event listeners for loading
       audioRef.current.onloadedmetadata = () => {
         setDuration(audioRef.current?.duration || 0);
+        // Set the current position if it's the same podcast
+        if (isSamePodcast) {
+          audioRef.current!.currentTime = currentPosition;
+        }
       };
       
       audioRef.current.ontimeupdate = () => {
@@ -109,8 +116,10 @@ export function useAudio() {
       setAudioData(podcast);
       setIsPlaying(true);
       
-      audioRef.current.src = audioSrc;
-      audioRef.current.load(); // Explicitly load the audio
+      if (!isSamePodcast) {
+        audioRef.current.src = audioSrc;
+        audioRef.current.load(); // Explicitly load the audio
+      }
       await audioRef.current.play();
       
       console.log('Audio started playing:', {
@@ -137,6 +146,7 @@ export function useAudio() {
       if (isPlaying) {
         audioRef.current.pause();
       } else {
+        // Resume from current position
         audioRef.current.play();
       }
       setIsPlaying(!isPlaying);
