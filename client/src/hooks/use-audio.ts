@@ -109,10 +109,10 @@ export function useAudio() {
       audioRef.current.src = audioSrc;
       audioRef.current.load(); // Explicitly load the audio
       
-      await audioRef.current.play();
-      console.log('Audio playback started successfully');
       setAudioData(podcast);
       setIsPlaying(true);
+      await audioRef.current.play();
+      console.log('Audio playback started successfully');
     } catch (error: any) {
       console.error('Error playing audio:', error.message);
       toast({
