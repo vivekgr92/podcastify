@@ -23,13 +23,15 @@ function Router() {
   }
 
   return (
-    <Switch>
-      <Route path="/" component={HomePage} />
-      <Route path="/auth" component={AuthPage} />
-      <Route path="/auth/signup" component={AuthPage} />
-      <Route path="/library" component={LibraryPage} />
-      <Route>404 Page Not Found</Route>
-    </Switch>
+    <div className="min-h-screen">
+      <Switch>
+        <Route path="/" component={HomePage} />
+        <Route path="/auth" component={AuthPage} />
+        <Route path="/auth/signup" component={AuthPage} />
+        <Route path="/library" component={user ? LibraryPage : AuthPage} />
+        <Route>404 Page Not Found</Route>
+      </Switch>
+    </div>
   );
 }
 
