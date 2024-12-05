@@ -79,9 +79,6 @@ export function useAudio() {
     try {
       const isSamePodcast = audioData?.id === podcast.id;
       const currentPosition = isSamePodcast ? audioRef.current.currentTime : 0;
-      
-      // Set audio data first
-      setAudioData(podcast);
 
       const audioSrc = podcast.audioUrl.startsWith('http') 
         ? podcast.audioUrl 
@@ -89,7 +86,16 @@ export function useAudio() {
       
       console.log('Attempting to play audio from:', audioSrc);
 
-      // Configure event listeners before loading audio
+      // Set audio source and load if it's a different podcast
+      if (!isSamePodcast) {
+        audioRef.current.src = audioSrc;
+        audioRef.current.load();
+      }
+
+      // Set audio data before playing
+      setAudioData(podcast);
+
+      // Configure event listeners
       audioRef.current.onloadedmetadata = () => {
         setDuration(audioRef.current?.duration || 0);
         if (isSamePodcast) {
@@ -143,13 +149,23 @@ export function useAudio() {
   };
 
   const togglePlay = async () => {
-    if (!audioRef.current || !audioData) return;
+    if (!audioRef.current || !audioData) {
+      console.warn('Cannot toggle play - no audio loaded');
+      return;
+    }
     
     try {
       if (isPlaying) {
         audioRef.current.pause();
         setIsPlaying(false);
       } else {
+        if (!audioRef.current.src) {
+          const audioSrc = audioData.audioUrl.startsWith('http') 
+            ? audioData.audioUrl 
+            : `${window.location.origin}${audioData.audioUrl}`;
+          audioRef.current.src = audioSrc;
+          audioRef.current.load();
+        }
         await audioRef.current.play();
         setIsPlaying(true);
       }
@@ -157,9 +173,11 @@ export function useAudio() {
       console.error('Error toggling playback:', error);
       toast({
         title: "Error",
-        description: "Failed to toggle playback",
+        description: "Failed to toggle playback. Please try again.",
         variant: "destructive",
       });
+      // Reset playing state on error
+      setIsPlaying(false);
     }
   };
 
