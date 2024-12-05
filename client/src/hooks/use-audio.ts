@@ -79,11 +79,19 @@ export function useAudio() {
     try {
       const isSamePodcast = audioData?.id === podcast.id;
       const currentPosition = isSamePodcast ? audioRef.current.currentTime : 0;
+      
+      // Set audio data first
+      setAudioData(podcast);
 
-      // Add event listeners for loading
+      const audioSrc = podcast.audioUrl.startsWith('http') 
+        ? podcast.audioUrl 
+        : `${window.location.origin}${podcast.audioUrl}`;
+      
+      console.log('Attempting to play audio from:', audioSrc);
+
+      // Configure event listeners before loading audio
       audioRef.current.onloadedmetadata = () => {
         setDuration(audioRef.current?.duration || 0);
-        // Set the current position if it's the same podcast
         if (isSamePodcast) {
           audioRef.current!.currentTime = currentPosition;
         }
@@ -92,14 +100,7 @@ export function useAudio() {
       audioRef.current.ontimeupdate = () => {
         setCurrentTime(audioRef.current?.currentTime || 0);
       };
-
-      const audioSrc = podcast.audioUrl.startsWith('http') 
-        ? podcast.audioUrl 
-        : `${window.location.origin}${podcast.audioUrl}`;
       
-      console.log('Attempting to play audio from:', audioSrc);
-      
-      // Add error handler for loading errors
       audioRef.current.onerror = (e) => {
         console.error('Audio loading error:', e);
         if (audioRef.current) {
@@ -112,13 +113,11 @@ export function useAudio() {
         setIsPlaying(false);
         setAudioData(null);
       };
-      
-      setAudioData(podcast);
-      setIsPlaying(true);
-      
+
+      // Load and play audio
       if (!isSamePodcast) {
         audioRef.current.src = audioSrc;
-        audioRef.current.load(); // Explicitly load the audio
+        audioRef.current.load();
       }
       
       await audioRef.current.play();
@@ -143,15 +142,24 @@ export function useAudio() {
     }
   };
 
-  const togglePlay = () => {
-    if (audioRef.current) {
+  const togglePlay = async () => {
+    if (!audioRef.current || !audioData) return;
+    
+    try {
       if (isPlaying) {
         audioRef.current.pause();
+        setIsPlaying(false);
       } else {
-        // Resume from current position
-        audioRef.current.play();
+        await audioRef.current.play();
+        setIsPlaying(true);
       }
-      setIsPlaying(!isPlaying);
+    } catch (error) {
+      console.error('Error toggling playback:', error);
+      toast({
+        title: "Error",
+        description: "Failed to toggle playback",
+        variant: "destructive",
+      });
     }
   };
 
