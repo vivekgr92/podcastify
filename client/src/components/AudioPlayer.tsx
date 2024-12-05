@@ -39,7 +39,7 @@ export default function AudioPlayer() {
   const VolumeIcon = volume === 0 ? VolumeX : volume < 50 ? Volume1 : Volume2;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-b from-black/50 to-black border-t border-white/10 backdrop-blur-lg">
+    <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-b from-black/50 to-black border-t border-white/10 backdrop-blur-lg z-50">
       <canvas
         ref={canvasRef}
         className="absolute top-0 left-0 right-0 h-1"
