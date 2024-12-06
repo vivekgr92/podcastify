@@ -2,18 +2,23 @@ import axios from "axios";
 import path from "path";
 import fs from "fs/promises";
 import { VertexAI } from "@google-cloud/vertexai";
-import { TextToSpeechClient } from "@google-cloud/text-to-speech";
+import { TextToSpeechClient, protos } from "@google-cloud/text-to-speech";
+const { AudioEncoding } = protos.google.cloud.texttospeech.v1;
+
+type Speaker = "Joe" | "Sarah";
+
+interface ConversationEntry {
+  speaker: Speaker;
+  text: string;
+}
 
 interface ElevenLabsOptions {
   text: string;
-interface ConversationEntry {
-  speaker: string;
-  text: string;
+  voiceId: string;
 }
 
 function cleanGeneratedText(rawText: string): ConversationEntry[] {
   try {
-    // Try to parse as JSON first
     const lines = rawText.split('\n');
     const conversation: ConversationEntry[] = [];
     let currentSpeaker = '';
@@ -29,17 +34,17 @@ function cleanGeneratedText(rawText: string): ConversationEntry[] {
 
       // Check for speaker markers
       const speakerMatch = trimmedLine.match(/^(Joe|Sarah):/);
-      if (speakerMatch) {
+      if (speakerMatch && speakerMatch[1]) {
         // If we have previous content, save it
         if (currentSpeaker && currentText) {
           conversation.push({
-            speaker: currentSpeaker,
+            speaker: currentSpeaker as "Joe" | "Sarah",
             text: currentText.trim()
           });
         }
         
         // Start new speaker section
-        currentSpeaker = speakerMatch[1];
+        currentSpeaker = speakerMatch[1] as "Joe" | "Sarah";
         currentText = trimmedLine.substring(speakerMatch[0].length).trim();
       } else if (currentSpeaker) {
         // Append to current text if we have a speaker
@@ -50,27 +55,25 @@ function cleanGeneratedText(rawText: string): ConversationEntry[] {
     // Add the last entry if exists
     if (currentSpeaker && currentText) {
       conversation.push({
-        speaker: currentSpeaker,
+        speaker: currentSpeaker as "Joe" | "Sarah",
         text: currentText.trim()
       });
     }
 
     return conversation;
   } catch (error) {
-    console.error('Error parsing text:', error);
+    console.error('Error parsing text:', error instanceof Error ? error.message : 'Unknown error');
     return [];
   }
 }
-  voiceId: string;
-}
 
 const ELEVENLABS_API_URL = "https://api.elevenlabs.io/v1/text-to-speech";
-const VOICE_IDS = {
+const VOICE_IDS: Record<Speaker, string> = {
   Joe: "IKne3meq5aSn9XLyUdCD",
   Sarah: "21m00Tcm4TlvDq8ikWAM",
 };
 
-const GOOGLE_VOICE_IDS = {
+const GOOGLE_VOICE_IDS: Record<Speaker, string> = {
   Joe: "en-US-Neural2-D",
   Sarah: "en-US-Neural2-F",
 };
@@ -105,7 +108,7 @@ export class TTSService {
     speaker,
   }: {
     text: string;
-    speaker: keyof typeof GOOGLE_VOICE_IDS;
+    speaker: Speaker;
   }): Promise<Buffer> {
     console.log("Making Google TTS API request...");
     console.log("Speaker:", speaker);
@@ -119,9 +122,9 @@ export class TTSService {
           name: GOOGLE_VOICE_IDS[speaker],
         },
         audioConfig: {
-          audioEncoding: "MP3",
+          audioEncoding: protos.google.cloud.texttospeech.v1.AudioEncoding.MP3,
         },
-      };
+      } satisfies protos.google.cloud.texttospeech.v1.ISynthesizeSpeechRequest;
 
       const [response] = await this.ttsClient.synthesizeSpeech(request);
       console.log("Google TTS API response received");
@@ -130,10 +133,10 @@ export class TTSService {
         throw new Error("No audio content received from Google TTS");
       }
 
-      return Buffer.from(response.audioContent as Uint8Array);
-    } catch (error: any) {
+      return Buffer.from(response.audioContent);
+    } catch (error) {
       console.error("Google TTS API error:", error);
-      throw error;
+      throw new Error(error instanceof Error ? error.message : "Failed to synthesize speech");
     }
   }
 

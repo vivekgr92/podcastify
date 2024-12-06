@@ -2,11 +2,23 @@ import { useState, useRef, useEffect } from "react";
 import type { Podcast } from "@db/schema";
 import { useToast } from "@/hooks/use-toast";
 
-export function useAudio() {
+interface AudioHookReturn {
+  isPlaying: boolean;
+  currentTime: number;
+  duration: number;
+  audioData: Podcast | null;
+  canvasRef: React.RefObject<HTMLCanvasElement>;
+  play: (podcast: Podcast) => Promise<void>;
+  togglePlay: () => Promise<void>;
+  setPosition: (time: number) => void;
+  setVolume: (value: number) => void;
+}
+
+export function useAudio(): AudioHookReturn {
   const [audioData, setAudioData] = useState<Podcast | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [currentTime, setCurrentTime] = useState<number>(0);
+  const [duration, setDuration] = useState<number>(0);
   const { toast } = useToast();
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -19,21 +31,21 @@ export function useAudio() {
       
       const audio = audioRef.current;
       
-      // Set up audio event listeners
-      const onTimeUpdate = () => {
+      // Set up audio event listeners with proper types
+      const onTimeUpdate = (): void => {
         setCurrentTime(audio.currentTime);
       };
 
-      const onLoadedMetadata = () => {
+      const onLoadedMetadata = (): void => {
         setDuration(audio.duration);
         console.log('Audio loaded, duration:', audio.duration);
       };
 
-      const onEnded = () => {
+      const onEnded = (): void => {
         setIsPlaying(false);
       };
 
-      const onError = (e: ErrorEvent) => {
+      const onError = (e: Event): void => {
         console.error('Audio error:', e);
         toast({
           title: "Error",
