@@ -25,14 +25,15 @@ export default function HomePage() {
         formData.append('file', file);
         
         try {
-          // Start the conversion process which will trigger the SSE connection
-          setIsConverting(true);
+          // Reset progress and start conversion
           setProgress(0);
+          setIsConverting(true);
           
           console.log('Starting file conversion...');
           const response = await fetch('/api/podcast', {
             method: 'POST',
-            body: formData
+            body: formData,
+            credentials: 'include'
           });
           
           if (!response.ok) {
