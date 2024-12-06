@@ -209,6 +209,8 @@ export function registerRoutes(app: Express) {
 
       // Read the file content
       const fileContent = await fs.readFile(file.path, 'utf-8');
+
+      console.log("File content:", fileContent);
       
       // Generate audio using TTS service
       const { audioBuffer, duration } = await ttsService.generateConversation(fileContent);

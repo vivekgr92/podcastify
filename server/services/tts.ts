@@ -79,10 +79,15 @@ export class TTSService {
     console.log('Starting text-to-speech conversion...');
     console.log('Input text length:', text.length);
     
-    // Split text into chunks of max 4000 chars
+    // Split text into smaller chunks to stay within token limits
     const chunks = this.splitTextIntoChunks(text);
     console.log('Split text into', chunks.length, 'chunks');
-    console.log('Chunks:', chunks);
+    
+    // Log first few chunks as example
+    console.log('First 3 chunks as example:');
+    chunks.slice(0, 3).forEach((chunk, i) => {
+      console.log(`Chunk ${i + 1}:`, chunk.substring(0, 100) + '...');
+    });
     
     const conversationParts: Buffer[] = [];
     let lastResponse = "";
@@ -186,26 +191,37 @@ export class TTSService {
     };
   }
 
-  private splitTextIntoChunks(text: string, maxChars: number = 4000): string[] {
-    const sentences = text.split('. ');
+  private splitTextIntoChunks(text: string, maxChars: number = 1000): string[] {
+    // Reduce chunk size significantly to stay within token limits
+    const sentences = text.split(/[.!?]+\s+/);
     const chunks: string[] = [];
     let currentChunk: string[] = [];
+    let currentLength = 0;
 
     for (const sentence of sentences) {
-      const newChunk = [...currentChunk, sentence].join('. ');
-      if (newChunk.length <= maxChars) {
-        currentChunk.push(sentence);
-      } else {
-        chunks.push(currentChunk.join('. ') + '.');
-        currentChunk = [sentence];
+      const trimmedSentence = sentence.trim();
+      if (!trimmedSentence) continue;
+
+      // Add punctuation back
+      const sentenceWithPunct = trimmedSentence + '. ';
+      const sentenceLength = sentenceWithPunct.length;
+
+      if (currentLength + sentenceLength > maxChars && currentChunk.length > 0) {
+        chunks.push(currentChunk.join(' '));
+        currentChunk = [];
+        currentLength = 0;
       }
+
+      currentChunk.push(sentenceWithPunct);
+      currentLength += sentenceLength;
     }
 
     if (currentChunk.length > 0) {
-      chunks.push(currentChunk.join('. ') + '.');
+      chunks.push(currentChunk.join(' '));
     }
 
-    return chunks;
+    // Filter out any empty chunks and trim each chunk
+    return chunks.filter(chunk => chunk.trim().length > 0).map(chunk => chunk.trim());
   }
 }
 
