@@ -1,23 +1,78 @@
-import axios from 'axios';
-import path from 'path';
-import fs from 'fs/promises';
-import { VertexAI } from '@google-cloud/vertexai';
-import { TextToSpeechClient } from '@google-cloud/text-to-speech';
+import axios from "axios";
+import path from "path";
+import fs from "fs/promises";
+import { VertexAI } from "@google-cloud/vertexai";
+import { TextToSpeechClient } from "@google-cloud/text-to-speech";
 
 interface ElevenLabsOptions {
   text: string;
+interface ConversationEntry {
+  speaker: string;
+  text: string;
+}
+
+function cleanGeneratedText(rawText: string): ConversationEntry[] {
+  try {
+    // Try to parse as JSON first
+    const lines = rawText.split('\n');
+    const conversation: ConversationEntry[] = [];
+    let currentSpeaker = '';
+    let currentText = '';
+
+    for (const line of lines) {
+      const trimmedLine = line.trim();
+      
+      // Skip empty lines and special markers
+      if (!trimmedLine || trimmedLine.startsWith('**') || trimmedLine.startsWith('--')) {
+        continue;
+      }
+
+      // Check for speaker markers
+      const speakerMatch = trimmedLine.match(/^(Joe|Sarah):/);
+      if (speakerMatch) {
+        // If we have previous content, save it
+        if (currentSpeaker && currentText) {
+          conversation.push({
+            speaker: currentSpeaker,
+            text: currentText.trim()
+          });
+        }
+        
+        // Start new speaker section
+        currentSpeaker = speakerMatch[1];
+        currentText = trimmedLine.substring(speakerMatch[0].length).trim();
+      } else if (currentSpeaker) {
+        // Append to current text if we have a speaker
+        currentText += ' ' + trimmedLine;
+      }
+    }
+
+    // Add the last entry if exists
+    if (currentSpeaker && currentText) {
+      conversation.push({
+        speaker: currentSpeaker,
+        text: currentText.trim()
+      });
+    }
+
+    return conversation;
+  } catch (error) {
+    console.error('Error parsing text:', error);
+    return [];
+  }
+}
   voiceId: string;
 }
 
 const ELEVENLABS_API_URL = "https://api.elevenlabs.io/v1/text-to-speech";
 const VOICE_IDS = {
-  "Joe": "IKne3meq5aSn9XLyUdCD",
-  "Sarah": "21m00Tcm4TlvDq8ikWAM"
+  Joe: "IKne3meq5aSn9XLyUdCD",
+  Sarah: "21m00Tcm4TlvDq8ikWAM",
 };
 
 const GOOGLE_VOICE_IDS = {
-  "Joe": "en-US-Neural2-D",
-  "Sarah": "en-US-Neural2-F"
+  Joe: "en-US-Neural2-D",
+  Sarah: "en-US-Neural2-F",
 };
 
 const SYSTEM_PROMPT = `You are generating a podcast conversation between Joe and Sarah.
@@ -34,43 +89,6 @@ const SYSTEM_PROMPT = `You are generating a podcast conversation between Joe and
 - Encourage a natural dialogue with varied contributions from both speakers.
 
 **Tone**:
-  private ttsClient: TextToSpeechClient;
-
-  constructor() {
-    this.ttsClient = new TextToSpeechClient();
-  }
-
-  async synthesizeWithGoogle({ text, speaker }: { text: string; speaker: keyof typeof GOOGLE_VOICE_IDS }): Promise<Buffer> {
-    console.log('Making Google TTS API request...');
-    console.log('Speaker:', speaker);
-    console.log('Text length:', text.length);
-    
-    try {
-      const request = {
-        input: { text },
-        voice: {
-          languageCode: 'en-US',
-          name: GOOGLE_VOICE_IDS[speaker]
-        },
-        audioConfig: {
-          audioEncoding: 'MP3'
-        },
-      };
-
-      const [response] = await this.ttsClient.synthesizeSpeech(request);
-      console.log('Google TTS API response received');
-      
-      if (!response.audioContent) {
-        throw new Error('No audio content received from Google TTS');
-      }
-      
-      return Buffer.from(response.audioContent as Uint8Array);
-    } catch (error: any) {
-      console.error('Google TTS API error:', error);
-      throw error;
-    }
-  }
-
 - Engaging, relatable, and spontaneous.
 - Emphasize human-like emotions, with occasional humor or lighthearted moments.
 - Balance technical depth with conversational relatability, avoiding overly formal language.`;
@@ -82,42 +100,51 @@ export class TTSService {
     this.ttsClient = new TextToSpeechClient();
   }
 
-  async synthesizeWithGoogle({ text, speaker }: { text: string; speaker: keyof typeof GOOGLE_VOICE_IDS }): Promise<Buffer> {
-    console.log('Making Google TTS API request...');
-    console.log('Speaker:', speaker);
-    console.log('Text length:', text.length);
-    
+  async synthesizeWithGoogle({
+    text,
+    speaker,
+  }: {
+    text: string;
+    speaker: keyof typeof GOOGLE_VOICE_IDS;
+  }): Promise<Buffer> {
+    console.log("Making Google TTS API request...");
+    console.log("Speaker:", speaker);
+    console.log("Text length:", text.length);
+
     try {
       const request = {
         input: { text },
         voice: {
-          languageCode: 'en-US',
-          name: GOOGLE_VOICE_IDS[speaker]
+          languageCode: "en-US",
+          name: GOOGLE_VOICE_IDS[speaker],
         },
         audioConfig: {
-          audioEncoding: 'MP3'
+          audioEncoding: "MP3",
         },
       };
 
       const [response] = await this.ttsClient.synthesizeSpeech(request);
-      console.log('Google TTS API response received');
-      
+      console.log("Google TTS API response received");
+
       if (!response.audioContent) {
-        throw new Error('No audio content received from Google TTS');
+        throw new Error("No audio content received from Google TTS");
       }
-      
+
       return Buffer.from(response.audioContent as Uint8Array);
     } catch (error: any) {
-      console.error('Google TTS API error:', error);
+      console.error("Google TTS API error:", error);
       throw error;
     }
   }
 
-  async synthesizeWithElevenLabs({ text, voiceId }: ElevenLabsOptions): Promise<Buffer> {
-    console.log('Making ElevenLabs API request...');
-    console.log('Voice ID:', voiceId);
-    console.log('Text length:', text.length);
-    
+  async synthesizeWithElevenLabs({
+    text,
+    voiceId,
+  }: ElevenLabsOptions): Promise<Buffer> {
+    console.log("Making ElevenLabs API request...");
+    console.log("Voice ID:", voiceId);
+    console.log("Text length:", text.length);
+
     try {
       const response = await axios.post(
         `${ELEVENLABS_API_URL}/${voiceId}`,
@@ -125,84 +152,88 @@ export class TTSService {
           text,
           voice_settings: {
             stability: 0.5,
-            similarity_boost: 0.75
-          }
+            similarity_boost: 0.75,
+          },
         },
         {
           headers: {
-            'Accept': 'audio/mpeg',
-            'xi-api-key': process.env.ELEVENLABS_API_KEY,
-            'Content-Type': 'application/json'
+            Accept: "audio/mpeg",
+            "xi-api-key": process.env.ELEVENLABS_API_KEY,
+            "Content-Type": "application/json",
           },
-          responseType: 'arraybuffer'
-        }
+          responseType: "arraybuffer",
+        },
       );
-      
-      console.log('ElevenLabs API response received');
-      console.log('Response status:', response.status);
-      console.log('Response data size:', response.data.length);
-      
+
+      console.log("ElevenLabs API response received");
+      console.log("Response status:", response.status);
+      console.log("Response data size:", response.data.length);
+
       return Buffer.from(response.data);
     } catch (error: any) {
-      console.error('ElevenLabs API error:', {
+      console.error("ElevenLabs API error:", {
         status: error.response?.status,
         statusText: error.response?.statusText,
-        data: error.response?.data ? error.response.data.toString() : null
+        data: error.response?.data ? error.response.data.toString() : null,
       });
       throw error;
     }
   }
 
-  async generateConversation(text: string): Promise<{ audioBuffer: Buffer; duration: number }> {
-    console.log('Starting text-to-speech conversion...');
-    console.log('Input text length:', text.length);
-    
+  async generateConversation(
+    text: string,
+  ): Promise<{ audioBuffer: Buffer; duration: number }> {
+    console.log("Starting text-to-speech conversion...");
+    console.log("Input text length:", text.length);
+
     // Split text into smaller chunks to stay within token limits
     const chunks = this.splitTextIntoChunks(text);
-    console.log('Split text into', chunks.length, 'chunks');
-    
+    console.log("Split text into", chunks.length, "chunks");
+
     // Log first few chunks as example
-    console.log('First 3 chunks as example:');
+    console.log("First 3 chunks as example:");
     chunks.slice(0, 3).forEach((chunk, i) => {
-      console.log(`Chunk ${i + 1}:`, chunk.substring(0, 100) + '...');
+      console.log(`Chunk ${i + 1}:`, chunk.substring(0, 100) + "...");
     });
-    
+
     const conversationParts: Buffer[] = [];
     let lastResponse = "";
     const speakers = ["Joe", "Sarah"];
     let speakerIndex = 0;
-    
+
     for (let index = 0; index < chunks.length; index++) {
       const chunk = chunks[index];
       const currentSpeaker = speakers[speakerIndex];
       const nextSpeaker = speakers[(speakerIndex + 1) % 2];
-      
+
       console.log(`\n=== Processing chunk ${index + 1}/${chunks.length} ===`);
-      console.log('Current speaker:', currentSpeaker);
-      console.log('Chunk content:', chunk);
-      
+      console.log("Current speaker:", currentSpeaker);
+      console.log("Chunk content:", chunk);
+
       try {
         // Generate conversation prompt
         let prompt = `${SYSTEM_PROMPT}\n${currentSpeaker}: ${chunk}\n${nextSpeaker}:`;
-        
+
         if (lastResponse) {
           prompt = `${SYSTEM_PROMPT}\nPrevious response: ${lastResponse}\n${prompt}`;
         }
-        
-        console.log('\nPrompt being sent to Vertex AI:');
-        console.log('-------------------');
+
+        console.log("\nPrompt being sent to Vertex AI:");
+        console.log("-------------------");
         console.log(prompt);
-        console.log('-------------------');
-        
+        console.log("-------------------");
+
         // Check for required environment variables
         if (!process.env.GOOGLE_CLOUD_PROJECT) {
-          throw new Error('GOOGLE_CLOUD_PROJECT environment variable is required');
+          throw new Error(
+            "GOOGLE_CLOUD_PROJECT environment variable is required",
+          );
         }
 
         // Initialize Vertex AI with Google Cloud project
         const vertex_ai = new VertexAI({
           project: process.env.GOOGLE_CLOUD_PROJECT,
-          location: 'us-central1',
+          location: "us-central1",
         });
 
         // Create Gemini model instance
@@ -215,34 +246,37 @@ export class TTSService {
           },
         });
 
-        console.log('Initialized Vertex AI with project:', process.env.GOOGLE_CLOUD_PROJECT);
+        console.log(
+          "Initialized Vertex AI with project:",
+          process.env.GOOGLE_CLOUD_PROJECT,
+        );
 
         // Generate response using Gemini
         const result = await model.generateContent({
           contents: [{ role: "user", parts: [{ text: prompt }] }],
         });
-        
+
         if (!result.response?.candidates?.[0]?.content?.parts?.[0]?.text) {
-          throw new Error('Invalid response from Vertex AI');
+          throw new Error("Invalid response from Vertex AI");
         }
-        
+
         const response = result.response.candidates[0].content.parts[0].text;
         lastResponse = response;
-        
-        console.log('\nVertex AI Response:');
-        console.log('-------------------');
+
+        console.log("\nVertex AI Response:");
+        console.log("-------------------");
         console.log(response);
-        console.log('-------------------');
-        
+        console.log("-------------------");
+
         // Use Google TTS for synthesis
         const audioBuffer = await this.synthesizeWithGoogle({
           text: response,
-          speaker: currentSpeaker as keyof typeof GOOGLE_VOICE_IDS
+          speaker: currentSpeaker as keyof typeof GOOGLE_VOICE_IDS,
         });
-        
+
         console.log(`Generated audio buffer for chunk ${index + 1}`);
         conversationParts.push(audioBuffer);
-        
+
         // Switch speaker for next iteration
         speakerIndex = (speakerIndex + 1) % 2;
       } catch (error) {
@@ -251,19 +285,19 @@ export class TTSService {
       }
     }
 
-    console.log('All chunks processed, combining audio parts...');
+    console.log("All chunks processed, combining audio parts...");
     // Combine all audio parts
     const combinedBuffer = Buffer.concat(conversationParts);
-    console.log('Combined audio buffer size:', combinedBuffer.length);
-    
+    console.log("Combined audio buffer size:", combinedBuffer.length);
+
     // Estimate duration (rough estimate: 1 second per 7 words)
     const wordCount = text.split(/\s+/).length;
     const estimatedDuration = Math.ceil(wordCount / 7);
-    console.log('Estimated duration:', estimatedDuration, 'seconds');
+    console.log("Estimated duration:", estimatedDuration, "seconds");
 
     return {
       audioBuffer: combinedBuffer,
-      duration: estimatedDuration
+      duration: estimatedDuration,
     };
   }
 
@@ -279,11 +313,14 @@ export class TTSService {
       if (!trimmedSentence) continue;
 
       // Add punctuation back
-      const sentenceWithPunct = trimmedSentence + '. ';
+      const sentenceWithPunct = trimmedSentence + ". ";
       const sentenceLength = sentenceWithPunct.length;
 
-      if (currentLength + sentenceLength > maxChars && currentChunk.length > 0) {
-        chunks.push(currentChunk.join(' '));
+      if (
+        currentLength + sentenceLength > maxChars &&
+        currentChunk.length > 0
+      ) {
+        chunks.push(currentChunk.join(" "));
         currentChunk = [];
         currentLength = 0;
       }
@@ -293,11 +330,13 @@ export class TTSService {
     }
 
     if (currentChunk.length > 0) {
-      chunks.push(currentChunk.join(' '));
+      chunks.push(currentChunk.join(" "));
     }
 
     // Filter out any empty chunks and trim each chunk
-    return chunks.filter(chunk => chunk.trim().length > 0).map(chunk => chunk.trim());
+    return chunks
+      .filter((chunk) => chunk.trim().length > 0)
+      .map((chunk) => chunk.trim());
   }
 }
 
