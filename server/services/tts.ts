@@ -82,6 +82,7 @@ export class TTSService {
     // Split text into chunks of max 4000 chars
     const chunks = this.splitTextIntoChunks(text);
     console.log('Split text into', chunks.length, 'chunks');
+    console.log('Chunks:', chunks);
     
     const conversationParts: Buffer[] = [];
     let lastResponse = "";
@@ -93,8 +94,9 @@ export class TTSService {
       const currentSpeaker = speakers[speakerIndex];
       const nextSpeaker = speakers[(speakerIndex + 1) % 2];
       
-      console.log(`Processing chunk ${index + 1}/${chunks.length}`);
+      console.log(`\n=== Processing chunk ${index + 1}/${chunks.length} ===`);
       console.log('Current speaker:', currentSpeaker);
+      console.log('Chunk content:', chunk);
       
       try {
         // Generate conversation prompt
@@ -103,6 +105,11 @@ export class TTSService {
         if (lastResponse) {
           prompt = `${SYSTEM_PROMPT}\nPrevious response: ${lastResponse}\n${prompt}`;
         }
+        
+        console.log('\nPrompt being sent to Vertex AI:');
+        console.log('-------------------');
+        console.log(prompt);
+        console.log('-------------------');
         
         // Check for required environment variables
         if (!process.env.GOOGLE_CLOUD_PROJECT) {
@@ -139,14 +146,21 @@ export class TTSService {
         const response = result.response.candidates[0].content.parts[0].text;
         lastResponse = response;
         
-        // Generate audio for the response
-        const audioBuffer = await this.synthesizeWithElevenLabs({
-          text: response,
-          voiceId: VOICE_IDS[currentSpeaker as keyof typeof VOICE_IDS]
-        });
+        console.log('\nVertex AI Response:');
+        console.log('-------------------');
+        console.log(response);
+        console.log('-------------------');
         
-        console.log(`Successfully generated audio for chunk ${index + 1}, buffer size:`, audioBuffer.length);
-        conversationParts.push(audioBuffer);
+        // Comment out ElevenLabs synthesis for debugging
+        // const audioBuffer = await this.synthesizeWithElevenLabs({
+        //   text: response,
+        //   voiceId: VOICE_IDS[currentSpeaker as keyof typeof VOICE_IDS]
+        // });
+        
+        // For testing, create a mock audio buffer
+        const mockAudioBuffer = Buffer.from('Mock audio data');
+        console.log(`Created mock audio buffer for chunk ${index + 1}`);
+        conversationParts.push(mockAudioBuffer);
         
         // Switch speaker for next iteration
         speakerIndex = (speakerIndex + 1) % 2;
