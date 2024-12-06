@@ -4,7 +4,8 @@ import { setupAuth } from "./auth";
 import { db } from "../db";
 import multer from "multer";
 import path from "path";
-import { promises as fs, createReadStream } from "fs";
+import { promises as fs } from "fs";
+import * as fsSync from "fs";
 import { podcasts, playlists, playlistItems, progress } from "@db/schema";
 import { eq, and } from "drizzle-orm";
 import { ttsService } from "./services/tts";
@@ -44,9 +45,14 @@ export function registerRoutes(app: Express) {
       if (range) {
         const parts = range.replace(/bytes=/, "").split("-");
         const start = parseInt(parts[0], 10);
-        const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+        let end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+        
+        if (isNaN(start) || isNaN(end) || start >= fileSize || start > end || end >= fileSize) {
+          res.status(416).send('Requested range not satisfiable');
+          return;
+        }
         const chunksize = (end - start) + 1;
-        const file = fs.createReadStream(filePath, { start, end });
+        const file = fsSync.createReadStream(filePath, { start, end });
         const head = {
           'Content-Range': `bytes ${start}-${end}/${fileSize}`,
           'Accept-Ranges': 'bytes',
@@ -61,7 +67,7 @@ export function registerRoutes(app: Express) {
           'Content-Type': 'audio/mpeg',
         };
         res.writeHead(200, head);
-        fs.createReadStream(filePath).pipe(res);
+        fsSync.createReadStream(filePath).pipe(res);
       }
     } catch (error) {
       console.error('Error streaming audio:', error);
