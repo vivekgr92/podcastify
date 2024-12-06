@@ -10,13 +10,20 @@ export function useTTS() {
     let eventSource: EventSource | null = null;
 
     const setupEventSource = () => {
+      console.log('Setting up EventSource connection...');
       eventSource = new EventSource('/api/tts/progress');
+      
+      eventSource.onopen = () => {
+        console.log('SSE connection opened');
+      };
       
       eventSource.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
-          console.log('Progress update:', data.progress);
-          setProgress(Math.round(data.progress));
+          console.log('Progress update received:', data);
+          if (typeof data.progress === 'number') {
+            setProgress(Math.round(data.progress));
+          }
         } catch (error) {
           console.error('Error parsing progress data:', error);
         }
@@ -25,6 +32,7 @@ export function useTTS() {
       eventSource.onerror = (error) => {
         console.error('EventSource error:', error);
         if (eventSource) {
+          console.log('Closing EventSource due to error');
           eventSource.close();
           setIsConverting(false);
           setProgress(0);
@@ -33,13 +41,18 @@ export function useTTS() {
     };
 
     if (isConverting) {
-      console.log('Setting up EventSource connection...');
       setupEventSource();
+    } else {
+      if (eventSource) {
+        console.log('Closing EventSource - conversion finished');
+        eventSource.close();
+        setProgress(0);
+      }
     }
 
     return () => {
       if (eventSource) {
-        console.log('Closing EventSource connection');
+        console.log('Cleanup: Closing EventSource connection');
         eventSource.close();
         setProgress(0);
       }
