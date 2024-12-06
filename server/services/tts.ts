@@ -2,6 +2,7 @@ import axios from 'axios';
 import path from 'path';
 import fs from 'fs/promises';
 import { VertexAI } from '@google-cloud/vertexai';
+import { TextToSpeechClient } from '@google-cloud/text-to-speech';
 
 interface ElevenLabsOptions {
   text: string;
@@ -12,6 +13,11 @@ const ELEVENLABS_API_URL = "https://api.elevenlabs.io/v1/text-to-speech";
 const VOICE_IDS = {
   "Joe": "IKne3meq5aSn9XLyUdCD",
   "Sarah": "21m00Tcm4TlvDq8ikWAM"
+};
+
+const GOOGLE_VOICE_IDS = {
+  "Joe": "en-US-Neural2-D",
+  "Sarah": "en-US-Neural2-F"
 };
 
 const SYSTEM_PROMPT = `You are generating a podcast conversation between Joe and Sarah.
@@ -28,6 +34,43 @@ const SYSTEM_PROMPT = `You are generating a podcast conversation between Joe and
 - Encourage a natural dialogue with varied contributions from both speakers.
 
 **Tone**:
+  private ttsClient: TextToSpeechClient;
+
+  constructor() {
+    this.ttsClient = new TextToSpeechClient();
+  }
+
+  async synthesizeWithGoogle({ text, speaker }: { text: string; speaker: keyof typeof GOOGLE_VOICE_IDS }): Promise<Buffer> {
+    console.log('Making Google TTS API request...');
+    console.log('Speaker:', speaker);
+    console.log('Text length:', text.length);
+    
+    try {
+      const request = {
+        input: { text },
+        voice: {
+          languageCode: 'en-US',
+          name: GOOGLE_VOICE_IDS[speaker]
+        },
+        audioConfig: {
+          audioEncoding: 'MP3'
+        },
+      };
+
+      const [response] = await this.ttsClient.synthesizeSpeech(request);
+      console.log('Google TTS API response received');
+      
+      if (!response.audioContent) {
+        throw new Error('No audio content received from Google TTS');
+      }
+      
+      return Buffer.from(response.audioContent as Uint8Array);
+    } catch (error: any) {
+      console.error('Google TTS API error:', error);
+      throw error;
+    }
+  }
+
 - Engaging, relatable, and spontaneous.
 - Emphasize human-like emotions, with occasional humor or lighthearted moments.
 - Balance technical depth with conversational relatability, avoiding overly formal language.`;
@@ -156,16 +199,14 @@ export class TTSService {
         console.log(response);
         console.log('-------------------');
         
-        // Comment out ElevenLabs synthesis for debugging
-        // const audioBuffer = await this.synthesizeWithElevenLabs({
-        //   text: response,
-        //   voiceId: VOICE_IDS[currentSpeaker as keyof typeof VOICE_IDS]
-        // });
+        // Use Google TTS for synthesis
+        const audioBuffer = await this.synthesizeWithGoogle({
+          text: response,
+          speaker: currentSpeaker as keyof typeof GOOGLE_VOICE_IDS
+        });
         
-        // For testing, create a mock audio buffer
-        const mockAudioBuffer = Buffer.from('Mock audio data');
-        console.log(`Created mock audio buffer for chunk ${index + 1}`);
-        conversationParts.push(mockAudioBuffer);
+        console.log(`Generated audio buffer for chunk ${index + 1}`);
+        conversationParts.push(audioBuffer);
         
         // Switch speaker for next iteration
         speakerIndex = (speakerIndex + 1) % 2;
