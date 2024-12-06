@@ -4,7 +4,7 @@ import { setupAuth } from "./auth";
 import { db } from "../db";
 import multer from "multer";
 import path from "path";
-import { promises as fs } from "fs";
+import { promises as fs, createReadStream } from "fs";
 import { podcasts, playlists, playlistItems, progress } from "@db/schema";
 import { eq, and } from "drizzle-orm";
 import { ttsService } from "./services/tts";
@@ -31,8 +31,43 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 export function registerRoutes(app: Express) {
-  // Serve static files from uploads directory
-  app.use("/uploads", express.static("uploads"));
+  // Serve static files from uploads directory with proper audio streaming support
+  app.get('/uploads/:filename', async (req, res) => {
+    const filename = req.params.filename;
+    const filePath = path.join(__dirname, '..', 'uploads', filename);
+
+    try {
+      const stat = await fs.stat(filePath);
+      const fileSize = stat.size;
+      const range = req.headers.range;
+
+      if (range) {
+        const parts = range.replace(/bytes=/, "").split("-");
+        const start = parseInt(parts[0], 10);
+        const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+        const chunksize = (end - start) + 1;
+        const file = fs.createReadStream(filePath, { start, end });
+        const head = {
+          'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+          'Accept-Ranges': 'bytes',
+          'Content-Length': chunksize,
+          'Content-Type': 'audio/mpeg',
+        };
+        res.writeHead(206, head);
+        file.pipe(res);
+      } else {
+        const head = {
+          'Content-Length': fileSize,
+          'Content-Type': 'audio/mpeg',
+        };
+        res.writeHead(200, head);
+        fs.createReadStream(filePath).pipe(res);
+      }
+    } catch (error) {
+      console.error('Error streaming audio:', error);
+      res.status(500).send('Error streaming audio file');
+    }
+  });
 
   // Set up authentication routes
   setupAuth(app);
