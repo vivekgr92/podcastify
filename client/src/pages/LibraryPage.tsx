@@ -14,6 +14,8 @@ export default function LibraryPage() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
+  const [isConverting, setIsConverting] = useState(false);
+const [conversionProgress, setConversionProgress] = useState(0);
   const { data: podcasts, isLoading } = useQuery<Podcast[]>({
     queryKey: ["podcasts"],
     queryFn: async () => {
@@ -40,11 +42,27 @@ export default function LibraryPage() {
       </nav>
 
       <main className="max-w-4xl mx-auto px-6 py-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl font-bold">Your Library</h1>
-          <Button onClick={() => setLocation('/')} className="bg-[#4CAF50] hover:bg-[#45a049]">
-            Convert New Podcast
-          </Button>
+        <div className="flex flex-col gap-4 mb-8">
+          <div className="flex justify-between items-center">
+            <h1 className="text-2xl font-bold">Your Library</h1>
+            <Button onClick={() => setLocation('/')} className="bg-[#4CAF50] hover:bg-[#45a049]">
+              Convert New Podcast
+            </Button>
+          </div>
+          {isConverting && (
+            <div className="w-full bg-gray-900 rounded-lg p-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm text-gray-400">Converting to podcast...</span>
+                <span className="text-sm text-gray-400">{Math.round(conversionProgress)}%</span>
+              </div>
+              <div className="w-full bg-gray-800 rounded-full h-2">
+                <div 
+                  className="bg-[#4CAF50] h-2 rounded-full transition-all duration-300" 
+                  style={{ width: `${conversionProgress}%` }}
+                />
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="space-y-4">
