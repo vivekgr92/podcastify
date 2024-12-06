@@ -10,17 +10,17 @@ export function useTTS() {
     let eventSource: EventSource | null = null;
 
     const setupEventSource = () => {
-      console.log('Setting up EventSource connection...');
-      eventSource = new EventSource('/api/tts/progress');
+      // Create the EventSource instance
+      const source = new window.EventSource('/api/tts/progress');
+      eventSource = source;
       
-      eventSource.onopen = () => {
-        console.log('SSE connection opened');
+      source.onopen = () => {
+        // console.log('SSE connection opened');
       };
       
-      eventSource.onmessage = (event) => {
+      source.onmessage = (event: MessageEvent) => {
         try {
           const data = JSON.parse(event.data);
-          console.log('Progress update received:', data);
           if (typeof data.progress === 'number') {
             setProgress(Math.round(data.progress));
           }
@@ -29,31 +29,26 @@ export function useTTS() {
         }
       };
 
-      eventSource.onerror = (error) => {
+      source.onerror = (error: Event) => {
         console.error('EventSource error:', error);
-        if (eventSource) {
-          console.log('Closing EventSource due to error');
-          eventSource.close();
+        if (source.readyState === EventSource.CLOSED) {
           setIsConverting(false);
           setProgress(0);
+          source.close();
         }
       };
     };
 
     if (isConverting) {
       setupEventSource();
-    } else {
-      if (eventSource) {
-        console.log('Closing EventSource - conversion finished');
-        eventSource.close();
-        setProgress(0);
-      }
+    } else if (eventSource?.readyState !== EventSource.CLOSED) {
+      eventSource?.close();
+      setProgress(0);
     }
 
     return () => {
-      if (eventSource) {
-        console.log('Cleanup: Closing EventSource connection');
-        eventSource.close();
+      if (eventSource?.readyState !== EventSource.CLOSED) {
+        eventSource?.close();
         setProgress(0);
       }
     };
