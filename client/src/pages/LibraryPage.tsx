@@ -7,6 +7,7 @@ import { useAudio } from "../hooks/use-audio";
 import AudioPlayer from "../components/AudioPlayer";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 
 export default function LibraryPage() {
   const [, setLocation] = useLocation();
