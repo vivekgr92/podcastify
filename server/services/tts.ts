@@ -118,10 +118,10 @@ export class TTSService {
         // Create Gemini model instance
         const model = vertex_ai.preview.getGenerativeModel({
           model: "gemini-1.0-pro",
-          generation_config: {
-            max_output_tokens: 1200,
+          generationConfig: {
+            maxOutputTokens: 1200,
             temperature: 0.7,
-            top_p: 0.95,
+            topP: 0.95,
           },
         });
 
@@ -131,6 +131,11 @@ export class TTSService {
         const result = await model.generateContent({
           contents: [{ role: "user", parts: [{ text: prompt }] }],
         });
+        
+        if (!result.response?.candidates?.[0]?.content?.parts?.[0]?.text) {
+          throw new Error('Invalid response from Vertex AI');
+        }
+        
         const response = result.response.candidates[0].content.parts[0].text;
         lastResponse = response;
         
