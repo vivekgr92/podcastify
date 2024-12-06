@@ -82,13 +82,16 @@ export function useAudio(): AudioHookReturn {
       const isSamePodcast = audioData?.id === podcast.id;
       
       // Construct audio URL
-      const audioSrc = podcast.audioUrl.startsWith('http') 
-        ? podcast.audioUrl 
-        : `${window.location.origin}${podcast.audioUrl}`;
+      let audioSrc = podcast.audioUrl;
+      if (!audioSrc.startsWith('http')) {
+        // Get the base URL without any path
+        const baseUrl = window.location.origin;
+        audioSrc = `${baseUrl}${audioSrc}`;
+      }
 
       console.log('Playing audio from:', audioSrc);
 
-      // Always set audio source and load
+      // Always set audio source
       audio.src = audioSrc;
       
       // Set up event listeners for this specific load/play attempt
@@ -100,14 +103,18 @@ export function useAudio(): AudioHookReturn {
         };
         
         const onError = (e: Event) => {
+          console.error('Audio loading error:', e);
           audio.removeEventListener('canplay', onCanPlay);
           audio.removeEventListener('error', onError);
-          reject(new Error('Failed to load audio'));
+          reject(new Error(`Failed to load audio: ${audioSrc}`));
         };
 
         audio.addEventListener('canplay', onCanPlay);
         audio.addEventListener('error', onError);
       });
+
+      // Force load the audio
+      audio.load();
 
       // Load the audio
       audio.load();
@@ -129,12 +136,14 @@ export function useAudio(): AudioHookReturn {
 
     } catch (error) {
       console.error('Error playing audio:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       toast({
         title: "Error",
-        description: "Failed to play audio. Please try again.",
+        description: `Failed to play audio: ${errorMessage}. Please try again.`,
         variant: "destructive",
       });
       setIsPlaying(false);
+      setAudioData(null);
     }
   };
 
