@@ -25,6 +25,10 @@ export default function HomePage() {
         formData.append('file', file);
         
         try {
+          // Start the conversion process which will trigger the SSE connection
+          setIsConverting(true);
+          setProgress(0);
+          
           console.log('Starting file conversion...');
           const response = await fetch('/api/podcast', {
             method: 'POST',
@@ -55,6 +59,9 @@ export default function HomePage() {
             description: "Failed to convert your file. Please try again.",
             variant: "destructive",
           });
+        } finally {
+          setIsConverting(false);
+          setProgress(0);
         }
       } else {
         toast({
@@ -64,7 +71,7 @@ export default function HomePage() {
         });
       }
     }
-  }, [toast, setLocation]);
+  }, [toast, setLocation, setIsConverting, setProgress]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
