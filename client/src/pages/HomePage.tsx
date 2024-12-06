@@ -11,7 +11,7 @@ export default function HomePage() {
   const [, setLocation] = useLocation();
   const [file, setFile] = useState<File | null>(null);
   const { toast } = useToast();
-  const { convertToSpeech, isConverting } = useTTS();
+  const { convertToSpeech, isConverting, progress } = useTTS();
   const queryClient = useQueryClient();
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
@@ -89,15 +89,32 @@ export default function HomePage() {
         <h1 className="text-4xl font-bold mb-4">Transform Your Articles Into Podcasts</h1>
         <p className="text-gray-400 mb-12">Upload any article and convert it into a natural-sounding podcast in seconds</p>
 
-        <div 
-          {...getRootProps()} 
-          className={`border-2 border-dashed rounded-lg p-12 mb-12 transition-colors
-            ${isDragActive ? 'border-[#4CAF50] bg-[#4CAF50]/10' : 'border-gray-700 hover:border-[#4CAF50]'}`}
-        >
-          <input {...getInputProps()} />
-          <Button className="mb-4">Choose File to Upload</Button>
-          <p className="text-sm text-gray-400">or drag and drop your file here</p>
-          <p className="text-xs text-gray-500 mt-2">Supported formats: PDF, DOC, DOCX, TXT</p>
+        <div className="space-y-4">
+          <div 
+            {...getRootProps()} 
+            className={`border-2 border-dashed rounded-lg p-12 transition-colors
+              ${isDragActive ? 'border-[#4CAF50] bg-[#4CAF50]/10' : 'border-gray-700 hover:border-[#4CAF50]'}`}
+          >
+            <input {...getInputProps()} />
+            <Button className="mb-4">Choose File to Upload</Button>
+            <p className="text-sm text-gray-400">or drag and drop your file here</p>
+            <p className="text-xs text-gray-500 mt-2">Supported formats: PDF, DOC, DOCX, TXT</p>
+          </div>
+          
+          {isConverting && (
+            <div className="w-full bg-gray-900 rounded-lg p-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm text-gray-400">Converting to podcast...</span>
+                <span className="text-sm text-gray-400">{Math.round(progress)}%</span>
+              </div>
+              <div className="w-full bg-gray-800 rounded-full h-2">
+                <div 
+                  className="bg-[#4CAF50] h-2 rounded-full transition-all duration-300" 
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-3 gap-8 mb-16">
