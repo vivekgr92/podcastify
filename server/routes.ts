@@ -213,13 +213,20 @@ export function registerRoutes(app: Express) {
 
   // SSE endpoint for TTS progress updates
   app.get("/api/tts/progress", (req, res) => {
+    console.log('Client connected to SSE endpoint');
+    
     res.writeHead(200, {
       "Content-Type": "text/event-stream",
       "Cache-Control": "no-cache",
       "Connection": "keep-alive",
+      "Access-Control-Allow-Origin": "*"
     });
 
+    // Send initial progress
+    res.write(`data: ${JSON.stringify({ progress: 0 })}\n\n`);
+
     const sendProgress = (progress: number) => {
+      console.log('Sending progress update:', progress);
       res.write(`data: ${JSON.stringify({ progress })}\n\n`);
     };
 
@@ -228,6 +235,7 @@ export function registerRoutes(app: Express) {
 
     // Remove listener when client disconnects
     req.on("close", () => {
+      console.log('Client disconnected from SSE endpoint');
       ttsService.removeProgressListener(sendProgress);
     });
   });
