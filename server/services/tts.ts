@@ -218,10 +218,13 @@ export class TTSService {
     const speakers = ["Joe", "Sarah"];
     let speakerIndex = 0;
 
+    // Emit initial progress
+    this.emitProgress(0);
+
     for (let index = 0; index < chunks.length; index++) {
-      // Calculate and emit progress
-      const progress = (index / chunks.length) * 100;
-      this.emitProgress(progress);
+      // Calculate and emit progress for chunk processing
+      const chunkProgress = ((index + 0.5) / chunks.length) * 100;
+      this.emitProgress(Math.min(chunkProgress, 99)); // Keep progress under 100% until complete
 
       const chunk = chunks[index];
       const currentSpeaker = speakers[speakerIndex];
