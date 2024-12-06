@@ -325,43 +325,48 @@ export class TTSService {
     };
   }
 
-  private splitTextIntoChunks(text: string, maxChars: number = 1000): string[] {
-    // Reduce chunk size significantly to stay within token limits
-    const sentences = text.split(/[.!?]+\s+/);
-    const chunks: string[] = [];
-    let currentChunk: string[] = [];
-    let currentLength = 0;
-
-    for (const sentence of sentences) {
-      const trimmedSentence = sentence.trim();
-      if (!trimmedSentence) continue;
-
-      // Add punctuation back
-      const sentenceWithPunct = trimmedSentence + ". ";
-      const sentenceLength = sentenceWithPunct.length;
-
-      if (
-        currentLength + sentenceLength > maxChars &&
-        currentChunk.length > 0
-      ) {
-        chunks.push(currentChunk.join(" "));
-        currentChunk = [];
-        currentLength = 0;
+  private splitTextIntoChunks(text: string, maxBytes: number = 5000): string[] {
+      const sentences = text.split(/[.!?]+\s+/);
+      const chunks: string[] = [];
+      let currentChunk: string[] = [];
+      let currentLength = 0;
+  
+      // Helper function to calculate byte length of a string
+      const getByteLength = (str: string): number => {
+          return new TextEncoder().encode(str).length;
+      };
+  
+      for (const sentence of sentences) {
+          const trimmedSentence = sentence.trim();
+          if (!trimmedSentence) continue;
+  
+          // Add punctuation back
+          const sentenceWithPunct = trimmedSentence + ". ";
+          const sentenceLength = getByteLength(sentenceWithPunct);
+  
+          // Check if adding this sentence exceeds the byte limit
+          if (
+              currentLength + sentenceLength > maxBytes &&
+              currentChunk.length > 0
+          ) {
+              chunks.push(currentChunk.join(" "));
+              currentChunk = [];
+              currentLength = 0;
+          }
+  
+          currentChunk.push(sentenceWithPunct);
+          currentLength += sentenceLength;
       }
-
-      currentChunk.push(sentenceWithPunct);
-      currentLength += sentenceLength;
-    }
-
-    if (currentChunk.length > 0) {
-      chunks.push(currentChunk.join(" "));
-    }
-
-    // Filter out any empty chunks and trim each chunk
-    return chunks
-      .filter((chunk) => chunk.trim().length > 0)
-      .map((chunk) => chunk.trim());
+  
+      if (currentChunk.length > 0) {
+          chunks.push(currentChunk.join(" "));
+      }
+  
+      // Filter out any empty chunks and trim each chunk
+      return chunks
+          .filter((chunk) => chunk.trim().length > 0)
+          .map((chunk) => chunk.trim());
   }
-}
+}  // Class end
 
 export const ttsService = new TTSService();
