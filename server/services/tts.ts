@@ -76,7 +76,42 @@ const SYSTEM_PROMPT = `You are generating a podcast conversation between Joe and
 - Balance technical depth with conversational relatability, avoiding overly formal language.`;
 
 export class TTSService {
-  constructor() {}
+  private ttsClient: TextToSpeechClient;
+
+  constructor() {
+    this.ttsClient = new TextToSpeechClient();
+  }
+
+  async synthesizeWithGoogle({ text, speaker }: { text: string; speaker: keyof typeof GOOGLE_VOICE_IDS }): Promise<Buffer> {
+    console.log('Making Google TTS API request...');
+    console.log('Speaker:', speaker);
+    console.log('Text length:', text.length);
+    
+    try {
+      const request = {
+        input: { text },
+        voice: {
+          languageCode: 'en-US',
+          name: GOOGLE_VOICE_IDS[speaker]
+        },
+        audioConfig: {
+          audioEncoding: 'MP3'
+        },
+      };
+
+      const [response] = await this.ttsClient.synthesizeSpeech(request);
+      console.log('Google TTS API response received');
+      
+      if (!response.audioContent) {
+        throw new Error('No audio content received from Google TTS');
+      }
+      
+      return Buffer.from(response.audioContent as Uint8Array);
+    } catch (error: any) {
+      console.error('Google TTS API error:', error);
+      throw error;
+    }
+  }
 
   async synthesizeWithElevenLabs({ text, voiceId }: ElevenLabsOptions): Promise<Buffer> {
     console.log('Making ElevenLabs API request...');
