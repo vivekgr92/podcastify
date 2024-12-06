@@ -6,7 +6,12 @@ import multer from "multer";
 import path from "path";
 import { promises as fs } from "fs";
 import * as fsSync from "fs";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 import { podcasts, playlists, playlistItems, progress } from "@db/schema";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 import { eq, and } from "drizzle-orm";
 import { ttsService } from "./services/tts";
 import pdfParse from 'pdf-parse/lib/pdf-parse.js';
