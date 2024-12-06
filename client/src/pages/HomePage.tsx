@@ -11,9 +11,9 @@ export default function HomePage() {
   const [, setLocation] = useLocation();
   const [file, setFile] = useState<File | null>(null);
   const { toast } = useToast();
-  const { convertToSpeech, isConverting, progress } = useTTS();
+  const { convertToSpeech, isConverting, setIsConverting, progress, setProgress } = useTTS();
   const queryClient = useQueryClient();
-
+  
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (file) {
@@ -71,7 +71,7 @@ export default function HomePage() {
         });
       }
     }
-  }, [toast, setLocation, setIsConverting, setProgress]);
+  }, [toast, setLocation, setIsConverting, setProgress, queryClient]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
