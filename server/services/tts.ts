@@ -1,6 +1,7 @@
 import axios from 'axios';
 import path from 'path';
 import fs from 'fs/promises';
+import { VertexAI } from '@google-cloud/vertexai';
 
 interface ElevenLabsOptions {
   text: string;
@@ -98,18 +99,39 @@ export class TTSService {
       try {
         // Generate conversation prompt
         let prompt = `${SYSTEM_PROMPT}\n${currentSpeaker}: ${chunk}\n${nextSpeaker}:`;
+        
         if (lastResponse) {
           prompt = `${SYSTEM_PROMPT}\nPrevious response: ${lastResponse}\n${prompt}`;
         }
         
-        // Here we would make the API call to an LLM (e.g., Vertex AI/Gemini)
-        // For now, we'll simulate the response based on the speakers
-        let response = "";
-        if (currentSpeaker === "Joe") {
-          response = `Um, let me explain this in a straightforward way. ${chunk} You know, the key thing to understand here is the technical implementation.`;
-        } else {
-          response = `That's interesting! Could you elaborate more on how this impacts ${chunk.split(' ').slice(0, 3).join(' ')}? I'm curious about the practical implications.`;
+        // Check for required environment variables
+        if (!process.env.GOOGLE_CLOUD_PROJECT) {
+          throw new Error('GOOGLE_CLOUD_PROJECT environment variable is required');
         }
+
+        // Initialize Vertex AI with Google Cloud project
+        const vertex_ai = new VertexAI({
+          project: process.env.GOOGLE_CLOUD_PROJECT,
+          location: 'us-central1',
+        });
+
+        // Create Gemini model instance
+        const model = vertex_ai.preview.getGenerativeModel({
+          model: "gemini-1.0-pro",
+          generation_config: {
+            max_output_tokens: 1200,
+            temperature: 0.7,
+            top_p: 0.95,
+          },
+        });
+
+        console.log('Initialized Vertex AI with project:', process.env.GOOGLE_CLOUD_PROJECT);
+
+        // Generate response using Gemini
+        const result = await model.generateContent({
+          contents: [{ role: "user", parts: [{ text: prompt }] }],
+        });
+        const response = result.response.candidates[0].content.parts[0].text;
         lastResponse = response;
         
         // Generate audio for the response
