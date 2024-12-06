@@ -9,15 +9,14 @@ export function useTTS() {
   useEffect(() => {
     let eventSource: EventSource | null = null;
 
-    if (isConverting) {
-      // Create new EventSource connection when conversion starts
+    const setupEventSource = () => {
       eventSource = new EventSource('/api/tts/progress');
       
       eventSource.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
           console.log('Progress update:', data.progress);
-          setProgress(data.progress);
+          setProgress(Math.round(data.progress));
         } catch (error) {
           console.error('Error parsing progress data:', error);
         }
@@ -31,15 +30,20 @@ export function useTTS() {
           setProgress(0);
         }
       };
+    };
 
-      // Clean up on unmount or when isConverting changes
-      return () => {
-        if (eventSource) {
-          console.log('Closing EventSource connection');
-          eventSource.close();
-        }
-      };
+    if (isConverting) {
+      console.log('Setting up EventSource connection...');
+      setupEventSource();
     }
+
+    return () => {
+      if (eventSource) {
+        console.log('Closing EventSource connection');
+        eventSource.close();
+        setProgress(0);
+      }
+    };
   }, [isConverting]);
 
   const convertToSpeech = async (text: string) => {
@@ -80,6 +84,8 @@ export function useTTS() {
   return {
     convertToSpeech,
     isConverting,
+    setIsConverting,
     progress,
+    setProgress
   };
 }
