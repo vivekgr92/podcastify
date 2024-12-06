@@ -279,16 +279,23 @@ export class TTSService {
           throw new Error("Invalid response from Vertex AI");
         }
 
-        const response = result.response.candidates[0].content.parts[0].text;
+        const rawResponse = result.response.candidates[0].content.parts[0].text;
+        
+        // Clean and structure the response text
+        const cleanedEntries = cleanGeneratedText(rawResponse);
+        console.log('Cleaned conversation entries:', cleanedEntries);
+        
+        // Combine all entries for the current speaker
+        lastResponse = cleanedEntries
+          .filter(entry => entry.speaker === currentSpeaker)
+          .map(entry => entry.text)
+          .join(' ');
         
         // Validate response length before proceeding
-        const responseBytes = new TextEncoder().encode(response).length;
+        const responseBytes = new TextEncoder().encode(lastResponse).length;
         if (responseBytes > 4800) {
           console.warn(`Response too long (${responseBytes} bytes), truncating...`);
-          const truncated = response.substring(0, Math.floor(4800 / 2)) + "...";
-          lastResponse = truncated;
-        } else {
-          lastResponse = response;
+          lastResponse = lastResponse.substring(0, Math.floor(4800 / 2)) + "...";
         }
 
         // Use Google TTS for synthesis
