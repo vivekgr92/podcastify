@@ -8,6 +8,7 @@ import { promises as fs } from "fs";
 import { podcasts, playlists, playlistItems, progress } from "@db/schema";
 import { eq, and } from "drizzle-orm";
 import { ttsService } from "./services/tts";
+import pdfParse from 'pdf-parse/lib/pdf-parse.js';
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
@@ -223,13 +224,18 @@ export function registerRoutes(app: Express) {
       // Validate file type and read content
       let fileContent;
       try {
+        const fileBuffer = await fs.readFile(file.path);
+        
         if (file.mimetype === 'application/pdf') {
-          const pdfParse = require('pdf-parse');
-          const pdfBuffer = await fs.readFile(file.path);
-          const pdfData = await pdfParse(pdfBuffer);
-          fileContent = pdfData.text;
+          try {
+            const pdfData = await pdfParse(fileBuffer);
+            fileContent = pdfData.text;
+          } catch (pdfError) {
+            console.error("PDF parsing error:", pdfError);
+            return res.status(400).send("Unable to parse PDF file. Please ensure it's a valid PDF.");
+          }
         } else if (file.mimetype === 'text/plain') {
-          fileContent = await fs.readFile(file.path, "utf-8");
+          fileContent = fileBuffer.toString('utf-8');
         } else {
           return res.status(400).send("Please upload a PDF or text file");
         }
