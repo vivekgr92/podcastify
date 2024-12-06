@@ -17,7 +17,8 @@ export default function HomePage() {
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (file) {
-      if (["application/pdf", "text/plain", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"].includes(file.type)) {
+      // For now, only accept text files to ensure proper processing
+      if (file.type === "text/plain") {
         setFile(file);
         
         // Create form data and append file
