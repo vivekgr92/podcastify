@@ -129,6 +129,13 @@ export class TTSService {
     console.log("Text length:", text.length);
 
     try {
+      // Validate text length before making the request
+      const textBytes = new TextEncoder().encode(text).length;
+      if (textBytes > 4800) {
+        console.warn(`Text too long (${textBytes} bytes), truncating...`);
+        text = text.substring(0, Math.floor(4800 / 2)) + "...";
+      }
+
       const request = {
         input: { text },
         voice: {
@@ -136,7 +143,9 @@ export class TTSService {
           name: GOOGLE_VOICE_IDS[speaker],
         },
         audioConfig: {
-          audioEncoding: protos.google.cloud.texttospeech.v1.AudioEncoding.MP3,
+          audioEncoding: AudioEncoding.MP3,
+          speakingRate: 1.0,
+          pitch: 0.0,
         },
       } satisfies protos.google.cloud.texttospeech.v1.ISynthesizeSpeechRequest;
 
@@ -150,6 +159,9 @@ export class TTSService {
       return Buffer.from(response.audioContent);
     } catch (error) {
       console.error("Google TTS API error:", error);
+      if (error instanceof Error && error.message.includes("longer than the limit")) {
+        throw new Error("Text chunk too long for TTS. Please try with a shorter text.");
+      }
       throw new Error(error instanceof Error ? error.message : "Failed to synthesize speech");
     }
   }
@@ -207,11 +219,6 @@ export class TTSService {
     const chunks = this.splitTextIntoChunks(text);
     console.log("Split text into", chunks.length, "chunks");
 
-    // Log first few chunks as example
-    console.log("First 3 chunks as example:");
-    chunks.slice(0, 3).forEach((chunk, i) => {
-      console.log(`Chunk ${i + 1}:`, chunk.substring(0, 100) + "...");
-    });
 
     const conversationParts: Buffer[] = [];
     let lastResponse = "";
@@ -230,9 +237,6 @@ export class TTSService {
       const currentSpeaker = speakers[speakerIndex];
       const nextSpeaker = speakers[(speakerIndex + 1) % 2];
 
-      console.log(`\n=== Processing chunk ${index + 1}/${chunks.length} ===`);
-      console.log("Current speaker:", currentSpeaker);
-      console.log("Chunk content:", chunk);
 
       try {
         // Generate conversation prompt
@@ -242,10 +246,6 @@ export class TTSService {
           prompt = `${SYSTEM_PROMPT}\nPrevious response: ${lastResponse}\n${prompt}`;
         }
 
-        console.log("\nPrompt being sent to Vertex AI:");
-        console.log("-------------------");
-        console.log(prompt);
-        console.log("-------------------");
 
         // Check for required environment variables
         if (!process.env.GOOGLE_CLOUD_PROJECT) {
@@ -270,11 +270,6 @@ export class TTSService {
           },
         });
 
-        console.log(
-          "Initialized Vertex AI with project:",
-          process.env.GOOGLE_CLOUD_PROJECT,
-        );
-
         // Generate response using Gemini
         const result = await model.generateContent({
           contents: [{ role: "user", parts: [{ text: prompt }] }],
@@ -285,16 +280,20 @@ export class TTSService {
         }
 
         const response = result.response.candidates[0].content.parts[0].text;
-        lastResponse = response;
-
-        console.log("\nVertex AI Response:");
-        console.log("-------------------");
-        console.log(response);
-        console.log("-------------------");
+        
+        // Validate response length before proceeding
+        const responseBytes = new TextEncoder().encode(response).length;
+        if (responseBytes > 4800) {
+          console.warn(`Response too long (${responseBytes} bytes), truncating...`);
+          const truncated = response.substring(0, Math.floor(4800 / 2)) + "...";
+          lastResponse = truncated;
+        } else {
+          lastResponse = response;
+        }
 
         // Use Google TTS for synthesis
         const audioBuffer = await this.synthesizeWithGoogle({
-          text: response,
+          text: lastResponse,
           speaker: currentSpeaker as keyof typeof GOOGLE_VOICE_IDS,
         });
 
@@ -325,7 +324,7 @@ export class TTSService {
     };
   }
 
-  private splitTextIntoChunks(text: string, maxBytes: number = 5000): string[] {
+  private splitTextIntoChunks(text: string, maxBytes: number = 4800): string[] {
     const sentences = text.split(/[.!?]+\s+/);
     const chunks: string[] = [];
     let currentChunk: string[] = [];
@@ -342,6 +341,40 @@ export class TTSService {
       const sentenceWithPunct = trimmedSentence + ". ";
       const sentenceLength = getByteLength(sentenceWithPunct);
 
+      // If a single sentence is too long, split it into smaller parts
+      if (sentenceLength > maxBytes) {
+        // If we have accumulated content, save it first
+        if (currentChunk.length > 0) {
+          chunks.push(currentChunk.join(" "));
+          currentChunk = [];
+          currentLength = 0;
+        }
+        
+        // Split the long sentence into smaller parts
+        const words = sentenceWithPunct.split(/\s+/);
+        let tempChunk: string[] = [];
+        let tempLength = 0;
+        
+        for (const word of words) {
+          const wordLength = getByteLength(word + " ");
+          if (tempLength + wordLength > maxBytes) {
+            if (tempChunk.length > 0) {
+              chunks.push(tempChunk.join(" "));
+              tempChunk = [];
+              tempLength = 0;
+            }
+          }
+          tempChunk.push(word);
+          tempLength += wordLength;
+        }
+        
+        if (tempChunk.length > 0) {
+          chunks.push(tempChunk.join(" "));
+        }
+        continue;
+      }
+
+      // Normal case: add sentence to current chunk if it fits
       if (currentLength + sentenceLength > maxBytes && currentChunk.length > 0) {
         chunks.push(currentChunk.join(" "));
         currentChunk = [];
@@ -356,10 +389,20 @@ export class TTSService {
       chunks.push(currentChunk.join(" "));
     }
 
+    // Final validation to ensure no chunk exceeds the limit
     return chunks
       .filter(chunk => chunk.trim().length > 0)
-      .map(chunk => chunk.trim());
+      .map(chunk => {
+        const trimmed = chunk.trim();
+        const byteLength = getByteLength(trimmed);
+        if (byteLength > maxBytes) {
+          console.warn(`Chunk still exceeds ${maxBytes} bytes (${byteLength} bytes)`);
+          return trimmed.substring(0, Math.floor(maxBytes / 2)) + "...";
+        }
+        return trimmed;
+      });
   }
-}  // Class end
+}
 
+// Create and export singleton instance
 export const ttsService = new TTSService();
