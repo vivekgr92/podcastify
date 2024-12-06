@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 
+interface ProgressData {
+  progress: number;
+}
+
 export function useTTS() {
   const [isConverting, setIsConverting] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -10,45 +14,50 @@ export function useTTS() {
     let eventSource: EventSource | null = null;
 
     const setupEventSource = () => {
-      // Create the EventSource instance
-      const source = new window.EventSource('/api/tts/progress');
-      eventSource = source;
+      if (typeof window === 'undefined' || !window.EventSource) return;
       
-      source.onopen = () => {
-        // console.log('SSE connection opened');
-      };
-      
-      source.onmessage = (event: MessageEvent) => {
-        try {
-          const data = JSON.parse(event.data);
-          if (typeof data.progress === 'number') {
-            setProgress(Math.round(data.progress));
+      try {
+        // Create the EventSource instance
+        eventSource = new EventSource('/api/tts/progress');
+        
+        eventSource.onopen = () => {
+          console.log('SSE connection opened');
+        };
+        
+        eventSource.onmessage = (event: MessageEvent<string>) => {
+          try {
+            const data = JSON.parse(event.data) as ProgressData;
+            if (typeof data.progress === 'number') {
+              setProgress(Math.round(data.progress));
+            }
+          } catch (error) {
+            console.error('Error parsing progress data:', error);
           }
-        } catch (error) {
-          console.error('Error parsing progress data:', error);
-        }
-      };
+        };
 
-      source.onerror = (error: Event) => {
-        console.error('EventSource error:', error);
-        if (source.readyState === EventSource.CLOSED) {
-          setIsConverting(false);
-          setProgress(0);
-          source.close();
-        }
-      };
+        eventSource.onerror = (event: Event) => {
+          console.error('EventSource error:', event);
+          // Check if connection is closed
+          if (eventSource && eventSource.readyState === EventSource.CLOSED) {
+            setIsConverting(false);
+            setProgress(0);
+            eventSource.close();
+          }
+        };
+      } catch (error) {
+        console.error('Error setting up EventSource:', error);
+        setIsConverting(false);
+        setProgress(0);
+      }
     };
 
     if (isConverting) {
       setupEventSource();
-    } else if (eventSource?.readyState !== EventSource.CLOSED) {
-      eventSource?.close();
-      setProgress(0);
     }
 
     return () => {
-      if (eventSource?.readyState !== EventSource.CLOSED) {
-        eventSource?.close();
+      if (eventSource) {
+        eventSource.close();
         setProgress(0);
       }
     };
