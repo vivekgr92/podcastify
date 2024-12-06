@@ -98,9 +98,23 @@ const SYSTEM_PROMPT = `You are generating a podcast conversation between Joe and
 
 export class TTSService {
   private ttsClient: TextToSpeechClient;
+  private progressListeners: Set<(progress: number) => void>;
 
   constructor() {
     this.ttsClient = new TextToSpeechClient();
+    this.progressListeners = new Set();
+  }
+
+  addProgressListener(listener: (progress: number) => void) {
+    this.progressListeners.add(listener);
+  }
+
+  removeProgressListener(listener: (progress: number) => void) {
+    this.progressListeners.delete(listener);
+  }
+
+  private emitProgress(progress: number) {
+    this.progressListeners.forEach(listener => listener(progress));
   }
 
   async synthesizeWithGoogle({
@@ -205,6 +219,10 @@ export class TTSService {
     let speakerIndex = 0;
 
     for (let index = 0; index < chunks.length; index++) {
+      // Calculate and emit progress
+      const progress = (index / chunks.length) * 100;
+      this.emitProgress(progress);
+
       const chunk = chunks[index];
       const currentSpeaker = speakers[speakerIndex];
       const nextSpeaker = speakers[(speakerIndex + 1) % 2];

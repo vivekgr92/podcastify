@@ -211,6 +211,27 @@ export function registerRoutes(app: Express) {
     }
   });
 
+  // SSE endpoint for TTS progress updates
+  app.get("/api/tts/progress", (req, res) => {
+    res.writeHead(200, {
+      "Content-Type": "text/event-stream",
+      "Cache-Control": "no-cache",
+      "Connection": "keep-alive",
+    });
+
+    const sendProgress = (progress: number) => {
+      res.write(`data: ${JSON.stringify({ progress })}\n\n`);
+    };
+
+    // Add this client to TTSService progress listeners
+    ttsService.addProgressListener(sendProgress);
+
+    // Remove listener when client disconnects
+    req.on("close", () => {
+      ttsService.removeProgressListener(sendProgress);
+    });
+  });
+
   // Text-to-speech conversion
   app.post("/api/podcast", upload.single("file"), async (req, res) => {
     try {
