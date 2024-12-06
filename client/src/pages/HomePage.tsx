@@ -17,8 +17,7 @@ export default function HomePage() {
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (file) {
-      // For now, only accept text files to ensure proper processing
-      if (file.type === "text/plain") {
+      if (file.type === "text/plain" || file.type === "application/pdf") {
         setFile(file);
         
         // Create form data and append file

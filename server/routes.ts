@@ -220,15 +220,19 @@ export function registerRoutes(app: Express) {
         return res.status(400).send("No file uploaded");
       }
 
-      // Validate file type
-      if (!file.mimetype.includes('text/')) {
-        return res.status(400).send("Please upload a valid text file");
-      }
-
-      // Read and validate file content
+      // Validate file type and read content
       let fileContent;
       try {
-        fileContent = await fs.readFile(file.path, "utf-8");
+        if (file.mimetype === 'application/pdf') {
+          const pdfParse = require('pdf-parse');
+          const pdfBuffer = await fs.readFile(file.path);
+          const pdfData = await pdfParse(pdfBuffer);
+          fileContent = pdfData.text;
+        } else if (file.mimetype === 'text/plain') {
+          fileContent = await fs.readFile(file.path, "utf-8");
+        } else {
+          return res.status(400).send("Please upload a PDF or text file");
+        }
         
         // Basic validation of text content
         if (!fileContent || typeof fileContent !== 'string' || fileContent.length === 0) {
@@ -244,7 +248,7 @@ export function registerRoutes(app: Express) {
         console.log("Processed file content sample:", fileContent.substring(0, 200) + "...");
       } catch (error) {
         console.error("Error reading file:", error);
-        return res.status(400).send("Unable to process file. Please ensure it's a valid text file.");
+        return res.status(400).send("Unable to process file. Please ensure it's a valid PDF or text file.");
       }
 
       // Generate audio using TTS service
