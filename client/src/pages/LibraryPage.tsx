@@ -147,7 +147,6 @@ export default function LibraryPage() {
           )}
         </div>
       </main>
-      <AudioPlayer />
     </div>
   );
 }
