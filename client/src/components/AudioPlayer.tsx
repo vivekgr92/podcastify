@@ -39,10 +39,11 @@ export default function AudioPlayer() {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-gray-900 border-t-2 border-[#4CAF50] shadow-lg z-50">
+    <div className="fixed bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur-sm border-t-2 border-[#4CAF50] shadow-lg z-[100]">
       <canvas
         ref={canvasRef}
         className="absolute top-0 left-0 right-0 h-1 bg-[#4CAF50]/20"
+        style={{ zIndex: 101 }}
       />
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between gap-4">
