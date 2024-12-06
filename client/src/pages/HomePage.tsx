@@ -25,6 +25,7 @@ export default function HomePage() {
         formData.append('file', file);
         
         try {
+          console.log('Starting file conversion...');
           const response = await fetch('/api/podcast', {
             method: 'POST',
             body: formData
@@ -35,6 +36,8 @@ export default function HomePage() {
           }
           
           const podcast = await response.json();
+          console.log('Conversion successful:', podcast);
+          
           toast({
             title: "Success",
             description: "Your file has been converted successfully!",
@@ -46,6 +49,7 @@ export default function HomePage() {
           // Redirect to library to see the converted podcast
           setLocation('/library');
         } catch (error) {
+          console.error('File conversion error:', error);
           toast({
             title: "Error",
             description: "Failed to convert your file. Please try again.",
