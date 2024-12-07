@@ -272,7 +272,9 @@ export class TTSService {
           },
         });
 
-        console.log('\n=== PROMPT TO VERTEX AI ===\n', prompt, '\n========================\n');
+        console.log('\n============== PROMPT TO VERTEX AI ==============\n');
+        console.log(prompt);
+        console.log('\n==============================================\n');
 
         // Generate response using Gemini
         const result = await model.generateContent({
@@ -284,11 +286,18 @@ export class TTSService {
         }
 
         const rawResponse = result.response.candidates[0].content.parts[0].text;
-        console.log('\n=== RAW VERTEX AI RESPONSE ===\n', rawResponse, '\n========================\n');
+        console.log('\n============== RAW VERTEX AI RESPONSE ==============\n');
+        console.log(rawResponse);
+        console.log('\n==============================================\n');
         
         // Clean and structure the response text
         const cleanedEntries = this.cleanGeneratedText(rawResponse);
-        console.log('\n=== CLEANED CONVERSATION ENTRIES ===\n', JSON.stringify(cleanedEntries, null, 2), '\n========================\n');
+        console.log('\n============== CLEANED CONVERSATION ENTRIES ==============\n');
+        // Format each entry with line breaks between speakers
+        cleanedEntries.forEach(entry => {
+          console.log(`\n${entry.speaker}:\n${entry.text}\n`);
+        });
+        console.log('\n==============================================\n');
         
         // Combine all entries for the current speaker
         lastResponse = cleanedEntries
