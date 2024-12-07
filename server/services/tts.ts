@@ -17,55 +17,7 @@ interface ElevenLabsOptions {
   voiceId: string;
 }
 
-function cleanGeneratedText(rawText: string): ConversationEntry[] {
-  try {
-    const lines = rawText.split('\n');
-    const conversation: ConversationEntry[] = [];
-    let currentSpeaker = '';
-    let currentText = '';
-
-    for (const line of lines) {
-      const trimmedLine = line.trim();
-      
-      // Skip empty lines and special markers
-      if (!trimmedLine || trimmedLine.startsWith('**') || trimmedLine.startsWith('--')) {
-        continue;
-      }
-
-      // Check for speaker markers
-      const speakerMatch = trimmedLine.match(/^(Joe|Sarah):/);
-      if (speakerMatch && speakerMatch[1]) {
-        // If we have previous content, save it
-        if (currentSpeaker && currentText) {
-          conversation.push({
-            speaker: currentSpeaker as "Joe" | "Sarah",
-            text: currentText.trim()
-          });
-        }
-        
-        // Start new speaker section
-        currentSpeaker = speakerMatch[1] as "Joe" | "Sarah";
-        currentText = trimmedLine.substring(speakerMatch[0].length).trim();
-      } else if (currentSpeaker) {
-        // Append to current text if we have a speaker
-        currentText += ' ' + trimmedLine;
-      }
-    }
-
-    // Add the last entry if exists
-    if (currentSpeaker && currentText) {
-      conversation.push({
-        speaker: currentSpeaker as "Joe" | "Sarah",
-        text: currentText.trim()
-      });
-    }
-
-    return conversation;
-  } catch (error) {
-    console.error('Error parsing text:', error instanceof Error ? error.message : 'Unknown error');
-    return [];
-  }
-}
+// Moved cleanGeneratedText inside TTSService class
 
 const ELEVENLABS_API_URL = "https://api.elevenlabs.io/v1/text-to-speech";
 const VOICE_IDS: Record<Speaker, string> = {
@@ -103,6 +55,56 @@ export class TTSService {
   constructor() {
     this.ttsClient = new TextToSpeechClient();
     this.progressListeners = new Set();
+  }
+
+  private cleanGeneratedText(rawText: string): ConversationEntry[] {
+    try {
+      const lines = rawText.split('\n');
+      const conversation: ConversationEntry[] = [];
+      let currentSpeaker = '';
+      let currentText = '';
+
+      for (const line of lines) {
+        const trimmedLine = line.trim();
+        
+        // Skip empty lines and special markers
+        if (!trimmedLine || trimmedLine.startsWith('**') || trimmedLine.startsWith('--')) {
+          continue;
+        }
+
+        // Check for speaker markers
+        const speakerMatch = trimmedLine.match(/^(Joe|Sarah):/);
+        if (speakerMatch && speakerMatch[1]) {
+          // If we have previous content, save it
+          if (currentSpeaker && currentText) {
+            conversation.push({
+              speaker: currentSpeaker as "Joe" | "Sarah",
+              text: currentText.trim()
+            });
+          }
+          
+          // Start new speaker section
+          currentSpeaker = speakerMatch[1] as "Joe" | "Sarah";
+          currentText = trimmedLine.substring(speakerMatch[0].length).trim();
+        } else if (currentSpeaker) {
+          // Append to current text if we have a speaker
+          currentText += ' ' + trimmedLine;
+        }
+      }
+
+      // Add the last entry if exists
+      if (currentSpeaker && currentText) {
+        conversation.push({
+          speaker: currentSpeaker as "Joe" | "Sarah",
+          text: currentText.trim()
+        });
+      }
+
+      return conversation;
+    } catch (error) {
+      console.error('Error parsing text:', error instanceof Error ? error.message : 'Unknown error');
+      return [];
+    }
   }
 
   addProgressListener(listener: (progress: number) => void) {
@@ -270,6 +272,8 @@ export class TTSService {
           },
         });
 
+        console.log('\n=== PROMPT TO VERTEX AI ===\n', prompt, '\n========================\n');
+
         // Generate response using Gemini
         const result = await model.generateContent({
           contents: [{ role: "user", parts: [{ text: prompt }] }],
@@ -280,10 +284,11 @@ export class TTSService {
         }
 
         const rawResponse = result.response.candidates[0].content.parts[0].text;
+        console.log('\n=== RAW VERTEX AI RESPONSE ===\n', rawResponse, '\n========================\n');
         
         // Clean and structure the response text
-        const cleanedEntries = cleanGeneratedText(rawResponse);
-        console.log('Cleaned conversation entries:', cleanedEntries);
+        const cleanedEntries = this.cleanGeneratedText(rawResponse);
+        console.log('\n=== CLEANED CONVERSATION ENTRIES ===\n', JSON.stringify(cleanedEntries, null, 2), '\n========================\n');
         
         // Combine all entries for the current speaker
         lastResponse = cleanedEntries
