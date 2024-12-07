@@ -57,6 +57,21 @@ export class TTSService {
     this.progressListeners = new Set();
   }
 
+  /**
+   * Processes the raw text from Vertex AI response and converts it into structured conversation entries.
+   * This method handles the parsing of the conversation between Joe and Sarah, maintaining the 
+   * proper speaker attribution and text content.
+   * 
+   * @param rawText - The unprocessed text response from Vertex AI containing the conversation
+   * @returns Array of ConversationEntry objects, each containing a speaker and their dialogue
+   * 
+   * Key features:
+   * - Splits text into lines and processes each line individually
+   * - Identifies speaker changes using "Joe:" or "Sarah:" markers
+   * - Combines multi-line dialogue for the same speaker
+   * - Skips special markers and empty lines
+   * - Handles error cases gracefully
+   */
   private cleanGeneratedText(rawText: string): ConversationEntry[] {
     try {
       const lines = rawText.split('\n');
@@ -345,6 +360,22 @@ export class TTSService {
     };
   }
 
+  /**
+   * Splits input text into smaller chunks that can be processed by the TTS service.
+   * This method ensures that each chunk stays within the byte limit while maintaining
+   * sentence integrity where possible.
+   * 
+   * @param text - The input text to be split into chunks
+   * @param maxBytes - Maximum size of each chunk in bytes (default: 4800)
+   * @returns Array of text chunks, each within the specified byte limit
+   * 
+   * Key features:
+   * - Splits text at sentence boundaries (.!?)
+   * - Handles long sentences by breaking them into smaller parts
+   * - Maintains word boundaries when splitting
+   * - Ensures no chunk exceeds the byte limit
+   * - Provides fallback truncation for extremely long segments
+   */
   private splitTextIntoChunks(text: string, maxBytes: number = 4800): string[] {
     const sentences = text.split(/[.!?]+\s+/);
     const chunks: string[] = [];
