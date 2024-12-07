@@ -377,6 +377,9 @@ export class TTSService {
    * - Provides fallback truncation for extremely long segments
    */
   private splitTextIntoChunks(text: string, maxBytes: number = 4800): string[] {
+    console.log('\n============== SPLITTING TEXT INTO CHUNKS ==============\n');
+    console.log('Original text length:', text.length, 'characters');
+    
     const sentences = text.split(/[.!?]+\s+/);
     const chunks: string[] = [];
     let currentChunk: string[] = [];
@@ -442,17 +445,27 @@ export class TTSService {
     }
 
     // Final validation to ensure no chunk exceeds the limit
-    return chunks
+    const finalChunks = chunks
       .filter(chunk => chunk.trim().length > 0)
-      .map(chunk => {
+      .map((chunk, index) => {
         const trimmed = chunk.trim();
         const byteLength = getByteLength(trimmed);
+        
+        console.log(`\n============== CHUNK ${index + 1} ==============`);
+        console.log('Length:', trimmed.length, 'characters');
+        console.log('Size:', byteLength, 'bytes');
+        console.log('Content:', trimmed.substring(0, 100) + (trimmed.length > 100 ? '...' : ''));
+        console.log('==========================================\n');
+        
         if (byteLength > maxBytes) {
           console.warn(`Chunk still exceeds ${maxBytes} bytes (${byteLength} bytes)`);
           return trimmed.substring(0, Math.floor(maxBytes / 2)) + "...";
         }
         return trimmed;
       });
+      
+    console.log(`Total chunks created: ${finalChunks.length}`);
+    return finalChunks;
   }
 }
 
