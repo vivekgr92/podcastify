@@ -72,6 +72,21 @@ export class TTSService {
    * - Skips special markers and empty lines
    * - Handles error cases gracefully
    */
+  /**
+   * Processes the raw text from Vertex AI response and converts it into structured conversation entries.
+   * This method handles the parsing of the conversation between Joe and Sarah, maintaining the 
+   * proper speaker attribution and text content.
+   * 
+   * @param rawText - The unprocessed text response from Vertex AI containing the conversation
+   * @returns Array of ConversationEntry objects, each containing a speaker and their dialogue
+   * 
+   * Key features:
+   * - Splits text into lines and processes each line individually
+   * - Identifies speaker changes using "Joe:" or "Sarah:" markers
+   * - Combines multi-line dialogue for the same speaker
+   * - Skips special markers and empty lines
+   * - Handles error cases gracefully
+   */
   private cleanGeneratedText(rawText: string): ConversationEntry[] {
     try {
       const lines = rawText.split('\n');
@@ -233,8 +248,9 @@ export class TTSService {
     console.log("Input text length:", text.length);
 
     // Split text into smaller chunks to stay within token limits
+    console.log("\nStarting text splitting process...");
     const chunks = this.splitTextIntoChunks(text);
-    console.log("Split text into", chunks.length, "chunks");
+    console.log(`\nFinished splitting text into ${chunks.length} chunks\n`);
 
 
     const conversationParts: Buffer[] = [];
@@ -304,9 +320,19 @@ export class TTSService {
         console.log('\n============== RAW VERTEX AI RESPONSE ==============\n');
         console.log(rawResponse);
         console.log('\n==============================================\n');
+        console.log('\n============== RAW VERTEX AI RESPONSE ==============\n');
+        console.log(rawResponse);
+        console.log('\n==============================================\n');
         
         // Clean and structure the response text
+        // Clean and structure the response text
         const cleanedEntries = this.cleanGeneratedText(rawResponse);
+        console.log('\n============== CLEANED CONVERSATION ENTRIES ==============\n');
+        // Format each entry with line breaks between speakers
+        cleanedEntries.forEach(entry => {
+          console.log(`\n${entry.speaker}:\n${entry.text}\n`);
+        });
+        console.log('\n==============================================\n');
         console.log('\n============== CLEANED CONVERSATION ENTRIES ==============\n');
         // Format each entry with line breaks between speakers
         cleanedEntries.forEach(entry => {
@@ -398,15 +424,19 @@ export class TTSService {
 
       // If a single sentence is too long, split it into smaller parts
       if (sentenceLength > maxBytes) {
+        console.log(`\nFound long sentence (${sentenceLength} bytes), splitting into smaller parts...`);
         // If we have accumulated content, save it first
         if (currentChunk.length > 0) {
-          chunks.push(currentChunk.join(" "));
+          const chunkText = currentChunk.join(" ");
+          console.log(`Saving accumulated chunk (${getByteLength(chunkText)} bytes)`);
+          chunks.push(chunkText);
           currentChunk = [];
           currentLength = 0;
         }
         
         // Split the long sentence into smaller parts
         const words = sentenceWithPunct.split(/\s+/);
+        console.log(`Split long sentence into ${words.length} words`);
         let tempChunk: string[] = [];
         let tempLength = 0;
         
@@ -414,7 +444,9 @@ export class TTSService {
           const wordLength = getByteLength(word + " ");
           if (tempLength + wordLength > maxBytes) {
             if (tempChunk.length > 0) {
-              chunks.push(tempChunk.join(" "));
+              const newChunk = tempChunk.join(" ");
+              console.log(`Creating new chunk from words (${getByteLength(newChunk)} bytes)`);
+              chunks.push(newChunk);
               tempChunk = [];
               tempLength = 0;
             }
