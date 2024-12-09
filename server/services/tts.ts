@@ -515,29 +515,30 @@ export class TTSService {
     }
 
     // Final validation to ensure no chunk exceeds the limit
-    const chunkPromises = chunks
-      .filter((chunk) => chunk.trim().length > 0)
-      .map(async (chunk, index) => {
-        const trimmed = chunk.trim();
-        const byteLength = getByteLength(trimmed);
+    const finalChunks: string[] = [];
+    const filteredChunks = chunks.filter((chunk) => chunk.trim().length > 0);
+    
+    for (let index = 0; index < filteredChunks.length; index++) {
+      const chunk = filteredChunks[index];
+      const trimmed = chunk.trim();
+      const byteLength = getByteLength(trimmed);
 
+      await logger.log(
+        `CHUNK ${index + 1}:\n` +
+        `Text: ${trimmed}\n` +
+        `Stats: ${trimmed.length} characters, ${byteLength} bytes`
+      );
+
+      if (byteLength > maxBytes) {
         await logger.log(
-          `CHUNK ${index + 1}:\n` +
-          `Text: ${trimmed}\n` +
-          `Stats: ${trimmed.length} characters, ${byteLength} bytes`
+          `Chunk still exceeds ${maxBytes} bytes (${byteLength} bytes)`,
+          "warn",
         );
-
-        if (byteLength > maxBytes) {
-          await logger.log(
-            `Chunk still exceeds ${maxBytes} bytes (${byteLength} bytes)`,
-            "warn",
-          );
-          return trimmed.substring(0, Math.floor(maxBytes / 2)) + "...";
-        }
-        return trimmed;
-      });
-
-    const finalChunks = await Promise.all(chunkPromises);
+        finalChunks.push(trimmed.substring(0, Math.floor(maxBytes / 2)) + "...");
+      } else {
+        finalChunks.push(trimmed);
+      }
+    }
     await logger.log(`Total chunks created: ${finalChunks.length}`);
     return finalChunks;
   }
