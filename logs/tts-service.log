@@ -1,0 +1,50 @@
+[2024-12-09T21:05:29.082Z] [INFO] Starting text-to-speech conversion...
+[2024-12-09T21:05:29.084Z] [INFO] Input text length: 16704
+[2024-12-09T21:05:29.085Z] [INFO] Starting text splitting process...
+[2024-12-09T21:05:29.085Z] [INFO] ============== SPLITTING TEXT INTO CHUNKS ==============
+[2024-12-09T21:05:29.086Z] [INFO] Original text length: 16704 characters
+[2024-12-09T21:05:29.087Z] [INFO] ============== CHUNK 1 ==============
+[2024-12-09T21:05:29.087Z] [INFO] ============== CHUNK 2 ==============
+[2024-12-09T21:05:29.087Z] [INFO] ============== CHUNK 3 ==============
+[2024-12-09T21:05:29.087Z] [INFO] ============== CHUNK 4 ==============
+[2024-12-09T21:05:29.087Z] [INFO] Length: 4830 characters
+[2024-12-09T21:05:29.087Z] [INFO] Length: 4817 characters
+[2024-12-09T21:05:29.087Z] [INFO] Length: 2402 characters
+[2024-12-09T21:05:29.087Z] [INFO] Length: 4785 characters
+[2024-12-09T21:05:29.088Z] [INFO] Size: 4817 bytes
+[2024-12-09T21:05:29.088Z] [INFO] Size: 2402 bytes
+[2024-12-09T21:05:29.088Z] [INFO] Size: 4830 bytes
+[2024-12-09T21:05:29.088Z] [INFO] Size: 4785 bytes
+[2024-12-09T21:05:29.088Z] [INFO] Content: YCharOSs industry partners provide the antibodies for testing, free of charge.  The partners, along ...
+[2024-12-09T21:05:29.088Z] [INFO] Content: CiteAbs data have revealed that scientists behaviour around antibody use has shifted drastically ove...
+[2024-12-09T21:05:29.089Z] [INFO] Content: C arl Laflamme knew what protein he wanted to study, but not where to find it.  It is encoded by a g...
+[2024-12-09T21:05:29.089Z] [INFO] Content: That wont change repro- ducibility by itself, but it is the first step.  In addition to being able t...
+[2024-12-09T21:05:29.089Z] [INFO] ==========================================
+[2024-12-09T21:05:29.089Z] [INFO] ==========================================
+[2024-12-09T21:05:29.089Z] [INFO] ==========================================
+[2024-12-09T21:05:29.089Z] [INFO] ==========================================
+[2024-12-09T21:05:29.090Z] [WARN] Chunk still exceeds 4800 bytes (4817 bytes)
+[2024-12-09T21:05:29.090Z] [WARN] Chunk still exceeds 4800 bytes (4830 bytes)
+[2024-12-09T21:05:29.090Z] [INFO] Total chunks created: 4
+[2024-12-09T21:05:29.090Z] [INFO] Finished splitting text into 4 chunks
+[2024-12-09T21:05:29.092Z] [INFO] ============== PROMPT TO VERTEX AI ==============
+[2024-12-09T21:05:29.093Z] [INFO] You are generating a podcast conversation between Joe and Sarah.
+
+**Guidelines**:
+1. Joe provides detailed technical insights but avoids overusing analogies. Instead, focus on straightforward, clear explanations.
+2. Sarah asks probing, thoughtful questions, occasionally offers her own insights, and challenges Joe to explain concepts simply and conversationally.
+3. Both speakers use natural human speech patterns, including filler words like "um," "ah," "you know," and short pauses.
+4. Conclude with a visionary statement highlighting the broader impact of the discussion on science and society.
+
+**Focus**:
+- Avoid excessive use of analogies. Use one or two if necessary for clarity but prioritize clear, direct explanations.
+- Include natural conversational flow with interruptions, backtracking, and filler words to make the dialogue feel authentic.
+- Encourage a natural dialogue with varied contributions from both speakers.
+
+**Tone**:
+- Engaging, relatable, and spontaneous.
+- Emphasize human-like emotions, with occasional humor or lighthearted moments.
+- Balance technical depth with conversational relatability, avoiding overly formal language.
+Joe: C arl Laflamme knew what protein he wanted to study, but not where to find it.  It is encoded by a gene called C9ORF72, which is mutated in some people with the devastating neuro- logical condition motor neuron disease, also known as amyotrophic lateral sclerosis.  And Laflamme wanted to understand its role in the disease.  When he started his postdoctoral fellowship at the Montreal Neurological Institute-Hospital in Canada, Laflamme scoured the literature, searching for information on the protein.  The problem was that none of the papers seemed to agree where in the cell this mysterious mol- ecule operates.  There was so much confusion in the field, Laflamme says.  He wondered whether a reagent was to blame, in particular the antibodies that scientists used to measure the amount of the protein and track its position in the cell.  So, he and his colleagues decided to test the antibodies that were available.  They identified 16 commercial antibodies that were adver- tised as able to bind to the protein encoded by C9ORF72.  When the researchers put them THE QUEST TO RID LABS OF THE REAGENTS THAT RUIN EXPERIMENTS Poorly performing antibodies have plagued biomedicalsciences for decades.  Several fresh initiativeshope to change this.  By Diana Kwon ILLUSTRATION BY FABIO BUONOCORE 26 | Nature | Vol 635 | 7 November 2024 Feature through their paces, only three performed wellmeaning that the antibodies bound to the protein of interest without binding to other molecules.  But not one published study had used these antibodies.  About 15 papers described experiments using an antibody that didnt even bind the key protein in Laflammes testing.  And those papers had been collec- tively cited more than 3,000 times 1.  Laflammes experience isnt unusual.  Scien- tists have long known that many commercial antibodies dont work as they should they often fail to recognize a specific protein or non-selectively bind to several other targets.  The result is a waste of time and resources that some say has contributed to a repro - ducibility crisis in the biological sciences, potentially slowing the pace of discovery and drug development.  Laflamme is part of a growing community that wants to solve the problem of unreliable antibodies in research.  He teamed up with molecular geneticist Aled Edwards at the University of Toronto, Canada, to set up Antibody Characterization through Ope...
+Sarah:
+[2024-12-09T21:05:29.093Z] [INFO] ==============================================
