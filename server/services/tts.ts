@@ -433,10 +433,7 @@ export class TTSService {
     text: string,
     maxBytes: number = 4800,
   ): Promise<string[]> {
-    await logger.log(
-      "\n\n============== SPLITTING TEXT INTO CHUNKS ==============",
-    );
-    await logger.log(`Original text length: ${text.length} characters`);
+    await logger.log(`SPLITTING TEXT INTO CHUNKS (Original length: ${text.length} characters)`);
 
     const sentences = text.split(/[.!?]+\s+/);
     const chunks: string[] = [];
@@ -524,9 +521,11 @@ export class TTSService {
         const trimmed = chunk.trim();
         const byteLength = getByteLength(trimmed);
 
-        await logger.log(`\nCHUNK ${index + 1}:`);
-        await logger.log(`Text: ${trimmed}`);
-        await logger.log(`Stats: ${trimmed.length} characters, ${byteLength} bytes`);
+        await logger.log(
+          `CHUNK ${index + 1}:\n` +
+          `Text: ${trimmed}\n` +
+          `Stats: ${trimmed.length} characters, ${byteLength} bytes`
+        );
 
         if (byteLength > maxBytes) {
           await logger.log(
