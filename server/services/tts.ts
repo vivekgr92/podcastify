@@ -47,7 +47,8 @@ const SYSTEM_PROMPT = `You are generating a podcast conversation between Joe and
 **Tone**:
 - Engaging, relatable, and spontaneous.
 - Emphasize human-like emotions, with occasional humor or lighthearted moments.
-- Balance technical depth with conversational relatability, avoiding overly formal language.`;
+- Balance technical depth with conversational relatability, avoiding overly formal language.
+`;
 
 export class TTSService {
   private ttsClient: TextToSpeechClient;
@@ -202,7 +203,10 @@ export class TTSService {
 
       return Buffer.from(response.audioContent);
     } catch (error) {
-      await logger.log(`Google TTS API error: ${error instanceof Error ? error.message : String(error)}`, "error");
+      await logger.log(
+        `Google TTS API error: ${error instanceof Error ? error.message : String(error)}`,
+        "error",
+      );
       if (
         error instanceof Error &&
         error.message.includes("longer than the limit")
@@ -251,11 +255,12 @@ export class TTSService {
 
       return Buffer.from(response.data);
     } catch (error: any) {
-      await logger.log(`ElevenLabs API error: 
+      await logger.log(
+        `ElevenLabs API error: 
         Status: ${error.response?.status}
         Status Text: ${error.response?.statusText}
-        Data: ${error.response?.data ? error.response.data.toString() : 'null'}`, 
-        "error"
+        Data: ${error.response?.data ? error.response.data.toString() : "null"}`,
+        "error",
       );
       throw error;
     }
@@ -366,7 +371,7 @@ export class TTSService {
         if (responseBytes > 4800) {
           await logger.log(
             `Response too long (${responseBytes} bytes), truncating...`,
-            "warn"
+            "warn",
           );
           lastResponse =
             lastResponse.substring(0, Math.floor(4800 / 2)) + "...";
@@ -519,13 +524,9 @@ export class TTSService {
         const trimmed = chunk.trim();
         const byteLength = getByteLength(trimmed);
 
-        await logger.log(`============== CHUNK ${index + 1} ==============`);
-        await logger.log(`Length: ${trimmed.length} characters`);
-        await logger.log(`Size: ${byteLength} bytes`);
-        await logger.log(
-          `Content: ${trimmed}`,
-        );
-        await logger.log("===================END=======================");
+        await logger.log(`\nCHUNK ${index + 1}:`);
+        await logger.log(`Text: ${trimmed}`);
+        await logger.log(`Stats: ${trimmed.length} characters, ${byteLength} bytes`);
 
         if (byteLength > maxBytes) {
           await logger.log(
