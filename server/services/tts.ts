@@ -60,12 +60,12 @@ export class TTSService {
 
   /**
    * Processes the raw text from Vertex AI response and converts it into structured conversation entries.
-   * This method handles the parsing of the conversation between Joe and Sarah, maintaining the 
+   * This method handles the parsing of the conversation between Joe and Sarah, maintaining the
    * proper speaker attribution and text content.
-   * 
+   *
    * @param rawText - The unprocessed text response from Vertex AI containing the conversation
    * @returns Array of ConversationEntry objects, each containing a speaker and their dialogue
-   * 
+   *
    * Key features:
    * - Splits text into lines and processes each line individually
    * - Identifies speaker changes using "Joe:" or "Sarah:" markers
@@ -75,12 +75,12 @@ export class TTSService {
    */
   /**
    * Processes the raw text from Vertex AI response and converts it into structured conversation entries.
-   * This method handles the parsing of the conversation between Joe and Sarah, maintaining the 
+   * This method handles the parsing of the conversation between Joe and Sarah, maintaining the
    * proper speaker attribution and text content.
-   * 
+   *
    * @param rawText - The unprocessed text response from Vertex AI containing the conversation
    * @returns Array of ConversationEntry objects, each containing a speaker and their dialogue
-   * 
+   *
    * Key features:
    * - Splits text into lines and processes each line individually
    * - Identifies speaker changes using "Joe:" or "Sarah:" markers
@@ -88,18 +88,24 @@ export class TTSService {
    * - Skips special markers and empty lines
    * - Handles error cases gracefully
    */
-  private async cleanGeneratedText(rawText: string): Promise<ConversationEntry[]> {
+  private async cleanGeneratedText(
+    rawText: string,
+  ): Promise<ConversationEntry[]> {
     try {
-      const lines = rawText.split('\n');
+      const lines = rawText.split("\n");
       const conversation: ConversationEntry[] = [];
-      let currentSpeaker = '';
-      let currentText = '';
+      let currentSpeaker = "";
+      let currentText = "";
 
       for (const line of lines) {
         const trimmedLine = line.trim();
-        
+
         // Skip empty lines and special markers
-        if (!trimmedLine || trimmedLine.startsWith('**') || trimmedLine.startsWith('--')) {
+        if (
+          !trimmedLine ||
+          trimmedLine.startsWith("**") ||
+          trimmedLine.startsWith("--")
+        ) {
           continue;
         }
 
@@ -110,16 +116,16 @@ export class TTSService {
           if (currentSpeaker && currentText) {
             conversation.push({
               speaker: currentSpeaker as "Joe" | "Sarah",
-              text: currentText.trim()
+              text: currentText.trim(),
             });
           }
-          
+
           // Start new speaker section
           currentSpeaker = speakerMatch[1] as "Joe" | "Sarah";
           currentText = trimmedLine.substring(speakerMatch[0].length).trim();
         } else if (currentSpeaker) {
           // Append to current text if we have a speaker
-          currentText += ' ' + trimmedLine;
+          currentText += " " + trimmedLine;
         }
       }
 
@@ -127,13 +133,17 @@ export class TTSService {
       if (currentSpeaker && currentText) {
         conversation.push({
           speaker: currentSpeaker as "Joe" | "Sarah",
-          text: currentText.trim()
+          text: currentText.trim(),
         });
       }
 
       return conversation;
     } catch (error) {
-      await logger.log('Error parsing text: ' + (error instanceof Error ? error.message : 'Unknown error'), 'error');
+      await logger.log(
+        "Error parsing text: " +
+          (error instanceof Error ? error.message : "Unknown error"),
+        "error",
+      );
       return [];
     }
   }
@@ -147,7 +157,7 @@ export class TTSService {
   }
 
   private emitProgress(progress: number) {
-    this.progressListeners.forEach(listener => listener(progress));
+    this.progressListeners.forEach((listener) => listener(progress));
   }
 
   async synthesizeWithGoogle({
@@ -165,8 +175,9 @@ export class TTSService {
       // Validate text length before making the request
       const textBytes = new TextEncoder().encode(text).length;
       if (textBytes > 4800) {
-        console.warn(`Text too long (${textBytes} bytes), truncating...`);
+        await logger.log(`Text length warning: ${textBytes} bytes`, "warn");
         text = text.substring(0, Math.floor(4800 / 2)) + "...";
+        await logger.log(`Truncated text: ${text}`);
       }
 
       const request = {
@@ -183,7 +194,7 @@ export class TTSService {
       } satisfies protos.google.cloud.texttospeech.v1.ISynthesizeSpeechRequest;
 
       const [response] = await this.ttsClient.synthesizeSpeech(request);
-      console.log("Google TTS API response received");
+      await logger.log("Google TTS API response received");
 
       if (!response.audioContent) {
         throw new Error("No audio content received from Google TTS");
@@ -191,11 +202,18 @@ export class TTSService {
 
       return Buffer.from(response.audioContent);
     } catch (error) {
-      console.error("Google TTS API error:", error);
-      if (error instanceof Error && error.message.includes("longer than the limit")) {
-        throw new Error("Text chunk too long for TTS. Please try with a shorter text.");
+      await logger.log(`Google TTS API error: ${error instanceof Error ? error.message : String(error)}`, "error");
+      if (
+        error instanceof Error &&
+        error.message.includes("longer than the limit")
+      ) {
+        throw new Error(
+          "Text chunk too long for TTS. Please try with a shorter text.",
+        );
       }
-      throw new Error(error instanceof Error ? error.message : "Failed to synthesize speech");
+      throw new Error(
+        error instanceof Error ? error.message : "Failed to synthesize speech",
+      );
     }
   }
 
@@ -227,17 +245,18 @@ export class TTSService {
         },
       );
 
-      console.log("ElevenLabs API response received");
-      console.log("Response status:", response.status);
-      console.log("Response data size:", response.data.length);
+      await logger.log("ElevenLabs API response received");
+      await logger.log(`Response status: ${response.status}`);
+      await logger.log(`Response data size: ${response.data.length}`);
 
       return Buffer.from(response.data);
     } catch (error: any) {
-      console.error("ElevenLabs API error:", {
-        status: error.response?.status,
-        statusText: error.response?.statusText,
-        data: error.response?.data ? error.response.data.toString() : null,
-      });
+      await logger.log(`ElevenLabs API error: 
+        Status: ${error.response?.status}
+        Status Text: ${error.response?.statusText}
+        Data: ${error.response?.data ? error.response.data.toString() : 'null'}`, 
+        "error"
+      );
       throw error;
     }
   }
@@ -252,7 +271,6 @@ export class TTSService {
     await logger.log("Starting text splitting process...");
     const chunks = await this.splitTextIntoChunks(text);
     await logger.log(`Finished splitting text into ${chunks.length} chunks`);
-
 
     const conversationParts: Buffer[] = [];
     let lastResponse = "";
@@ -271,7 +289,6 @@ export class TTSService {
       const currentSpeaker = speakers[speakerIndex];
       const nextSpeaker = speakers[(speakerIndex + 1) % 2];
 
-
       try {
         // Generate conversation prompt
         let prompt = `${SYSTEM_PROMPT}\n${currentSpeaker}: ${chunk}\n${nextSpeaker}:`;
@@ -279,7 +296,6 @@ export class TTSService {
         if (lastResponse) {
           prompt = `${SYSTEM_PROMPT}\nPrevious response: ${lastResponse}\n${prompt}`;
         }
-
 
         // Check for required environment variables
         if (!process.env.GOOGLE_CLOUD_PROJECT) {
@@ -304,9 +320,11 @@ export class TTSService {
           },
         });
 
-        await logger.log('============== PROMPT TO VERTEX AI ==============');
+        await logger.log(
+          "\n\n============== PROMPT TO VERTEX AI ==============",
+        );
         await logger.log(prompt);
-        await logger.log('==============================================');
+        await logger.log("=================END=============================");
 
         // Generate response using Gemini
         const result = await model.generateContent({
@@ -318,32 +336,40 @@ export class TTSService {
         }
 
         const rawResponse = result.response.candidates[0].content.parts[0].text;
-        await logger.log('============== RAW VERTEX AI RESPONSE ==============');
+        await logger.log(
+          "\n\n============== RAW VERTEX AI RESPONSE ==============",
+        );
         await logger.log(rawResponse);
-        await logger.log('==============================================');
-        
+        await logger.log("==================END============================");
+
         // Clean and structure the response text
         // Clean and structure the response text
         const cleanedEntries = await this.cleanGeneratedText(rawResponse);
-        await logger.log('============== CLEANED CONVERSATION ENTRIES ==============');
+        await logger.log(
+          "\n\n============== CLEANED CONVERSATION ENTRIES ==============",
+        );
         // Format each entry with line breaks between speakers
         for (const entry of cleanedEntries) {
           await logger.log(`${entry.speaker}:`);
           await logger.log(entry.text);
         }
-        await logger.log('==============================================');
-        
+        await logger.log("====================END==========================");
+
         // Combine all entries for the current speaker
         lastResponse = cleanedEntries
-          .filter(entry => entry.speaker === currentSpeaker)
-          .map(entry => entry.text)
-          .join(' ');
-        
+          .filter((entry) => entry.speaker === currentSpeaker)
+          .map((entry) => entry.text)
+          .join(" ");
+
         // Validate response length before proceeding
         const responseBytes = new TextEncoder().encode(lastResponse).length;
         if (responseBytes > 4800) {
-          console.warn(`Response too long (${responseBytes} bytes), truncating...`);
-          lastResponse = lastResponse.substring(0, Math.floor(4800 / 2)) + "...";
+          await logger.log(
+            `Response too long (${responseBytes} bytes), truncating...`,
+            "warn"
+          );
+          lastResponse =
+            lastResponse.substring(0, Math.floor(4800 / 2)) + "...";
         }
 
         // Use Google TTS for synthesis
@@ -358,7 +384,10 @@ export class TTSService {
         // Switch speaker for next iteration
         speakerIndex = (speakerIndex + 1) % 2;
       } catch (error) {
-        await logger.log(`Error generating audio for chunk ${index + 1}: ${error instanceof Error ? error.message : 'Unknown error'}`, 'error');
+        await logger.log(
+          `Error generating audio for chunk ${index + 1}: ${error instanceof Error ? error.message : "Unknown error"}`,
+          "error",
+        );
         throw error;
       }
     }
@@ -383,11 +412,11 @@ export class TTSService {
    * Splits input text into smaller chunks that can be processed by the TTS service.
    * This method ensures that each chunk stays within the byte limit while maintaining
    * sentence integrity where possible.
-   * 
+   *
    * @param text - The input text to be split into chunks
    * @param maxBytes - Maximum size of each chunk in bytes (default: 4800)
    * @returns Array of text chunks, each within the specified byte limit
-   * 
+   *
    * Key features:
    * - Splits text at sentence boundaries (.!?)
    * - Handles long sentences by breaking them into smaller parts
@@ -395,10 +424,15 @@ export class TTSService {
    * - Ensures no chunk exceeds the byte limit
    * - Provides fallback truncation for extremely long segments
    */
-  private async splitTextIntoChunks(text: string, maxBytes: number = 4800): Promise<string[]> {
-    await logger.log('============== SPLITTING TEXT INTO CHUNKS ==============');
+  private async splitTextIntoChunks(
+    text: string,
+    maxBytes: number = 4800,
+  ): Promise<string[]> {
+    await logger.log(
+      "\n\n============== SPLITTING TEXT INTO CHUNKS ==============",
+    );
     await logger.log(`Original text length: ${text.length} characters`);
-    
+
     const sentences = text.split(/[.!?]+\s+/);
     const chunks: string[] = [];
     let currentChunk: string[] = [];
@@ -417,28 +451,34 @@ export class TTSService {
 
       // If a single sentence is too long, split it into smaller parts
       if (sentenceLength > maxBytes) {
-        await logger.log(`Found long sentence (${sentenceLength} bytes), splitting into smaller parts...`);
+        await logger.log(
+          `Found long sentence (${sentenceLength} bytes), splitting into smaller parts...`,
+        );
         // If we have accumulated content, save it first
         if (currentChunk.length > 0) {
           const chunkText = currentChunk.join(" ");
-          await logger.log(`Saving accumulated chunk (${getByteLength(chunkText)} bytes)`);
+          await logger.log(
+            `Saving accumulated chunk (${getByteLength(chunkText)} bytes)`,
+          );
           chunks.push(chunkText);
           currentChunk = [];
           currentLength = 0;
         }
-        
+
         // Split the long sentence into smaller parts
         const words = sentenceWithPunct.split(/\s+/);
         await logger.log(`Split long sentence into ${words.length} words`);
         let tempChunk: string[] = [];
         let tempLength = 0;
-        
+
         for (const word of words) {
           const wordLength = getByteLength(word + " ");
           if (tempLength + wordLength > maxBytes) {
             if (tempChunk.length > 0) {
               const newChunk = tempChunk.join(" ");
-              await logger.log(`Creating new chunk from words (${getByteLength(newChunk)} bytes)`);
+              await logger.log(
+                `Creating new chunk from words (${getByteLength(newChunk)} bytes)`,
+              );
               chunks.push(newChunk);
               tempChunk = [];
               tempLength = 0;
@@ -447,7 +487,7 @@ export class TTSService {
           tempChunk.push(word);
           tempLength += wordLength;
         }
-        
+
         if (tempChunk.length > 0) {
           chunks.push(tempChunk.join(" "));
         }
@@ -455,7 +495,10 @@ export class TTSService {
       }
 
       // Normal case: add sentence to current chunk if it fits
-      if (currentLength + sentenceLength > maxBytes && currentChunk.length > 0) {
+      if (
+        currentLength + sentenceLength > maxBytes &&
+        currentChunk.length > 0
+      ) {
         chunks.push(currentChunk.join(" "));
         currentChunk = [];
         currentLength = 0;
@@ -471,24 +514,29 @@ export class TTSService {
 
     // Final validation to ensure no chunk exceeds the limit
     const chunkPromises = chunks
-      .filter(chunk => chunk.trim().length > 0)
+      .filter((chunk) => chunk.trim().length > 0)
       .map(async (chunk, index) => {
         const trimmed = chunk.trim();
         const byteLength = getByteLength(trimmed);
-        
+
         await logger.log(`============== CHUNK ${index + 1} ==============`);
         await logger.log(`Length: ${trimmed.length} characters`);
         await logger.log(`Size: ${byteLength} bytes`);
-        await logger.log(`Content: ${trimmed.substring(0, 100)}${trimmed.length > 100 ? '...' : ''}`);
-        await logger.log('==========================================');
-        
+        await logger.log(
+          `Content: ${trimmed}`,
+        );
+        await logger.log("===================END=======================");
+
         if (byteLength > maxBytes) {
-          await logger.log(`Chunk still exceeds ${maxBytes} bytes (${byteLength} bytes)`, 'warn');
+          await logger.log(
+            `Chunk still exceeds ${maxBytes} bytes (${byteLength} bytes)`,
+            "warn",
+          );
           return trimmed.substring(0, Math.floor(maxBytes / 2)) + "...";
         }
         return trimmed;
       });
-      
+
     const finalChunks = await Promise.all(chunkPromises);
     await logger.log(`Total chunks created: ${finalChunks.length}`);
     return finalChunks;
