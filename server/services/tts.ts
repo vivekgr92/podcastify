@@ -156,14 +156,9 @@ export class TTSService {
     text: string;
     speaker: Speaker;
   }): Promise<Buffer> {
-    console.log("\n============== GOOGLE TTS REQUEST ==============");
+    console.log("Making Google TTS API request...");
     console.log("Speaker:", speaker);
     console.log("Text length:", text.length);
-    console.log("Text preview:", text.substring(0, 100) + "...");
-
-    if (!text || text.trim().length === 0) {
-      throw new Error("Empty text provided to TTS service");
-    }
 
     try {
       // Validate text length before making the request
@@ -258,20 +253,15 @@ export class TTSService {
     console.log(`\nFinished splitting text into ${chunks.length} chunks\n`);
 
 
-    const conversationParts: { buffer: Buffer; index: number }[] = [];
+    const conversationParts: Buffer[] = [];
     let lastResponse = "";
     const speakers = ["Joe", "Sarah"];
     let speakerIndex = 0;
 
     // Emit initial progress
     this.emitProgress(0);
-    console.log('\n============== STARTING CHUNK PROCESSING ==============\n');
-    console.log(`Total chunks to process: ${chunks.length}`);
 
     for (let index = 0; index < chunks.length; index++) {
-      console.log(`\nProcessing chunk ${index + 1}/${chunks.length}`);
-      console.log(`Current speaker: ${speakers[speakerIndex]}`);
-      
       // Calculate and emit progress for chunk processing
       const chunkProgress = ((index + 0.5) / chunks.length) * 100;
       this.emitProgress(Math.min(chunkProgress, 99)); // Keep progress under 100% until complete
@@ -369,14 +359,8 @@ export class TTSService {
           speaker: currentSpeaker as keyof typeof GOOGLE_VOICE_IDS,
         });
 
-        // Validate audio buffer
-        if (!audioBuffer || audioBuffer.length === 0) {
-          console.error(`Empty audio buffer received for chunk ${index + 1}`);
-          throw new Error('Empty audio buffer received from TTS service');
-        }
-
-        console.log(`Generated audio buffer for chunk ${index + 1}, size: ${audioBuffer.length} bytes`);
-        conversationParts.push({ buffer: audioBuffer, index });
+        console.log(`Generated audio buffer for chunk ${index + 1}`);
+        conversationParts.push(audioBuffer);
 
         // Switch speaker for next iteration
         speakerIndex = (speakerIndex + 1) % 2;
@@ -386,23 +370,10 @@ export class TTSService {
       }
     }
 
-    console.log("\n============== COMBINING AUDIO PARTS ==============");
-    console.log(`Number of audio parts to combine: ${conversationParts.length}`);
-    
-    // Sort parts by index to ensure correct order
-    conversationParts.sort((a, b) => a.index - b.index);
-    
-    // Log each part's size before combining
-    conversationParts.forEach((part, i) => {
-      console.log(`Part ${i + 1} size: ${part.buffer.length} bytes`);
-    });
-    
-    // Extract buffers in correct order
-    const orderedBuffers = conversationParts.map(part => part.buffer);
-    
+    console.log("All chunks processed, combining audio parts...");
     // Combine all audio parts
-    const combinedBuffer = Buffer.concat(orderedBuffers);
-    console.log("\nFinal combined audio buffer size:", combinedBuffer.length);
+    const combinedBuffer = Buffer.concat(conversationParts);
+    console.log("Combined audio buffer size:", combinedBuffer.length);
 
     // Estimate duration (rough estimate: 1 second per 7 words)
     const wordCount = text.split(/\s+/).length;
