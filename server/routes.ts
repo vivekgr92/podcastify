@@ -42,8 +42,26 @@ export function registerRoutes(app: Express) {
     const filename = req.params.filename;
     const filePath = path.join(__dirname, '..', 'uploads', filename);
 
+    // Set CORS headers
+    res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Range');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Expose-Headers', 'Content-Range, Accept-Ranges, Content-Length');
+
+    // Handle preflight request
+    if (req.method === 'OPTIONS') {
+      res.sendStatus(204);
+      return;
+    }
+
     try {
       const stat = await fs.stat(filePath);
+      if (stat.size === 0) {
+        console.error('Empty audio file:', filename);
+        res.status(404).send('Audio file is empty');
+        return;
+      }
       const fileSize = stat.size;
       const range = req.headers.range;
 
