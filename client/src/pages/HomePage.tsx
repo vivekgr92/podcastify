@@ -55,9 +55,10 @@ export default function HomePage() {
           setLocation('/library');
         } catch (error) {
           console.error('File conversion error:', error);
+          const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
           toast({
             title: "Error",
-            description: "Failed to convert your file. Please try again.",
+            description: `Failed to convert file: ${errorMessage}. Please try again with a different file.`,
             variant: "destructive",
           });
         } finally {

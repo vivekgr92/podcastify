@@ -314,37 +314,75 @@ export function registerRoutes(app: Express) {
         return res.status(400).send("No file uploaded");
       }
 
+      console.log('File upload received:', {
+        filename: file.originalname,
+        mimetype: file.mimetype,
+        size: file.size
+      });
+
+      // Validate file size
+      const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+      if (file.size > MAX_FILE_SIZE) {
+        return res.status(400).send("File too large. Maximum size is 10MB");
+      }
+
       // Validate file type and read content
       let fileContent;
       try {
         const fileBuffer = await fs.readFile(file.path);
+        console.log('File buffer read, size:', fileBuffer.length);
         
         if (file.mimetype === 'application/pdf') {
           try {
+            console.log('Processing PDF file...');
             const pdfData = await pdfParse(fileBuffer);
             fileContent = pdfData.text;
+            console.log('PDF parsed successfully, text length:', fileContent.length);
           } catch (pdfError) {
             console.error("PDF parsing error:", pdfError);
             return res.status(400).send("Unable to parse PDF file. Please ensure it's a valid PDF.");
           }
         } else if (file.mimetype === 'text/plain') {
+          console.log('Processing text file...');
           fileContent = fileBuffer.toString('utf-8');
+          console.log('Text file parsed, length:', fileContent.length);
         } else {
           return res.status(400).send("Please upload a PDF or text file");
         }
         
         // Basic validation of text content
-        if (!fileContent || typeof fileContent !== 'string' || fileContent.length === 0) {
-          throw new Error('Invalid file content');
+        if (!fileContent || typeof fileContent !== 'string') {
+          console.error('Invalid file content type:', typeof fileContent);
+          return res.status(400).send('Invalid file content format');
+        }
+        
+        if (fileContent.length === 0) {
+          console.error('Empty file content detected');
+          return res.status(400).send('The file appears to be empty');
+        }
+
+        if (fileContent.length < 10) {
+          console.error('File content too short:', fileContent.length, 'characters');
+          return res.status(400).send('The file content is too short to process');
         }
 
         // Remove any non-printable characters and normalize whitespace
-        fileContent = fileContent
+        const normalizedContent = fileContent
           .replace(/[^\x20-\x7E\n\r\t]/g, '') // Keep only printable ASCII chars and basic whitespace
           .replace(/\s+/g, ' ')
           .trim();
+        
+        if (normalizedContent.length === 0) {
+          console.error('No valid content after normalization');
+          return res.status(400).send('No valid text content found in the file');
+        }
 
-        console.log("Processed file content sample:", fileContent.substring(0, 200) + "...");
+        fileContent = normalizedContent;
+        console.log("Processed file content:", {
+          originalLength: fileContent.length,
+          normalizedLength: normalizedContent.length,
+          sample: fileContent.substring(0, 200) + "..."
+        });
       } catch (error) {
         console.error("Error reading file:", error);
         return res.status(400).send("Unable to process file. Please ensure it's a valid PDF or text file.");

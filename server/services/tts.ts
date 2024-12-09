@@ -156,9 +156,14 @@ export class TTSService {
     text: string;
     speaker: Speaker;
   }): Promise<Buffer> {
-    console.log("Making Google TTS API request...");
+    console.log("\n============== GOOGLE TTS REQUEST ==============");
     console.log("Speaker:", speaker);
     console.log("Text length:", text.length);
+    console.log("Text preview:", text.substring(0, 100) + "...");
+
+    if (!text || text.trim().length === 0) {
+      throw new Error("Empty text provided to TTS service");
+    }
 
     try {
       // Validate text length before making the request
