@@ -91,7 +91,15 @@ export function useAudio(): AudioHookReturn {
 
       console.log('Playing audio from:', audioSrc);
 
-      // Always set audio source
+      // Validate URL before setting
+      try {
+        new URL(audioSrc);
+      } catch (e) {
+        throw new Error(`Invalid audio URL: ${audioSrc}`);
+      }
+
+      // Set up audio source with credentials
+      audio.crossOrigin = 'use-credentials';
       audio.src = audioSrc;
       
       // Set up event listeners for this specific load/play attempt

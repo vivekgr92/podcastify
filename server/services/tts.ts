@@ -364,6 +364,12 @@ export class TTSService {
           speaker: currentSpeaker as keyof typeof GOOGLE_VOICE_IDS,
         });
 
+        // Validate audio buffer
+        if (!audioBuffer || audioBuffer.length === 0) {
+          console.error(`Empty audio buffer received for chunk ${index + 1}`);
+          throw new Error('Empty audio buffer received from TTS service');
+        }
+
         console.log(`Generated audio buffer for chunk ${index + 1}, size: ${audioBuffer.length} bytes`);
         conversationParts.push({ buffer: audioBuffer, index });
 
