@@ -25,8 +25,7 @@ class LoggingService {
   }
 
   async log(message: string, type: 'info' | 'warn' | 'error' = 'info') {
-    const timestamp = new Date().toISOString();
-    const formattedMessage = `[${timestamp}] [${type.toUpperCase()}] ${message}\n`;
+    const formattedMessage = `[${type.toUpperCase()}] ${message}\n`;
     
     try {
       await fs.appendFile(this.logFilePath, formattedMessage);
