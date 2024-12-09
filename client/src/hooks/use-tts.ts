@@ -21,7 +21,8 @@ export function useTTS() {
         eventSource = new EventSource('/api/tts/progress');
         
         eventSource.onopen = () => {
-          console.log('SSE connection opened');
+          // Keep this client-side log for debugging purposes
+          console.info('SSE connection opened');
         };
         
         eventSource.onmessage = (event: MessageEvent<string>) => {
@@ -31,12 +32,12 @@ export function useTTS() {
               setProgress(Math.round(data.progress));
             }
           } catch (error) {
-            console.error('Error parsing progress data:', error);
+            console.error('Error parsing SSE progress data:', error instanceof Error ? error.message : String(error));
           }
         };
 
         eventSource.onerror = (event: Event) => {
-          console.error('EventSource error:', event);
+          console.error('SSE connection error:', event instanceof Error ? event.message : 'Connection failed');
           // Check if connection is closed
           if (eventSource && eventSource.readyState === EventSource.CLOSED) {
             setIsConverting(false);
@@ -45,7 +46,7 @@ export function useTTS() {
           }
         };
       } catch (error) {
-        console.error('Error setting up EventSource:', error);
+        console.error('Failed to setup SSE connection:', error instanceof Error ? error.message : String(error));
         setIsConverting(false);
         setProgress(0);
       }
@@ -68,7 +69,8 @@ export function useTTS() {
       setIsConverting(true);
       setProgress(0);
       
-      console.log('Starting conversion...');
+      // Keep this log for debugging the conversion start
+      console.info('Starting file conversion...');
       const response = await fetch("/api/podcast", {
         method: "POST",
         body: JSON.stringify({ text }),
@@ -82,10 +84,10 @@ export function useTTS() {
       }
 
       const result = await response.json();
-      console.log('Conversion completed:', result);
+      console.info('Conversion successful:', result);
       return result;
     } catch (error) {
-      console.error('Conversion error:', error);
+      console.error('File conversion error:', error instanceof Error ? error.message : error);
       toast({
         title: "Error",
         description: "Failed to convert text to speech",
