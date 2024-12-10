@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import type { Podcast } from "@db/schema";
-import { Share2, Upload, Play, Pause } from "lucide-react";
+import { Share2, Upload, Play, Pause, Download } from "lucide-react";
 import { useLocation } from "wouter";
 import { useAudio } from "../hooks/use-audio";
 import AudioPlayer from "../components/AudioPlayer";
@@ -96,6 +96,26 @@ const [conversionProgress, setConversionProgress] = useState(0);
                   <Button variant="default" size="sm" className="flex items-center gap-2">
                     <Upload size={16} />
                     Upload to Spotify
+                  </Button>
+                  <Button 
+                    variant="default" 
+                    size="sm" 
+                    className="flex items-center gap-2"
+                    onClick={() => {
+                      const link = document.createElement('a');
+                      const baseUrl = window.location.origin;
+                      const audioUrl = podcast.audioUrl.startsWith('http') 
+                        ? podcast.audioUrl 
+                        : `${baseUrl}${podcast.audioUrl}`;
+                      link.href = audioUrl;
+                      link.download = `${podcast.title}.mp3`;
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+                    }}
+                  >
+                    <Download size={16} />
+                    Download
                   </Button>
                   <Button variant="outline" size="sm" className="flex items-center gap-2">
                     <Share2 size={16} />
