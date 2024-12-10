@@ -523,3 +523,4 @@ Joe:
 [INFO] Generated audio buffer for chunk 4
 [INFO] Combined audio buffer size: 7509312
 [INFO] Estimated duration: 377 seconds
+[INFO] TTSService initialized successfully

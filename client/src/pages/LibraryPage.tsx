@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import type { Podcast } from "@db/schema";
-import { Share2, Upload, Play, Pause, Download } from "lucide-react";
+import { Share2, Play, Pause, Download } from "lucide-react";
 import { useLocation } from "wouter";
 import { useAudio } from "../hooks/use-audio";
 import AudioPlayer from "../components/AudioPlayer";
@@ -92,10 +92,6 @@ const [conversionProgress, setConversionProgress] = useState(0);
                     ) : (
                       <Play className="h-5 w-5 text-black fill-black" />
                     )}
-                  </Button>
-                  <Button variant="default" size="sm" className="flex items-center gap-2">
-                    <Upload size={16} />
-                    Upload to Spotify
                   </Button>
                   <Button 
                     variant="default" 
