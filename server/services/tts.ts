@@ -333,14 +333,37 @@ export class TTSService {
             },
           });
 
-          // Generate conversation prompt with proper context
+          // Generate conversation prompt with proper context and handling
           let prompt;
           if (index === 0) {
-            // First chunk should start with introduction
-            prompt = `${SYSTEM_PROMPT}\n\nCreate an engaging introduction where Joe welcomes the audience and introduces Sarah, then begin discussing this content:\n\n${chunk}\n\nJoe: `;
+            // Generate introduction separately for the first chunk
+            const introPrompt = `${SYSTEM_PROMPT}\n\nCreate a brief podcast introduction where Joe welcomes the audience and introduces Sarah. Keep it under 30 seconds:\n\nJoe: `;
+            
+            const introResult = await model.generateContent({
+              contents: [{ role: "user", parts: [{ text: introPrompt }] }],
+            });
+
+            if (!introResult.response?.candidates?.[0]?.content?.parts?.[0]?.text) {
+              throw new Error("Invalid introduction response from Vertex AI");
+            }
+
+            const introText = introResult.response.candidates[0].content.parts[0].text.trim();
+            const cleanedIntro = await this.cleanRawResponse(introText, "Joe");
+            
+            // Generate audio for introduction
+            const introAudio = await this.synthesizeWithGoogle({
+              text: cleanedIntro.text,
+              speaker: "Joe",
+            });
+            
+            conversationParts.push(introAudio);
+            
+            // Now generate the first chunk of content discussion
+            prompt = `${SYSTEM_PROMPT}\n\nNow, Sarah will start discussing this content:\n\n${chunk}\n\nSarah: `;
+            speakerIndex = 1; // Set to Sarah after Joe's introduction
           } else {
             // Subsequent chunks should continue the conversation
-            prompt = `${SYSTEM_PROMPT}\n\nContinue the conversation about this content, maintaining the natural flow:\n\nPrevious response: ${lastResponse}\n\nNew content to discuss: ${chunk}\n\n${currentSpeaker}: `;
+            prompt = `${SYSTEM_PROMPT}\n\nContinue the conversation about this content, maintaining the natural flow. Use this previous response for context, but discuss new points:\n\nPrevious response: ${lastResponse}\n\nNew content to discuss: ${chunk}\n\n${currentSpeaker}: `;
           }
 
           const finalPrompt = prompt;
