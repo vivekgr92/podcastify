@@ -296,10 +296,10 @@ export class TTSService {
 
       try {
         // Generate conversation prompt
-        let prompt = `${SYSTEM_PROMPT}\n${currentSpeaker}: ${chunk}\n${nextSpeaker}:`;
+        let prompt = `${SYSTEM_PROMPT}\n\n${currentSpeaker}: ${chunk}\n\n${nextSpeaker}:`;
 
         if (lastResponse) {
-          prompt = `${SYSTEM_PROMPT}\nPrevious response: ${lastResponse}\n${prompt}`;
+          prompt = `${SYSTEM_PROMPT}\n\nPrevious response: ${lastResponse}\n\n${prompt}`;
         }
 
         // Check for required environment variables
@@ -433,7 +433,9 @@ export class TTSService {
     text: string,
     maxBytes: number = 4800,
   ): Promise<string[]> {
-    await logger.log(`SPLITTING TEXT INTO CHUNKS (Original length: ${text.length} characters)`);
+    await logger.log(
+      `SPLITTING TEXT INTO CHUNKS (Original length: ${text.length} characters)`,
+    );
 
     const sentences = text.split(/[.!?]+\s+/);
     const chunks: string[] = [];
@@ -517,16 +519,16 @@ export class TTSService {
     // Final validation to ensure no chunk exceeds the limit
     const finalChunks: string[] = [];
     const filteredChunks = chunks.filter((chunk) => chunk.trim().length > 0);
-    
+
     for (let index = 0; index < filteredChunks.length; index++) {
       const chunk = filteredChunks[index];
       const trimmed = chunk.trim();
       const byteLength = getByteLength(trimmed);
 
       await logger.log(
-        `CHUNK ${index + 1}:\n` +
-        `Text: ${trimmed}\n` +
-        `Stats: ${trimmed.length} characters, ${byteLength} bytes`
+        `CHUNK ${index + 1}====:\n` +
+          `Text: ${trimmed}\n` +
+          `Stats: ${trimmed.length} characters, ${byteLength} bytes`,
       );
 
       if (byteLength > maxBytes) {
@@ -534,7 +536,9 @@ export class TTSService {
           `Chunk still exceeds ${maxBytes} bytes (${byteLength} bytes)`,
           "warn",
         );
-        finalChunks.push(trimmed.substring(0, Math.floor(maxBytes / 2)) + "...");
+        finalChunks.push(
+          trimmed.substring(0, Math.floor(maxBytes / 2)) + "...",
+        );
       } else {
         finalChunks.push(trimmed);
       }
