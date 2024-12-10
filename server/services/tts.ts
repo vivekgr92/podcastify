@@ -37,6 +37,9 @@ const GOOGLE_VOICE_IDS: Record<Speaker, string> = {
 const SYSTEM_PROMPT = `You are generating a natural podcast conversation between Joe and Sarah.
 
 **Guidelines**:
+Start the conversation with a warm welcome to the Curuosity Podcast and weclome the guests.
+
+**Joe**: Hi Sarah, I'm Joe, your host for this episode
 1. Joe provides detailed technical insights with clear, straightforward explanations
 2. Sarah asks thoughtful questions and offers her own insights, making the conversation engaging
 3. Keep responses concise and focused, avoiding speaker markers in the actual content
@@ -109,7 +112,8 @@ export class TTSService {
       await logger.log(`Original response: ${rawResponse}`);
 
       // Simple speaker detection at the start
-      const speakerRegex = /^(?:\*\*)?(Joe|Sarah)(?:\*\*)?(?::|：|\s*[-–—]\s*)/i;
+      const speakerRegex =
+        /^(?:\*\*)?(Joe|Sarah)(?:\*\*)?(?::|：|\s*[-–—]\s*)/i;
       const speakerMatch = rawResponse.match(speakerRegex);
 
       // Determine speaker - prefer detected speaker, fallback to current speaker
@@ -119,15 +123,15 @@ export class TTSService {
       // Clean the text - remove all speaker markers and formatting
       let cleanedText = rawResponse
         // Remove speaker markers
-        .replace(/^(?:\*\*)?(Joe|Sarah)(?:\*\*)?(?::|：|\s*[-–—]\s*)/i, '')
-        .replace(/\*\*(Joe|Sarah)\*\*[:：]/g, '')
-        .replace(/\[(Joe|Sarah)\][:：]/g, '')
-        .replace(/@(Joe|Sarah)[:：]/g, '')
-        .replace(/\b(Joe|Sarah)[:：]\s*/g, '')
+        .replace(/^(?:\*\*)?(Joe|Sarah)(?:\*\*)?(?::|：|\s*[-–—]\s*)/i, "")
+        .replace(/\*\*(Joe|Sarah)\*\*[:：]/g, "")
+        .replace(/\[(Joe|Sarah)\][:：]/g, "")
+        .replace(/@(Joe|Sarah)[:：]/g, "")
+        .replace(/\b(Joe|Sarah)[:：]\s*/g, "")
         // Remove any remaining formatting
-        .replace(/\*\*/g, '')
-        .replace(/[\n\r]+/g, ' ')
-        .replace(/\s+/g, ' ')
+        .replace(/\*\*/g, "")
+        .replace(/[\n\r]+/g, " ")
+        .replace(/\s+/g, " ")
         .trim();
 
       if (cleanedText.length === 0) {
@@ -331,9 +335,9 @@ export class TTSService {
 
           // Generate conversation prompt with explicit speaker role and alternation
           const prompt = `${SYSTEM_PROMPT}\n\n${currentSpeaker}: ${chunk}\n\n${nextSpeaker}:`;
-          
+
           // Include previous response if available
-          const finalPrompt = lastResponse 
+          const finalPrompt = lastResponse
             ? `${SYSTEM_PROMPT}\nPrevious response: ${lastResponse}\n${prompt}`
             : prompt;
 
@@ -358,7 +362,9 @@ export class TTSService {
             "\n============== VERTEX AI RESPONSE ==============",
           );
           await logger.log(`Raw response: ${rawResponse}`);
-          await logger.log("==================END============================");
+          await logger.log(
+            "\n==================END============================",
+          );
 
           // Clean the text and get the speaker
           const { text: cleanedText, speaker: detectedSpeaker } =
@@ -379,7 +385,7 @@ export class TTSService {
           await logger.log("\n============== VOICE SELECTION ==============");
           await logger.log(`Using speaker: ${finalSpeaker}`);
           await logger.log(`Voice ID: ${GOOGLE_VOICE_IDS[finalSpeaker]}`);
-          await logger.log("==================END=======================");
+          await logger.log("\n==================END=======================");
 
           // Use the final speaker's voice
           const audioBuffer = await this.synthesizeWithGoogle({

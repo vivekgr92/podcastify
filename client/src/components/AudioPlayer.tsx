@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
-import { Play, Pause, SkipBack, SkipForward, Volume2, Volume1, VolumeX } from "lucide-react";
+import { Play, Pause, SkipBack, SkipForward, Volume2, Volume1, VolumeX, Download } from "lucide-react";
 import { useAudio } from "../hooks/use-audio";
 
 export default function AudioPlayer() {
@@ -145,6 +145,30 @@ export default function AudioPlayer() {
               className="w-[100px]"
             />
           </div>
+          {/* Download Button */}
+          {audioData && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                const link = document.createElement('a');
+                // Get the base URL without any path
+                const baseUrl = window.location.origin;
+                const audioUrl = audioData.audioUrl.startsWith('http') 
+                  ? audioData.audioUrl 
+                  : `${baseUrl}${audioData.audioUrl}`;
+                link.href = audioUrl;
+                link.download = `${audioData.title}.mp3`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              }}
+              className="text-white hover:text-white hover:bg-[#4CAF50]/20 ml-4"
+              title="Download audio"
+            >
+              <Download className="h-5 w-5" />
+            </Button>
+          )}
         </div>
       </div>
     </div>
