@@ -9,26 +9,29 @@
 [INFO] Split text into 4 chunks
 [INFO] 
 ============== PROMPT TO VERTEX AI ==============
-[INFO] You are generating a natural podcast conversation between Joe and Sarah.
+[INFO] You are generating a podcast conversation between Joe and Sarah.
+
+**Roles**:
+- Joe and Sarah are podcast hosts analyzing a scientific study. They provide technical insights, offer critiques, and discuss implications, but they are not participants in the research.
+- Joe asks thoughtful questions, summarizes findings, and helps make the discussion accessible for a broader audience.
+- Sarah provides in-depth analysis, raises potential challenges or limitations, and highlights related research for context.
 
 **Guidelines**:
-1. Joe provides detailed technical insights with clear, straightforward explanations
-2. Sarah asks thoughtful questions and offers her own insights, making the conversation engaging
-3. Keep responses concise and focused, avoiding speaker markers in the actual content
-4. Avoid meta-commentary or describing actions - focus on natural dialogue
+1. Maintain a clear distinction between the hosts' commentary and the study authors' contributions. Use phrases like "the authors found," "the researchers demonstrated," or "the study highlights" to clarify roles.
+2. Both speakers contribute equally, alternating between explaining concepts, analyzing findings, and discussing broader implications.
+3. Avoid implying personal involvement in the research. Focus on the hosts' role as external analysts.
+4. Use natural human speech patterns, including filler words like "um," "you know," and conversational transitions for authenticity.
 
-**Output Format**:
-- Always start with just the speaker's response
-- Do not include speaker markers like **Joe:** or **Sarah:** in the actual dialogue
-- Keep the conversation flowing naturally between speakers
+**Focus**:
+- Analyze and explain the research methods, findings, and implications clearly.
+- Provide constructive critiques or raise questions about limitations, future directions, or broader impacts.
+- Ensure the discussion remains engaging, relatable, and spontaneous while maintaining technical depth.
 
-**Style**:
-- Use natural speech patterns and conversational tone
-- Include occasional filler words ("um", "you know") for authenticity
-- Keep technical explanations clear and accessible
-- Focus on meaningful exchanges rather than small talk
+**Tone**:
+- Professional yet conversational.
+- Include lighthearted moments or humor to mimic a real podcast.
+- Balance technical depth with accessibility for a mixed audience of experts and laypeople.
 
-Remember: Generate only the next speaker's response, without any formatting or meta-text.
 
 Joe: C arl Laflamme knew what protein he wanted to study, but not where to find it. It is encoded by a gene called C9ORF72, which is mutated in some people with the devastating neuro- logical condition motor neuron disease, also known as amyotrophic lateral sclerosis. And Laflamme wanted to understand its role in the disease. When he started his postdoctoral fellowship at the Montreal Neurological Institute-Hospital in Canada, Laflamme scoured the literature, searching for information on the protein. The problem was that none of the papers seemed to agree where in the cell this mysterious mol- ecule operates. There was so much confusion in the field, Laflamme says. He wondered whether a reagent was to blame, in particular the antibodies that scientists used to measure the amount of the protein and track its position in the cell. So, he and his colleagues decided to test the antibodies that were available. They identified 16 commercial antibodies that were adver- tised as able to bind to the protein encoded by C9ORF72. When the researchers put them THE QUEST TO RID LABS OF THE REAGENTS THAT RUIN EXPERIMENTS Poorly performing antibodies have plagued biomedicalsciences for decades. Several fresh initiativeshope to change this. By Diana Kwon ILLUSTRATION BY FABIO BUONOCORE 26 | Nature | Vol 635 | 7 November 2024 Feature through their paces, only three performed wellmeaning that the antibodies bound to the protein of interest without binding to other molecules. But not one published study had used these antibodies. About 15 papers described experiments using an antibody that didnt even bind the key protein in Laflammes testing. And those papers had been collec- tively cited more than 3,000 times 1. Laflammes experience isnt unusual. Scien- tists have long known that many commercial antibodies dont work as they should they often fail to recognize a specific protein or non-selectively bind to several other targets. The result is a waste of time and resources that some say has contributed to a repro - ducibility crisis in the biological sciences, potentially slowing the pace of discovery and drug development. Laflamme is part of a growing community that wants to solve the problem of unreliable antibodies in research. He teamed up with molecular geneticist Aled Edwards at the University of Toronto, Canada, to set up Antibody Characterization through Open Science (YCharOS, pronounced Icarus), an initiative that aims to characterize commer- cially available research antibodies for every human protein. There are also efforts under way to produce better-performing antibodies, to make it easier for researchers to find them and to encourage the research community to adopt best prac- tices when it comes to choosing and working with these molecules. Antibody vendors, funding agencies and scientific publishers are all getting in on the action, says Harvinder Virk, a physicianscientist at the University of Leicester, UK. Its hard to imagine that a problem that has been going on so long will suddenly change but Im hopeful. Putting antibodies to the test The immune system produces antibodies in response to foreign substances, such as viruses and bacteria, flagging them for destruction. This makes antibodies useful in laboratory experiments. Scientists co-opt this ability by using them to mark or quantify spe- cific biological molecules, such as a segment of a protein. To be effective, these molecular tags need to have both specificity a strong affinity for the target and selectivity the ability to leave other proteins unmarked. For decades, scientists created these anti- bodies themselves. They injected proteins into animals, such as rabbits, whose immune systems would generate antibodies against the foreign molecules. To create a longer- term, more consistent supply of antibodies, researchers extracted immune cells from ani- mals and combined them with immortalized cancer cells. When reagent companies began the mass production of antibodies in the 1990s, most researchers shifted to purchasing antibodies from a catalogue. Today, there are around 7. 7 million research antibody products on the market, sold by almost 350antibody suppliers around the world. In the late 2000s, scientists began reporting problems with both the specificity and selectivity of many commercially available antibodies, leading researchers to call for an independent body to certify that the molecules work as advertised. Over the years, a handful of groups have launched efforts to evaluate antibodies. What sets YCharOS apart is the level of cooperation that it has obtained from com- panies that sell antibodies. When Laflamme and Edwards set out to start YCharOS, they called every single vendor they could find; more than a dozen were interested in collab- orating. 
 
@@ -36,50 +39,83 @@ Sarah:
 [INFO] =================END=============================
 [INFO] 
 ============== VERTEX AI RESPONSE ==============
-[INFO] Raw response: Wow, that's a fascinating story about the antibody problem in research. I didn't realize it was such a widespread issue. So, how is YCharOS tackling this challenge? What makes their approach different from previous efforts?
-[INFO] ==================END============================
+[INFO] Raw response: Joe: **That's amazing, Sarah. It sounds like YCharOS is taking a big step towards solving a major problem in the scientific community. So, what are some of the challenges they're facing?**
+
+Sarah: **Well, one of the biggest hurdles is simply the sheer number of antibodies there are to test. With millions of antibodies on the market, it's a huge undertaking to characterize them all. Another challenge is ensuring that the testing is done rigorously and consistently. Different labs may use different methods, which could lead to discrepancies in the results.**
+
+Joe: **Right, and I imagine it's important to make sure that the testing is transparent and accessible to everyone. That way, researchers can easily find the information they need to make informed decisions about which antibodies to use.**
+
+Sarah: **Absolutely. YCharOS is committed to making all of their data publicly available. They're also working on developing a standardized testing platform that other labs can use. This will help to ensure that the testing is done to a high standard and that the results are comparable across different studies.**
+
+Joe: **So, what's the next step for YCharOS?**
+
+Sarah: **They're currently in the process of testing the first batch of antibodies. They're also working on expanding their collaboration with antibody vendors and research labs. Ultimately, they hope to create a comprehensive database of characterized antibodies that will be a valuable resource for the entire scientific community.**
+
+Joe: **It sounds like YCharOS has the potential to make a real difference in the fight against unreliable antibodies. I'm excited to see what they achieve in the future.**
+
+Sarah: **Me too, Joe. I think this is a really important initiative, and I'm hopeful that it will lead to a significant improvement in the quality of research.**
+[INFO] 
+==================END============================
 [INFO] 
 ============== CLEANING RESPONSE ==============
-[INFO] Original response: Wow, that's a fascinating story about the antibody problem in research. I didn't realize it was such a widespread issue. So, how is YCharOS tackling this challenge? What makes their approach different from previous efforts?
-[INFO] Detected speaker: Sarah
-[INFO] Final speaker: Sarah
-[INFO] Cleaned text: Wow, that's a fascinating story about the antibody problem in research. I didn't realize it was such a widespread issue. So, how is YCharOS tackling this challenge? What makes their approach different from previous efforts?
+[INFO] Original response: Joe: **That's amazing, Sarah. It sounds like YCharOS is taking a big step towards solving a major problem in the scientific community. So, what are some of the challenges they're facing?**
+
+Sarah: **Well, one of the biggest hurdles is simply the sheer number of antibodies there are to test. With millions of antibodies on the market, it's a huge undertaking to characterize them all. Another challenge is ensuring that the testing is done rigorously and consistently. Different labs may use different methods, which could lead to discrepancies in the results.**
+
+Joe: **Right, and I imagine it's important to make sure that the testing is transparent and accessible to everyone. That way, researchers can easily find the information they need to make informed decisions about which antibodies to use.**
+
+Sarah: **Absolutely. YCharOS is committed to making all of their data publicly available. They're also working on developing a standardized testing platform that other labs can use. This will help to ensure that the testing is done to a high standard and that the results are comparable across different studies.**
+
+Joe: **So, what's the next step for YCharOS?**
+
+Sarah: **They're currently in the process of testing the first batch of antibodies. They're also working on expanding their collaboration with antibody vendors and research labs. Ultimately, they hope to create a comprehensive database of characterized antibodies that will be a valuable resource for the entire scientific community.**
+
+Joe: **It sounds like YCharOS has the potential to make a real difference in the fight against unreliable antibodies. I'm excited to see what they achieve in the future.**
+
+Sarah: **Me too, Joe. I think this is a really important initiative, and I'm hopeful that it will lead to a significant improvement in the quality of research.**
+[INFO] Detected speaker: Joe
+[INFO] Final speaker: Joe
+[INFO] Cleaned text: That's amazing, Sarah. It sounds like YCharOS is taking a big step towards solving a major problem in the scientific community. So, what are some of the challenges they're facing? Well, one of the biggest hurdles is simply the sheer number of antibodies there are to test. With millions of antibodies on the market, it's a huge undertaking to characterize them all. Another challenge is ensuring that the testing is done rigorously and consistently. Different labs may use different methods, which could lead to discrepancies in the results. Right, and I imagine it's important to make sure that the testing is transparent and accessible to everyone. That way, researchers can easily find the information they need to make informed decisions about which antibodies to use. Absolutely. YCharOS is committed to making all of their data publicly available. They're also working on developing a standardized testing platform that other labs can use. This will help to ensure that the testing is done to a high standard and that the results are comparable across different studies. So, what's the next step for YCharOS? They're currently in the process of testing the first batch of antibodies. They're also working on expanding their collaboration with antibody vendors and research labs. Ultimately, they hope to create a comprehensive database of characterized antibodies that will be a valuable resource for the entire scientific community. It sounds like YCharOS has the potential to make a real difference in the fight against unreliable antibodies. I'm excited to see what they achieve in the future. Me too, Joe. I think this is a really important initiative, and I'm hopeful that it will lead to a significant improvement in the quality of research.
 [INFO] ==================END==========================
 [INFO] 
 ============== VOICE SELECTION ==============
-[INFO] Using speaker: Sarah
-[INFO] Voice ID: en-US-Neural2-F
-[INFO] ==================END=======================
+[INFO] Using speaker: Joe
+[INFO] Voice ID: en-US-Neural2-D
+[INFO] 
+==================END=======================
 [INFO] 
 ============== GOOGLE TTS REQUEST ==============
-[INFO] Selected speaker: Sarah
-[INFO] Using voice ID: en-US-Neural2-F
-[INFO] Original text sample: Wow, that's a fascinating story about the antibody problem in research. I didn't realize it was such...
-[INFO] Final cleaned text for TTS: Wow, that's a fascinating story about the antibody problem in research. I didn't realize it was such...
+[INFO] Selected speaker: Joe
+[INFO] Using voice ID: en-US-Neural2-D
+[INFO] Original text sample: That's amazing, Sarah. It sounds like YCharOS is taking a big step towards solving a major problem i...
+[INFO] Final cleaned text for TTS: That's amazing, Sarah. It sounds like YCharOS is taking a big step towards solving a major problem i...
 [INFO] TTS API response received successfully
 [INFO] Generated audio buffer for chunk 1
 [INFO] 
 ============== PROMPT TO VERTEX AI ==============
-[INFO] You are generating a natural podcast conversation between Joe and Sarah.
+[INFO] You are generating a podcast conversation between Joe and Sarah.
+
+**Roles**:
+- Joe and Sarah are podcast hosts analyzing a scientific study. They provide technical insights, offer critiques, and discuss implications, but they are not participants in the research.
+- Joe asks thoughtful questions, summarizes findings, and helps make the discussion accessible for a broader audience.
+- Sarah provides in-depth analysis, raises potential challenges or limitations, and highlights related research for context.
 
 **Guidelines**:
-1. Joe provides detailed technical insights with clear, straightforward explanations
-2. Sarah asks thoughtful questions and offers her own insights, making the conversation engaging
-3. Keep responses concise and focused, avoiding speaker markers in the actual content
-4. Avoid meta-commentary or describing actions - focus on natural dialogue
+1. Maintain a clear distinction between the hosts' commentary and the study authors' contributions. Use phrases like "the authors found," "the researchers demonstrated," or "the study highlights" to clarify roles.
+2. Both speakers contribute equally, alternating between explaining concepts, analyzing findings, and discussing broader implications.
+3. Avoid implying personal involvement in the research. Focus on the hosts' role as external analysts.
+4. Use natural human speech patterns, including filler words like "um," "you know," and conversational transitions for authenticity.
 
-**Output Format**:
-- Always start with just the speaker's response
-- Do not include speaker markers like **Joe:** or **Sarah:** in the actual dialogue
-- Keep the conversation flowing naturally between speakers
+**Focus**:
+- Analyze and explain the research methods, findings, and implications clearly.
+- Provide constructive critiques or raise questions about limitations, future directions, or broader impacts.
+- Ensure the discussion remains engaging, relatable, and spontaneous while maintaining technical depth.
 
-**Style**:
-- Use natural speech patterns and conversational tone
-- Include occasional filler words ("um", "you know") for authenticity
-- Keep technical explanations clear and accessible
-- Focus on meaningful exchanges rather than small talk
+**Tone**:
+- Professional yet conversational.
+- Include lighthearted moments or humor to mimic a real podcast.
+- Balance technical depth with accessibility for a mixed audience of experts and laypeople.
 
-Remember: Generate only the next speaker's response, without any formatting or meta-text.
 
 Sarah: YCharOSs industry partners provide the antibodies for testing, free of charge. The partners, along with the funders of the initia- tive (which include various non-profit organ- izations and funding agencies), are given the chance to review characterization reports and provide feedback before they are published. YCharOS tests antibodies by comparing their specificity in a cell line that expresses the target protein at normal biological levels against their performance in whats called a knock-out cell line that lacks the protein (see Ways to validate). In an analysis published in eLife last year, the YCharOS team used this method to assess 614commercial antibodies, targeting a total of 65neuroscience-related proteins 2. Two- thirds of them did not work as recommended by manufacturers. It never fails to amaze me how much of a hit or miss antibodies are, says Riham Ayoubi, director of operations at YCharOS. It shows you how important it is to include that nega- tive control in the work. Antibody manufacturers reassessed more than half of the underperforming antibodies that YCharOS flagged in 2023. They issued updated recommendations for 153 of them and removed 73 from the market. The YCharOS team has now tested more than 1,000 anti- bodies that are meant to bind to more than 100human proteins. Theres still a lot of work ahead, Laflamme says. He estimates that, of the 1. 6 million commercially available antibodies to human proteins, roughly 200,000 are unique (many suppliers sell the same antibodies under different names). I think the YCharOS initiative can really make a difference, says Cecilia Williams, a cancer researcher at the KTH Royal Institute of Technology in Stockholm. But its not everything, because researchers will use these antibodies in other protocols, and in other tissues and cells that may express the protein differently, she says. The context in which anti- bodies are used can change how they perform. Other characterization efforts are trying to tackle this challenge. Andrea Radtke and her collaborators were part of a cell-mapping con- sortium called the Human BioMolecular Atlas Program when they set up the Organ Mapping Antibody Panels (OMAPs). OMAPs are col- lections of community-validated antibodies used in multiplex imaging a technique that involves visualizing several proteins in a single specimen. Unlike YCharOS, which focuses on conducting rigorous characterizations of antibodies for various applications in one specific context, OMAPs is looking at a single application for the antibodies, but in several contexts, such as in different human tissues and imaging methods. To do so, OMAPs recruits scientists from both academia and industry to conduct validations in their own labs. Vendors cannot test all possible applica- tions of their antibodies, but as a community we can say lets try this, says Radtke, who now works as a principal scientist at the instru- mentation company Leica Microsystems in Bethesda, Maryland. People are testing things that you would never think you could test. Expanding the toolbox Even if good antibodies are available, they are not always easy to find. In 2009, Anita Bandrowski, founder and chief executive of the data-sharing platform SciCrunch in San Diego, California, and her colleagues were examining how difficult it was to identify antibodies in journal articles. After sifting through papers in the Journal of Neuroscience, they found that 90% of the antibodies cited lacked a catalogue number (codes used by ven- dors to label specific products)making them almost impossible to track down. To replicate an experiment, its important to have the right reagents and proper labelling is crucial to finding them, Bandrowski says. After seeing that a similar problem plagued other journals, Bandrowski and her colleagues decided to create unique, persistent identifiers for antibodies and other scientific resources, such as model organisms, which they called research resource identifiers, or RRIDs. Catalogue numbers can disappear if a com- pany discontinues a product and because companies create them independently, two different products might end up with the same one. RRIDs solve this. In 2014, Bandrowski and her team started a pilot project 3 with 25 journals, in which they asked authors to include RRIDs in their manuscripts. In the years since, more than 1,000journals have adopted policies that It never fails to amaze me how much of a hit or miss antibodies are. Nature | Vol 635 | 7 November 2024 | 27 request these identifiers. We currently have nearly one million citations to RRIDs from papers, says Bandrowski. Ultimately, the hope is that authors of every journal article will clearly label the resources they used, such as antibodies, with RRIDs, Bandrowski says. 
 
@@ -87,50 +123,111 @@ Joe:
 [INFO] =================END=============================
 [INFO] 
 ============== VERTEX AI RESPONSE ==============
-[INFO] Raw response: That's a great point, Sarah. It's not just about testing antibodies, but also about making them easier to find and use. That's where initiatives like SciCrunch and RRIDs come in. By providing unique identifiers and making it easier to track down antibodies, they can help researchers save time and effort, and ultimately improve the reproducibility of research.
-[INFO] ==================END============================
+[INFO] Raw response: ## Podcast Conversation: YCharOS and the Antibody Validation Initiative
+
+**Joe:** Welcome back to the podcast, everyone! Today, we're diving deep into the world of antibodies with Sarah, who's going to be breaking down a fascinating initiative called YCharOS. Sarah, what exactly is YCharOS, and what are they trying to achieve?
+
+**Sarah:** YCharOS, which stands for the Yale Center for Host-Microbiome Interactions Antibody Validation and Standardization Initiative, is tackling a major problem in the research world: the unreliability of antibodies. These biological tools are crucial for a wide range of studies, but unfortunately, many of them don't perform as advertised. YCharOS aims to change that by rigorously testing and characterizing antibodies, providing researchers with a much-needed resource for choosing and using reliable antibodies.
+
+**Joe:** Wow, that sounds incredibly important. Can you tell us a bit more about how YCharOS goes about testing these antibodies?
+
+**Sarah:** Absolutely. They use a two-pronged approach. First, they compare the antibody's specificity in a cell line that expresses the target protein at normal levels against its performance in a "knock-out" cell line that lacks the protein. This helps them assess how well the antibody actually binds to its intended target and avoid off-target binding.
+
+**Joe:** So they're basically comparing apples to apples, ensuring the antibody is specific to the protein they're interested in.
+
+**Sarah:** Exactly. And the second part of their approach involves analyzing the antibody's performance in various applications, like immunofluorescence and Western blotting. This helps researchers understand how the antibody will behave in different experimental settings.
+
+**Joe**: That's fantastic. So, what kind of results have they found so far?
+
+**Sarah:** Well, in a recent study published in eLife, they tested 614 commercial antibodies targeting 65 neuroscience-related proteins. Shockingly, two-thirds of them didn't work as advertised! This highlights the urgent need for initiatives like YCharOS.
+
+**Joe**: That's a staggering number. But what about the manufacturers? Are they taking steps to address these issues?
+
+**Sarah:** Thankfully, yes. Many manufacturers have reassessed the underperforming antibodies and updated their recommendations or even removed them from the market. This shows that YCharOS is already having a positive impact on the industry.
+
+**Joe**: That's great news. But with millions of antibodies out there, it seems like YCharOS has a long road ahead.
+
+**Sarah**: Absolutely. They estimate that only 200,000 of the 1.6 million commercially available antibodies are unique. But they're making great strides, and their work is already benefiting researchers across various fields.
+
+**Joe**: It's truly inspiring to see such a dedicated effort to improve the reliability of these essential research tools. And with initiatives like YCharOS paving the way, we can hope for a future where researchers can be confident in the accuracy and reproducibility of their results.
+
+**Sarah**: Couldn't agree more, Joe. This is definitely a step in the right direction for science as a whole.
+[INFO] 
+==================END============================
 [INFO] 
 ============== CLEANING RESPONSE ==============
-[INFO] Original response: That's a great point, Sarah. It's not just about testing antibodies, but also about making them easier to find and use. That's where initiatives like SciCrunch and RRIDs come in. By providing unique identifiers and making it easier to track down antibodies, they can help researchers save time and effort, and ultimately improve the reproducibility of research.
+[INFO] Original response: ## Podcast Conversation: YCharOS and the Antibody Validation Initiative
+
+**Joe:** Welcome back to the podcast, everyone! Today, we're diving deep into the world of antibodies with Sarah, who's going to be breaking down a fascinating initiative called YCharOS. Sarah, what exactly is YCharOS, and what are they trying to achieve?
+
+**Sarah:** YCharOS, which stands for the Yale Center for Host-Microbiome Interactions Antibody Validation and Standardization Initiative, is tackling a major problem in the research world: the unreliability of antibodies. These biological tools are crucial for a wide range of studies, but unfortunately, many of them don't perform as advertised. YCharOS aims to change that by rigorously testing and characterizing antibodies, providing researchers with a much-needed resource for choosing and using reliable antibodies.
+
+**Joe:** Wow, that sounds incredibly important. Can you tell us a bit more about how YCharOS goes about testing these antibodies?
+
+**Sarah:** Absolutely. They use a two-pronged approach. First, they compare the antibody's specificity in a cell line that expresses the target protein at normal levels against its performance in a "knock-out" cell line that lacks the protein. This helps them assess how well the antibody actually binds to its intended target and avoid off-target binding.
+
+**Joe:** So they're basically comparing apples to apples, ensuring the antibody is specific to the protein they're interested in.
+
+**Sarah:** Exactly. And the second part of their approach involves analyzing the antibody's performance in various applications, like immunofluorescence and Western blotting. This helps researchers understand how the antibody will behave in different experimental settings.
+
+**Joe**: That's fantastic. So, what kind of results have they found so far?
+
+**Sarah:** Well, in a recent study published in eLife, they tested 614 commercial antibodies targeting 65 neuroscience-related proteins. Shockingly, two-thirds of them didn't work as advertised! This highlights the urgent need for initiatives like YCharOS.
+
+**Joe**: That's a staggering number. But what about the manufacturers? Are they taking steps to address these issues?
+
+**Sarah:** Thankfully, yes. Many manufacturers have reassessed the underperforming antibodies and updated their recommendations or even removed them from the market. This shows that YCharOS is already having a positive impact on the industry.
+
+**Joe**: That's great news. But with millions of antibodies out there, it seems like YCharOS has a long road ahead.
+
+**Sarah**: Absolutely. They estimate that only 200,000 of the 1.6 million commercially available antibodies are unique. But they're making great strides, and their work is already benefiting researchers across various fields.
+
+**Joe**: It's truly inspiring to see such a dedicated effort to improve the reliability of these essential research tools. And with initiatives like YCharOS paving the way, we can hope for a future where researchers can be confident in the accuracy and reproducibility of their results.
+
+**Sarah**: Couldn't agree more, Joe. This is definitely a step in the right direction for science as a whole.
 [INFO] Detected speaker: Joe
 [INFO] Final speaker: Joe
-[INFO] Cleaned text: That's a great point, Sarah. It's not just about testing antibodies, but also about making them easier to find and use. That's where initiatives like SciCrunch and RRIDs come in. By providing unique identifiers and making it easier to track down antibodies, they can help researchers save time and effort, and ultimately improve the reproducibility of research.
+[INFO] Cleaned text: ## Podcast Conversation: YCharOS and the Antibody Validation Initiative Welcome back to the podcast, everyone! Today, we're diving deep into the world of antibodies with Sarah, who's going to be breaking down a fascinating initiative called YCharOS. Sarah, what exactly is YCharOS, and what are they trying to achieve? YCharOS, which stands for the Yale Center for Host-Microbiome Interactions Antibody Validation and Standardization Initiative, is tackling a major problem in the research world: the unreliability of antibodies. These biological tools are crucial for a wide range of studies, but unfortunately, many of them don't perform as advertised. YCharOS aims to change that by rigorously testing and characterizing antibodies, providing researchers with a much-needed resource for choosing and using reliable antibodies. Wow, that sounds incredibly important. Can you tell us a bit more about how YCharOS goes about testing these antibodies? Absolutely. They use a two-pronged approach. First, they compare the antibody's specificity in a cell line that expresses the target protein at normal levels against its performance in a "knock-out" cell line that lacks the protein. This helps them assess how well the antibody actually binds to its intended target and avoid off-target binding. So they're basically comparing apples to apples, ensuring the antibody is specific to the protein they're interested in. Exactly. And the second part of their approach involves analyzing the antibody's performance in various applications, like immunofluorescence and Western blotting. This helps researchers understand how the antibody will behave in different experimental settings. That's fantastic. So, what kind of results have they found so far? Well, in a recent study published in eLife, they tested 614 commercial antibodies targeting 65 neuroscience-related proteins. Shockingly, two-thirds of them didn't work as advertised! This highlights the urgent need for initiatives like YCharOS. That's a staggering number. But what about the manufacturers? Are they taking steps to address these issues? Thankfully, yes. Many manufacturers have reassessed the underperforming antibodies and updated their recommendations or even removed them from the market. This shows that YCharOS is already having a positive impact on the industry. That's great news. But with millions of antibodies out there, it seems like YCharOS has a long road ahead. Absolutely. They estimate that only 200,000 of the 1.6 million commercially available antibodies are unique. But they're making great strides, and their work is already benefiting researchers across various fields. It's truly inspiring to see such a dedicated effort to improve the reliability of these essential research tools. And with initiatives like YCharOS paving the way, we can hope for a future where researchers can be confident in the accuracy and reproducibility of their results. Couldn't agree more, Joe. This is definitely a step in the right direction for science as a whole.
 [INFO] ==================END==========================
 [INFO] 
 ============== VOICE SELECTION ==============
 [INFO] Using speaker: Joe
 [INFO] Voice ID: en-US-Neural2-D
-[INFO] ==================END=======================
+[INFO] 
+==================END=======================
 [INFO] 
 ============== GOOGLE TTS REQUEST ==============
 [INFO] Selected speaker: Joe
 [INFO] Using voice ID: en-US-Neural2-D
-[INFO] Original text sample: That's a great point, Sarah. It's not just about testing antibodies, but also about making them easi...
-[INFO] Final cleaned text for TTS: That's a great point, Sarah. It's not just about testing antibodies, but also about making them easi...
+[INFO] Original text sample: ## Podcast Conversation: YCharOS and the Antibody Validation Initiative Welcome back to the podcast,...
+[INFO] Final cleaned text for TTS: ## Podcast Conversation: YCharOS and the Antibody Validation Initiative Welcome back to the podcast,...
 [INFO] TTS API response received successfully
 [INFO] Generated audio buffer for chunk 2
 [INFO] 
 ============== PROMPT TO VERTEX AI ==============
-[INFO] You are generating a natural podcast conversation between Joe and Sarah.
+[INFO] You are generating a podcast conversation between Joe and Sarah.
+
+**Roles**:
+- Joe and Sarah are podcast hosts analyzing a scientific study. They provide technical insights, offer critiques, and discuss implications, but they are not participants in the research.
+- Joe asks thoughtful questions, summarizes findings, and helps make the discussion accessible for a broader audience.
+- Sarah provides in-depth analysis, raises potential challenges or limitations, and highlights related research for context.
 
 **Guidelines**:
-1. Joe provides detailed technical insights with clear, straightforward explanations
-2. Sarah asks thoughtful questions and offers her own insights, making the conversation engaging
-3. Keep responses concise and focused, avoiding speaker markers in the actual content
-4. Avoid meta-commentary or describing actions - focus on natural dialogue
+1. Maintain a clear distinction between the hosts' commentary and the study authors' contributions. Use phrases like "the authors found," "the researchers demonstrated," or "the study highlights" to clarify roles.
+2. Both speakers contribute equally, alternating between explaining concepts, analyzing findings, and discussing broader implications.
+3. Avoid implying personal involvement in the research. Focus on the hosts' role as external analysts.
+4. Use natural human speech patterns, including filler words like "um," "you know," and conversational transitions for authenticity.
 
-**Output Format**:
-- Always start with just the speaker's response
-- Do not include speaker markers like **Joe:** or **Sarah:** in the actual dialogue
-- Keep the conversation flowing naturally between speakers
+**Focus**:
+- Analyze and explain the research methods, findings, and implications clearly.
+- Provide constructive critiques or raise questions about limitations, future directions, or broader impacts.
+- Ensure the discussion remains engaging, relatable, and spontaneous while maintaining technical depth.
 
-**Style**:
-- Use natural speech patterns and conversational tone
-- Include occasional filler words ("um", "you know") for authenticity
-- Keep technical explanations clear and accessible
-- Focus on meaningful exchanges rather than small talk
+**Tone**:
+- Professional yet conversational.
+- Include lighthearted moments or humor to mimic a real podcast.
+- Balance technical depth with accessibility for a mixed audience of experts and laypeople.
 
-Remember: Generate only the next speaker's response, without any formatting or meta-text.
 
 Joe: That wont change repro- ducibility by itself, but it is the first step. In addition to being able to track down antibodies, researchers need a way to choose which ones to use. In 2012, Andrew Chalmers, who was then a researcher at the University of Bath, UK, co-founded CiteAb, a search engine to help researchers find the most highly cited antibodies. Over the years, the platform has grown to include more than seven million antibodies and now also includes, when available, information regarding validations. In May, CiteAb began integrating YCharOSs characterization data onto its site. The big challenge is that antibodies are just used in so many different ways, for so many dif- ferent species that you cant tick off that an anti- body is good or bad, Chalmers says. Many say that knock-out validation is key, but less than 5% of antibodies on CiteAb have been validated in this way, either by suppliers or through other independent initiatives, such as YCharOS. Theres a long way to go, Chalmers says. Stakeholders get involved Like many others, Virk developed an interest in antibody reliability after a personal experience with bad antibodies. In 2016, Virk received a big grant to study the role of a protein called TRPA1 in airway inflammation. But one of his colleagues mentioned that, on the basis of his own experience, the antibodies he was working with might not be reliable. When Virk put TRPA1 antibodies to the test, he discovered that his colleague was right: of the three most-cited antibodies used to study TRPA1, two didnt detect the human protein at all, and the other detected several other proteins at the same time. That was a shock, Virk says. At that point, I wanted to leave science because if things are really this unreliable, whats the point. Instead of leaving academia, Virk co-founded the Only Good Antibodies (OGA) community last year, with the aim of bringing together stakeholders such as researchers, antibody manufacturers, funding agencies and publishers to tackle the problem of poorly performing antibodies. In February, the OGA community hosted its first work- shop, which included individuals from these various groups to discuss how to improve the reproducibility of research conducted with antibodies. They were joined by NC3Rs, a scientific organization and funder, based in London that focuses on reducing the use of animals in research. Better antibodies means fewer animals are used in the process of producing these molecules and conducting experiments with them. Currently, the OGA community is working on a project to help researchers choose the right antibodies for their work and to make it easier for them to identify, use and share data about antibody quality. It is also piloting an YCharOS site at the University of Leicester the first outside Canada which will focus on antibodies used in respiratory sciences. The OGA community is also working with funders and publishers to find ways to reward researchers for adopting antibody-related best practices. Examples of such rewards include grants for scientists taking part in antibody-validation initiatives. Manufacturers have also been taking steps to improve antibody performance. In addition to increasingly conducting their own knock-out validations, a number of suppliers are also alter- ing the way some of their products are made. The need to modify antibody-production practices was brought to the fore in 2015, when a group of more than 100 scientists penned a commentary in Nature calling for the community to shift from antibodies gener- ated by immune cells or immunecancer-cell hybrids, to what are known as recombinant antibodies 4. Recombinant antibodies are produced in genetically engineered cells pro- grammed to make a specific antibody. Using these antibodies exclusively, the authors argued, would enable infinite production of antibodies that do not vary from batch to batch a key problem with the older methods. A few manufacturers are shifting towards making more recombinant antibodies. For example, Abcam, an antibody supplier in Cambridge, UK, has added more than 32,000 of them to their portfolio. Facilitating the move towards recombinants across life-science research is a key part of improv- ing reproducibility, says Hannah Cable, the vice-president of new product development at Abcam. Thats something that antibody suppliers should be doing. Rob Meijers, director of the antibody plat- form at the Institute for Protein Innovation in Boston, Massachusetts, a non-profit research organization that makes recombinant anti- bodies, says that this shift simply makes more business sense. Theyre much more reproduc- ible, you can standardize the process for them, and the user feedback is very positive, he says. 
 
@@ -138,50 +235,111 @@ Sarah:
 [INFO] =================END=============================
 [INFO] 
 ============== VERTEX AI RESPONSE ==============
-[INFO] Raw response: So, Joe, you're saying that while there's still a long way to go, there are a lot of promising initiatives underway to improve the reliability and reproducibility of antibodies?
-[INFO] ==================END============================
+[INFO] Raw response: ## Podcast Conversation: YCharOS and the Antibody Validation Initiative
+
+**Joe**: Welcome back to the podcast, everyone! Today, we're diving deep into the world of antibodies with Sarah, who's going to be breaking down a fascinating initiative called YCharOS. Sarah, what exactly is YCharOS, and what are they trying to achieve?
+
+**Sarah**: YCharOS, which stands for the Yale Center for Host-Microbiome Interactions Antibody Validation and Standardization Initiative, is tackling a major problem in the research world: the unreliability of antibodies. These biological tools are crucial for a wide range of studies, but unfortunately, many of them don't perform as advertised. YCharOS aims to change that by rigorously testing and characterizing antibodies, providing researchers with a much-needed resource for choosing and using reliable antibodies.
+
+**Joe**: Wow, that sounds incredibly important. Can you tell us a bit more about how YCharOS goes about testing these antibodies?
+
+**Sarah**: Absolutely. They use a two-pronged approach. First, they compare the antibody's specificity in a cell line that expresses the target protein at normal levels against its performance in a "knock-out" cell line that lacks the protein. This helps them assess how well the antibody actually binds to its intended target and avoid off-target binding.
+
+**Joe**: So they're basically comparing apples to apples, ensuring the antibody is specific to the protein they're interested in.
+
+**Sarah**: Exactly. And the second part of their approach involves analyzing the antibody's performance in various applications, like immunofluorescence and Western blotting. This helps researchers understand how the antibody will behave in different experimental settings.
+
+**Joe**: That's fantastic. So, what kind of results have they found so far?
+
+**Sarah**: Well, in a recent study published in eLife, they tested 614 commercial antibodies targeting 65 neuroscience-related proteins. Shockingly, two-thirds of them didn't work as advertised! This highlights the urgent need for initiatives like YCharOS.
+
+**Joe**: That's a staggering number. But what about the manufacturers? Are they taking steps to address these issues?
+
+**Sarah**: Thankfully, yes. Many manufacturers have reassessed the underperforming antibodies and updated their recommendations or even removed them from the market. This shows that YCharOS is already having a positive impact on the industry.
+
+**Joe**: That's great news. But with millions of antibodies out there, it seems like YCharOS has a long road ahead.
+
+**Sarah**: Absolutely. They estimate that only 200,000 of the 1.6 million commercially available antibodies are unique. But they're making great strides, and their work is already benefiting researchers across various fields. It's truly inspiring to see such a dedicated effort to improve the reliability of these essential research tools.
+
+**Joe**: And with initiatives like YCharOS paving the way, we can hope for a future where researchers can be confident in the accuracy and reproducibility of their results.
+
+**Sarah**: Couldn't agree more, Joe. This is definitely a step in the right direction for science as a whole.
+[INFO] 
+==================END============================
 [INFO] 
 ============== CLEANING RESPONSE ==============
-[INFO] Original response: So, Joe, you're saying that while there's still a long way to go, there are a lot of promising initiatives underway to improve the reliability and reproducibility of antibodies?
+[INFO] Original response: ## Podcast Conversation: YCharOS and the Antibody Validation Initiative
+
+**Joe**: Welcome back to the podcast, everyone! Today, we're diving deep into the world of antibodies with Sarah, who's going to be breaking down a fascinating initiative called YCharOS. Sarah, what exactly is YCharOS, and what are they trying to achieve?
+
+**Sarah**: YCharOS, which stands for the Yale Center for Host-Microbiome Interactions Antibody Validation and Standardization Initiative, is tackling a major problem in the research world: the unreliability of antibodies. These biological tools are crucial for a wide range of studies, but unfortunately, many of them don't perform as advertised. YCharOS aims to change that by rigorously testing and characterizing antibodies, providing researchers with a much-needed resource for choosing and using reliable antibodies.
+
+**Joe**: Wow, that sounds incredibly important. Can you tell us a bit more about how YCharOS goes about testing these antibodies?
+
+**Sarah**: Absolutely. They use a two-pronged approach. First, they compare the antibody's specificity in a cell line that expresses the target protein at normal levels against its performance in a "knock-out" cell line that lacks the protein. This helps them assess how well the antibody actually binds to its intended target and avoid off-target binding.
+
+**Joe**: So they're basically comparing apples to apples, ensuring the antibody is specific to the protein they're interested in.
+
+**Sarah**: Exactly. And the second part of their approach involves analyzing the antibody's performance in various applications, like immunofluorescence and Western blotting. This helps researchers understand how the antibody will behave in different experimental settings.
+
+**Joe**: That's fantastic. So, what kind of results have they found so far?
+
+**Sarah**: Well, in a recent study published in eLife, they tested 614 commercial antibodies targeting 65 neuroscience-related proteins. Shockingly, two-thirds of them didn't work as advertised! This highlights the urgent need for initiatives like YCharOS.
+
+**Joe**: That's a staggering number. But what about the manufacturers? Are they taking steps to address these issues?
+
+**Sarah**: Thankfully, yes. Many manufacturers have reassessed the underperforming antibodies and updated their recommendations or even removed them from the market. This shows that YCharOS is already having a positive impact on the industry.
+
+**Joe**: That's great news. But with millions of antibodies out there, it seems like YCharOS has a long road ahead.
+
+**Sarah**: Absolutely. They estimate that only 200,000 of the 1.6 million commercially available antibodies are unique. But they're making great strides, and their work is already benefiting researchers across various fields. It's truly inspiring to see such a dedicated effort to improve the reliability of these essential research tools.
+
+**Joe**: And with initiatives like YCharOS paving the way, we can hope for a future where researchers can be confident in the accuracy and reproducibility of their results.
+
+**Sarah**: Couldn't agree more, Joe. This is definitely a step in the right direction for science as a whole.
 [INFO] Detected speaker: Sarah
 [INFO] Final speaker: Sarah
-[INFO] Cleaned text: So, Joe, you're saying that while there's still a long way to go, there are a lot of promising initiatives underway to improve the reliability and reproducibility of antibodies?
+[INFO] Cleaned text: ## Podcast Conversation: YCharOS and the Antibody Validation Initiative Welcome back to the podcast, everyone! Today, we're diving deep into the world of antibodies with Sarah, who's going to be breaking down a fascinating initiative called YCharOS. Sarah, what exactly is YCharOS, and what are they trying to achieve? YCharOS, which stands for the Yale Center for Host-Microbiome Interactions Antibody Validation and Standardization Initiative, is tackling a major problem in the research world: the unreliability of antibodies. These biological tools are crucial for a wide range of studies, but unfortunately, many of them don't perform as advertised. YCharOS aims to change that by rigorously testing and characterizing antibodies, providing researchers with a much-needed resource for choosing and using reliable antibodies. Wow, that sounds incredibly important. Can you tell us a bit more about how YCharOS goes about testing these antibodies? Absolutely. They use a two-pronged approach. First, they compare the antibody's specificity in a cell line that expresses the target protein at normal levels against its performance in a "knock-out" cell line that lacks the protein. This helps them assess how well the antibody actually binds to its intended target and avoid off-target binding. So they're basically comparing apples to apples, ensuring the antibody is specific to the protein they're interested in. Exactly. And the second part of their approach involves analyzing the antibody's performance in various applications, like immunofluorescence and Western blotting. This helps researchers understand how the antibody will behave in different experimental settings. That's fantastic. So, what kind of results have they found so far? Well, in a recent study published in eLife, they tested 614 commercial antibodies targeting 65 neuroscience-related proteins. Shockingly, two-thirds of them didn't work as advertised! This highlights the urgent need for initiatives like YCharOS. That's a staggering number. But what about the manufacturers? Are they taking steps to address these issues? Thankfully, yes. Many manufacturers have reassessed the underperforming antibodies and updated their recommendations or even removed them from the market. This shows that YCharOS is already having a positive impact on the industry. That's great news. But with millions of antibodies out there, it seems like YCharOS has a long road ahead. Absolutely. They estimate that only 200,000 of the 1.6 million commercially available antibodies are unique. But they're making great strides, and their work is already benefiting researchers across various fields. It's truly inspiring to see such a dedicated effort to improve the reliability of these essential research tools. And with initiatives like YCharOS paving the way, we can hope for a future where researchers can be confident in the accuracy and reproducibility of their results. Couldn't agree more, Joe. This is definitely a step in the right direction for science as a whole.
 [INFO] ==================END==========================
 [INFO] 
 ============== VOICE SELECTION ==============
 [INFO] Using speaker: Sarah
 [INFO] Voice ID: en-US-Neural2-F
-[INFO] ==================END=======================
+[INFO] 
+==================END=======================
 [INFO] 
 ============== GOOGLE TTS REQUEST ==============
 [INFO] Selected speaker: Sarah
 [INFO] Using voice ID: en-US-Neural2-F
-[INFO] Original text sample: So, Joe, you're saying that while there's still a long way to go, there are a lot of promising initi...
-[INFO] Final cleaned text for TTS: So, Joe, you're saying that while there's still a long way to go, there are a lot of promising initi...
+[INFO] Original text sample: ## Podcast Conversation: YCharOS and the Antibody Validation Initiative Welcome back to the podcast,...
+[INFO] Final cleaned text for TTS: ## Podcast Conversation: YCharOS and the Antibody Validation Initiative Welcome back to the podcast,...
 [INFO] TTS API response received successfully
 [INFO] Generated audio buffer for chunk 3
 [INFO] 
 ============== PROMPT TO VERTEX AI ==============
-[INFO] You are generating a natural podcast conversation between Joe and Sarah.
+[INFO] You are generating a podcast conversation between Joe and Sarah.
+
+**Roles**:
+- Joe and Sarah are podcast hosts analyzing a scientific study. They provide technical insights, offer critiques, and discuss implications, but they are not participants in the research.
+- Joe asks thoughtful questions, summarizes findings, and helps make the discussion accessible for a broader audience.
+- Sarah provides in-depth analysis, raises potential challenges or limitations, and highlights related research for context.
 
 **Guidelines**:
-1. Joe provides detailed technical insights with clear, straightforward explanations
-2. Sarah asks thoughtful questions and offers her own insights, making the conversation engaging
-3. Keep responses concise and focused, avoiding speaker markers in the actual content
-4. Avoid meta-commentary or describing actions - focus on natural dialogue
+1. Maintain a clear distinction between the hosts' commentary and the study authors' contributions. Use phrases like "the authors found," "the researchers demonstrated," or "the study highlights" to clarify roles.
+2. Both speakers contribute equally, alternating between explaining concepts, analyzing findings, and discussing broader implications.
+3. Avoid implying personal involvement in the research. Focus on the hosts' role as external analysts.
+4. Use natural human speech patterns, including filler words like "um," "you know," and conversational transitions for authenticity.
 
-**Output Format**:
-- Always start with just the speaker's response
-- Do not include speaker markers like **Joe:** or **Sarah:** in the actual dialogue
-- Keep the conversation flowing naturally between speakers
+**Focus**:
+- Analyze and explain the research methods, findings, and implications clearly.
+- Provide constructive critiques or raise questions about limitations, future directions, or broader impacts.
+- Ensure the discussion remains engaging, relatable, and spontaneous while maintaining technical depth.
 
-**Style**:
-- Use natural speech patterns and conversational tone
-- Include occasional filler words ("um", "you know") for authenticity
-- Keep technical explanations clear and accessible
-- Focus on meaningful exchanges rather than small talk
+**Tone**:
+- Professional yet conversational.
+- Include lighthearted moments or humor to mimic a real podcast.
+- Balance technical depth with accessibility for a mixed audience of experts and laypeople.
 
-Remember: Generate only the next speaker's response, without any formatting or meta-text.
 
 Sarah: CiteAbs data have revealed that scientists behaviour around antibody use has shifted drastically over the past decade. About 20% of papers from 2023 that involved antibodies used recombinants. Thats a big change from where we were ten years ago, says Chalmers, who is now CiteAbs chief executive. Although the ongoing efforts to improve antibody reliability are a move in the right direction, changing scientists behaviour remains one of the biggest challenges, say those leading the charge. There are cases in which researchers dont want to hear that an antibody theyve been using for their experi- ments isnt actually doing what its meant to, Williams says. If somebody is happy with the result of an antibody, its being used regard- less, even if its certain that it doesnt bind this protein, Williams says. Ultimately, she adds, you can never get around the fact that the researcher will have to do validations. Still, many scientists are hopeful that recent efforts will lead to much needed change. Im optimistic that things are getting better, Radtke says. What Im so encouraged by is the young generation of scientists, who have more of a wolf-pack mentality, and are working together to solve this problem as a community. Diana Kwon writes for Nature from Berlin. 1. Laflamme, C. et al. eLife 8, e48363 (2019). 2. Ayoubi, R. et al. eLife 12, RP91645 (2023). 3. Bandrowski, A. et al. J. Comp. Neurol. 524, 822 (2016). 4. Bradbury, A. & Plckthun, A. Nature 518, 2729 (2015). WAYS TO VALIDATE Researchers test antibodies that they wish to use in several ways. They can stain a sample of cells that express a protein of interest using immunohistochemistry. Western blotting can reveal whether an antibody binds to a specific protein with an expected molecular weight. And scientists can use immunoprecipitation to pull the protein out of a mixture and then check its identity using mass spectrometry. Immunohistochemistry Antibodies label cells with the target protein Cells without target protein Western blot Molecular- weight reference ladder Imummoprecipitation Antibodies attached to beads Protein of interest is captured and then confirmed using mass spectrometry A single band is found at the expected molecular weight I wanted to leave science because if things are really this unreliable, whats the point. 28 | Nature | Vol 635 | 7 November 2024 Feature. 
 
@@ -189,296 +347,103 @@ Joe:
 [INFO] =================END=============================
 [INFO] 
 ============== VERTEX AI RESPONSE ==============
-[INFO] Raw response: That's definitely encouraging, Sarah. It seems like there's a growing awareness of the importance of antibody validation, and the scientific community is starting to take concrete steps to address the issue. It's also promising to see younger researchers taking a more collaborative approach to solving this problem. But I also think it's important to acknowledge the challenges that still lie ahead. As you mentioned, changing scientists' behavior can be difficult, especially when they're already comfortable with a particular antibody. It's crucial to continue developing and promoting better validation tools and resources, and to encourage open communication about antibody performance.
-[INFO] ==================END============================
+[INFO] Raw response: ## Podcast Conversation: Antibody Validation in a New Era
+
+**Joe:** Hey everyone, welcome back to the show! Today, we're taking a deep dive into the world of antibodies, specifically exploring how scientists are tackling the issue of validation and reliability. Joining me as always is the insightful Sarah, who will be guiding us through this fascinating topic. Sarah, let's start with the basics. What are antibodies, and why are they so important in scientific research?
+
+**Sarah:** Antibodies are like tiny detectives that recognize and bind to specific molecules in the body. They're crucial tools for researchers because they allow us to visualize, quantify, and manipulate these molecules in cells, tissues, and even living organisms. They're used in everything from basic research to drug development and disease diagnosis.
+
+**Joe:** So, they sound like an essential part of the scientific toolkit. But if they're not reliable, how can researchers trust the results they're getting?
+
+**Sarah:** That's a great question, Joe. You're right, the reliability of antibodies has been a major concern for many years. In fact, a recent study published in eLife found that about two-thirds of commercially available antibodies didn't work as advertised! This means a lot of research could be based on inaccurate or misleading data.
+
+**Joe:** Wow, that's shocking! So, what's being done to address this issue?
+
+**Sarah:** Thankfully, there are several initiatives underway, and one of the most promising is the YCharOS project, which stands for the Yale Center for Host-Microbiome Interactions Antibody Validation and Standardization Initiative. YCharOS is working to rigorously test and characterize antibodies, providing researchers with a much-needed resource for choosing and using reliable antibodies.
+
+**Joe:** That sounds like a crucial step in the right direction. Can you tell us more about how YCharOS goes about testing these antibodies?
+
+**Sarah:** Absolutely. They use a two-pronged approach. First, they compare the antibody's specificity in a cell line that expresses the target protein at normal levels against its performance in a "knock-out" cell line that lacks the protein. This helps them assess how well the antibody actually binds to its intended target and avoid off-target binding.
+
+**Joe:** So, they're basically comparing apples to apples?
+
+**Sarah:** Exactly. And the second part of their approach involves analyzing the antibody's performance in various applications, like immunofluorescence and Western blotting. This helps researchers understand how the antibody will behave in different experimental settings.
+
+**Joe:** That's fantastic. But even with initiatives like YCharOS, it seems like there's still a long way to go. What do you think are the biggest challenges in antibody validation?
+
+**Sarah:** One of the biggest challenges is the sheer number of antibodies available. It's estimated that there are over 1.6 million commercially available antibodies, and only a fraction of them have been rigorously tested. Additionally, there are often issues with reproducibility between labs and even within the same lab. This makes it difficult to compare results and draw definitive conclusions.
+
+**Joe:** That's a lot of antibodies to sift through! So, what can researchers do to ensure they're using reliable antibodies in their work?
+
+**Sarah:** There are several things researchers can do. First, they should consult resources like the YCharOS database and CiteAb, which provide information on antibody validation and performance. They should also look for antibodies that have been validated in multiple applications and by independent researchers. And finally, they should always perform their own validation experiments before drawing conclusions from their data.
+
+**Joe:** Those are some great tips, Sarah. So, do you think we're headed toward a future where antibody reliability is no longer a concern?
+
+**Sarah:** I'm optimistic that things are getting better. With initiatives like YCharOS and a growing awareness of the importance of antibody validation, I believe we're moving in the right direction. It's encouraging to see the scientific community coming together to tackle this important issue.
+
+**Joe:** I couldn't agree more. Thanks for sharing your insights, Sarah. This has been a fascinating discussion about antibodies and the future of scientific research.
+
+**Sarah:** My pleasure, Joe. It's always great to chat with you about science. And to our listeners, we encourage you to learn more about antibody validation and do your part to ensure the accuracy and reliability of your research.
+[INFO] 
+==================END============================
 [INFO] 
 ============== CLEANING RESPONSE ==============
-[INFO] Original response: That's definitely encouraging, Sarah. It seems like there's a growing awareness of the importance of antibody validation, and the scientific community is starting to take concrete steps to address the issue. It's also promising to see younger researchers taking a more collaborative approach to solving this problem. But I also think it's important to acknowledge the challenges that still lie ahead. As you mentioned, changing scientists' behavior can be difficult, especially when they're already comfortable with a particular antibody. It's crucial to continue developing and promoting better validation tools and resources, and to encourage open communication about antibody performance.
+[INFO] Original response: ## Podcast Conversation: Antibody Validation in a New Era
+
+**Joe:** Hey everyone, welcome back to the show! Today, we're taking a deep dive into the world of antibodies, specifically exploring how scientists are tackling the issue of validation and reliability. Joining me as always is the insightful Sarah, who will be guiding us through this fascinating topic. Sarah, let's start with the basics. What are antibodies, and why are they so important in scientific research?
+
+**Sarah:** Antibodies are like tiny detectives that recognize and bind to specific molecules in the body. They're crucial tools for researchers because they allow us to visualize, quantify, and manipulate these molecules in cells, tissues, and even living organisms. They're used in everything from basic research to drug development and disease diagnosis.
+
+**Joe:** So, they sound like an essential part of the scientific toolkit. But if they're not reliable, how can researchers trust the results they're getting?
+
+**Sarah:** That's a great question, Joe. You're right, the reliability of antibodies has been a major concern for many years. In fact, a recent study published in eLife found that about two-thirds of commercially available antibodies didn't work as advertised! This means a lot of research could be based on inaccurate or misleading data.
+
+**Joe:** Wow, that's shocking! So, what's being done to address this issue?
+
+**Sarah:** Thankfully, there are several initiatives underway, and one of the most promising is the YCharOS project, which stands for the Yale Center for Host-Microbiome Interactions Antibody Validation and Standardization Initiative. YCharOS is working to rigorously test and characterize antibodies, providing researchers with a much-needed resource for choosing and using reliable antibodies.
+
+**Joe:** That sounds like a crucial step in the right direction. Can you tell us more about how YCharOS goes about testing these antibodies?
+
+**Sarah:** Absolutely. They use a two-pronged approach. First, they compare the antibody's specificity in a cell line that expresses the target protein at normal levels against its performance in a "knock-out" cell line that lacks the protein. This helps them assess how well the antibody actually binds to its intended target and avoid off-target binding.
+
+**Joe:** So, they're basically comparing apples to apples?
+
+**Sarah:** Exactly. And the second part of their approach involves analyzing the antibody's performance in various applications, like immunofluorescence and Western blotting. This helps researchers understand how the antibody will behave in different experimental settings.
+
+**Joe:** That's fantastic. But even with initiatives like YCharOS, it seems like there's still a long way to go. What do you think are the biggest challenges in antibody validation?
+
+**Sarah:** One of the biggest challenges is the sheer number of antibodies available. It's estimated that there are over 1.6 million commercially available antibodies, and only a fraction of them have been rigorously tested. Additionally, there are often issues with reproducibility between labs and even within the same lab. This makes it difficult to compare results and draw definitive conclusions.
+
+**Joe:** That's a lot of antibodies to sift through! So, what can researchers do to ensure they're using reliable antibodies in their work?
+
+**Sarah:** There are several things researchers can do. First, they should consult resources like the YCharOS database and CiteAb, which provide information on antibody validation and performance. They should also look for antibodies that have been validated in multiple applications and by independent researchers. And finally, they should always perform their own validation experiments before drawing conclusions from their data.
+
+**Joe:** Those are some great tips, Sarah. So, do you think we're headed toward a future where antibody reliability is no longer a concern?
+
+**Sarah:** I'm optimistic that things are getting better. With initiatives like YCharOS and a growing awareness of the importance of antibody validation, I believe we're moving in the right direction. It's encouraging to see the scientific community coming together to tackle this important issue.
+
+**Joe:** I couldn't agree more. Thanks for sharing your insights, Sarah. This has been a fascinating discussion about antibodies and the future of scientific research.
+
+**Sarah:** My pleasure, Joe. It's always great to chat with you about science. And to our listeners, we encourage you to learn more about antibody validation and do your part to ensure the accuracy and reliability of your research.
 [INFO] Detected speaker: Joe
 [INFO] Final speaker: Joe
-[INFO] Cleaned text: That's definitely encouraging, Sarah. It seems like there's a growing awareness of the importance of antibody validation, and the scientific community is starting to take concrete steps to address the issue. It's also promising to see younger researchers taking a more collaborative approach to solving this problem. But I also think it's important to acknowledge the challenges that still lie ahead. As you mentioned, changing scientists' behavior can be difficult, especially when they're already comfortable with a particular antibody. It's crucial to continue developing and promoting better validation tools and resources, and to encourage open communication about antibody performance.
+[INFO] Cleaned text: ## Podcast Conversation: Antibody Validation in a New Era Hey everyone, welcome back to the show! Today, we're taking a deep dive into the world of antibodies, specifically exploring how scientists are tackling the issue of validation and reliability. Joining me as always is the insightful Sarah, who will be guiding us through this fascinating topic. Sarah, let's start with the basics. What are antibodies, and why are they so important in scientific research? Antibodies are like tiny detectives that recognize and bind to specific molecules in the body. They're crucial tools for researchers because they allow us to visualize, quantify, and manipulate these molecules in cells, tissues, and even living organisms. They're used in everything from basic research to drug development and disease diagnosis. So, they sound like an essential part of the scientific toolkit. But if they're not reliable, how can researchers trust the results they're getting? That's a great question, Joe. You're right, the reliability of antibodies has been a major concern for many years. In fact, a recent study published in eLife found that about two-thirds of commercially available antibodies didn't work as advertised! This means a lot of research could be based on inaccurate or misleading data. Wow, that's shocking! So, what's being done to address this issue? Thankfully, there are several initiatives underway, and one of the most promising is the YCharOS project, which stands for the Yale Center for Host-Microbiome Interactions Antibody Validation and Standardization Initiative. YCharOS is working to rigorously test and characterize antibodies, providing researchers with a much-needed resource for choosing and using reliable antibodies. That sounds like a crucial step in the right direction. Can you tell us more about how YCharOS goes about testing these antibodies? Absolutely. They use a two-pronged approach. First, they compare the antibody's specificity in a cell line that expresses the target protein at normal levels against its performance in a "knock-out" cell line that lacks the protein. This helps them assess how well the antibody actually binds to its intended target and avoid off-target binding. So, they're basically comparing apples to apples? Exactly. And the second part of their approach involves analyzing the antibody's performance in various applications, like immunofluorescence and Western blotting. This helps researchers understand how the antibody will behave in different experimental settings. That's fantastic. But even with initiatives like YCharOS, it seems like there's still a long way to go. What do you think are the biggest challenges in antibody validation? One of the biggest challenges is the sheer number of antibodies available. It's estimated that there are over 1.6 million commercially available antibodies, and only a fraction of them have been rigorously tested. Additionally, there are often issues with reproducibility between labs and even within the same lab. This makes it difficult to compare results and draw definitive conclusions. That's a lot of antibodies to sift through! So, what can researchers do to ensure they're using reliable antibodies in their work? There are several things researchers can do. First, they should consult resources like the YCharOS database and CiteAb, which provide information on antibody validation and performance. They should also look for antibodies that have been validated in multiple applications and by independent researchers. And finally, they should always perform their own validation experiments before drawing conclusions from their data. Those are some great tips, Sarah. So, do you think we're headed toward a future where antibody reliability is no longer a concern? I'm optimistic that things are getting better. With initiatives like YCharOS and a growing awareness of the importance of antibody validation, I believe we're moving in the right direction. It's encouraging to see the scientific community coming together to tackle this important issue. I couldn't agree more. Thanks for sharing your insights, Sarah. This has been a fascinating discussion about antibodies and the future of scientific research. My pleasure, Joe. It's always great to chat with you about science. And to our listeners, we encourage you to learn more about antibody validation and do your part to ensure the accuracy and reliability of your research.
 [INFO] ==================END==========================
 [INFO] 
 ============== VOICE SELECTION ==============
 [INFO] Using speaker: Joe
 [INFO] Voice ID: en-US-Neural2-D
-[INFO] ==================END=======================
+[INFO] 
+==================END=======================
 [INFO] 
 ============== GOOGLE TTS REQUEST ==============
 [INFO] Selected speaker: Joe
 [INFO] Using voice ID: en-US-Neural2-D
-[INFO] Original text sample: That's definitely encouraging, Sarah. It seems like there's a growing awareness of the importance of...
-[INFO] Final cleaned text for TTS: That's definitely encouraging, Sarah. It seems like there's a growing awareness of the importance of...
+[INFO] Original text sample: ## Podcast Conversation: Antibody Validation in a New Era Hey everyone, welcome back to the show! To...
+[INFO] Final cleaned text for TTS: ## Podcast Conversation: Antibody Validation in a New Era Hey everyone, welcome back to the show! To...
 [INFO] TTS API response received successfully
 [INFO] Generated audio buffer for chunk 4
-[INFO] Combined audio buffer size: 688704
-[INFO] Estimated duration: 377 seconds
-[INFO] TTSService initialized successfully
-[INFO] TTSService initialized successfully
-[INFO] TTSService initialized successfully
-[INFO] TTSService initialized successfully
-[INFO] TTSService initialized successfully
-[INFO] TTSService initialized successfully
-[INFO] TTSService initialized successfully
-[INFO] TTSService initialized successfully
-[INFO] TTSService initialized successfully
-[INFO] TTSService initialized successfully
-[INFO] TTSService initialized successfully
-[INFO] TTSService initialized successfully
-[INFO] TTSService initialized successfully
-[INFO] TTSService initialized successfully
-[INFO] TTSService initialized successfully
-[INFO] TTSService initialized successfully
-[INFO] TTSService initialized successfully
-[INFO] TTSService initialized successfully
-[INFO] TTSService initialized successfully
-[INFO] TTSService initialized successfully
-[INFO] TTSService initialized successfully
-[INFO] TTSService initialized successfully
-[INFO] TTSService initialized successfully
-[INFO] TTSService initialized successfully
-[INFO] Starting text-to-speech conversion...
-[INFO] Input text length: 16704
-[INFO] Starting text splitting process (text length: 16704 characters)
-[INFO] Created chunk #1: C arl Laflamme knew what protein he wanted to stud...
-[INFO] Created chunk #2: YCharOSs industry partners provide the antibodies ...
-[INFO] Created chunk #3: That wont change repro- ducibility by itself, but ...
-[INFO] Created final chunk #4: CiteAbs data have revealed that scientists behavio...
-[INFO] Successfully created 4 chunks
-[INFO] Split text into 4 chunks
-[INFO] 
-============== PROMPT TO VERTEX AI ==============
-[INFO] You are generating a natural podcast conversation between Joe and Sarah.
-
-**Guidelines**:
-Start the conversation with a warm welcome to the Curuosity Podcast and weclome the guests.
-
-**Joe**: Hi Sarah, I'm Joe, your host for this episode
-1. Joe provides detailed technical insights with clear, straightforward explanations
-2. Sarah asks thoughtful questions and offers her own insights, making the conversation engaging
-3. Keep responses concise and focused, avoiding speaker markers in the actual content
-4. Avoid meta-commentary or describing actions - focus on natural dialogue
-
-**Output Format**:
-- Always start with just the speaker's response
-- Do not include speaker markers like **Joe:** or **Sarah:** in the actual dialogue
-- Keep the conversation flowing naturally between speakers
-
-**Style**:
-- Use natural speech patterns and conversational tone
-- Include occasional filler words ("um", "you know") for authenticity
-- Keep technical explanations clear and accessible
-- Focus on meaningful exchanges rather than small talk
-
-Remember: Generate only the next speaker's response, without any formatting or meta-text.
-
-Joe: C arl Laflamme knew what protein he wanted to study, but not where to find it. It is encoded by a gene called C9ORF72, which is mutated in some people with the devastating neuro- logical condition motor neuron disease, also known as amyotrophic lateral sclerosis. And Laflamme wanted to understand its role in the disease. When he started his postdoctoral fellowship at the Montreal Neurological Institute-Hospital in Canada, Laflamme scoured the literature, searching for information on the protein. The problem was that none of the papers seemed to agree where in the cell this mysterious mol- ecule operates. There was so much confusion in the field, Laflamme says. He wondered whether a reagent was to blame, in particular the antibodies that scientists used to measure the amount of the protein and track its position in the cell. So, he and his colleagues decided to test the antibodies that were available. They identified 16 commercial antibodies that were adver- tised as able to bind to the protein encoded by C9ORF72. When the researchers put them THE QUEST TO RID LABS OF THE REAGENTS THAT RUIN EXPERIMENTS Poorly performing antibodies have plagued biomedicalsciences for decades. Several fresh initiativeshope to change this. By Diana Kwon ILLUSTRATION BY FABIO BUONOCORE 26 | Nature | Vol 635 | 7 November 2024 Feature through their paces, only three performed wellmeaning that the antibodies bound to the protein of interest without binding to other molecules. But not one published study had used these antibodies. About 15 papers described experiments using an antibody that didnt even bind the key protein in Laflammes testing. And those papers had been collec- tively cited more than 3,000 times 1. Laflammes experience isnt unusual. Scien- tists have long known that many commercial antibodies dont work as they should they often fail to recognize a specific protein or non-selectively bind to several other targets. The result is a waste of time and resources that some say has contributed to a repro - ducibility crisis in the biological sciences, potentially slowing the pace of discovery and drug development. Laflamme is part of a growing community that wants to solve the problem of unreliable antibodies in research. He teamed up with molecular geneticist Aled Edwards at the University of Toronto, Canada, to set up Antibody Characterization through Open Science (YCharOS, pronounced Icarus), an initiative that aims to characterize commer- cially available research antibodies for every human protein. There are also efforts under way to produce better-performing antibodies, to make it easier for researchers to find them and to encourage the research community to adopt best prac- tices when it comes to choosing and working with these molecules. Antibody vendors, funding agencies and scientific publishers are all getting in on the action, says Harvinder Virk, a physicianscientist at the University of Leicester, UK. Its hard to imagine that a problem that has been going on so long will suddenly change but Im hopeful. Putting antibodies to the test The immune system produces antibodies in response to foreign substances, such as viruses and bacteria, flagging them for destruction. This makes antibodies useful in laboratory experiments. Scientists co-opt this ability by using them to mark or quantify spe- cific biological molecules, such as a segment of a protein. To be effective, these molecular tags need to have both specificity a strong affinity for the target and selectivity the ability to leave other proteins unmarked. For decades, scientists created these anti- bodies themselves. They injected proteins into animals, such as rabbits, whose immune systems would generate antibodies against the foreign molecules. To create a longer- term, more consistent supply of antibodies, researchers extracted immune cells from ani- mals and combined them with immortalized cancer cells. When reagent companies began the mass production of antibodies in the 1990s, most researchers shifted to purchasing antibodies from a catalogue. Today, there are around 7. 7 million research antibody products on the market, sold by almost 350antibody suppliers around the world. In the late 2000s, scientists began reporting problems with both the specificity and selectivity of many commercially available antibodies, leading researchers to call for an independent body to certify that the molecules work as advertised. Over the years, a handful of groups have launched efforts to evaluate antibodies. What sets YCharOS apart is the level of cooperation that it has obtained from com- panies that sell antibodies. When Laflamme and Edwards set out to start YCharOS, they called every single vendor they could find; more than a dozen were interested in collab- orating. 
-
-Sarah:
-[INFO] =================END=============================
-[INFO] 
-============== VERTEX AI RESPONSE ==============
-[INFO] Raw response: That's a fascinating story, Joe. It's shocking to think that so many research papers could be based on unreliable data due to faulty antibodies. I'm curious to learn more about how YCharOS and other initiatives are tackling this problem and what impact they're having on the research landscape.
-[INFO] 
-==================END============================
-[INFO] 
-============== CLEANING RESPONSE ==============
-[INFO] Original response: That's a fascinating story, Joe. It's shocking to think that so many research papers could be based on unreliable data due to faulty antibodies. I'm curious to learn more about how YCharOS and other initiatives are tackling this problem and what impact they're having on the research landscape.
-[INFO] Detected speaker: Sarah
-[INFO] Final speaker: Sarah
-[INFO] Cleaned text: That's a fascinating story, Joe. It's shocking to think that so many research papers could be based on unreliable data due to faulty antibodies. I'm curious to learn more about how YCharOS and other initiatives are tackling this problem and what impact they're having on the research landscape.
-[INFO] ==================END==========================
-[INFO] 
-============== VOICE SELECTION ==============
-[INFO] Using speaker: Sarah
-[INFO] Voice ID: en-US-Neural2-F
-[INFO] 
-==================END=======================
-[INFO] 
-============== GOOGLE TTS REQUEST ==============
-[INFO] Selected speaker: Sarah
-[INFO] Using voice ID: en-US-Neural2-F
-[INFO] Original text sample: That's a fascinating story, Joe. It's shocking to think that so many research papers could be based ...
-[INFO] Final cleaned text for TTS: That's a fascinating story, Joe. It's shocking to think that so many research papers could be based ...
-[INFO] TTS API response received successfully
-[INFO] Generated audio buffer for chunk 1
-[INFO] 
-============== PROMPT TO VERTEX AI ==============
-[INFO] You are generating a natural podcast conversation between Joe and Sarah.
-
-**Guidelines**:
-Start the conversation with a warm welcome to the Curuosity Podcast and weclome the guests.
-
-**Joe**: Hi Sarah, I'm Joe, your host for this episode
-1. Joe provides detailed technical insights with clear, straightforward explanations
-2. Sarah asks thoughtful questions and offers her own insights, making the conversation engaging
-3. Keep responses concise and focused, avoiding speaker markers in the actual content
-4. Avoid meta-commentary or describing actions - focus on natural dialogue
-
-**Output Format**:
-- Always start with just the speaker's response
-- Do not include speaker markers like **Joe:** or **Sarah:** in the actual dialogue
-- Keep the conversation flowing naturally between speakers
-
-**Style**:
-- Use natural speech patterns and conversational tone
-- Include occasional filler words ("um", "you know") for authenticity
-- Keep technical explanations clear and accessible
-- Focus on meaningful exchanges rather than small talk
-
-Remember: Generate only the next speaker's response, without any formatting or meta-text.
-
-Sarah: YCharOSs industry partners provide the antibodies for testing, free of charge. The partners, along with the funders of the initia- tive (which include various non-profit organ- izations and funding agencies), are given the chance to review characterization reports and provide feedback before they are published. YCharOS tests antibodies by comparing their specificity in a cell line that expresses the target protein at normal biological levels against their performance in whats called a knock-out cell line that lacks the protein (see Ways to validate). In an analysis published in eLife last year, the YCharOS team used this method to assess 614commercial antibodies, targeting a total of 65neuroscience-related proteins 2. Two- thirds of them did not work as recommended by manufacturers. It never fails to amaze me how much of a hit or miss antibodies are, says Riham Ayoubi, director of operations at YCharOS. It shows you how important it is to include that nega- tive control in the work. Antibody manufacturers reassessed more than half of the underperforming antibodies that YCharOS flagged in 2023. They issued updated recommendations for 153 of them and removed 73 from the market. The YCharOS team has now tested more than 1,000 anti- bodies that are meant to bind to more than 100human proteins. Theres still a lot of work ahead, Laflamme says. He estimates that, of the 1. 6 million commercially available antibodies to human proteins, roughly 200,000 are unique (many suppliers sell the same antibodies under different names). I think the YCharOS initiative can really make a difference, says Cecilia Williams, a cancer researcher at the KTH Royal Institute of Technology in Stockholm. But its not everything, because researchers will use these antibodies in other protocols, and in other tissues and cells that may express the protein differently, she says. The context in which anti- bodies are used can change how they perform. Other characterization efforts are trying to tackle this challenge. Andrea Radtke and her collaborators were part of a cell-mapping con- sortium called the Human BioMolecular Atlas Program when they set up the Organ Mapping Antibody Panels (OMAPs). OMAPs are col- lections of community-validated antibodies used in multiplex imaging a technique that involves visualizing several proteins in a single specimen. Unlike YCharOS, which focuses on conducting rigorous characterizations of antibodies for various applications in one specific context, OMAPs is looking at a single application for the antibodies, but in several contexts, such as in different human tissues and imaging methods. To do so, OMAPs recruits scientists from both academia and industry to conduct validations in their own labs. Vendors cannot test all possible applica- tions of their antibodies, but as a community we can say lets try this, says Radtke, who now works as a principal scientist at the instru- mentation company Leica Microsystems in Bethesda, Maryland. People are testing things that you would never think you could test. Expanding the toolbox Even if good antibodies are available, they are not always easy to find. In 2009, Anita Bandrowski, founder and chief executive of the data-sharing platform SciCrunch in San Diego, California, and her colleagues were examining how difficult it was to identify antibodies in journal articles. After sifting through papers in the Journal of Neuroscience, they found that 90% of the antibodies cited lacked a catalogue number (codes used by ven- dors to label specific products)making them almost impossible to track down. To replicate an experiment, its important to have the right reagents and proper labelling is crucial to finding them, Bandrowski says. After seeing that a similar problem plagued other journals, Bandrowski and her colleagues decided to create unique, persistent identifiers for antibodies and other scientific resources, such as model organisms, which they called research resource identifiers, or RRIDs. Catalogue numbers can disappear if a com- pany discontinues a product and because companies create them independently, two different products might end up with the same one. RRIDs solve this. In 2014, Bandrowski and her team started a pilot project 3 with 25 journals, in which they asked authors to include RRIDs in their manuscripts. In the years since, more than 1,000journals have adopted policies that It never fails to amaze me how much of a hit or miss antibodies are. Nature | Vol 635 | 7 November 2024 | 27 request these identifiers. We currently have nearly one million citations to RRIDs from papers, says Bandrowski. Ultimately, the hope is that authors of every journal article will clearly label the resources they used, such as antibodies, with RRIDs, Bandrowski says. 
-
-Joe:
-[INFO] =================END=============================
-[INFO] 
-============== VERTEX AI RESPONSE ==============
-[INFO] Raw response: That's fascinating, Sarah. It's clear that initiatives like YCharOS and OMAPs are playing a crucial role in improving the reliability of research by ensuring the quality of antibodies. And the adoption of RRIDs is definitely a step in the right direction for making research more reproducible.
-
-But it seems like there's still a long way to go. With millions of antibodies available, initiatives like YCharOS and OMAPs can only test a fraction of them. And even with RRIDs, finding the right antibody for a specific experiment can be challenging.
-
-So, what are your thoughts on the future of antibody validation and characterization? Do you think these initiatives will be enough to solve the problem, or are there other approaches that need to be considered?
-[INFO] 
-==================END============================
-[INFO] 
-============== CLEANING RESPONSE ==============
-[INFO] Original response: That's fascinating, Sarah. It's clear that initiatives like YCharOS and OMAPs are playing a crucial role in improving the reliability of research by ensuring the quality of antibodies. And the adoption of RRIDs is definitely a step in the right direction for making research more reproducible.
-
-But it seems like there's still a long way to go. With millions of antibodies available, initiatives like YCharOS and OMAPs can only test a fraction of them. And even with RRIDs, finding the right antibody for a specific experiment can be challenging.
-
-So, what are your thoughts on the future of antibody validation and characterization? Do you think these initiatives will be enough to solve the problem, or are there other approaches that need to be considered?
-[INFO] Detected speaker: Joe
-[INFO] Final speaker: Joe
-[INFO] Cleaned text: That's fascinating, Sarah. It's clear that initiatives like YCharOS and OMAPs are playing a crucial role in improving the reliability of research by ensuring the quality of antibodies. And the adoption of RRIDs is definitely a step in the right direction for making research more reproducible. But it seems like there's still a long way to go. With millions of antibodies available, initiatives like YCharOS and OMAPs can only test a fraction of them. And even with RRIDs, finding the right antibody for a specific experiment can be challenging. So, what are your thoughts on the future of antibody validation and characterization? Do you think these initiatives will be enough to solve the problem, or are there other approaches that need to be considered?
-[INFO] ==================END==========================
-[INFO] 
-============== VOICE SELECTION ==============
-[INFO] Using speaker: Joe
-[INFO] Voice ID: en-US-Neural2-D
-[INFO] 
-==================END=======================
-[INFO] 
-============== GOOGLE TTS REQUEST ==============
-[INFO] Selected speaker: Joe
-[INFO] Using voice ID: en-US-Neural2-D
-[INFO] Original text sample: That's fascinating, Sarah. It's clear that initiatives like YCharOS and OMAPs are playing a crucial ...
-[INFO] Final cleaned text for TTS: That's fascinating, Sarah. It's clear that initiatives like YCharOS and OMAPs are playing a crucial ...
-[INFO] TTS API response received successfully
-[INFO] Generated audio buffer for chunk 2
-[INFO] 
-============== PROMPT TO VERTEX AI ==============
-[INFO] You are generating a natural podcast conversation between Joe and Sarah.
-
-**Guidelines**:
-Start the conversation with a warm welcome to the Curuosity Podcast and weclome the guests.
-
-**Joe**: Hi Sarah, I'm Joe, your host for this episode
-1. Joe provides detailed technical insights with clear, straightforward explanations
-2. Sarah asks thoughtful questions and offers her own insights, making the conversation engaging
-3. Keep responses concise and focused, avoiding speaker markers in the actual content
-4. Avoid meta-commentary or describing actions - focus on natural dialogue
-
-**Output Format**:
-- Always start with just the speaker's response
-- Do not include speaker markers like **Joe:** or **Sarah:** in the actual dialogue
-- Keep the conversation flowing naturally between speakers
-
-**Style**:
-- Use natural speech patterns and conversational tone
-- Include occasional filler words ("um", "you know") for authenticity
-- Keep technical explanations clear and accessible
-- Focus on meaningful exchanges rather than small talk
-
-Remember: Generate only the next speaker's response, without any formatting or meta-text.
-
-Joe: That wont change repro- ducibility by itself, but it is the first step. In addition to being able to track down antibodies, researchers need a way to choose which ones to use. In 2012, Andrew Chalmers, who was then a researcher at the University of Bath, UK, co-founded CiteAb, a search engine to help researchers find the most highly cited antibodies. Over the years, the platform has grown to include more than seven million antibodies and now also includes, when available, information regarding validations. In May, CiteAb began integrating YCharOSs characterization data onto its site. The big challenge is that antibodies are just used in so many different ways, for so many dif- ferent species that you cant tick off that an anti- body is good or bad, Chalmers says. Many say that knock-out validation is key, but less than 5% of antibodies on CiteAb have been validated in this way, either by suppliers or through other independent initiatives, such as YCharOS. Theres a long way to go, Chalmers says. Stakeholders get involved Like many others, Virk developed an interest in antibody reliability after a personal experience with bad antibodies. In 2016, Virk received a big grant to study the role of a protein called TRPA1 in airway inflammation. But one of his colleagues mentioned that, on the basis of his own experience, the antibodies he was working with might not be reliable. When Virk put TRPA1 antibodies to the test, he discovered that his colleague was right: of the three most-cited antibodies used to study TRPA1, two didnt detect the human protein at all, and the other detected several other proteins at the same time. That was a shock, Virk says. At that point, I wanted to leave science because if things are really this unreliable, whats the point. Instead of leaving academia, Virk co-founded the Only Good Antibodies (OGA) community last year, with the aim of bringing together stakeholders such as researchers, antibody manufacturers, funding agencies and publishers to tackle the problem of poorly performing antibodies. In February, the OGA community hosted its first work- shop, which included individuals from these various groups to discuss how to improve the reproducibility of research conducted with antibodies. They were joined by NC3Rs, a scientific organization and funder, based in London that focuses on reducing the use of animals in research. Better antibodies means fewer animals are used in the process of producing these molecules and conducting experiments with them. Currently, the OGA community is working on a project to help researchers choose the right antibodies for their work and to make it easier for them to identify, use and share data about antibody quality. It is also piloting an YCharOS site at the University of Leicester the first outside Canada which will focus on antibodies used in respiratory sciences. The OGA community is also working with funders and publishers to find ways to reward researchers for adopting antibody-related best practices. Examples of such rewards include grants for scientists taking part in antibody-validation initiatives. Manufacturers have also been taking steps to improve antibody performance. In addition to increasingly conducting their own knock-out validations, a number of suppliers are also alter- ing the way some of their products are made. The need to modify antibody-production practices was brought to the fore in 2015, when a group of more than 100 scientists penned a commentary in Nature calling for the community to shift from antibodies gener- ated by immune cells or immunecancer-cell hybrids, to what are known as recombinant antibodies 4. Recombinant antibodies are produced in genetically engineered cells pro- grammed to make a specific antibody. Using these antibodies exclusively, the authors argued, would enable infinite production of antibodies that do not vary from batch to batch a key problem with the older methods. A few manufacturers are shifting towards making more recombinant antibodies. For example, Abcam, an antibody supplier in Cambridge, UK, has added more than 32,000 of them to their portfolio. Facilitating the move towards recombinants across life-science research is a key part of improv- ing reproducibility, says Hannah Cable, the vice-president of new product development at Abcam. Thats something that antibody suppliers should be doing. Rob Meijers, director of the antibody plat- form at the Institute for Protein Innovation in Boston, Massachusetts, a non-profit research organization that makes recombinant anti- bodies, says that this shift simply makes more business sense. Theyre much more reproduc- ible, you can standardize the process for them, and the user feedback is very positive, he says. 
-
-Sarah:
-[INFO] =================END=============================
-[INFO] 
-============== VERTEX AI RESPONSE ==============
-[INFO] Raw response: I think it's great that so many stakeholders are getting involved in addressing the issue of antibody reliability. It's clear that this is a complex problem that requires a multi-pronged approach. I'm particularly interested in the work that the OGA community is doing to help researchers choose the right antibodies and to share data about antibody quality. I think this is a crucial step in improving the reproducibility of research. I'm also encouraged by the fact that manufacturers are starting to take steps to improve the quality of their antibodies. The shift towards recombinant antibodies is a positive development, and I hope that more manufacturers will follow suit.
-[INFO] 
-==================END============================
-[INFO] 
-============== CLEANING RESPONSE ==============
-[INFO] Original response: I think it's great that so many stakeholders are getting involved in addressing the issue of antibody reliability. It's clear that this is a complex problem that requires a multi-pronged approach. I'm particularly interested in the work that the OGA community is doing to help researchers choose the right antibodies and to share data about antibody quality. I think this is a crucial step in improving the reproducibility of research. I'm also encouraged by the fact that manufacturers are starting to take steps to improve the quality of their antibodies. The shift towards recombinant antibodies is a positive development, and I hope that more manufacturers will follow suit.
-[INFO] Detected speaker: Sarah
-[INFO] Final speaker: Sarah
-[INFO] Cleaned text: I think it's great that so many stakeholders are getting involved in addressing the issue of antibody reliability. It's clear that this is a complex problem that requires a multi-pronged approach. I'm particularly interested in the work that the OGA community is doing to help researchers choose the right antibodies and to share data about antibody quality. I think this is a crucial step in improving the reproducibility of research. I'm also encouraged by the fact that manufacturers are starting to take steps to improve the quality of their antibodies. The shift towards recombinant antibodies is a positive development, and I hope that more manufacturers will follow suit.
-[INFO] ==================END==========================
-[INFO] 
-============== VOICE SELECTION ==============
-[INFO] Using speaker: Sarah
-[INFO] Voice ID: en-US-Neural2-F
-[INFO] 
-==================END=======================
-[INFO] 
-============== GOOGLE TTS REQUEST ==============
-[INFO] Selected speaker: Sarah
-[INFO] Using voice ID: en-US-Neural2-F
-[INFO] Original text sample: I think it's great that so many stakeholders are getting involved in addressing the issue of antibod...
-[INFO] Final cleaned text for TTS: I think it's great that so many stakeholders are getting involved in addressing the issue of antibod...
-[INFO] TTS API response received successfully
-[INFO] Generated audio buffer for chunk 3
-[INFO] 
-============== PROMPT TO VERTEX AI ==============
-[INFO] You are generating a natural podcast conversation between Joe and Sarah.
-
-**Guidelines**:
-Start the conversation with a warm welcome to the Curuosity Podcast and weclome the guests.
-
-**Joe**: Hi Sarah, I'm Joe, your host for this episode
-1. Joe provides detailed technical insights with clear, straightforward explanations
-2. Sarah asks thoughtful questions and offers her own insights, making the conversation engaging
-3. Keep responses concise and focused, avoiding speaker markers in the actual content
-4. Avoid meta-commentary or describing actions - focus on natural dialogue
-
-**Output Format**:
-- Always start with just the speaker's response
-- Do not include speaker markers like **Joe:** or **Sarah:** in the actual dialogue
-- Keep the conversation flowing naturally between speakers
-
-**Style**:
-- Use natural speech patterns and conversational tone
-- Include occasional filler words ("um", "you know") for authenticity
-- Keep technical explanations clear and accessible
-- Focus on meaningful exchanges rather than small talk
-
-Remember: Generate only the next speaker's response, without any formatting or meta-text.
-
-Sarah: CiteAbs data have revealed that scientists behaviour around antibody use has shifted drastically over the past decade. About 20% of papers from 2023 that involved antibodies used recombinants. Thats a big change from where we were ten years ago, says Chalmers, who is now CiteAbs chief executive. Although the ongoing efforts to improve antibody reliability are a move in the right direction, changing scientists behaviour remains one of the biggest challenges, say those leading the charge. There are cases in which researchers dont want to hear that an antibody theyve been using for their experi- ments isnt actually doing what its meant to, Williams says. If somebody is happy with the result of an antibody, its being used regard- less, even if its certain that it doesnt bind this protein, Williams says. Ultimately, she adds, you can never get around the fact that the researcher will have to do validations. Still, many scientists are hopeful that recent efforts will lead to much needed change. Im optimistic that things are getting better, Radtke says. What Im so encouraged by is the young generation of scientists, who have more of a wolf-pack mentality, and are working together to solve this problem as a community. Diana Kwon writes for Nature from Berlin. 1. Laflamme, C. et al. eLife 8, e48363 (2019). 2. Ayoubi, R. et al. eLife 12, RP91645 (2023). 3. Bandrowski, A. et al. J. Comp. Neurol. 524, 822 (2016). 4. Bradbury, A. & Plckthun, A. Nature 518, 2729 (2015). WAYS TO VALIDATE Researchers test antibodies that they wish to use in several ways. They can stain a sample of cells that express a protein of interest using immunohistochemistry. Western blotting can reveal whether an antibody binds to a specific protein with an expected molecular weight. And scientists can use immunoprecipitation to pull the protein out of a mixture and then check its identity using mass spectrometry. Immunohistochemistry Antibodies label cells with the target protein Cells without target protein Western blot Molecular- weight reference ladder Imummoprecipitation Antibodies attached to beads Protein of interest is captured and then confirmed using mass spectrometry A single band is found at the expected molecular weight I wanted to leave science because if things are really this unreliable, whats the point. 28 | Nature | Vol 635 | 7 November 2024 Feature. 
-
-Joe:
-[INFO] =================END=============================
-[INFO] 
-============== VERTEX AI RESPONSE ==============
-[INFO] Raw response: Absolutely, it's fantastic to have you both on the Curiosity Podcast today. We're excited to dive deep into the fascinating world of antibody reliability and explore the latest advancements and challenges in this critical field. Sarah, perhaps you could kick things off by sharing your insights on the recent shifts in scientists' attitudes and behaviors towards antibody usage.
-[INFO] 
-==================END============================
-[INFO] 
-============== CLEANING RESPONSE ==============
-[INFO] Original response: Absolutely, it's fantastic to have you both on the Curiosity Podcast today. We're excited to dive deep into the fascinating world of antibody reliability and explore the latest advancements and challenges in this critical field. Sarah, perhaps you could kick things off by sharing your insights on the recent shifts in scientists' attitudes and behaviors towards antibody usage.
-[INFO] Detected speaker: Joe
-[INFO] Final speaker: Joe
-[INFO] Cleaned text: Absolutely, it's fantastic to have you both on the Curiosity Podcast today. We're excited to dive deep into the fascinating world of antibody reliability and explore the latest advancements and challenges in this critical field. Sarah, perhaps you could kick things off by sharing your insights on the recent shifts in scientists' attitudes and behaviors towards antibody usage.
-[INFO] ==================END==========================
-[INFO] 
-============== VOICE SELECTION ==============
-[INFO] Using speaker: Joe
-[INFO] Voice ID: en-US-Neural2-D
-[INFO] 
-==================END=======================
-[INFO] 
-============== GOOGLE TTS REQUEST ==============
-[INFO] Selected speaker: Joe
-[INFO] Using voice ID: en-US-Neural2-D
-[INFO] Original text sample: Absolutely, it's fantastic to have you both on the Curiosity Podcast today. We're excited to dive de...
-[INFO] Final cleaned text for TTS: Absolutely, it's fantastic to have you both on the Curiosity Podcast today. We're excited to dive de...
-[INFO] TTS API response received successfully
-[INFO] Generated audio buffer for chunk 4
-[INFO] Combined audio buffer size: 982080
+[INFO] Combined audio buffer size: 5913792
 [INFO] Estimated duration: 377 seconds
 [INFO] TTSService initialized successfully
 [INFO] TTSService initialized successfully

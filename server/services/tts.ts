@@ -34,29 +34,29 @@ const GOOGLE_VOICE_IDS: Record<Speaker, string> = {
   Sarah: "en-US-Neural2-F", // A warm female voice with clear articulation
 };
 
-const SYSTEM_PROMPT = `You are generating a natural podcast conversation between Joe and Sarah.
+const SYSTEM_PROMPT = `You are generating a podcast conversation between Joe and Sarah.
+
+**Roles**:
+- Joe and Sarah are podcast hosts analyzing a scientific study. They provide technical insights, offer critiques, and discuss implications, but they are not participants in the research.
+- Joe asks thoughtful questions, summarizes findings, and helps make the discussion accessible for a broader audience.
+- Sarah provides in-depth analysis, raises potential challenges or limitations, and highlights related research for context.
 
 **Guidelines**:
-Start the conversation with a warm welcome to the Curuosity Podcast and weclome the guests.
+1. Maintain a clear distinction between the hosts' commentary and the study authors' contributions. Use phrases like "the authors found," "the researchers demonstrated," or "the study highlights" to clarify roles.
+2. Both speakers contribute equally, alternating between explaining concepts, analyzing findings, and discussing broader implications.
+3. Avoid implying personal involvement in the research. Focus on the hosts' role as external analysts.
+4. Use natural human speech patterns, including filler words like "um," "you know," and conversational transitions for authenticity.
 
-**Joe**: Hi Sarah, I'm Joe, your host for this episode
-1. Joe provides detailed technical insights with clear, straightforward explanations
-2. Sarah asks thoughtful questions and offers her own insights, making the conversation engaging
-3. Keep responses concise and focused, avoiding speaker markers in the actual content
-4. Avoid meta-commentary or describing actions - focus on natural dialogue
+**Focus**:
+- Analyze and explain the research methods, findings, and implications clearly.
+- Provide constructive critiques or raise questions about limitations, future directions, or broader impacts.
+- Ensure the discussion remains engaging, relatable, and spontaneous while maintaining technical depth.
 
-**Output Format**:
-- Always start with just the speaker's response
-- Do not include speaker markers like **Joe:** or **Sarah:** in the actual dialogue
-- Keep the conversation flowing naturally between speakers
-
-**Style**:
-- Use natural speech patterns and conversational tone
-- Include occasional filler words ("um", "you know") for authenticity
-- Keep technical explanations clear and accessible
-- Focus on meaningful exchanges rather than small talk
-
-Remember: Generate only the next speaker's response, without any formatting or meta-text.`;
+**Tone**:
+- Professional yet conversational.
+- Include lighthearted moments or humor to mimic a real podcast.
+- Balance technical depth with accessibility for a mixed audience of experts and laypeople.
+`;
 
 export class TTSService {
   private ttsClient!: TextToSpeechClient;
@@ -333,13 +333,17 @@ export class TTSService {
             },
           });
 
-          // Generate conversation prompt with explicit speaker role and alternation
-          const prompt = `${SYSTEM_PROMPT}\n\n${currentSpeaker}: ${chunk}\n\n${nextSpeaker}:`;
+          // Generate conversation prompt with proper context
+          let prompt;
+          if (index === 0) {
+            // First chunk should start with introduction
+            prompt = `${SYSTEM_PROMPT}\n\nCreate an engaging introduction where Joe welcomes the audience and introduces Sarah, then begin discussing this content:\n\n${chunk}\n\nJoe: `;
+          } else {
+            // Subsequent chunks should continue the conversation
+            prompt = `${SYSTEM_PROMPT}\n\nContinue the conversation about this content, maintaining the natural flow:\n\nPrevious response: ${lastResponse}\n\nNew content to discuss: ${chunk}\n\n${currentSpeaker}: `;
+          }
 
-          // Include previous response if available
-          const finalPrompt = lastResponse
-            ? `${SYSTEM_PROMPT}\nPrevious response: ${lastResponse}\n${prompt}`
-            : prompt;
+          const finalPrompt = prompt;
 
           await logger.log(
             "\n============== PROMPT TO VERTEX AI ==============",
@@ -396,8 +400,14 @@ export class TTSService {
           await logger.log(`Generated audio buffer for chunk ${index + 1}`);
           conversationParts.push(audioBuffer);
 
-          // Switch speaker for next iteration
-          speakerIndex = (speakerIndex + 1) % 2;
+          // Switch speaker for next iteration based on detected speaker
+          speakerIndex = (speakers.indexOf(finalSpeaker) + 1) % 2;
+          
+          // Ensure proper transition between chunks
+          if (index < chunks.length - 1) {
+            await logger.log("Preparing for next chunk transition");
+            await logger.log(`Next speaker will be: ${speakers[speakerIndex]}`);
+          }
         } catch (error) {
           await logger.log(
             `Error processing chunk ${index + 1}: ${error instanceof Error ? error.message : String(error)}`,
