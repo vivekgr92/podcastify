@@ -388,7 +388,6 @@ export class TTSService {
       throw error;
     }
   }
-  }
 }
 
 // Create and export singleton instance
