@@ -92,17 +92,55 @@ export class TTSService {
 
     try {
       await logger.log("\n============== CLEANING RESPONSE ==============");
+      await logger.log(`Original response: ${rawResponse}`);
       
-      // Extract the speaker from the text
-      const speakerMatch = rawResponse.match(/^(?:\*\*)?(Joe|Sarah)(?:\*\*)?:/);
-      const speaker = (speakerMatch && (speakerMatch[1] as Speaker)) || currentSpeaker;
+      // Detect speaker from any format of speaker marker at the start of text
+      const speakerRegex = /^[\s\n]*(?:\*\*)?(Joe|Sarah)(?:\*\*)?(?::|：|\s*[-–—]\s*|\s*>|\s*\]|\s*\})/i;
+      const speakerMatch = rawResponse.match(speakerRegex);
       
-      // Remove the speaker prefix and clean the text
-      let cleanedText = rawResponse
-        .replace(/^(?:\*\*)?(Joe|Sarah)(?:\*\*)?:\s*/g, '') // Remove speaker prefix
-        .replace(/\*\*/g, '') // Remove markdown
-        .replace(/[\n\r]+/g, ' ') // Normalize line breaks
-        .replace(/\s+/g, ' ') // Normalize spaces
+      // Use detected speaker or fallback to current speaker
+      const speaker = (speakerMatch && speakerMatch[1] as Speaker) || currentSpeaker;
+      await logger.log(`Initially detected speaker: ${speaker}`);
+      
+      // First, clean all possible speaker markers from anywhere in the text
+      let cleanedText = rawResponse;
+      
+      // Array of patterns to clean
+      const patterns = [
+        /^[\s\n]*(?:\*\*)?(Joe|Sarah)(?:\*\*)?(?::|：|\s*[-–—]\s*|\s*>|\s*\]|\s*\})/i,  // Start of text
+        /\[(Joe|Sarah)\](?::|：|\s*[-–—]\s*|\s*>)/gi,  // Bracketed format
+        /@(Joe|Sarah)(?::|：|\s*[-–—]\s*|\s*>)/gi,     // @ format
+        /\*\*(Joe|Sarah)\*\*(?::|：|\s*[-–—]\s*|\s*>)/gi,  // Markdown format
+        /(?:^|\s)(Joe|Sarah)(?::|：|\s*[-–—]\s*|\s*>)/gi,  // Plain format
+        /\s*(Joe|Sarah)\s*says[:\s]/gi,                // "says" format
+        /\b(Joe|Sarah)\b[：:]/g                        // Basic format
+      ];
+
+      try {
+        // Apply each cleaning pattern
+        patterns.forEach(pattern => {
+          const before = cleanedText;
+          cleanedText = cleanedText.replace(pattern, '');
+          if (before !== cleanedText) {
+            logger.log(`Cleaned pattern: ${pattern}`, 'info').catch(console.error);
+          }
+        });
+      } catch (cleaningError) {
+        await logger.log(`Error during pattern cleaning: ${cleaningError}`, 'error');
+        // On pattern cleaning error, fallback to simple cleanup
+        cleanedText = rawResponse
+          .replace(/^[\s\n]*(?:\*\*)?(Joe|Sarah)(?:\*\*)?(?::|：|\s*[-–—]\s*|\s*>|\s*\]|\s*\})/i, '')
+          .replace(/\*\*/g, '')
+          .trim();
+      }
+
+      // Final cleanup
+      cleanedText = cleanedText
+        .replace(/\*\*/g, '')           // Remove any remaining markdown
+        .replace(/[\n\r]+/g, ' ')       // Normalize line breaks
+        .replace(/\s+/g, ' ')           // Normalize spaces
+        .replace(/^[:\s]+/, '')         // Remove any leftover colons or spaces at start
+        .replace(/[:\s]+$/, '')         // Remove any trailing colons or spaces
         .trim();
 
       if (cleanedText.length === 0) {
@@ -110,8 +148,8 @@ export class TTSService {
         throw new Error('Cleaning resulted in empty text');
       }
 
-      await logger.log(`Speaker detected: ${speaker}`);
-      await logger.log(`Cleaned text sample: ${cleanedText.substring(0, 100)}...`);
+      await logger.log(`Final speaker selection: ${speaker}`);
+      await logger.log(`Final cleaned text: ${cleanedText}`);
       await logger.log("==================END==========================");
 
       return { text: cleanedText, speaker };
@@ -120,7 +158,11 @@ export class TTSService {
         `Error cleaning response: ${error instanceof Error ? error.message : String(error)}`,
         "error"
       );
-      throw error;
+      // On critical error, return the current speaker and cleaned text
+      return {
+        speaker: currentSpeaker,
+        text: rawResponse.replace(/\*\*/g, '').trim()
+      };
     }
   }
 
@@ -150,9 +192,9 @@ export class TTSService {
     }
 
     await logger.log("\n============== GOOGLE TTS REQUEST ==============");
-    await logger.log(`Speaker: ${speaker}`);
-    await logger.log(`Voice ID: ${GOOGLE_VOICE_IDS[speaker]}`);
-    await logger.log(`Text sample: ${text.substring(0, 100)}...`);
+    await logger.log(`Selected speaker: ${speaker}`);
+    await logger.log(`Using voice ID: ${GOOGLE_VOICE_IDS[speaker]}`);
+    await logger.log(`Original text sample: ${text.substring(0, 100)}...`);
 
     try {
       // Validate and clean input text
@@ -160,17 +202,20 @@ export class TTSService {
         throw new Error('Invalid text input for TTS');
       }
 
-      // Remove any remaining speaker markers or formatting
+      // Final cleanup to ensure no speaker markers remain
       text = text
-        .replace(/\b(?:Joe|Sarah)\b\s*[:]/g, '')
-        .replace(/\*\*/g, '')
+        .replace(/\b(?:Joe|Sarah)\b\s*[:：]/g, '')  // Remove any remaining speaker markers
+        .replace(/\*\*/g, '')                       // Remove any markdown
+        .replace(/\s+/g, ' ')                       // Normalize spaces
         .trim();
+
+      await logger.log(`Final cleaned text for TTS: ${text.substring(0, 100)}...`);
 
       const textBytes = new TextEncoder().encode(text).length;
       if (textBytes > 4800) {
         await logger.log(`Text length warning: ${textBytes} bytes`, "warn");
         text = text.substring(0, Math.floor(4800 / 2)) + "...";
-        await logger.log(`Truncated text sample: ${text.substring(0, 100)}...`);
+        await logger.log(`Truncated text: ${text.substring(0, 100)}...`);
       }
 
       const request = {
@@ -294,8 +339,8 @@ export class TTSService {
             },
           });
 
-          // Generate conversation prompt
-          const prompt = `${SYSTEM_PROMPT}\n\nPrevious Response: ${lastResponse ? `${lastResponse}\n\n` : ''}Current chunk: ${chunk}\n\nNow ${nextSpeaker} should respond:`;
+          // Generate conversation prompt with explicit speaker role
+          const prompt = `${SYSTEM_PROMPT}\n\nPrevious Response: ${lastResponse ? `${lastResponse}\n\n` : ''}Current chunk: ${chunk}\n\nGenerate ${nextSpeaker}'s response. Start with "${nextSpeaker}:" and maintain natural conversational flow.`;
 
           await logger.log("\n============== PROMPT TO VERTEX AI ==============");
           await logger.log(prompt);
@@ -310,19 +355,19 @@ export class TTSService {
           }
 
           const rawResponse = result.response.candidates[0].content.parts[0].text.trim();
-          
-          // Always force the next speaker's prefix
-          const formattedResponse = `${nextSpeaker}: ${rawResponse.replace(/^(?:\*\*)?(Joe|Sarah)(?:\*\*)?:\s*/, '')}`;
 
           await logger.log("\n============== VERTEX AI RESPONSE ==============");
-          await logger.log(`Raw response: ${formattedResponse}`);
+          await logger.log(`Raw response: ${rawResponse}`);
           await logger.log("==================END============================");
 
           // Clean the text and get the speaker
           const { text: cleanedText, speaker: detectedSpeaker } = await this.cleanRawResponse(
-            formattedResponse,
+            rawResponse,
             nextSpeaker
           );
+
+          // Ensure we're using the intended speaker
+          const finalSpeaker = detectedSpeaker === nextSpeaker ? nextSpeaker : nextSpeaker;
 
           // Basic length validation
           const responseBytes = new TextEncoder().encode(cleanedText).length;
@@ -333,14 +378,14 @@ export class TTSService {
           }
 
           await logger.log("\n============== VOICE SELECTION ==============");
-          await logger.log(`Using speaker: ${detectedSpeaker}`);
-          await logger.log(`Voice ID: ${GOOGLE_VOICE_IDS[detectedSpeaker]}`);
+          await logger.log(`Using speaker: ${finalSpeaker}`);
+          await logger.log(`Voice ID: ${GOOGLE_VOICE_IDS[finalSpeaker]}`);
           await logger.log("==================END=======================");
 
-          // Use the detected speaker's voice
+          // Use the final speaker's voice
           const audioBuffer = await this.synthesizeWithGoogle({
             text: lastResponse,
-            speaker: detectedSpeaker
+            speaker: finalSpeaker
           });
 
           await logger.log(`Generated audio buffer for chunk ${index + 1}`);
@@ -354,7 +399,17 @@ export class TTSService {
             `Error processing chunk ${index + 1}: ${error instanceof Error ? error.message : String(error)}`,
             "error"
           );
-          continue; // Skip this chunk and continue with the next one
+          // On error, try to generate audio with current speaker
+          try {
+            const errorAudio = await this.synthesizeWithGoogle({
+              text: "I apologize, but I need to pass the conversation back.",
+              speaker: speakers[speakerIndex]
+            });
+            conversationParts.push(errorAudio);
+          } catch (audioError) {
+            await logger.log(`Failed to generate error audio: ${audioError}`, "error");
+          }
+          continue;
         }
       }
 
@@ -368,6 +423,8 @@ export class TTSService {
 
       await logger.log(`Combined audio buffer size: ${combinedBuffer.length}`);
       await logger.log(`Estimated duration: ${estimatedDuration} seconds`);
+
+      this.emitProgress(100);
 
       return {
         audioBuffer: combinedBuffer,
