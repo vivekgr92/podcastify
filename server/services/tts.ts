@@ -89,65 +89,7 @@ export class TTSService {
    * - Skips special markers and empty lines
    * - Handles error cases gracefully
    */
-  private async cleanGeneratedText(
-    rawText: string,
-  ): Promise<ConversationEntry[]> {
-    try {
-      const lines = rawText.split("\n");
-      const conversation: ConversationEntry[] = [];
-      let currentSpeaker = "";
-      let currentText = "";
-
-      for (const line of lines) {
-        const trimmedLine = line.trim();
-
-        // Skip empty lines and special markers
-        if (
-          !trimmedLine ||
-          trimmedLine.startsWith("**") ||
-          trimmedLine.startsWith("--")
-        ) {
-          continue;
-        }
-
-        // Check for speaker markers
-        const speakerMatch = trimmedLine.match(/^(Joe|Sarah):/);
-        if (speakerMatch && speakerMatch[1]) {
-          // If we have previous content, save it
-          if (currentSpeaker && currentText) {
-            conversation.push({
-              speaker: currentSpeaker as "Joe" | "Sarah",
-              text: currentText.trim(),
-            });
-          }
-
-          // Start new speaker section
-          currentSpeaker = speakerMatch[1] as "Joe" | "Sarah";
-          currentText = trimmedLine.substring(speakerMatch[0].length).trim();
-        } else if (currentSpeaker) {
-          // Append to current text if we have a speaker
-          currentText += " " + trimmedLine;
-        }
-      }
-
-      // Add the last entry if exists
-      if (currentSpeaker && currentText) {
-        conversation.push({
-          speaker: currentSpeaker as "Joe" | "Sarah",
-          text: currentText.trim(),
-        });
-      }
-
-      return conversation;
-    } catch (error) {
-      await logger.log(
-        "Error parsing text: " +
-          (error instanceof Error ? error.message : "Unknown error"),
-        "error",
-      );
-      return [];
-    }
-  }
+  // Removed cleanGeneratedText function as we're using raw responses directly
 
   addProgressListener(listener: (progress: number) => void) {
     this.progressListeners.add(listener);
@@ -340,47 +282,31 @@ export class TTSService {
           throw new Error("Invalid response from Vertex AI");
         }
 
-        const rawResponse = result.response.candidates[0].content.parts[0].text;
-        await logger.log(
-          "\n\n============== RAW VERTEX AI RESPONSE ==============",
-        );
-        await logger.log(rawResponse);
+        const rawResponse = result.response.candidates[0].content.parts[0].text.trim();
+        await logger.log("\n\n============== VERTEX AI RESPONSE ==============");
+        await logger.log(`Speaker: ${currentSpeaker}`);
+        await logger.log(`Raw response: ${rawResponse}`);
         await logger.log("==================END============================");
 
-        // Clean and structure the response text
-        // Clean and structure the response text
-        const cleanedEntries = await this.cleanGeneratedText(rawResponse);
-        await logger.log(
-          "\n\n============== CLEANED CONVERSATION ENTRIES ==============",
-        );
-        // Format each entry with line breaks between speakers
-        for (const entry of cleanedEntries) {
-          await logger.log(`${entry.speaker}:`);
-          await logger.log(entry.text);
-        }
-        await logger.log("====================END==========================");
+        // Extract text after speaker marker if present, otherwise use full response
+        const speakerMarker = `${currentSpeaker}:`;
+        let processedResponse = rawResponse.startsWith(speakerMarker) 
+          ? rawResponse.substring(speakerMarker.length).trim()
+          : rawResponse;
 
-        // Combine all entries for the current speaker
-        lastResponse = cleanedEntries
-          .filter((entry) => entry.speaker === currentSpeaker)
-          .map((entry) => entry.text)
-          .join(" ");
-
-        // Validate response length before proceeding
-        const responseBytes = new TextEncoder().encode(lastResponse).length;
+        // Basic length validation
+        const responseBytes = new TextEncoder().encode(processedResponse).length;
         if (responseBytes > 4800) {
-          await logger.log(
-            `Response too long (${responseBytes} bytes), truncating...`,
-            "warn",
-          );
-          lastResponse =
-            lastResponse.substring(0, Math.floor(4800 / 2)) + "...";
+          await logger.log(`Response too long (${responseBytes} bytes), truncating...`, "warn");
+          processedResponse = processedResponse.substring(0, Math.floor(4800 / 2)) + "...";
         }
+        
+        lastResponse = processedResponse;
 
-        // Use Google TTS for synthesis
+        // Use Google TTS for synthesis with the current speaker
         const audioBuffer = await this.synthesizeWithGoogle({
           text: lastResponse,
-          speaker: currentSpeaker as keyof typeof GOOGLE_VOICE_IDS,
+          speaker: currentSpeaker as Speaker,
         });
 
         await logger.log(`Generated audio buffer for chunk ${index + 1}`);
