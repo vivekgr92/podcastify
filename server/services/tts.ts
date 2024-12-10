@@ -30,8 +30,8 @@ const VOICE_IDS: Record<Speaker, string> = {
 };
 
 const GOOGLE_VOICE_IDS: Record<Speaker, string> = {
-  Joe: "en-US-Neural2-D",
-  Sarah: "en-US-Neural2-F",
+  Joe: "en-US-Neural2-J",    // A deeper male voice
+  Sarah: "en-US-Neural2-C",  // A clearer female voice
 };
 
 const SYSTEM_PROMPT = `You are generating a podcast conversation between Joe and Sarah.
@@ -62,7 +62,7 @@ export class TTSService {
     this.progressListeners = new Set();
   }
 
-  private async cleanRawResponse(rawResponse: string, currentSpeaker: Speaker): Promise<string> {
+  private async cleanRawResponse(rawResponse: string, currentSpeaker: Speaker): Promise<{ text: string; speaker: Speaker }> {
     if (!rawResponse || typeof rawResponse !== 'string') {
       await logger.log('Invalid raw response received', 'error');
       throw new Error('Invalid response format');
@@ -72,7 +72,14 @@ export class TTSService {
       await logger.log("\n============== CLEANING RESPONSE ==============");
       await logger.log(`Original text: ${rawResponse}`);
       
-      // Remove all speaker markers and their following colons
+      // First, detect the speaker from the markers
+      let detectedSpeaker = currentSpeaker;
+      const speakerMatch = rawResponse.match(/\*\*(Joe|Sarah)\*\*:|^(Joe|Sarah):/m);
+      if (speakerMatch) {
+        detectedSpeaker = (speakerMatch[1] || speakerMatch[2]) as Speaker;
+      }
+      
+      // Then remove all speaker markers and their following colons
       let cleanedText = rawResponse
         .replace(/\*\*(Joe|Sarah)\*\*:\s*/g, '') // Remove markdown style markers
         .replace(/^(Joe|Sarah):\s*/gm, '')       // Remove plain speaker prefixes
@@ -86,11 +93,14 @@ export class TTSService {
         throw new Error('Cleaning resulted in empty text');
       }
       
-      await logger.log(`Current Speaker: ${currentSpeaker}`);
+      await logger.log(`Detected Speaker: ${detectedSpeaker}`);
       await logger.log(`Cleaned text: ${cleanedText}`);
       await logger.log("==================END==========================");
       
-      return cleanedText;
+      return {
+        text: cleanedText,
+        speaker: detectedSpeaker
+      };
     } catch (error) {
       await logger.log(
         `Error cleaning response: ${error instanceof Error ? error.message : String(error)}`,
@@ -280,12 +290,11 @@ export class TTSService {
 
           const rawResponse = result.response.candidates[0].content.parts[0].text.trim();
           await logger.log("\n============== VERTEX AI RESPONSE ==============");
-          await logger.log(`Speaker: ${currentSpeaker}`);
           await logger.log(`Raw response: ${rawResponse}`);
           await logger.log("==================END============================");
 
-          // Clean and process the response
-          const cleanedResponse = await this.cleanRawResponse(rawResponse, currentSpeaker);
+          // Clean and process the response, getting both cleaned text and detected speaker
+          const { text: cleanedResponse, speaker: detectedSpeaker } = await this.cleanRawResponse(rawResponse, currentSpeaker);
           
           // Basic length validation
           const responseBytes = new TextEncoder().encode(cleanedResponse).length;
@@ -296,10 +305,13 @@ export class TTSService {
             lastResponse = cleanedResponse;
           }
 
-          // Use Google TTS for synthesis
+          // Log the speaker change
+          await logger.log(`Using voice for speaker: ${detectedSpeaker}`);
+          
+          // Use Google TTS for synthesis with the detected speaker
           const audioBuffer = await this.synthesizeWithGoogle({
             text: lastResponse,
-            speaker: currentSpeaker,
+            speaker: detectedSpeaker,
           });
 
           await logger.log(`Generated audio buffer for chunk ${index + 1}`);
