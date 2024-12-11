@@ -111,27 +111,40 @@ export class TTSService {
       await logger.log("\n============== CLEANING RESPONSE ==============");
       await logger.log(`Original response: ${rawResponse}`);
 
-      // Simple speaker detection at the start
-      const speakerRegex =
-        /^(?:\*\*)?(Joe|Sarah)(?:\*\*)?(?::|：|\s*[-–—]\s*)/i;
-      const speakerMatch = rawResponse.match(speakerRegex);
+      // Enhanced speaker detection patterns
+      const speakerPatterns = [
+        /^(?:\*\*)?(Joe|Sarah)(?:\*\*)?(?::|：|\s*[-–—]\s*)/i,
+        /(?:^|\n)(?:\*\*)?(Joe|Sarah)(?:\*\*)?(?::|：|\s*[-–—]\s*)/i,
+        /\[(Joe|Sarah)\][:：]/,
+        /@(Joe|Sarah)[:：]/,
+        /\*\*(Joe|Sarah)\*\*[:：]/,
+      ];
 
-      // Determine speaker - prefer detected speaker, fallback to current speaker
-      const speaker = (speakerMatch?.[1] as Speaker) || currentSpeaker;
-      await logger.log(`Detected speaker: ${speaker}`);
+      let detectedSpeaker = currentSpeaker;
+      for (const pattern of speakerPatterns) {
+        const match = rawResponse.match(pattern);
+        if (match) {
+          detectedSpeaker = match[1] as Speaker;
+          break;
+        }
+      }
 
-      // Clean the text - remove all speaker markers and formatting
+      await logger.log(`Detected speaker: ${detectedSpeaker}`);
+
+      // Thorough cleaning of the text
       let cleanedText = rawResponse
-        // Remove speaker markers
+        // Remove all variations of speaker markers
         .replace(/^(?:\*\*)?(Joe|Sarah)(?:\*\*)?(?::|：|\s*[-–—]\s*)/i, "")
-        .replace(/\*\*(Joe|Sarah)\*\*[:：]/g, "")
+        .replace(/(?:^|\n)(?:\*\*)?(Joe|Sarah)(?:\*\*)?(?::|：|\s*[-–—]\s*)/gi, "")
         .replace(/\[(Joe|Sarah)\][:：]/g, "")
         .replace(/@(Joe|Sarah)[:：]/g, "")
+        .replace(/\*\*(Joe|Sarah)\*\*[:：]/g, "")
         .replace(/\b(Joe|Sarah)[:：]\s*/g, "")
-        // Remove any remaining formatting
+        // Clean formatting and normalize whitespace
         .replace(/\*\*/g, "")
         .replace(/[\n\r]+/g, " ")
         .replace(/\s+/g, " ")
+        .replace(/^\s+|\s+$/g, "")
         .trim();
 
       if (cleanedText.length === 0) {
@@ -336,34 +349,12 @@ export class TTSService {
           // Generate conversation prompt with proper context and handling
           let prompt;
           if (index === 0) {
-            // Generate introduction separately for the first chunk
-            const introPrompt = `${SYSTEM_PROMPT}\n\nCreate a brief podcast introduction where Joe welcomes the audience and introduces Sarah. Keep it under 30 seconds:\n\nJoe: `;
-            
-            const introResult = await model.generateContent({
-              contents: [{ role: "user", parts: [{ text: introPrompt }] }],
-            });
-
-            if (!introResult.response?.candidates?.[0]?.content?.parts?.[0]?.text) {
-              throw new Error("Invalid introduction response from Vertex AI");
-            }
-
-            const introText = introResult.response.candidates[0].content.parts[0].text.trim();
-            const cleanedIntro = await this.cleanRawResponse(introText, "Joe");
-            
-            // Generate audio for introduction
-            const introAudio = await this.synthesizeWithGoogle({
-              text: cleanedIntro.text,
-              speaker: "Joe",
-            });
-            
-            conversationParts.push(introAudio);
-            
-            // Now generate the first chunk of content discussion
-            prompt = `${SYSTEM_PROMPT}\n\nNow, Sarah will start discussing this content:\n\n${chunk}\n\nSarah: `;
-            speakerIndex = 1; // Set to Sarah after Joe's introduction
+            // Always start with Joe's introduction
+            prompt = `${SYSTEM_PROMPT}\n\nStart with Joe welcoming the audience and introducing Sarah (keep it under 30 seconds), then have Sarah begin discussing this content:\n\n${chunk}\n\nJoe:`;
+            speakerIndex = 0; // Ensure we start with Joe
           } else {
             // Subsequent chunks should continue the conversation
-            prompt = `${SYSTEM_PROMPT}\n\nContinue the conversation about this content, maintaining the natural flow. Use this previous response for context, but discuss new points:\n\nPrevious response: ${lastResponse}\n\nNew content to discuss: ${chunk}\n\n${currentSpeaker}: `;
+            prompt = `${SYSTEM_PROMPT}\n\nContinue the conversation about this content, maintaining the natural flow. Use this previous response for context, but discuss new points:\n\nPrevious response: ${lastResponse}\n\nNew content to discuss: ${chunk}\n\n${speakers[speakerIndex]}:`;
           }
 
           const finalPrompt = prompt;
