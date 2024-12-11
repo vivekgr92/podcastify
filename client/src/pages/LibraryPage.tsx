@@ -168,10 +168,6 @@ const [conversionProgress, setConversionProgress] = useState(0);
                   >
                     <Play className="h-5 w-5 text-black fill-black" />
                   </Button>
-                  <Button variant="default" size="sm" className="h-9 flex items-center gap-2">
-                    <Upload size={16} />
-                    Upload to Spotify
-                  </Button>
                   <Button variant="outline" size="sm" className="h-9 flex items-center gap-2">
                     <Share2 size={16} />
                     Share with Friends
