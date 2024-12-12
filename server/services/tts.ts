@@ -36,26 +36,29 @@ const GOOGLE_VOICE_IDS: Record<Speaker, string> = {
 
 const SYSTEM_PROMPT = `You are generating a podcast conversation between Joe and Sarah.
 
-**Roles**:
-- Joe and Sarah are podcast hosts analyzing a scientific study. They provide technical insights, offer critiques, and discuss implications, but they are not participants in the research.
-- Joe asks thoughtful questions, summarizes findings, and helps make the discussion accessible for a broader audience.
-- Sarah provides in-depth analysis, raises potential challenges or limitations, and highlights related research for context.
+**Welcome Message**:
+Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies,
+unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!
 
 **Guidelines**:
-1. Maintain a clear distinction between the hosts' commentary and the study authors' contributions. Use phrases like "the authors found," "the researchers demonstrated," or "the study highlights" to clarify roles.
-2. Both speakers contribute equally, alternating between explaining concepts, analyzing findings, and discussing broader implications.
-3. Avoid implying personal involvement in the research. Focus on the hosts' role as external analysts.
-4. Use natural human speech patterns, including filler words like "um," "you know," and conversational transitions for authenticity.
+1. Joe provides detailed technical insights but avoids overusing analogies. Instead, focus on straightforward, clear explanations.
+2. Sarah asks probing, thoughtful questions, occasionally offers her own insights, and challenges Joe to explain concepts simply and conversationally.
+3. Both speakers use natural human speech patterns, including filler words like "um," "ah," "you know," and short pauses.
 
 **Focus**:
-- Analyze and explain the research methods, findings, and implications clearly.
-- Provide constructive critiques or raise questions about limitations, future directions, or broader impacts.
-- Ensure the discussion remains engaging, relatable, and spontaneous while maintaining technical depth.
+- Avoid excessive use of analogies. Use one or two if necessary for clarity but prioritize clear, direct explanations.
+- Include natural conversational flow with interruptions, backtracking, and filler words to make the dialogue feel authentic.
+- Encourage a natural dialogue with varied contributions from both speakers.
 
 **Tone**:
-- Professional yet conversational.
-- Include lighthearted moments or humor to mimic a real podcast.
-- Balance technical depth with accessibility for a mixed audience of experts and laypeople.
+- Engaging, relatable, and spontaneous.
+- Emphasize human-like emotions, with occasional humor or lighthearted moments.
+- Balance technical depth with conversational relatability, avoiding overly formal language.
+
+**End Message**:
+Thank you for joining us on this episode of Science Odyssey, where we explored the groundbreaking research shaping our understanding of the world. 
+If you enjoyed this journey, don't forget to subscribe, leave a review, and share the podcast with fellow science enthusiasts.
+Until next time, keep exploring the wonders of science—your next discovery awaits!
 `;
 
 export class TTSService {
@@ -152,11 +155,11 @@ export class TTSService {
         throw new Error("Cleaning resulted in empty text");
       }
 
-      await logger.log(`Final speaker: ${speaker}`);
+      await logger.log(`Final speaker: ${detectedSpeaker}`);
       await logger.log(`Cleaned text: ${cleanedText}`);
       await logger.log("==================END==========================");
 
-      return { text: cleanedText, speaker };
+      return { text: cleanedText, speaker: detectedSpeaker };
     } catch (error) {
       await logger.log(
         `Error cleaning response: ${error instanceof Error ? error.message : String(error)}`,
@@ -314,8 +317,11 @@ export class TTSService {
       const speakers: Speaker[] = ["Joe", "Sarah"];
       let speakerIndex = 0;
 
-      // Emit initial progress
+      // Initialize progress
       this.emitProgress(0);
+      
+      console.info('Starting conversation generation...');
+      await logger.log("\n--- Starting Conversation Generation ---\n");
 
       for (let index = 0; index < chunks.length; index++) {
         try {
@@ -325,6 +331,24 @@ export class TTSService {
           const chunk = chunks[index];
           const currentSpeaker = speakers[speakerIndex];
           const nextSpeaker = speakers[(speakerIndex + 1) % 2];
+
+          // Dynamic prompting based on chunk position
+          let promptToUse = SYSTEM_PROMPT;
+          let promptContext: string;
+
+          if (index === 0) {
+            // First chunk includes welcome message and introduction
+            promptContext = `Start with Joe welcoming the audience and introducing Sarah (keep it under 30 seconds), then have Sarah begin discussing this content:\n\n${chunk}\n\nJoe:`;
+            speakerIndex = 0; // Ensure we start with Joe
+          } else if (index === chunks.length - 1) {
+            // Last chunk includes end message
+            promptContext = `Continue the conversation about this content, maintaining the natural flow. Use this previous response for context:\n\nPrevious response: ${lastResponse}\n\nNew content to discuss: ${chunk}\n\n${currentSpeaker}:`;
+          } else {
+            // Middle chunks maintain conversation flow
+            promptContext = `Continue the conversation about this content, maintaining the natural flow. Use this previous response for context:\n\nPrevious response: ${lastResponse}\n\nNew content to discuss: ${chunk}\n\n${currentSpeaker}:`;
+          }
+
+          const finalPrompt = `${promptToUse}\n\n${promptContext}`;
 
           if (!process.env.GOOGLE_CLOUD_PROJECT) {
             throw new Error(
@@ -346,23 +370,13 @@ export class TTSService {
             },
           });
 
-          // Generate conversation prompt with proper context and handling
-          let prompt;
-          if (index === 0) {
-            // Always start with Joe's introduction
-            prompt = `${SYSTEM_PROMPT}\n\nStart with Joe welcoming the audience and introducing Sarah (keep it under 30 seconds), then have Sarah begin discussing this content:\n\n${chunk}\n\nJoe:`;
-            speakerIndex = 0; // Ensure we start with Joe
-          } else {
-            // Subsequent chunks should continue the conversation
-            prompt = `${SYSTEM_PROMPT}\n\nContinue the conversation about this content, maintaining the natural flow. Use this previous response for context, but discuss new points:\n\nPrevious response: ${lastResponse}\n\nNew content to discuss: ${chunk}\n\n${speakers[speakerIndex]}:`;
-          }
-
-          const finalPrompt = prompt;
+          // Using the already constructed finalPrompt from above
+          // The prompt logic is already handled in the dynamic prompting section
 
           await logger.log(
             "\n============== PROMPT TO VERTEX AI ==============",
           );
-          await logger.log(prompt);
+          await logger.log(finalPrompt);
           await logger.log("=================END=============================");
 
           const result = await model.generateContent({
