@@ -2337,3 +2337,335 @@ Thank you for joining us on this episode of Science Odyssey, where we explored t
 [INFO] Generated audio buffer for chunk 5
 [INFO] Combined audio buffer size: 6555456
 [INFO] Estimated duration: 377 seconds
+[INFO] 
+--- Starting Conversation Generation ---
+
+[INFO] 
+
+ ------------PROMPT to VERTEX AI-----------------
+
+[INFO] Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies,
+unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!
+
+**Guidelines**:
+1. Joe provides detailed technical insights but avoids overusing analogies. Instead, focus on straightforward, clear explanations.
+2. Sarah asks probing, thoughtful questions, occasionally offers her own insights, and challenges Joe to explain concepts simply and conversationally.
+3. Both speakers use natural human speech patterns, including filler words like "um," "ah," "you know," and short pauses.
+
+**Focus**:
+- Avoid excessive use of analogies. Use one or two if necessary for clarity but prioritize clear, direct explanations.
+- Include natural conversational flow with interruptions, backtracking, and filler words to make the dialogue feel authentic.
+- Encourage a natural dialogue with varied contributions from both speakers.
+
+**Tone**:
+- Engaging, relatable, and spontaneous.
+- Emphasize human-like emotions, with occasional humor or lighthearted moments.
+- Balance technical depth with conversational relatability, avoiding overly formal language.
+
+You are generating a podcast conversation between Joe and Sarah.
+
+**Guidelines**:
+1. Joe provides detailed technical insights but avoids overusing analogies. Instead, focus on straightforward, clear explanations.
+2. Sarah asks probing, thoughtful questions, occasionally offers her own insights, and challenges Joe to explain concepts simply and conversationally.
+3. Both speakers use natural human speech patterns, including filler words like "um," "ah," "you know," and short pauses.
+
+**Focus**:
+- Avoid excessive use of analogies. Use one or two if necessary for clarity but prioritize clear, direct explanations.
+- Include natural conversational flow with interruptions, backtracking, and filler words to make the dialogue feel authentic.
+- Encourage a natural dialogue with varied contributions from both speakers.
+
+**Tone**:
+- Engaging, relatable, and spontaneous.
+- Emphasize human-like emotions, with occasional humor or lighthearted moments.
+- Balance technical depth with conversational relatability, avoiding overly formal language.
+
+Joe: C arl Laflamme knew what protein he wanted to study, but not where to find it. It is encoded by a gene called C9ORF72, which is mutated in some people with the devastating neuro- logical condition motor neuron disease, also known as amyotrophic lateral sclerosis. And Laflamme wanted to understand its role in the disease. When he started his postdoctoral fellowship at the Montreal Neurological Institute-Hospital in Canada, Laflamme scoured the literature, searching for information on the protein. The problem was that none of the papers seemed to agree where in the cell this mysterious mol- ecule operates. There was so much confusion in the field, Laflamme says. He wondered whether a reagent was to blame, in particular the antibodies that scientists used to measure the amount of the protein and track its position in the cell. So, he and his colleagues decided to test the antibodies that were available. They identified 16 commercial antibodies that were adver- tised as able to bind to the protein encoded by C9ORF72. When the researchers put them THE QUEST TO RID LABS OF THE REAGENTS THAT RUIN EXPERIMENTS Poorly performing antibodies have plagued biomedicalsciences for decades. Several fresh initiativeshope to change this. By Diana Kwon ILLUSTRATION BY FABIO BUONOCORE 26 | Nature | Vol 635 | 7 November 2024 Feature through their paces, only three performed wellmeaning that the antibodies bound to the protein of interest without binding to other molecules. But not one published study had used these antibodies. About 15 papers described experiments using an antibody that didnt even bind the key protein in Laflammes testing. And those papers had been collec- tively cited more than 3,000 times 1 . Laflammes experience isnt unusual. Scien- tists have long known that many commercial antibodies dont work as they should they often fail to recognize a specific protein or non-selectively bind to several other targets. The result is a waste of time and resources that some say has contributed to a repro - ducibility crisis in the biological sciences, potentially slowing the pace of discovery and drug development. Laflamme is part of a growing community that wants to solve the problem of unreliable antibodies in research. He teamed up with molecular geneticist Aled Edwards at the University of Toronto, Canada, to set up Antibody Characterization through Open Science (YCharOS, pronounced Icarus), an initiative that aims to characterize commer- cially available research antibodies for every human protein. There are also efforts under way to produce better-performing antibodies, to make it easier for researchers to find them and to encourage the research community to adopt best prac- tices when it comes to choosing and working with these molecules. Antibody vendors, funding agencies and scientific publishers are all getting in on the action, says Harvinder Virk, a physicianscientist at the University of Leicester, UK. Its hard to imagine that a problem that has been going on so long will suddenly change but Im hopeful. Putting antibodies to the test The immune system produces antibodies in response to foreign substances, such as viruses and bacteria, flagging them for destruction. This makes antibodies useful in laboratory experiments. Scientists co-opt this ability by using them to mark or quantify spe- cific biological molecules, such as a segment of a protein. To be effective, these molecular tags need to have both specificity a strong affinity for the target and selectivity the ability to leave other proteins unmarked. For decades, scientists created these anti- bodies themselves. They injected proteins into animals, such as rabbits, whose immune systems would generate antibodies against the foreign molecules. To create a longer- term, more consistent supply of antibodies, researchers extracted immune cells from ani- mals and combined them with immortalized cancer cells.
+
+Sarah:
+[INFO] 
+
+ ------------END-----------------
+
+[INFO] Raw Text (Chunk 1): Sarah: Wow, Joe, that's a really fascinating story about Carl Laflamme and the antibody problem.  So, he basically found that a huge number of published studies were using antibodies that just...didn't work properly?  That's a pretty shocking revelation.  Um, I mean, thousands of citations based on faulty data? That seems like a massive issue for the field.
+
+Joe: Yeah, it's a huge problem, Sarah.  It's not just Laflamme's experience; it's a widespread issue.  Think about it – scientists are relying on these antibodies to, you know, identify and quantify specific proteins. If the antibody isn't binding to the *right* protein, or if it's binding to multiple proteins, your whole experiment is compromised.  You're getting inaccurate results, and that leads to, well, bad science.  And as you pointed out,  it's had a massive impact on the literature. Thousands of papers, potentially thousands of research projects, affected by unreliable antibodies.  It's incredibly frustrating for researchers.
+
+Sarah:  So, what exactly *is* an antibody, and why are they so crucial in this kind of research? I mean, I have a vague idea, but could you explain it in a simple way?
+
+Joe: Sure.  Um, antibodies are basically proteins produced by the immune system to target and neutralize foreign substances.  Scientists use them in research because they can be incredibly specific; they can bind to a single, specific protein in a complex mixture of proteins.  So you can use them to, for example, measure the amount of that protein in a sample, or to locate it within a cell.  They're like, ah, highly specific molecular tags.  But if the "tag" is faulty, it throws everything off.
+
+Sarah:  Right, so if the antibody isn't specific enough, it's like trying to find a specific grain of sand on a beach using a magnet that attracts everything metallic.  You're not going to get a reliable result.
+
+Joe: Exactly!  That's a pretty good analogy, actually.  And it's not just specificity; it's also about *selectivity*. A good antibody will only bind to its target; it won't bind to other proteins.  A lot of the antibodies tested by Laflamme and his colleagues lacked that selectivity. They were binding to multiple proteins, leading to false positives and false negatives.
+
+Sarah:  So, what's being done to address this? Is there a way to improve the reliability of antibodies?
+
+Joe:  There are several initiatives.  Laflamme's work with iCharOS is one example – they're systematically characterizing commercially available antibodies.  Other groups are focusing on developing better antibodies, improving the production process, and even creating databases to help researchers choose the right antibodies.  It's a multi-pronged approach, and it's really encouraging to see so many people working on this. It's a long-term problem, but there's finally a lot of momentum building to solve it.  It's, uh, a much-needed change.
+
+
+Sarah: It's definitely a hopeful sign.  It sounds like it'll take a collaborative effort across the whole research community to really make a difference.  Thanks, Joe, for shedding some light on this important issue.  It's something I think a lot of listeners will find both surprising and concerning.
+
+[INFO] Error parsing conversation: Unexpected token 'S', "Sarah: Wow"... is not valid JSON
+[[]] Cleaned Text (Chunk 1):
+[INFO] 
+
+ ------------PROMPT to VERTEX AI-----------------
+
+[INFO] You are generating a podcast conversation between Joe and Sarah.
+
+**Guidelines**:
+1. Joe provides detailed technical insights but avoids overusing analogies. Instead, focus on straightforward, clear explanations.
+2. Sarah asks probing, thoughtful questions, occasionally offers her own insights, and challenges Joe to explain concepts simply and conversationally.
+3. Both speakers use natural human speech patterns, including filler words like "um," "ah," "you know," and short pauses.
+
+**Focus**:
+- Avoid excessive use of analogies. Use one or two if necessary for clarity but prioritize clear, direct explanations.
+- Include natural conversational flow with interruptions, backtracking, and filler words to make the dialogue feel authentic.
+- Encourage a natural dialogue with varied contributions from both speakers.
+
+**Tone**:
+- Engaging, relatable, and spontaneous.
+- Emphasize human-like emotions, with occasional humor or lighthearted moments.
+- Balance technical depth with conversational relatability, avoiding overly formal language.
+
+Joe: When reagent companies began the mass production of antibodies in the 1990s, most researchers shifted to purchasing antibodies from a catalogue. Today, there are around 7.7 million research antibody products on the market, sold by almost 350antibody suppliers around the world. In the late 2000s, scientists began reporting problems with both the specificity and selectivity of many commercially available antibodies, leading researchers to call for an independent body to certify that the molecules work as advertised. Over the years, a handful of groups have launched efforts to evaluate antibodies. What sets YCharOS apart is the level of cooperation that it has obtained from com- panies that sell antibodies. When Laflamme and Edwards set out to start YCharOS, they called every single vendor they could find; more than a dozen were interested in collab- orating. YCharOSs industry partners provide the antibodies for testing, free of charge. The partners, along with the funders of the initia- tive (which include various non-profit organ- izations and funding agencies), are given the chance to review characterization reports and provide feedback before they are published. YCharOS tests antibodies by comparing their specificity in a cell line that expresses the target protein at normal biological levels against their performance in whats called a knock-out cell line that lacks the protein (see Ways to validate). In an analysis published in eLife last year, the YCharOS team used this method to assess 614commercial antibodies, targeting a total of 65neuroscience-related proteins 2 . Two- thirds of them did not work as recommended by manufacturers. It never fails to amaze me how much of a hit or miss antibodies are, says Riham Ayoubi, director of operations at YCharOS. It shows you how important it is to include that nega- tive control in the work. Antibody manufacturers reassessed more than half of the underperforming antibodies that YCharOS flagged in 2023. They issued updated recommendations for 153 of them and removed 73 from the market. The YCharOS team has now tested more than 1,000 anti- bodies that are meant to bind to more than 100human proteins. Theres still a lot of work ahead, Laflamme says. He estimates that, of the 1.6 million commercially available antibodies to human proteins, roughly 200,000 are unique (many suppliers sell the same antibodies under different names). I think the YCharOS initiative can really make a difference, says Cecilia Williams, a cancer researcher at the KTH Royal Institute of Technology in Stockholm. But its not everything, because researchers will use these antibodies in other protocols, and in other tissues and cells that may express the protein differently, she says. The context in which anti- bodies are used can change how they perform. Other characterization efforts are trying to tackle this challenge. Andrea Radtke and her collaborators were part of a cell-mapping con- sortium called the Human BioMolecular Atlas Program when they set up the Organ Mapping Antibody Panels (OMAPs). OMAPs are col- lections of community-validated antibodies used in multiplex imaging a technique that involves visualizing several proteins in a single specimen. Unlike YCharOS, which focuses on conducting rigorous characterizations of antibodies for various applications in one specific context, OMAPs is looking at a single application for the antibodies, but in several contexts, such as in different human tissues and imaging methods. To do so, OMAPs recruits scientists from both academia and industry to conduct validations in their own labs. Vendors cannot test all possible applica- tions of their antibodies, but as a community we can say lets try this, says Radtke, who now works as a principal scientist at the instru- mentation company Leica Microsystems in Bethesda, Maryland. People are testing things that you would never think you could test.
+[INFO] 
+
+ ------------END-----------------
+
+[INFO] Raw Text (Chunk 2): **(Sound of podcast intro music fades)**
+
+**Sarah:** Welcome back to the show, everyone! Today, we're diving into the fascinating, and frankly, slightly terrifying world of research antibodies.  With me is Joe, a biochemist who's been following the developments in antibody validation. Joe, welcome!
+
+**Joe:** Thanks for having me, Sarah. It's a topic that needs more attention, that's for sure.
+
+**Sarah:** Absolutely. So, Joe, let's start with the basics.  Millions of antibodies are available commercially.  What's the problem? Why all the fuss about validation?
+
+**Joe:** Well, um, since the 90s, there's been a huge explosion in the number of commercially available antibodies.  We're talking millions, sold by hundreds of suppliers.  But, ah, starting in the late 2000s, researchers began noticing a significant issue: many of these antibodies simply didn't work as advertised. They lacked either specificity – binding to the wrong things – or selectivity – not binding strongly enough to the target.  It became a real problem.
+
+**Sarah:** So, essentially, scientists were buying antibodies that were, essentially, duds? That's a huge problem for research reproducibility, isn't it?
+
+**Joe:** Exactly.  And that's why initiatives like YCharOS are so important.  They're trying to systematically test and validate these antibodies.  What sets YCharOS apart is its level of cooperation with antibody suppliers.  They've managed to get a huge number of vendors to collaborate, providing antibodies for testing free of charge.
+
+**Sarah:**  That's impressive collaboration! How do they actually test the antibodies?  Can you explain the methodology in a way that even I can understand?
+
+**Joe:** Sure.  They basically compare how an antibody performs in two different cell lines. One cell line expresses the target protein normally, and the other is a "knockout" line – it lacks the target protein entirely.  If the antibody only binds to the first cell line, it’s specific to the target. If it binds to both, it's not specific enough. It's a pretty straightforward approach.
+
+**Sarah:** So, a simple, but crucial, control.  And what were the results?  Did they find a lot of faulty antibodies?
+
+**Joe:**  Oh yeah.  Their initial study looked at 614 antibodies and found that two-thirds didn't perform as claimed.  That's a huge failure rate.  But the good news is that manufacturers are actually responding to this. They're reassessing, updating recommendations, or even removing some antibodies from the market.
+
+**Sarah:** That's encouraging. But is YCharOS the only initiative tackling this problem?
+
+**Joe:**  No, there are others. For example, OMAPs focuses on validating antibodies for multiplex imaging – visualizing multiple proteins at once in a sample – but across different tissues and imaging methods.  So, it's a different approach, focusing on a specific application in various contexts rather than validating across many applications in one context.  It's a community-based effort, with researchers from academia and industry contributing.
+
+
+**Sarah:** So, it seems there’s no single silver bullet solution.  It's a complex issue requiring multiple approaches.
+
+**Joe:**  Precisely.  The context matters a lot. How an antibody performs in one cell type, under one condition, might be completely different in another.  There's still a massive amount of work to be done, but these initiatives are making a real difference in improving the reliability of research antibodies.
+
+**(Sound of podcast outro music fades in)**
+
+**Sarah:**  That's a fantastic overview, Joe.  Thank you for shedding light on this crucial area of research.  And to our listeners, remember to always critically evaluate your reagents! Join us next time…
+
+
+**(Sound of podcast outro music fades out)**
+
+[INFO] Error parsing conversation: Unexpected token '*', "**(Sound o"... is not valid JSON
+[[]] Cleaned Text (Chunk 2):
+[INFO] 
+
+ ------------PROMPT to VERTEX AI-----------------
+
+[INFO] You are generating a podcast conversation between Joe and Sarah.
+
+**Guidelines**:
+1. Joe provides detailed technical insights but avoids overusing analogies. Instead, focus on straightforward, clear explanations.
+2. Sarah asks probing, thoughtful questions, occasionally offers her own insights, and challenges Joe to explain concepts simply and conversationally.
+3. Both speakers use natural human speech patterns, including filler words like "um," "ah," "you know," and short pauses.
+
+**Focus**:
+- Avoid excessive use of analogies. Use one or two if necessary for clarity but prioritize clear, direct explanations.
+- Include natural conversational flow with interruptions, backtracking, and filler words to make the dialogue feel authentic.
+- Encourage a natural dialogue with varied contributions from both speakers.
+
+**Tone**:
+- Engaging, relatable, and spontaneous.
+- Emphasize human-like emotions, with occasional humor or lighthearted moments.
+- Balance technical depth with conversational relatability, avoiding overly formal language.
+
+Joe: Expanding the toolbox Even if good antibodies are available, they are not always easy to find. In 2009, Anita Bandrowski, founder and chief executive of the data-sharing platform SciCrunch in San Diego, California, and her colleagues were examining how difficult it was to identify antibodies in journal articles. After sifting through papers in the Journal of Neuroscience, they found that 90% of the antibodies cited lacked a catalogue number (codes used by ven- dors to label specific products)making them almost impossible to track down. To replicate an experiment, its important to have the right reagents and proper labelling is crucial to finding them, Bandrowski says. After seeing that a similar problem plagued other journals, Bandrowski and her colleagues decided to create unique, persistent identifiers for antibodies and other scientific resources, such as model organisms, which they called research resource identifiers, or RRIDs. Catalogue numbers can disappear if a com- pany discontinues a product and because companies create them independently, two different products might end up with the same one. RRIDs solve this. In 2014, Bandrowski and her team started a pilot project 3 with 25 journals, in which they asked authors to include RRIDs in their manuscripts. In the years since, more than 1,000journals have adopted policies that It never fails to amaze me how much of a hit or miss antibodies are. Nature | Vol 635 | 7 November 2024 | 27 request these identifiers. We currently have nearly one million citations to RRIDs from papers, says Bandrowski. Ultimately, the hope is that authors of every journal article will clearly label the resources they used, such as antibodies, with RRIDs, Bandrowski says. That wont change repro- ducibility by itself, but it is the first step. In addition to being able to track down antibodies, researchers need a way to choose which ones to use. In 2012, Andrew Chalmers, who was then a researcher at the University of Bath, UK, co-founded CiteAb, a search engine to help researchers find the most highly cited antibodies. Over the years, the platform has grown to include more than seven million antibodies and now also includes, when available, information regarding validations. In May, CiteAb began integrating YCharOSs characterization data onto its site. The big challenge is that antibodies are just used in so many different ways, for so many dif- ferent species that you cant tick off that an anti- body is good or bad, Chalmers says. Many say that knock-out validation is key, but less than 5% of antibodies on CiteAb have been validated in this way, either by suppliers or through other independent initiatives, such as YCharOS. Theres a long way to go, Chalmers says. Stakeholders get involved Like many others, Virk developed an interest in antibody reliability after a personal experience with bad antibodies. In 2016, Virk received a big grant to study the role of a protein called TRPA1 in airway inflammation. But one of his colleagues mentioned that, on the basis of his own experience, the antibodies he was working with might not be reliable. When Virk put TRPA1 antibodies to the test, he discovered that his colleague was right: of the three most-cited antibodies used to study TRPA1, two didnt detect the human protein at all, and the other detected several other proteins at the same time. That was a shock, Virk says. At that point, I wanted to leave science because if things are really this unreliable, whats the point? Instead of leaving academia, Virk co-founded the Only Good Antibodies (OGA) community last year, with the aim of bringing together stakeholders such as researchers, antibody manufacturers, funding agencies and publishers to tackle the problem of poorly performing antibodies. In February, the OGA community hosted its first work- shop, which included individuals from these various groups to discuss how to improve the reproducibility of research conducted with antibodies.
+[INFO] 
+
+ ------------END-----------------
+
+[INFO] Raw Text (Chunk 3): **(Intro music fades)**
+
+**Sarah:** Hi everyone, and welcome back to the podcast! Today, we're diving into the surprisingly messy world of antibodies – those tiny workhorses of biological research.  I'm here with Joe, who's going to help us unravel some of the complexities.  Joe, thanks for joining us.
+
+**Joe:** Thanks for having me, Sarah.  It's a pleasure to be here.  Antibodies, yeah, they seem simple enough on the surface, but...um...the reality is a bit more nuanced.
+
+**Sarah:**  Nuanced is one word for it! I've heard stories about researchers struggling to replicate experiments because of antibody issues.  Can you explain what the problem is?
+
+**Joe:**  Sure.  The core problem is reproducibility.  Many published studies rely on antibodies to detect specific proteins, right? But, um,  a significant percentage of commercially available antibodies simply don't perform as advertised.  They might not bind to the target protein effectively, or they might cross-react with other proteins, leading to false-positive results. This makes it incredibly difficult to replicate experiments.  In some cases, researchers find that the antibodies they used aren't even available anymore – the supplier has discontinued them.
+
+
+**Sarah:**  So, it's not just about the quality of the antibody itself, but also about accessibility and tracking them down?
+
+**Joe:** Exactly.  Think about it –  a researcher publishes a paper using a specific antibody, but the catalogue number might be outdated or missing entirely.  This makes it nearly impossible for another researcher to repeat the experiment using the same antibody.  That's why initiatives like SciCrunch and their RRIDs (Research Resource Identifiers) are so crucial.  They're creating unique, persistent identifiers for antibodies and other resources, making them much easier to track down.
+
+**Sarah:**  So RRIDs are like...a permanent digital address for each antibody?
+
+**Joe:**  Yeah, you could think of it that way. It's a persistent identifier, even if the supplier changes or the product is discontinued.  It helps address the issue of catalogue numbers disappearing.
+
+**Sarah:** That’s really helpful.  But even if you *can* find the antibody, how do you know it's a good one?  I mean, there are millions of them out there.
+
+**Joe:**  That's where sites like CiteAb come in.  They're building a database of antibodies, and they're trying to incorporate validation data.  The problem is, validating antibodies is a huge undertaking.  There's no single, universally accepted validation method.  Knock-out validation is considered ideal, but less than 5% of antibodies have been validated that way.
+
+**Sarah:**  So, it's a bit of a wild west out there, antibody-wise.
+
+**Joe:** (Chuckles)  Yeah, that's a pretty good way to put it.  It's a complex problem with no easy solutions. That's why initiatives like the Only Good Antibodies (OGA) community are so important – bringing together researchers, manufacturers, funders, and publishers to collaboratively address this issue.  They're trying to establish better standards and practices for antibody validation and reporting.
+
+
+**Sarah:**  It sounds like a massive undertaking.  Any final thoughts?
+
+
+**Joe:**  The problem is multifaceted. It's about improving standardization, improving validation methods, and improving how we share information about antibodies.  It's a long road, but these initiatives are crucial first steps towards making research more reliable and reproducible.
+
+
+**(Outro music fades in)**
+
+**Sarah:**  That's a great overview, Joe. Thanks so much for shedding light on this often-overlooked aspect of scientific research.  And thank you all for listening!
+
+[INFO] Error parsing conversation: Unexpected token '*', "**(Intro m"... is not valid JSON
+[[]] Cleaned Text (Chunk 3):
+[INFO] 
+
+ ------------PROMPT to VERTEX AI-----------------
+
+[INFO] You are generating a podcast conversation between Joe and Sarah.
+
+**Guidelines**:
+1. Joe provides detailed technical insights but avoids overusing analogies. Instead, focus on straightforward, clear explanations.
+2. Sarah asks probing, thoughtful questions, occasionally offers her own insights, and challenges Joe to explain concepts simply and conversationally.
+3. Both speakers use natural human speech patterns, including filler words like "um," "ah," "you know," and short pauses.
+
+**Focus**:
+- Avoid excessive use of analogies. Use one or two if necessary for clarity but prioritize clear, direct explanations.
+- Include natural conversational flow with interruptions, backtracking, and filler words to make the dialogue feel authentic.
+- Encourage a natural dialogue with varied contributions from both speakers.
+
+**Tone**:
+- Engaging, relatable, and spontaneous.
+- Emphasize human-like emotions, with occasional humor or lighthearted moments.
+- Balance technical depth with conversational relatability, avoiding overly formal language.
+
+Joe: They were joined by NC3Rs, a scientific organization and funder, based in London that focuses on reducing the use of animals in research. Better antibodies means fewer animals are used in the process of producing these molecules and conducting experiments with them. Currently, the OGA community is working on a project to help researchers choose the right antibodies for their work and to make it easier for them to identify, use and share data about antibody quality. It is also piloting an YCharOS site at the University of Leicester the first outside Canada which will focus on antibodies used in respiratory sciences. The OGA community is also working with funders and publishers to find ways to reward researchers for adopting antibody-related best practices. Examples of such rewards include grants for scientists taking part in antibody-validation initiatives. Manufacturers have also been taking steps to improve antibody performance. In addition to increasingly conducting their own knock-out validations, a number of suppliers are also alter- ing the way some of their products are made. The need to modify antibody-production practices was brought to the fore in 2015, when a group of more than 100 scientists penned a commentary in Nature calling for the community to shift from antibodies gener- ated by immune cells or immunecancer-cell hybrids, to what are known as recombinant antibodies 4 . Recombinant antibodies are produced in genetically engineered cells pro- grammed to make a specific antibody. Using these antibodies exclusively, the authors argued, would enable infinite production of antibodies that do not vary from batch to batch a key problem with the older methods. A few manufacturers are shifting towards making more recombinant antibodies. For example, Abcam, an antibody supplier in Cambridge, UK, has added more than 32,000 of them to their portfolio. Facilitating the move towards recombinants across life-science research is a key part of improv- ing reproducibility, says Hannah Cable, the vice-president of new product development at Abcam. Thats something that antibody suppliers should be doing. Rob Meijers, director of the antibody plat- form at the Institute for Protein Innovation in Boston, Massachusetts, a non-profit research organization that makes recombinant anti- bodies, says that this shift simply makes more business sense. Theyre much more reproduc- ible, you can standardize the process for them, and the user feedback is very positive, he says. CiteAbs data have revealed that scientists behaviour around antibody use has shifted drastically over the past decade. About 20% of papers from 2023 that involved antibodies used recombinants. Thats a big change from where we were ten years ago, says Chalmers, who is now CiteAbs chief executive. Although the ongoing efforts to improve antibody reliability are a move in the right direction, changing scientists behaviour remains one of the biggest challenges, say those leading the charge. There are cases in which researchers dont want to hear that an antibody theyve been using for their experi- ments isnt actually doing what its meant to, Williams says. If somebody is happy with the result of an antibody, its being used regard- less, even if its certain that it doesnt bind this protein, Williams says. Ultimately, she adds, you can never get around the fact that the researcher will have to do validations. Still, many scientists are hopeful that recent efforts will lead to much needed change. Im optimistic that things are getting better, Radtke says. What Im so encouraged by is the young generation of scientists, who have more of a wolf-pack mentality, and are working together to solve this problem as a community. Diana Kwon writes for Nature from Berlin. 1. Laflamme, C. et al. eLife 8, e48363 (2019). 2. Ayoubi, R. et al. eLife 12, RP91645 (2023). 3. Bandrowski, A. et al. J. Comp. Neurol. 524, 822 (2016). 4. Bradbury, A. & Plckthun, A. Nature 518, 2729 (2015).
+[INFO] 
+
+ ------------END-----------------
+
+[INFO] Raw Text (Chunk 4): Sarah: Wow, Joe, that's a lot of information about antibodies!  So, let's start with the basics.  You mentioned recombinant antibodies are better than those generated from immune cells. Can you explain the difference in a way that even *I* can understand?
+
+Joe:  Um, sure.  So, traditionally, antibodies were made by essentially triggering an immune response in an animal –  like a mouse – to produce antibodies against a specific target.  The process is, uh,  a bit messy. You get a mixture of antibodies, and the process isn't easily repeatable.  Recombinant antibodies, on the other hand, are made using genetically engineered cells.  These cells are programmed to produce *only* the specific antibody you want,  in a controlled and consistent way.  Think of it like this:  the old way is like baking a cake with random ingredients; the new way is using a precise recipe.
+
+
+Sarah: Okay, so that makes the new method more reliable because you get the same antibody every time, right?
+
+Joe: Exactly. That consistency is crucial for reproducibility in research.  If you're using an antibody in an experiment and get different results each time, it's hard to draw any solid conclusions. Recombinant antibodies solve that problem.  You know,  it's a big deal because it directly impacts the reliability of scientific findings.
+
+Sarah: You mentioned NC3Rs and their role in reducing animal use. How exactly do better antibodies help with that?
+
+Joe: Ah, right.  The traditional method of antibody production often requires a significant number of animals.  With recombinant antibodies, you don't need to induce an immune response in animals to create the antibody; you just need to engineer the cells. This significantly reduces the number of animals needed for research.  It's a win-win – better science and improved animal welfare.
+
+Sarah:  It sounds like there's been a significant shift in the field.  You mentioned some companies like Abcam are moving towards recombinant antibodies.  Is this a widespread change, or are there still hurdles?
+
+Joe:  It's definitely a shift happening but it's not complete. Many researchers are still using older methods, and there's some resistance to change,  as you'd expect. Some researchers are comfortable with what they know, even if there are better options available.  Plus,  switching to a new method takes time and effort.  But the data from CiteAbs shows a significant increase in the use of recombinant antibodies in recent years, which is encouraging.
+
+Sarah: So, the biggest challenge isn't the technology itself, but convincing researchers to adopt it?
+
+Joe:  Yeah, that's a huge part of it.  There's also the issue of validating existing antibodies.  Many researchers are using antibodies that haven't been properly validated, and that's a major problem for reproducibility.  The OGA community is actively working on this, trying to incentivize researchers to validate their antibodies and share that data.
+
+Sarah:  That's fascinating. It sounds like a complex issue with scientific, ethical, and even business aspects involved.  Thanks for breaking it down, Joe.  This is really eye-opening.
+
+Joe:  No problem, Sarah.  It's a complex issue, but hopefully, things are heading in the right direction.  The younger generation of scientists seems particularly focused on collaboration and improving antibody reliability, which gives me hope.
+
+[INFO] Error parsing conversation: Unexpected token 'S', "Sarah: Wow"... is not valid JSON
+[[]] Cleaned Text (Chunk 4):
+[INFO] 
+
+ ------------PROMPT to VERTEX AI-----------------
+
+[INFO] You are generating a podcast conversation between Joe and Sarah.
+
+**Guidelines**:
+1. Joe provides detailed technical insights but avoids overusing analogies. Instead, focus on straightforward, clear explanations.
+2. Sarah asks probing, thoughtful questions, occasionally offers her own insights, and challenges Joe to explain concepts simply and conversationally.
+3. Both speakers use natural human speech patterns, including filler words like "um," "ah," "you know," and short pauses.
+
+**Focus**:
+- Avoid excessive use of analogies. Use one or two if necessary for clarity but prioritize clear, direct explanations.
+- Include natural conversational flow with interruptions, backtracking, and filler words to make the dialogue feel authentic.
+- Encourage a natural dialogue with varied contributions from both speakers.
+
+**Tone**:
+- Engaging, relatable, and spontaneous.
+- Emphasize human-like emotions, with occasional humor or lighthearted moments.
+- Balance technical depth with conversational relatability, avoiding overly formal language.
+
+Joe: WAYS TO VALIDATE Researchers test antibodies that they wish to use in several ways. They can stain a sample of cells that express a protein of interest using immunohistochemistry. Western blotting can reveal whether an antibody binds to a specific protein with an expected molecular weight. And scientists can use immunoprecipitation to pull the protein out of a mixture and then check its identity using mass spectrometry. Immunohistochemistry Antibodies label cells with the target protein Cells without target protein Western blot Molecular- weight reference ladder Imummoprecipitation Antibodies attached to beads Protein of interest is captured and then confirmed using mass spectrometry A single band is found at the expected molecular weight I wanted to leave science because if things are really this unreliable, whats the point? 28 | Nature | Vol 635 | 7 November 2024 Feature.
+
+Thank you for joining us on this episode of Science Odyssey, where we explored the groundbreaking research shaping our understanding of the world. 
+If you enjoyed this journey, don't forget to subscribe, leave a review, and share the podcast with fellow science enthusiasts.
+Until next time, keep exploring the wonders of science—your next discovery awaits!
+[INFO] 
+
+ ------------END-----------------
+
+[INFO] Raw Text (Chunk 5): (Sound of upbeat intro music fades)
+
+**Sarah:** Welcome back to Science Odyssey, everyone! Today, we're diving into the fascinating, and sometimes frustrating, world of antibody validation with Joe, a researcher who's seen it all.  Joe, thanks for joining us.
+
+**Joe:** Thanks for having me, Sarah.  It's… um… a topic close to my heart, let's say.  Close to my heart and also sometimes my desk, strewn with… well, let's just say *failed* experiments.
+
+**Sarah:** (Laughs) I hear you.  So, let's start with the basics.  For our listeners who aren't familiar, what exactly does "validating an antibody" mean in a research context?
+
+**Joe:**  Right. So, an antibody, basically, is a molecule that specifically binds to a particular protein. We use them all the time in research to, you know, identify and study these proteins.  Validating an antibody means making absolutely sure that it *only* binds to the protein we think it does, and nothing else.  It's crucial because if your antibody is binding to the wrong thing, all your results are garbage.
+
+**Sarah:**  Garbage, yes.  So, how do you actually go about validating one? I mean, it sounds like a pretty critical step.
+
+**Joe:**  It is. There are several ways.  One common method is immunohistochemistry, or IHC.  Basically, you take a sample of cells, and you apply your antibody. If the antibody binds to the protein, you'll see a signal, usually a color change, in the cells that express that protein.  It's a visual confirmation.
+
+**Sarah:** So, it's like, you're looking for a visual "yes, it's bound"?
+
+**Joe:** Exactly.  Another method is Western blotting.  Here, you separate proteins by size, and then you use your antibody to see if it binds to a protein of a specific size, the expected molecular weight of your target protein.  You get a band on the blot if it does.
+
+**Sarah:**  Okay, so IHC is visual, Western blotting is more about size.  Is there another method?  Because I imagine there are pitfalls to relying on just two techniques.
+
+**Joe:** Absolutely.  There's immunoprecipitation, or IP.  In this case, you use the antibody to physically pull out the protein of interest from a complex mixture of proteins.  Then, you can use something like mass spectrometry to identify exactly what protein you've pulled out.  That’s a much more definitive way of confirming your antibody's specificity.
+
+**Sarah:** Mass spectrometry… that sounds very high-tech.  So, essentially, you're using multiple techniques to cross-check and confirm the antibody’s binding specificity.  It's like triangulation, but for proteins.
+
+**Joe:** (Chuckles) You could say that.  It's about minimizing the chance of error.  You really need multiple lines of evidence.  Sometimes, even then, you can run into problems.  It's… ah… a humbling process.
+
+**Sarah:** (Laughs) I can imagine. So, Joe, what's the biggest challenge you face when validating antibodies?
+
+**Joe:**  Um… well, the biggest challenge is often the lack of perfectly specific antibodies.  Many antibodies bind to multiple proteins, or they don't bind strongly enough.  It's a constant struggle to find reliable reagents.  And that's why validation is so crucial.
+
+
+**Sarah:**  It sounds incredibly meticulous and frankly, a little disheartening at times.  Thanks for sharing your insights, Joe.  This has been incredibly helpful.
+
+**Joe:** My pleasure, Sarah.
+
+(Sound of upbeat outro music fades in)
+
+**Sarah:** And that’s all the time we have for today's episode of Science Odyssey.  Don’t forget to subscribe and leave us a review! Until next time, keep exploring!
+
+[INFO] Error parsing conversation: Unexpected token '(', "(Sound of "... is not valid JSON
+[[]] Cleaned Text (Chunk 5):
+[INFO] 
+--- Full Generated Conversation ---
+[INFO] --- End of Conversation ---
+
+[INFO] Generating audio files...
+[INFO] Error generating conversation: Failed to merge audio files: ENOENT: no such file or directory, scandir 'audio-files'
