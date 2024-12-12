@@ -87,16 +87,17 @@ export function useTTS() {
       console.info('Conversion successful:', result);
       return result;
     } catch (error) {
-      console.error('File conversion error:', error instanceof Error ? error.message : error);
+      console.error('File conversion error:', error instanceof Error ? error.message : String(error));
+      const errorMessage = error instanceof Error ? error.message : 'Failed to convert text to speech';
       toast({
         title: "Error",
-        description: "Failed to convert text to speech",
+        description: errorMessage,
         variant: "destructive",
       });
-      throw error;
-    } finally {
       setIsConverting(false);
       setProgress(0);
+      // Don't throw the error, just handle it gracefully
+      return null;
     }
   };
 
