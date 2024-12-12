@@ -1,44 +1,32 @@
-import axios from "axios";
+import { VertexAI } from "@google-cloud/vertexai";
+import { TextToSpeechClient } from "@google-cloud/text-to-speech";
+import { logger } from "./logging";
 import path from "path";
 import fs from "fs/promises";
-import { VertexAI } from "@google-cloud/vertexai";
-import { TextToSpeechClient, protos } from "@google-cloud/text-to-speech";
-import { logger } from "./logging";
-const { AudioEncoding } = protos.google.cloud.texttospeech.v1;
+import { execSync } from "child_process";
 
 type Speaker = "Joe" | "Sarah";
+type ProgressListener = (progress: number) => void;
 
-interface ConversationEntry {
+interface ConversationPart {
   speaker: Speaker;
   text: string;
 }
 
-interface ElevenLabsOptions {
-  text: string;
-  voiceId: string;
-}
+const SPEAKERS: Speaker[] = ["Joe", "Sarah"];
 
-interface RawResponse {
-  text: string;
-  speaker: Speaker;
-}
-
-const ELEVENLABS_API_URL = "https://api.elevenlabs.io/v1/text-to-speech";
-const VOICE_IDS: Record<Speaker, string> = {
-  Joe: "IKne3meq5aSn9XLyUdCD",
-  Sarah: "21m00Tcm4TlvDq8ikWAM",
+// Voice mapping for different speakers
+const SPEAKER_VOICE_MAP = {
+  Joe: "en-US-Wavenet-D",  // Male voice
+  Sarah: "en-US-Wavenet-F" // Female voice
 };
 
-const GOOGLE_VOICE_IDS: Record<Speaker, string> = {
-  Joe: "en-US-Neural2-D", // A deeper male voice with natural intonation
-  Sarah: "en-US-Neural2-F", // A warm female voice with clear articulation
-};
-
-const SYSTEM_PROMPT = `You are generating a podcast conversation between Joe and Sarah.
-
-**Welcome Message**:
-Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies,
-unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!
+// System prompts for different stages of conversation
+const SYSTEM_PROMPTS = {
+  WELCOME: `Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies,
+unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!`,
+  
+  MAIN: `You are generating a podcast conversation between Joe and Sarah.
 
 **Guidelines**:
 1. Joe provides detailed technical insights but avoids overusing analogies. Instead, focus on straightforward, clear explanations.
@@ -53,316 +41,170 @@ unraveling the mysteries behind the research that shapes our world. Thanks for t
 **Tone**:
 - Engaging, relatable, and spontaneous.
 - Emphasize human-like emotions, with occasional humor or lighthearted moments.
-- Balance technical depth with conversational relatability, avoiding overly formal language.
+- Balance technical depth with conversational relatability, avoiding overly formal language.`,
 
-**End Message**:
-Thank you for joining us on this episode of Science Odyssey, where we explored the groundbreaking research shaping our understanding of the world. 
+  FAREWELL: `Thank you for joining us on this episode of Science Odyssey, where we explored the groundbreaking research shaping our understanding of the world. 
 If you enjoyed this journey, don't forget to subscribe, leave a review, and share the podcast with fellow science enthusiasts.
-Until next time, keep exploring the wonders of science—your next discovery awaits!
-`;
+Until next time, keep exploring the wonders of science—your next discovery awaits!`
+};
 
 export class TTSService {
-  private ttsClient!: TextToSpeechClient;
-  private progressListeners!: Set<(progress: number) => void>;
-  private initialized: boolean = false;
+  private progressListeners: Set<ProgressListener> = new Set();
+  private vertexAI: VertexAI;
+  private ttsClient: TextToSpeechClient;
 
   constructor() {
-    this.progressListeners = new Set();
-    this.initialized = false;
-
-    // Attempt to initialize the TTS client
-    try {
-      if (!process.env.GOOGLE_APPLICATION_CREDENTIALS) {
-        console.warn(
-          "GOOGLE_APPLICATION_CREDENTIALS not set. Some features may be limited.",
-        );
-        return;
-      }
-
-      this.ttsClient = new TextToSpeechClient();
-      this.initialized = true;
-      logger
-        .log("TTSService initialized successfully", "info")
-        .catch(console.error);
-    } catch (error) {
-      console.error("Failed to initialize TTSService:", error);
-      logger
-        .log(
-          `Failed to initialize TTSService: ${error instanceof Error ? error.message : String(error)}`,
-          "error",
-        )
-        .catch(console.error);
+    if (!process.env.GOOGLE_CLOUD_PROJECT) {
+      throw new Error("GOOGLE_CLOUD_PROJECT environment variable is required");
     }
+
+    this.vertexAI = new VertexAI({
+      project: process.env.GOOGLE_CLOUD_PROJECT,
+      location: "us-central1",
+    });
+
+    this.ttsClient = new TextToSpeechClient();
   }
 
-  private ensureInitialized() {
-    if (!this.initialized) {
-      throw new Error("TTSService not properly initialized");
-    }
-  }
-
-  private async cleanRawResponse(
-    rawResponse: string,
-    currentSpeaker: Speaker,
-  ): Promise<{ text: string; speaker: Speaker }> {
-    if (!rawResponse || typeof rawResponse !== "string") {
-      await logger.log("Invalid raw response received", "error");
-      throw new Error("Invalid response format");
-    }
-
-    try {
-      await logger.log("\n============== CLEANING RESPONSE ==============");
-      await logger.log(`Original response: ${rawResponse}`);
-
-      // Enhanced speaker detection patterns
-      const speakerPatterns = [
-        /^(?:\*\*)?(Joe|Sarah)(?:\*\*)?(?::|：|\s*[-–—]\s*)/i,
-        /(?:^|\n)(?:\*\*)?(Joe|Sarah)(?:\*\*)?(?::|：|\s*[-–—]\s*)/i,
-        /\[(Joe|Sarah)\][:：]/,
-        /@(Joe|Sarah)[:：]/,
-        /\*\*(Joe|Sarah)\*\*[:：]/,
-      ];
-
-      let detectedSpeaker = currentSpeaker;
-      for (const pattern of speakerPatterns) {
-        const match = rawResponse.match(pattern);
-        if (match) {
-          detectedSpeaker = match[1] as Speaker;
-          break;
-        }
-      }
-
-      await logger.log(`Detected speaker: ${detectedSpeaker}`);
-
-      // Thorough cleaning of the text
-      let cleanedText = rawResponse
-        // Remove all variations of speaker markers
-        .replace(/^(?:\*\*)?(Joe|Sarah)(?:\*\*)?(?::|：|\s*[-–—]\s*)/i, "")
-        .replace(/(?:^|\n)(?:\*\*)?(Joe|Sarah)(?:\*\*)?(?::|：|\s*[-–—]\s*)/gi, "")
-        .replace(/\[(Joe|Sarah)\][:：]/g, "")
-        .replace(/@(Joe|Sarah)[:：]/g, "")
-        .replace(/\*\*(Joe|Sarah)\*\*[:：]/g, "")
-        .replace(/\b(Joe|Sarah)[:：]\s*/g, "")
-        // Clean formatting and normalize whitespace
-        .replace(/\*\*/g, "")
-        .replace(/[\n\r]+/g, " ")
-        .replace(/\s+/g, " ")
-        .replace(/^\s+|\s+$/g, "")
-        .trim();
-
-      if (cleanedText.length === 0) {
-        await logger.log("Cleaning resulted in empty text", "warn");
-        throw new Error("Cleaning resulted in empty text");
-      }
-
-      await logger.log(`Final speaker: ${detectedSpeaker}`);
-      await logger.log(`Cleaned text: ${cleanedText}`);
-      await logger.log("==================END==========================");
-
-      return { text: cleanedText, speaker: detectedSpeaker };
-    } catch (error) {
-      await logger.log(
-        `Error cleaning response: ${error instanceof Error ? error.message : String(error)}`,
-        "error",
-      );
-      return {
-        speaker: currentSpeaker,
-        text: rawResponse.replace(/\*\*/g, "").trim(),
-      };
-    }
-  }
-
-  addProgressListener(listener: (progress: number) => void) {
+  addProgressListener(listener: ProgressListener) {
     this.progressListeners.add(listener);
   }
 
-  removeProgressListener(listener: (progress: number) => void) {
+  removeProgressListener(listener: ProgressListener) {
     this.progressListeners.delete(listener);
   }
 
   private emitProgress(progress: number) {
-    this.progressListeners.forEach((listener) => listener(progress));
+    Array.from(this.progressListeners).forEach(listener => {
+      listener(progress);
+    });
   }
 
-  async synthesizeWithGoogle({
-    text,
-    speaker,
-  }: {
-    text: string;
-    speaker: Speaker;
-  }): Promise<Buffer> {
-    this.ensureInitialized();
+  private splitTextIntoChunks(text: string, maxChars: number = 4000): string[] {
+    const sentences = text.split(". ");
+    const chunks: string[] = [];
+    let currentChunk: string[] = [];
 
-    if (!GOOGLE_VOICE_IDS[speaker]) {
-      throw new Error(`Invalid speaker: ${speaker}. Expected 'Joe' or 'Sarah'`);
+    for (const sentence of sentences) {
+      const newChunk = [...currentChunk, sentence].join(". ") + ".";
+      if (newChunk.length <= maxChars) {
+        currentChunk.push(sentence);
+      } else {
+        chunks.push(currentChunk.join(". ") + ".");
+        currentChunk = [sentence];
+      }
     }
 
-    await logger.log("\n============== GOOGLE TTS REQUEST ==============");
-    await logger.log(`Selected speaker: ${speaker}`);
-    await logger.log(`Using voice ID: ${GOOGLE_VOICE_IDS[speaker]}`);
-    await logger.log(`Original text sample: ${text.substring(0, 100)}...`);
+    if (currentChunk.length) {
+      chunks.push(currentChunk.join(". ") + ".");
+    }
+
+    return chunks;
+  }
+
+  private async synthesizeSpeech(text: string, speaker: Speaker, index: number): Promise<string> {
+    const voiceName = SPEAKER_VOICE_MAP[speaker];
+    const outputFile = path.join("audio-files", `${index}.mp3`);
 
     try {
-      // Validate and clean input text
-      if (!text || typeof text !== "string") {
-        throw new Error("Invalid text input for TTS");
-      }
-
-      // Final cleanup to ensure no speaker markers remain
-      text = text
-        .replace(/\b(?:Joe|Sarah)\b\s*[:：]/g, "") // Remove any remaining speaker markers
-        .replace(/\*\*/g, "") // Remove any markdown
-        .replace(/\s+/g, " ") // Normalize spaces
-        .trim();
-
-      await logger.log(
-        `Final cleaned text for TTS: ${text.substring(0, 100)}...`,
-      );
-
-      const textBytes = new TextEncoder().encode(text).length;
-      if (textBytes > 4800) {
-        await logger.log(`Text length warning: ${textBytes} bytes`, "warn");
-        text = text.substring(0, Math.floor(4800 / 2)) + "...";
-        await logger.log(`Truncated text: ${text.substring(0, 100)}...`);
-      }
-
-      const request = {
+      const [response] = await this.ttsClient.synthesizeSpeech({
         input: { text },
         voice: {
           languageCode: "en-US",
-          name: GOOGLE_VOICE_IDS[speaker],
+          name: voiceName,
         },
         audioConfig: {
-          audioEncoding: AudioEncoding.MP3,
-          speakingRate: 1.0,
-          pitch: 0.0,
+          audioEncoding: "MP3",
         },
-      } satisfies protos.google.cloud.texttospeech.v1.ISynthesizeSpeechRequest;
+      });
 
-      const [response] = await this.ttsClient.synthesizeSpeech(request);
-      await logger.log("TTS API response received successfully");
+      await fs.mkdir("audio-files", { recursive: true });
+      await fs.writeFile(outputFile, response.audioContent as Buffer);
+      await logger.log(`Audio content written to file "${outputFile}"`);
 
-      if (!response.audioContent) {
-        throw new Error("No audio content received from Google TTS");
-      }
-
-      return Buffer.from(response.audioContent);
+      return outputFile;
     } catch (error) {
-      await logger.log(
-        `TTS API error: ${error instanceof Error ? error.message : String(error)}`,
-        "error",
-      );
-      throw error;
+      throw new Error(`Failed to synthesize speech: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 
-  async synthesizeWithElevenLabs({
-    text,
-    voiceId,
-  }: ElevenLabsOptions): Promise<Buffer> {
-    await logger.log("Making ElevenLabs API request...");
-    await logger.log(`Voice ID: ${voiceId}`);
-    await logger.log(`Text length: ${text.length}`);
-
+  private async mergeAudioFiles(audioFolder: string, outputFile: string): Promise<void> {
     try {
-      const response = await axios.post(
-        `${ELEVENLABS_API_URL}/${voiceId}`,
-        {
-          text,
-          voice_settings: {
-            stability: 0.5,
-            similarity_boost: 0.75,
-          },
-        },
-        {
-          headers: {
-            Accept: "audio/mpeg",
-            "xi-api-key": process.env.ELEVENLABS_API_KEY,
-            "Content-Type": "application/json",
-          },
-          responseType: "arraybuffer",
-        },
-      );
+      const files = await fs.readdir(audioFolder);
+      const audioFiles = files
+        .filter(file => file.endsWith(".mp3"))
+        .sort((a, b) => {
+          const aIndex = parseInt(a.match(/(\d+)/)?.[0] || "0");
+          const bIndex = parseInt(b.match(/(\d+)/)?.[0] || "0");
+          return aIndex - bIndex;
+        });
 
-      await logger.log("ElevenLabs API response received");
-      await logger.log(`Response status: ${response.status}`);
-      await logger.log(`Response data size: ${response.data.length}`);
-
-      return Buffer.from(response.data);
-    } catch (error: any) {
-      await logger.log(
-        `ElevenLabs API error: 
-        Status: ${error.response?.status}
-        Status Text: ${error.response?.statusText}
-        Data: ${error.response?.data ? error.response.data.toString() : "null"}`,
-        "error",
-      );
-      throw error;
+      const filePaths = audioFiles.map(file => path.join(audioFolder, file));
+      const command = `ffmpeg -i "concat:${filePaths.join("|")}" -acodec copy ${outputFile}`;
+      
+      execSync(command);
+      await logger.log(`Merged audio saved as ${outputFile}`);
+    } catch (error) {
+      throw new Error(`Failed to merge audio files: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 
-  async generateConversation(
-    text: string,
-  ): Promise<{ audioBuffer: Buffer; duration: number }> {
+  private cleanGeneratedText(rawText: string): ConversationPart[] {
     try {
-      await logger.log("Starting text-to-speech conversion...");
-      await logger.log(`Input text length: ${text.length}`);
+      const data = JSON.parse(rawText);
+      const conversation: ConversationPart[] = [];
+      
+      if ("podcastConversation" in data) {
+        for (const entry of data.podcastConversation) {
+          const speaker = entry.speaker as Speaker;
+          const dialogue = entry.dialogue?.trim();
+          if (speaker && dialogue && SPEAKERS.includes(speaker)) {
+            conversation.push({ speaker, text: dialogue });
+          }
+        }
+      }
+      
+      return conversation;
+    } catch (error) {
+      throw new Error(`Failed to parse conversation: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
 
-      // Split text into smaller chunks to stay within token limits
-      const chunks = await this.splitTextIntoChunks(text);
-      await logger.log(`Split text into ${chunks.length} chunks`);
-
-      const conversationParts: Buffer[] = [];
+  async generateConversation(text: string): Promise<{ audioBuffer: Buffer; duration: number }> {
+    try {
+      const chunks = this.splitTextIntoChunks(text);
+      let allConversations: ConversationPart[] = [];
       let lastResponse = "";
-      const speakers: Speaker[] = ["Joe", "Sarah"];
       let speakerIndex = 0;
 
-      // Initialize progress
+      // Initialize progress tracking
       this.emitProgress(0);
-      
-      console.info('Starting conversation generation...');
-      await logger.log("\n--- Starting Conversation Generation ---\n");
+      await logger.log("Starting conversation generation...");
+
+      const model = this.vertexAI.getGenerativeModel({ model: "gemini-1.5-flash-002" });
 
       for (let index = 0; index < chunks.length; index++) {
+        const chunk = chunks[index];
+        const currentSpeaker = SPEAKERS[speakerIndex];
+        
         try {
-          const chunkProgress = ((index + 0.5) / chunks.length) * 100;
-          this.emitProgress(Math.min(chunkProgress, 99));
-
-          const chunk = chunks[index];
-          const currentSpeaker = speakers[speakerIndex];
-          const nextSpeaker = speakers[(speakerIndex + 1) % 2];
-
-          // Dynamic prompting based on chunk position
-          let promptToUse = SYSTEM_PROMPT;
-          let promptContext: string;
-
+          // Construct prompt based on chunk position
+          let prompt = "";
           if (index === 0) {
-            // First chunk includes welcome message and introduction
-            promptContext = `Start with Joe welcoming the audience and introducing Sarah (keep it under 30 seconds), then have Sarah begin discussing this content:\n\n${chunk}\n\nJoe:`;
-            speakerIndex = 0; // Ensure we start with Joe
+            prompt = `${SYSTEM_PROMPTS.WELCOME}\n\n${SYSTEM_PROMPTS.MAIN}\n\nJoe: ${chunk}\n\nSarah:`;
+            speakerIndex = 0;
           } else if (index === chunks.length - 1) {
-            // Last chunk includes end message
-            promptContext = `Continue the conversation about this content, maintaining the natural flow. Use this previous response for context:\n\nPrevious response: ${lastResponse}\n\nNew content to discuss: ${chunk}\n\n${currentSpeaker}:`;
+            prompt = `${SYSTEM_PROMPTS.MAIN}\n\n${lastResponse}\n\n${currentSpeaker}: ${chunk}\n\n${SYSTEM_PROMPTS.FAREWELL}`;
           } else {
-            // Middle chunks maintain conversation flow
-            promptContext = `Continue the conversation about this content, maintaining the natural flow. Use this previous response for context:\n\nPrevious response: ${lastResponse}\n\nNew content to discuss: ${chunk}\n\n${currentSpeaker}:`;
+            prompt = `${SYSTEM_PROMPTS.MAIN}\n\n${lastResponse}\n\n${currentSpeaker}: ${chunk}`;
           }
 
-          const finalPrompt = `${promptToUse}\n\n${promptContext}`;
+          await logger.log("\n=== PROMPT TO VERTEX AI ===\n");
+          await logger.log(prompt);
+          await logger.log("\n=== END PROMPT ===\n");
 
-          if (!process.env.GOOGLE_CLOUD_PROJECT) {
-            throw new Error(
-              "GOOGLE_CLOUD_PROJECT environment variable is required",
-            );
-          }
-
-          const vertex_ai = new VertexAI({
-            project: process.env.GOOGLE_CLOUD_PROJECT,
-            location: "us-central1",
-          });
-
-          const model = vertex_ai.preview.getGenerativeModel({
-            model: "gemini-1.0-pro",
+          const result = await model.generateContent({
+            contents: [{ role: "user", parts: [{ text: prompt }] }],
             generationConfig: {
               maxOutputTokens: 1200,
               temperature: 0.7,
@@ -370,177 +212,58 @@ export class TTSService {
             },
           });
 
-          // Using the already constructed finalPrompt from above
-          // The prompt logic is already handled in the dynamic prompting section
-
-          await logger.log(
-            "\n============== PROMPT TO VERTEX AI ==============",
-          );
-          await logger.log(finalPrompt);
-          await logger.log("=================END=============================");
-
-          const result = await model.generateContent({
-            contents: [{ role: "user", parts: [{ text: finalPrompt }] }],
-          });
-
-          if (!result.response?.candidates?.[0]?.content?.parts?.[0]?.text) {
+          const response = result.response;
+          if (!response.candidates?.[0]?.content?.parts?.[0]?.text) {
             throw new Error("Invalid response from Vertex AI");
           }
 
-          const rawResponse =
-            result.response.candidates[0].content.parts[0].text.trim();
+          const conversationParts = this.cleanGeneratedText(response.candidates[0].content.parts[0].text);
+          allConversations.push(...conversationParts);
 
-          await logger.log(
-            "\n============== VERTEX AI RESPONSE ==============",
-          );
-          await logger.log(`Raw response: ${rawResponse}`);
-          await logger.log(
-            "\n==================END============================",
-          );
-
-          // Clean the text and get the speaker
-          const { text: cleanedText, speaker: detectedSpeaker } =
-            await this.cleanRawResponse(rawResponse, nextSpeaker);
-
-          // Always use the detected speaker from the response for voice selection
-          const finalSpeaker = detectedSpeaker;
-
-          // Basic length validation
-          const responseBytes = new TextEncoder().encode(cleanedText).length;
-          if (responseBytes > 4800) {
-            lastResponse =
-              cleanedText.substring(0, Math.floor(4800 / 2)) + "...";
-          } else {
-            lastResponse = cleanedText;
+          if (conversationParts.length > 0) {
+            lastResponse = conversationParts[conversationParts.length - 1].text;
+            speakerIndex = (speakerIndex + 1) % 2;
           }
 
-          await logger.log("\n============== VOICE SELECTION ==============");
-          await logger.log(`Using speaker: ${finalSpeaker}`);
-          await logger.log(`Voice ID: ${GOOGLE_VOICE_IDS[finalSpeaker]}`);
-          await logger.log("\n==================END=======================");
-
-          // Use the final speaker's voice
-          const audioBuffer = await this.synthesizeWithGoogle({
-            text: lastResponse,
-            speaker: finalSpeaker,
-          });
-
-          await logger.log(`Generated audio buffer for chunk ${index + 1}`);
-          conversationParts.push(audioBuffer);
-
-          // Switch speaker for next iteration based on detected speaker
-          speakerIndex = (speakers.indexOf(finalSpeaker) + 1) % 2;
-          
-          // Ensure proper transition between chunks
-          if (index < chunks.length - 1) {
-            await logger.log("Preparing for next chunk transition");
-            await logger.log(`Next speaker will be: ${speakers[speakerIndex]}`);
-          }
+          // Update progress
+          this.emitProgress(((index + 1) / chunks.length) * 50);
         } catch (error) {
-          await logger.log(
-            `Error processing chunk ${index + 1}: ${error instanceof Error ? error.message : String(error)}`,
-            "error",
-          );
-          // On error, try to generate audio with current speaker
-          try {
-            const errorAudio = await this.synthesizeWithGoogle({
-              text: "I apologize, but I need to pass the conversation back.",
-              speaker: speakers[speakerIndex],
-            });
-            conversationParts.push(errorAudio);
-          } catch (audioError) {
-            await logger.log(
-              `Failed to generate error audio: ${audioError}`,
-              "error",
-            );
-          }
-          continue;
+          await logger.log(`Error processing chunk ${index + 1}: ${error instanceof Error ? error.message : String(error)}`);
+          throw error;
         }
       }
 
-      if (conversationParts.length === 0) {
-        throw new Error("No audio parts were generated");
+      // Generate audio for each conversation part
+      await logger.log("Generating audio files...");
+      const audioFiles: string[] = [];
+
+      for (let i = 0; i < allConversations.length; i++) {
+        const { speaker, text } = allConversations[i];
+        const audioFile = await this.synthesizeSpeech(text, speaker, i);
+        audioFiles.push(audioFile);
+        
+        // Update progress for audio generation (50-100%)
+        this.emitProgress(50 + ((i + 1) / allConversations.length) * 50);
       }
 
-      const combinedBuffer = Buffer.concat(conversationParts);
-      const wordCount = text.split(/\s+/).length;
-      const estimatedDuration = Math.ceil(wordCount / 7);
+      // Merge audio files
+      const outputFile = path.join("audio-files", "final_output.mp3");
+      await this.mergeAudioFiles("audio-files", outputFile);
 
-      await logger.log(`Combined audio buffer size: ${combinedBuffer.length}`);
-      await logger.log(`Estimated duration: ${estimatedDuration} seconds`);
+      // Read the final audio file
+      const audioBuffer = await fs.readFile(outputFile);
+      
+      // Calculate approximate duration (assuming average speaking rate)
+      const totalCharacters = allConversations.reduce((sum, part) => sum + part.text.length, 0);
+      const approximateDuration = Math.ceil(totalCharacters / 20); // Rough estimate: 20 characters per second
 
       this.emitProgress(100);
-
-      return {
-        audioBuffer: combinedBuffer,
-        duration: estimatedDuration,
-      };
+      return { audioBuffer, duration: approximateDuration };
     } catch (error) {
-      await logger.log(
-        `Error in conversation generation: ${error instanceof Error ? error.message : String(error)}`,
-        "error",
-      );
-      throw error;
-    }
-  }
-
-  private async splitTextIntoChunks(
-    text: string,
-    maxBytes: number = 4800,
-  ): Promise<string[]> {
-    await logger.log(
-      `Starting text splitting process (text length: ${text.length} characters)`,
-    );
-
-    const getByteLength = (str: string): number => {
-      return new TextEncoder().encode(str).length;
-    };
-
-    try {
-      const sentences = text.split(/[.!?]+\s*/);
-      const chunks: string[] = [];
-      let currentChunk: string[] = [];
-
-      for (const sentence of sentences) {
-        const trimmedSentence = sentence.trim();
-        if (!trimmedSentence) continue;
-
-        const sentenceWithPunct = trimmedSentence + ". ";
-        const newChunk = [...currentChunk, sentenceWithPunct].join("");
-
-        if (getByteLength(newChunk) <= maxBytes) {
-          currentChunk.push(sentenceWithPunct);
-        } else {
-          if (currentChunk.length > 0) {
-            const chunk = currentChunk.join("");
-            chunks.push(chunk);
-            await logger.log(
-              `Created chunk #${chunks.length}: ${chunk.substring(0, 50)}...`,
-            );
-          }
-          currentChunk = [sentenceWithPunct];
-        }
-      }
-
-      if (currentChunk.length > 0) {
-        const finalChunk = currentChunk.join("");
-        chunks.push(finalChunk);
-        await logger.log(
-          `Created final chunk #${chunks.length}: ${finalChunk.substring(0, 50)}...`,
-        );
-      }
-
-      await logger.log(`Successfully created ${chunks.length} chunks`);
-      return chunks;
-    } catch (error) {
-      await logger.log(
-        `Error splitting text: ${error instanceof Error ? error.message : String(error)}`,
-        "error",
-      );
+      await logger.log(`Error generating conversation: ${error instanceof Error ? error.message : String(error)}`);
       throw error;
     }
   }
 }
 
-// Create and export singleton instance
 export const ttsService = new TTSService();
