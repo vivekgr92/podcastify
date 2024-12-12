@@ -30,8 +30,8 @@ const VOICE_IDS: Record<Speaker, string> = {
 };
 
 const GOOGLE_VOICE_IDS: Record<Speaker, string> = {
-  Joe: "en-US-Wavenet-D", // Male voice with natural intonation
-  Sarah: "en-US-Wavenet-F", // Female voice with clear articulation
+  Joe: "en-US-Neural2-D", // A deeper male voice with natural intonation
+  Sarah: "en-US-Neural2-F", // A warm female voice with clear articulation
 };
 
 const SYSTEM_PROMPT = `You are generating a podcast conversation between Joe and Sarah.
@@ -187,19 +187,19 @@ export class TTSService {
   async synthesizeWithGoogle({
     text,
     speaker,
-    index
   }: {
     text: string;
     speaker: Speaker;
-    index: number;
   }): Promise<Buffer> {
     this.ensureInitialized();
 
-    const voiceName = GOOGLE_VOICE_IDS[speaker] || "en-US-Wavenet-D";  // Default to Joe's voice
+    if (!GOOGLE_VOICE_IDS[speaker]) {
+      throw new Error(`Invalid speaker: ${speaker}. Expected 'Joe' or 'Sarah'`);
+    }
 
     await logger.log("\n============== GOOGLE TTS REQUEST ==============");
     await logger.log(`Selected speaker: ${speaker}`);
-    await logger.log(`Using voice ID: ${voiceName}`);
+    await logger.log(`Using voice ID: ${GOOGLE_VOICE_IDS[speaker]}`);
     await logger.log(`Original text sample: ${text.substring(0, 100)}...`);
 
     try {
@@ -208,36 +208,39 @@ export class TTSService {
         throw new Error("Invalid text input for TTS");
       }
 
-      // Clean up text and prepare for synthesis
-      const cleanedText = text
+      // Final cleanup to ensure no speaker markers remain
+      text = text
         .replace(/\b(?:Joe|Sarah)\b\s*[:：]/g, "") // Remove any remaining speaker markers
         .replace(/\*\*/g, "") // Remove any markdown
         .replace(/\s+/g, " ") // Normalize spaces
         .trim();
 
-      const synthesisInput = {
-        text: cleanedText
-      };
+      await logger.log(
+        `Final cleaned text for TTS: ${text.substring(0, 100)}...`,
+      );
 
-      const voice = {
-        languageCode: "en-US",
-        name: voiceName
-      };
-
-      const audioConfig = {
-        audioEncoding: AudioEncoding.MP3,
-        speakingRate: 1.0,
-        pitch: 0.0,
-      } satisfies protos.google.cloud.texttospeech.v1.IAudioConfig;
+      const textBytes = new TextEncoder().encode(text).length;
+      if (textBytes > 4800) {
+        await logger.log(`Text length warning: ${textBytes} bytes`, "warn");
+        text = text.substring(0, Math.floor(4800 / 2)) + "...";
+        await logger.log(`Truncated text: ${text.substring(0, 100)}...`);
+      }
 
       const request = {
-        input: synthesisInput,
-        voice: voice,
-        audioConfig: audioConfig,
+        input: { text },
+        voice: {
+          languageCode: "en-US",
+          name: GOOGLE_VOICE_IDS[speaker],
+        },
+        audioConfig: {
+          audioEncoding: AudioEncoding.MP3,
+          speakingRate: 1.0,
+          pitch: 0.0,
+        },
       } satisfies protos.google.cloud.texttospeech.v1.ISynthesizeSpeechRequest;
 
       const [response] = await this.ttsClient.synthesizeSpeech(request);
-      await logger.log(`Successfully synthesized speech for ${speaker}, chunk ${index}`);
+      await logger.log("TTS API response received successfully");
 
       if (!response.audioContent) {
         throw new Error("No audio content received from Google TTS");
@@ -420,7 +423,6 @@ export class TTSService {
           const audioBuffer = await this.synthesizeWithGoogle({
             text: lastResponse,
             speaker: finalSpeaker,
-            index: index
           });
 
           await logger.log(`Generated audio buffer for chunk ${index + 1}`);
@@ -484,35 +486,44 @@ export class TTSService {
 
   private async splitTextIntoChunks(
     text: string,
-    maxChars: number = 4000,
+    maxBytes: number = 4800,
   ): Promise<string[]> {
     await logger.log(
       `Starting text splitting process (text length: ${text.length} characters)`,
     );
 
+    const getByteLength = (str: string): number => {
+      return new TextEncoder().encode(str).length;
+    };
+
     try {
-      const sentences = text.split('. ');
+      const sentences = text.split(/[.!?]+\s*/);
       const chunks: string[] = [];
       let currentChunk: string[] = [];
 
       for (const sentence of sentences) {
-        const newChunk = [...currentChunk, sentence].join('. ') + '.';
-        
-        if (newChunk.length <= maxChars) {
-          currentChunk.push(sentence);
+        const trimmedSentence = sentence.trim();
+        if (!trimmedSentence) continue;
+
+        const sentenceWithPunct = trimmedSentence + ". ";
+        const newChunk = [...currentChunk, sentenceWithPunct].join("");
+
+        if (getByteLength(newChunk) <= maxBytes) {
+          currentChunk.push(sentenceWithPunct);
         } else {
           if (currentChunk.length > 0) {
-            chunks.push(currentChunk.join('. ') + '.');
+            const chunk = currentChunk.join("");
+            chunks.push(chunk);
             await logger.log(
-              `Created chunk #${chunks.length}: ${chunks[chunks.length - 1].substring(0, 50)}...`,
+              `Created chunk #${chunks.length}: ${chunk.substring(0, 50)}...`,
             );
           }
-          currentChunk = [sentence];
+          currentChunk = [sentenceWithPunct];
         }
       }
 
       if (currentChunk.length > 0) {
-        const finalChunk = currentChunk.join('. ') + '.';
+        const finalChunk = currentChunk.join("");
         chunks.push(finalChunk);
         await logger.log(
           `Created final chunk #${chunks.length}: ${finalChunk.substring(0, 50)}...`,
