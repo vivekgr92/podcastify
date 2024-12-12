@@ -127,22 +127,42 @@ export class TTSService {
 
   private cleanGeneratedText(rawText: string): ConversationPart[] {
     try {
-      const data = JSON.parse(rawText);
+      // First try to parse the JSON
+      let data: any;
+      try {
+        data = JSON.parse(rawText);
+      } catch (parseError) {
+        logger.info(`Invalid JSON format: ${rawText.substring(0, 100)}...`);
+        throw new Error('Invalid response format from AI model');
+      }
+
       const conversation: ConversationPart[] = [];
       
-      if ("podcastConversation" in data) {
-        for (const entry of data.podcastConversation) {
-          const speaker = entry.speaker as Speaker;
-          const dialogue = entry.dialogue?.trim();
-          if (speaker && dialogue && SPEAKERS.includes(speaker)) {
-            conversation.push({ speaker, text: dialogue });
-          }
+      if (!data.podcastConversation || !Array.isArray(data.podcastConversation)) {
+        logger.info('Missing or invalid podcastConversation array');
+        return conversation;
+      }
+      
+      for (const entry of data.podcastConversation) {
+        const speaker = entry.speaker as Speaker;
+        const dialogue = entry.dialogue?.trim();
+        
+        if (!speaker || !dialogue) {
+          logger.info(`Skipping invalid entry: ${JSON.stringify(entry)}`);
+          continue;
         }
+        
+        if (!SPEAKERS.includes(speaker)) {
+          logger.info(`Invalid speaker: ${speaker}`);
+          continue;
+        }
+        
+        conversation.push({ speaker, text: dialogue });
       }
       
       return conversation;
     } catch (error) {
-      logger.log(`Error parsing conversation: ${error instanceof Error ? error.message : String(error)}`);
+      logger.error(`Error parsing conversation: ${error instanceof Error ? error.message : String(error)}`);
       return [];
     }
   }
@@ -165,7 +185,7 @@ export class TTSService {
 
       await fs.mkdir("audio-files", { recursive: true });
       await fs.writeFile(outputFile, response.audioContent as Buffer);
-      await logger.log(`Audio content written to file "${outputFile}"`);
+      await logger.info(`Audio content written to file "${outputFile}"`);
 
       return outputFile;
     } catch (error) {
@@ -188,7 +208,7 @@ export class TTSService {
       const command = `ffmpeg -i "concat:${filePaths.join("|")}" -acodec copy ${outputFile}`;
       
       execSync(command);
-      await logger.log(`Merged audio saved as ${outputFile}`);
+      await logger.info(`Merged audio saved as ${outputFile}`);
     } catch (error) {
       throw new Error(`Failed to merge audio files: ${error instanceof Error ? error.message : String(error)}`);
     }
@@ -196,6 +216,15 @@ export class TTSService {
 
   async generateConversation(text: string): Promise<{ audioBuffer: Buffer; duration: number }> {
     try {
+      // Ensure audio-files directory exists and is empty
+      const audioDir = 'audio-files';
+      try {
+        await fs.rm(audioDir, { recursive: true, force: true });
+      } catch (error) {
+        // Ignore error if directory doesn't exist
+      }
+      await fs.mkdir(audioDir, { recursive: true });
+
       // Split text into manageable chunks
       const chunks = this.splitTextIntoChunks(text);
       let allConversations: ConversationPart[] = [];
@@ -204,7 +233,7 @@ export class TTSService {
 
       // Initialize progress tracking
       this.emitProgress(0);
-      await logger.log("\n--- Starting Conversation Generation ---\n");
+      await logger.info("\n--- Starting Conversation Generation ---\n");
 
       const model = this.vertexAI.getGenerativeModel({ model: "gemini-1.5-flash-002" });
 

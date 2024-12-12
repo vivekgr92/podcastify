@@ -24,14 +24,38 @@ class LoggingService {
     }
   }
 
-  async log(message: string, type: 'info' | 'warn' | 'error' = 'info') {
-    const formattedMessage = `[${type.toUpperCase()}] ${message}\n`;
+  async log(message: string | string[], type: 'info' | 'warn' | 'error' = 'info') {
+    let formattedMessage: string;
+    
+    if (Array.isArray(message)) {
+      formattedMessage = `[${type.toUpperCase()}] ${message.join(' ')}\n`;
+    } else {
+      formattedMessage = `[${type.toUpperCase()}] ${message}\n`;
+    }
     
     try {
       await fs.appendFile(this.logFilePath, formattedMessage);
+      // Also log to console for development
+      console.log(formattedMessage.trim());
     } catch (error) {
       console.error('Error writing to log file:', error);
     }
+  }
+
+  async debug(message: string | string[]) {
+    return this.log(message, 'info');
+  }
+
+  async info(message: string | string[]) {
+    return this.log(message, 'info');
+  }
+
+  async warn(message: string | string[]) {
+    return this.log(message, 'warn');
+  }
+
+  async error(message: string | string[]) {
+    return this.log(message, 'error');
   }
 }
 
