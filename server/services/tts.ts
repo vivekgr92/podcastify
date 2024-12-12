@@ -22,10 +22,33 @@ const SPEAKER_VOICE_MAP = {
 };
 
 // System prompts for different stages of conversation
+// Generation configuration
+const GENERATION_CONFIG = {
+  maxOutputTokens: 1200,
+  temperature: 0.7,
+  topP: 0.95,
+};
+
+// System prompts exactly matching Python implementation
 const SYSTEM_PROMPTS = {
   WELCOME: `Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies,
-unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!`,
-  
+unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!
+
+**Guidelines**:
+1. Joe provides detailed technical insights but avoids overusing analogies. Instead, focus on straightforward, clear explanations.
+2. Sarah asks probing, thoughtful questions, occasionally offers her own insights, and challenges Joe to explain concepts simply and conversationally.
+3. Both speakers use natural human speech patterns, including filler words like "um," "ah," "you know," and short pauses.
+
+**Focus**:
+- Avoid excessive use of analogies. Use one or two if necessary for clarity but prioritize clear, direct explanations.
+- Include natural conversational flow with interruptions, backtracking, and filler words to make the dialogue feel authentic.
+- Encourage a natural dialogue with varied contributions from both speakers.
+
+**Tone**:
+- Engaging, relatable, and spontaneous.
+- Emphasize human-like emotions, with occasional humor or lighthearted moments.
+- Balance technical depth with conversational relatability, avoiding overly formal language.`,
+
   MAIN: `You are generating a podcast conversation between Joe and Sarah.
 
 **Guidelines**:
@@ -102,6 +125,28 @@ export class TTSService {
     return chunks;
   }
 
+  private cleanGeneratedText(rawText: string): ConversationPart[] {
+    try {
+      const data = JSON.parse(rawText);
+      const conversation: ConversationPart[] = [];
+      
+      if ("podcastConversation" in data) {
+        for (const entry of data.podcastConversation) {
+          const speaker = entry.speaker as Speaker;
+          const dialogue = entry.dialogue?.trim();
+          if (speaker && dialogue && SPEAKERS.includes(speaker)) {
+            conversation.push({ speaker, text: dialogue });
+          }
+        }
+      }
+      
+      return conversation;
+    } catch (error) {
+      logger.log(`Error parsing conversation: ${error instanceof Error ? error.message : String(error)}`);
+      return [];
+    }
+  }
+
   private async synthesizeSpeech(text: string, speaker: Speaker, index: number): Promise<string> {
     const voiceName = SPEAKER_VOICE_MAP[speaker];
     const outputFile = path.join("audio-files", `${index}.mp3`);
@@ -134,9 +179,9 @@ export class TTSService {
       const audioFiles = files
         .filter(file => file.endsWith(".mp3"))
         .sort((a, b) => {
-          const aIndex = parseInt(a.match(/(\d+)/)?.[0] || "0");
-          const bIndex = parseInt(b.match(/(\d+)/)?.[0] || "0");
-          return aIndex - bIndex;
+          const aNum = parseInt(a.match(/\d+/)?.[0] || "0");
+          const bNum = parseInt(b.match(/\d+/)?.[0] || "0");
+          return aNum - bNum;
         });
 
       const filePaths = audioFiles.map(file => path.join(audioFolder, file));
@@ -149,29 +194,9 @@ export class TTSService {
     }
   }
 
-  private cleanGeneratedText(rawText: string): ConversationPart[] {
-    try {
-      const data = JSON.parse(rawText);
-      const conversation: ConversationPart[] = [];
-      
-      if ("podcastConversation" in data) {
-        for (const entry of data.podcastConversation) {
-          const speaker = entry.speaker as Speaker;
-          const dialogue = entry.dialogue?.trim();
-          if (speaker && dialogue && SPEAKERS.includes(speaker)) {
-            conversation.push({ speaker, text: dialogue });
-          }
-        }
-      }
-      
-      return conversation;
-    } catch (error) {
-      throw new Error(`Failed to parse conversation: ${error instanceof Error ? error.message : String(error)}`);
-    }
-  }
-
   async generateConversation(text: string): Promise<{ audioBuffer: Buffer; duration: number }> {
     try {
+      // Split text into manageable chunks
       const chunks = this.splitTextIntoChunks(text);
       let allConversations: ConversationPart[] = [];
       let lastResponse = "";
@@ -179,59 +204,76 @@ export class TTSService {
 
       // Initialize progress tracking
       this.emitProgress(0);
-      await logger.log("Starting conversation generation...");
+      await logger.log("\n--- Starting Conversation Generation ---\n");
 
       const model = this.vertexAI.getGenerativeModel({ model: "gemini-1.5-flash-002" });
 
+      // Process each chunk and generate conversation
       for (let index = 0; index < chunks.length; index++) {
         const chunk = chunks[index];
         const currentSpeaker = SPEAKERS[speakerIndex];
         
         try {
-          // Construct prompt based on chunk position
-          let prompt = "";
+          // Dynamic prompting based on chunk position
+          let systemPrompt: string;
+          let prompt: string;
+
           if (index === 0) {
-            prompt = `${SYSTEM_PROMPTS.WELCOME}\n\n${SYSTEM_PROMPTS.MAIN}\n\nJoe: ${chunk}\n\nSarah:`;
+            systemPrompt = SYSTEM_PROMPTS.WELCOME;
+            prompt = `${systemPrompt}\n\n${SYSTEM_PROMPTS.MAIN}\n\nJoe: ${chunk}\n\nSarah:`;
             speakerIndex = 0;
           } else if (index === chunks.length - 1) {
-            prompt = `${SYSTEM_PROMPTS.MAIN}\n\n${lastResponse}\n\n${currentSpeaker}: ${chunk}\n\n${SYSTEM_PROMPTS.FAREWELL}`;
+            systemPrompt = SYSTEM_PROMPTS.MAIN;
+            prompt = `${systemPrompt}\n\n${lastResponse ? `Previous Context:\n${lastResponse}\n\n` : ""}${currentSpeaker}: ${chunk}\n\n${SYSTEM_PROMPTS.FAREWELL}`;
           } else {
-            prompt = `${SYSTEM_PROMPTS.MAIN}\n\n${lastResponse}\n\n${currentSpeaker}: ${chunk}`;
+            systemPrompt = SYSTEM_PROMPTS.MAIN;
+            prompt = `${systemPrompt}\n\n${lastResponse ? `Previous Context:\n${lastResponse}\n\n` : ""}${currentSpeaker}: ${chunk}`;
           }
 
-          await logger.log("\n=== PROMPT TO VERTEX AI ===\n");
+          // Log prompt for debugging
+          await logger.log("\n\n ------------PROMPT to VERTEX AI-----------------\n");
           await logger.log(prompt);
-          await logger.log("\n=== END PROMPT ===\n");
+          await logger.log("\n\n ------------END-----------------\n");
 
+          // Generate content using Vertex AI
           const result = await model.generateContent({
             contents: [{ role: "user", parts: [{ text: prompt }] }],
-            generationConfig: {
-              maxOutputTokens: 1200,
-              temperature: 0.7,
-              topP: 0.95,
-            },
+            generationConfig: GENERATION_CONFIG,
           });
 
+          // Validate and extract response
           const response = result.response;
           if (!response.candidates?.[0]?.content?.parts?.[0]?.text) {
             throw new Error("Invalid response from Vertex AI");
           }
 
-          const conversationParts = this.cleanGeneratedText(response.candidates[0].content.parts[0].text);
-          allConversations.push(...conversationParts);
+          const rawText = response.candidates[0].content.parts[0].text;
+          await logger.log(`Raw Text (Chunk ${index + 1}): ${rawText}`);
+
+          // Process conversation parts
+          const conversationParts = this.cleanGeneratedText(rawText);
+          await logger.log(`Cleaned Text (Chunk ${index + 1}):`, JSON.stringify(conversationParts, null, 2));
 
           if (conversationParts.length > 0) {
+            allConversations.push(...conversationParts);
             lastResponse = conversationParts[conversationParts.length - 1].text;
             speakerIndex = (speakerIndex + 1) % 2;
           }
 
-          // Update progress
+          // Update progress for conversation generation (0-50%)
           this.emitProgress(((index + 1) / chunks.length) * 50);
         } catch (error) {
           await logger.log(`Error processing chunk ${index + 1}: ${error instanceof Error ? error.message : String(error)}`);
           throw error;
         }
       }
+
+      // Print full conversation for debugging
+      await logger.log("\n--- Full Generated Conversation ---");
+      allConversations.forEach(part => {
+        logger.log(`${part.speaker}: ${part.text}`);
+      });
+      await logger.log("--- End of Conversation ---\n");
 
       // Generate audio for each conversation part
       await logger.log("Generating audio files...");
