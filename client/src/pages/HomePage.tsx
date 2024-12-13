@@ -57,14 +57,19 @@ export default function HomePage() {
           newEventSource.onmessage = (event) => {
             try {
               const data = JSON.parse(event.data);
+              console.log('Received progress data:', data);
+              
               if (typeof data.progress === 'number') {
-                setConversionProgress(Math.min(data.progress, 100));
-                console.log('Progress update:', data.progress);
+                const progress = Math.min(Math.round(data.progress), 100);
+                setConversionProgress(progress);
+                console.log('Setting progress:', progress);
                 
                 // Close EventSource when conversion is complete
-                if (data.progress >= 100) {
+                if (progress >= 100) {
+                  console.log('Conversion complete, closing EventSource');
                   newEventSource.close();
                   setEventSource(null);
+                  setIsConverting(false);
                 }
               }
             } catch (error) {
@@ -180,28 +185,28 @@ export default function HomePage() {
             </div>
 
             {isConverting && (
-              <div className="w-full bg-gray-900 rounded-lg p-4 mb-12">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-[#4CAF50] border-t-transparent"></div>
-                    <span className="text-sm text-gray-400">
+              <div className="w-full bg-gray-900 rounded-lg p-6 mb-12">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="animate-spin rounded-full h-5 w-5 border-3 border-[#4CAF50] border-t-transparent"></div>
+                    <span className="text-base text-gray-300 font-medium">
                       {conversionProgress === 0 
-                        ? "Preparing conversion..." 
+                        ? "Preparing your podcast..." 
                         : conversionProgress < 100 
-                        ? "Converting to podcast..." 
-                        : "Finalizing conversion..."}
+                        ? "Converting article to podcast" 
+                        : "Finalizing your podcast..."}
                     </span>
                   </div>
-                  <span className="text-sm text-gray-400 font-medium">
-                    {conversionProgress > 0 ? `${Math.round(conversionProgress)}%` : ""}
+                  <span className="text-lg text-[#4CAF50] font-bold">
+                    {conversionProgress > 0 ? `${Math.round(conversionProgress)}%` : "0%"}
                   </span>
                 </div>
-                <div className="w-full bg-gray-800 rounded-full h-2 overflow-hidden">
+                <div className="w-full bg-gray-800 rounded-full h-3 overflow-hidden">
                   <div 
-                    className={`h-2 rounded-full transition-all duration-300 ease-out ${
+                    className={`h-3 rounded-full transition-all duration-300 ease-out ${
                       conversionProgress === 0 
-                        ? "bg-[#4CAF50]/50 animate-pulse w-full" 
-                        : "bg-[#4CAF50]"
+                        ? "bg-[#4CAF50]/30 animate-pulse w-full" 
+                        : "bg-gradient-to-r from-[#4CAF50] to-emerald-400"
                     }`}
                     style={{ 
                       width: conversionProgress > 0 ? `${conversionProgress}%` : '100%',
@@ -209,6 +214,11 @@ export default function HomePage() {
                     }}
                   />
                 </div>
+                <p className="text-sm text-gray-400 mt-3">
+                  {conversionProgress > 0 && conversionProgress < 100 
+                    ? "This may take a few minutes depending on the article length" 
+                    : ""}
+                </p>
               </div>
             )}
 
