@@ -56,7 +56,7 @@ function Router() {
                   {!user?.isAdmin ? <HomePage /> : <AdminPage />}
                 </Route>
                 <Route path="/">
-                  {!user ? <AuthPage /> : <HomePage />}
+                  <HomePage />
                 </Route>
                 <Route>404 Page Not Found</Route>
               </Switch>
