@@ -7,7 +7,7 @@ export const users = pgTable("users", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   username: text("username").unique().notNull(),
   email: text("email").unique().notNull(),
-  displayName: text("display_name").notNull().default(sql`username`),
+  displayName: text("display_name").notNull(),
   password: text("password").notNull(),
   isAdmin: boolean("is_admin").notNull().default(false),
   createdAt: timestamp("created_at").defaultNow(),
