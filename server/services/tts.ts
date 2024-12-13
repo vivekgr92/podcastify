@@ -45,7 +45,7 @@ const GENERATION_CONFIG = {
 
 // System prompts exactly matching Python implementation
 const SYSTEM_PROMPTS = {
-  WELCOME: `Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies,
+  WELCOME: `Speaker Joe should Start the podcast by saying this: Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies,
 unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!
 
 **Guidelines**:
@@ -68,7 +68,8 @@ unraveling the mysteries behind the research that shapes our world. Thanks for t
 **Guidelines**:
 1. Joe provides detailed technical insights but avoids overusing analogies. Instead, focus on straightforward, clear explanations.
 2. Sarah asks probing, thoughtful questions, occasionally offers her own insights, and challenges Joe to explain concepts simply and conversationally.
-3. Both speakers use natural human speech patterns, including filler words like "um," "ah," "you know," and short pauses.
+3. Both speakers use natural human speech patterns, including filler words like "you know," and short pauses.
+4. Don't include any sound effects or background music.
 
 **Focus**:
 - Avoid excessive use of analogies. Use one or two if necessary for clarity but prioritize clear, direct explanations.
@@ -80,7 +81,7 @@ unraveling the mysteries behind the research that shapes our world. Thanks for t
 - Emphasize human-like emotions, with occasional humor or lighthearted moments.
 - Balance technical depth with conversational relatability, avoiding overly formal language.`,
 
-  FAREWELL: `Thank you for joining us on this episode of Science Odyssey, where we explored the groundbreaking research shaping our understanding of the world. 
+  FAREWELL: `Speaker Joe should End the podcast by saying this: Thank you for joining us on this episode of Science Odyssey, where we explored the groundbreaking research shaping our understanding of the world. 
 If you enjoyed this journey, don't forget to subscribe, leave a review, and share the podcast with fellow science enthusiasts.
 Until next time, keep exploring the wonders of science—your next discovery awaits!`,
 };
@@ -139,23 +140,26 @@ export class TTSService {
     return chunks;
   }
 
-  private async cleanGeneratedText(rawText: string): Promise<ConversationPart[]> {
+  private async cleanGeneratedText(
+    rawText: string,
+  ): Promise<ConversationPart[]> {
     try {
       const conversation: ConversationPart[] = [];
       const lines = rawText.split("\n");
 
       for (const line of lines) {
-        const match = line.match(/^(\w+):\s*(.*)$/);
+        // Adjust regex to handle asterisks around speaker names (e.g., **Joe:**) 
+        const match = line.match(/^\*?\*?(\w+)\*?\*?:\s*(.*)$/);
         if (match) {
           const [, speakerName, dialogue] = match;
-          
+
           if (
-            dialogue?.trim() && 
+            dialogue?.trim() &&
             (speakerName === "Joe" || speakerName === "Sarah")
           ) {
             const speaker = speakerName as Speaker;
             const text = dialogue.trim();
-            
+
             if (text.length > 0) {
               conversation.push({ speaker, text });
             }
@@ -164,15 +168,20 @@ export class TTSService {
       }
 
       if (conversation.length === 0) {
-        await logger.warn("No valid conversation parts found in the generated text");
+        await logger.warn(
+          "No valid conversation parts found in the generated text",
+        );
       }
 
       return conversation;
     } catch (error) {
-      await logger.error(`Error processing raw text: ${error instanceof Error ? error.message : String(error)}`);
+      await logger.error(
+        `Error processing raw text: ${error instanceof Error ? error.message : String(error)}`,
+      );
       return [];
     }
   }
+
 
   private async synthesizeSpeech(
     text: string,
@@ -272,12 +281,16 @@ export class TTSService {
             prompt = `${SYSTEM_PROMPTS.WELCOME}\n\n${SYSTEM_PROMPTS.MAIN}\n\nJoe: ${chunk}\n\nSarah:`;
             speakerIndex = 0;
           } else if (index === chunks.length - 1) {
+            await logger.info([
+              "\n\n ==================Last Chunk===================\n",
+            ]);
+
             prompt = `${SYSTEM_PROMPTS.MAIN}\n\n${
-              lastResponse ? `Previous Context:\n${lastResponse}\n\n` : ""
+              lastResponse ? `**Previous Context**:\n${lastResponse}\n\n` : ""
             }${currentSpeaker}: ${chunk}\n\n${SYSTEM_PROMPTS.FAREWELL}`;
           } else {
             prompt = `${SYSTEM_PROMPTS.MAIN}\n\n${
-              lastResponse ? `Previous Context:\n${lastResponse}\n\n` : ""
+              lastResponse ? `**Previous Context**:\n${lastResponse}\n\n` : ""
             }${currentSpeaker}: ${chunk}`;
           }
 
@@ -285,17 +298,18 @@ export class TTSService {
           await logger.info([
             "\n\n ------------PROMPT to VERTEX AI-----------------\n",
             prompt,
-            "\n\n ------------END-----------------\n"
+            "\n\n ------------END-----------------\n",
           ]);
 
           // Generate content using Vertex AI
-          const result = await model.generateContent({
+          const result = (await model.generateContent({
             contents: [{ role: "user", parts: [{ text: prompt }] }],
             generationConfig: GENERATION_CONFIG,
-          }) as GenerationResult;
+          })) as GenerationResult;
 
           // Validate and extract response
-          const rawText = result.response.candidates?.[0]?.content?.parts?.[0]?.text;
+          const rawText =
+            result.response.candidates?.[0]?.content?.parts?.[0]?.text;
           if (!rawText) {
             throw new Error("Invalid response from Vertex AI");
           }
@@ -303,14 +317,14 @@ export class TTSService {
           await logger.info([
             "\n\n -------RESPONSE FROM VERTEX AI---------\n",
             rawText,
-            "\n\n ------------END-----------------\n"
+            "\n\n ------------END-----------------\n",
           ]);
 
           // Process conversation parts
           const conversationParts = await this.cleanGeneratedText(rawText);
           await logger.info([
             `Cleaned Text (Chunk ${index + 1}):`,
-            JSON.stringify(conversationParts, null, 2)
+            JSON.stringify(conversationParts, null, 2),
           ]);
 
           if (conversationParts.length > 0) {
