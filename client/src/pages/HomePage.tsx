@@ -11,8 +11,10 @@ import { useUser } from "../hooks/use-user";
 export default function HomePage() {
   const [, setLocation] = useLocation();
   const [file, setFile] = useState<File | null>(null);
+  const [isConverting, setIsConverting] = useState(false);
+  const [conversionProgress, setConversionProgress] = useState(0);
   const { toast } = useToast();
-  const { convertToSpeech, isConverting, setIsConverting, progress, setProgress } = useTTS();
+  const { convertToSpeech } = useTTS();
   const queryClient = useQueryClient();
   const { user } = useUser();
 
@@ -26,15 +28,26 @@ export default function HomePage() {
         formData.append('file', file);
         
         try {
-          setProgress(0);
+          setConversionProgress(0);
           setIsConverting(true);
           
           console.log('Starting file conversion...');
+          
+          // Set up SSE for progress tracking
+          const eventSource = new EventSource('/api/podcast/progress');
+          eventSource.onmessage = (event) => {
+            const progress = JSON.parse(event.data).progress;
+            setConversionProgress(progress);
+          };
+          
           const response = await fetch('/api/podcast', {
             method: 'POST',
             body: formData,
             credentials: 'include'
           });
+          
+          // Close SSE connection
+          eventSource.close();
           
           if (!response.ok) {
             throw new Error('Failed to convert file');
@@ -42,6 +55,7 @@ export default function HomePage() {
           
           const podcast = await response.json();
           console.log('Conversion successful:', podcast);
+          setConversionProgress(100); // Set to 100% when complete
           
           toast({
             title: "Success",
@@ -59,7 +73,7 @@ export default function HomePage() {
           });
         } finally {
           setIsConverting(false);
-          setProgress(0);
+          setConversionProgress(0);
         }
       } else {
         toast({
@@ -69,7 +83,7 @@ export default function HomePage() {
         });
       }
     }
-  }, [toast, setLocation, setIsConverting, setProgress, queryClient]);
+  }, [toast, setLocation, queryClient]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -132,12 +146,12 @@ export default function HomePage() {
             <div className="w-full bg-gray-900 rounded-lg p-4 mb-12">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-gray-400">Converting to podcast...</span>
-                <span className="text-sm text-gray-400">{Math.round(progress)}%</span>
+                <span className="text-sm text-gray-400">{Math.round(conversionProgress)}%</span>
               </div>
               <div className="w-full bg-gray-800 rounded-full h-2">
                 <div 
                   className="bg-[#4CAF50] h-2 rounded-full transition-all duration-300" 
-                  style={{ width: `${progress}%` }}
+                  style={{ width: `${conversionProgress}%` }}
                 />
               </div>
             </div>
