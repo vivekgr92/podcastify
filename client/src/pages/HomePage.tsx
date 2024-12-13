@@ -15,19 +15,17 @@ export default function HomePage() {
   const { convertToSpeech, isConverting, setIsConverting, progress, setProgress } = useTTS();
   const queryClient = useQueryClient();
   const { user } = useUser();
-  
+
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (file) {
       if (file.type === "text/plain" || file.type === "application/pdf") {
         setFile(file);
         
-        // Create form data and append file
         const formData = new FormData();
         formData.append('file', file);
         
         try {
-          // Reset progress and start conversion
           setProgress(0);
           setIsConverting(true);
           
@@ -50,10 +48,7 @@ export default function HomePage() {
             description: "Your file has been converted successfully!",
           });
           
-          // Invalidate podcasts query to refresh library
           await queryClient.invalidateQueries({ queryKey: ['podcasts'] });
-          
-          // Redirect to library to see the converted podcast
           setLocation('/library');
         } catch (error) {
           console.error('File conversion error:', error);
@@ -86,6 +81,47 @@ export default function HomePage() {
     },
     multiple: false
   });
+
+  if (user) {
+    return (
+      <div className="min-h-screen bg-black text-white">
+        <div className="max-w-4xl mx-auto px-6 py-8">
+          <h1 className="text-3xl font-bold mb-8">Convert Your Content</h1>
+          <div className="space-y-4">
+            <div 
+              {...getRootProps()} 
+              className={`border-2 border-dashed rounded-lg p-12 transition-colors
+                ${isDragActive ? 'border-[#4CAF50] bg-[#4CAF50]/10' : 'border-gray-700 hover:border-[#4CAF50]'}`}
+            >
+              <input {...getInputProps()} />
+              <div className="text-center">
+                <FileText className="w-12 h-12 mx-auto mb-4 text-[#4CAF50]" />
+                <h3 className="text-lg font-semibold mb-2">Drop your file here</h3>
+                <p className="text-sm text-gray-400 mb-4">or</p>
+                <Button size="lg">Choose File to Upload</Button>
+                <p className="text-xs text-gray-500 mt-2">Supported formats: PDF, DOC, DOCX, TXT</p>
+              </div>
+            </div>
+            
+            {isConverting && (
+              <div className="w-full bg-gray-900 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm text-gray-400">Converting to podcast...</span>
+                  <span className="text-sm text-gray-400">{Math.round(progress)}%</span>
+                </div>
+                <div className="w-full bg-gray-800 rounded-full h-2">
+                  <div 
+                    className="bg-[#4CAF50] h-2 rounded-full transition-all duration-300" 
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -152,7 +188,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Features Section */}
+        {/* Features */}
         <div className="mb-24">
           <h2 className="text-3xl font-bold text-center mb-12">How It Works</h2>
           <div className="grid grid-cols-3 gap-8">
@@ -182,83 +218,6 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* File Upload Section (for authenticated users) */}
-        {user && (
-          <div className="space-y-4 mb-24">
-            <h2 className="text-3xl font-bold text-center mb-8">Start Converting</h2>
-            <div 
-              {...getRootProps()} 
-              className={`border-2 border-dashed rounded-lg p-12 transition-colors
-                ${isDragActive ? 'border-[#4CAF50] bg-[#4CAF50]/10' : 'border-gray-700 hover:border-[#4CAF50]'}`}
-            >
-              <input {...getInputProps()} />
-              <Button size="lg" className="mb-4">Choose File to Upload</Button>
-              <p className="text-sm text-gray-400">or drag and drop your file here</p>
-              <p className="text-xs text-gray-500 mt-2">Supported formats: PDF, DOC, DOCX, TXT</p>
-            </div>
-            
-            {isConverting && (
-              <div className="w-full bg-gray-900 rounded-lg p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-gray-400">Converting to podcast...</span>
-                  <span className="text-sm text-gray-400">{Math.round(progress)}%</span>
-                </div>
-                <div className="w-full bg-gray-800 rounded-full h-2">
-                  <div 
-                    className="bg-[#4CAF50] h-2 rounded-full transition-all duration-300" 
-                    style={{ width: `${progress}%` }}
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Testimonials */}
-        <div className="mb-24">
-          <h2 className="text-3xl font-bold text-center mb-12">What Our Users Say</h2>
-          <div className="grid grid-cols-3 gap-8">
-            <div className="p-8 rounded-lg bg-gray-900">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-full bg-[#4CAF50]/20 flex items-center justify-center mr-4">
-                  <span className="text-xl font-bold text-[#4CAF50]">J</span>
-                </div>
-                <div>
-                  <h4 className="font-semibold">John Smith</h4>
-                  <p className="text-sm text-gray-400">Content Creator</p>
-                </div>
-              </div>
-              <p className="text-gray-300">"Podcastify has revolutionized how I create content. The voice quality is amazing, and it saves me hours of work!"</p>
-            </div>
-            
-            <div className="p-8 rounded-lg bg-gray-900">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-full bg-[#4CAF50]/20 flex items-center justify-center mr-4">
-                  <span className="text-xl font-bold text-[#4CAF50]">S</span>
-                </div>
-                <div>
-                  <h4 className="font-semibold">Sarah Johnson</h4>
-                  <p className="text-sm text-gray-400">Digital Marketer</p>
-                </div>
-              </div>
-              <p className="text-gray-300">"The natural-sounding voices and seamless conversion process make this tool indispensable for my content strategy."</p>
-            </div>
-            
-            <div className="p-8 rounded-lg bg-gray-900">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-full bg-[#4CAF50]/20 flex items-center justify-center mr-4">
-                  <span className="text-xl font-bold text-[#4CAF50]">M</span>
-                </div>
-                <div>
-                  <h4 className="font-semibold">Michael Chen</h4>
-                  <p className="text-sm text-gray-400">Tech Blogger</p>
-                </div>
-              </div>
-              <p className="text-gray-300">"Finally, a tool that understands the nuances of technical content. The AI voices sound incredibly natural!"</p>
-            </div>
-          </div>
-        </div>
-
         {/* Call to Action */}
         <div className="text-center mb-24 bg-gradient-to-r from-[#4CAF50]/20 to-emerald-500/20 rounded-xl p-12">
           <h2 className="text-4xl font-bold mb-6">Ready to Transform Your Content?</h2>
@@ -274,72 +233,11 @@ export default function HomePage() {
           </Button>
         </div>
 
-        {/* Recent Conversions (only shown to authenticated users) */}
-        {user && (
-          <section className="text-left mb-24">
-            <h2 className="text-xl font-semibold mb-4">Recent Conversions</h2>
-            <div className="bg-gray-900 rounded-lg p-4">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gray-800 rounded"></div>
-                <div>
-                  <h3 className="font-medium">Sample Article Title</h3>
-                  <p className="text-sm text-gray-400">3:45 minutes • Converted 2 hours ago</p>
-                </div>
-                <Button variant="ghost" size="icon" className="ml-auto">
-                  <Play className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-          </section>
-        )}
+        {/* Footer */}
+        <footer className="text-center text-sm text-gray-500">
+          <p>© 2024 Podcastify. All rights reserved.</p>
+        </footer>
       </main>
-
-      <footer className="border-t border-gray-800 mt-16 py-12 text-center text-sm text-gray-500">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="grid grid-cols-4 gap-8 mb-8 text-left">
-            <div>
-              <h4 className="font-semibold text-white mb-4">Product</h4>
-              <ul className="space-y-2">
-                <li><a href="#" className="hover:text-white">Features</a></li>
-                <li><a href="#" className="hover:text-white">Pricing</a></li>
-                <li><a href="#" className="hover:text-white">Use Cases</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold text-white mb-4">Company</h4>
-              <ul className="space-y-2">
-                <li><a href="#" className="hover:text-white">About</a></li>
-                <li><a href="#" className="hover:text-white">Blog</a></li>
-                <li><a href="#" className="hover:text-white">Careers</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold text-white mb-4">Resources</h4>
-              <ul className="space-y-2">
-                <li><a href="#" className="hover:text-white">Documentation</a></li>
-                <li><a href="#" className="hover:text-white">Help Center</a></li>
-                <li><a href="#" className="hover:text-white">Tutorials</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold text-white mb-4">Legal</h4>
-              <ul className="space-y-2">
-                <li><a href="#" className="hover:text-white">Privacy</a></li>
-                <li><a href="#" className="hover:text-white">Terms</a></li>
-                <li><a href="#" className="hover:text-white">Security</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 pt-8 flex justify-between items-center">
-            <p>© 2024 Podcastify. All rights reserved.</p>
-            <div className="flex gap-6">
-              <a href="#" className="hover:text-white">Twitter</a>
-              <a href="#" className="hover:text-white">LinkedIn</a>
-              <a href="#" className="hover:text-white">GitHub</a>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
