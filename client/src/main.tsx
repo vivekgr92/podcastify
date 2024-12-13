@@ -12,6 +12,7 @@ import PricingPage from "./pages/PricingPage";
 import { Loader2 } from "lucide-react";
 import { useUser } from "./hooks/use-user";
 import AudioPlayer from "./components/AudioPlayer";
+import Sidebar from "./components/Sidebar";
 
 function Router() {
   const { user, isLoading } = useUser();
@@ -26,31 +27,40 @@ function Router() {
 
   return (
     <>
-      <>
-        <div className="flex flex-col min-h-screen pb-24">
-          <div className="flex-1">
-            <Switch>
-              <Route path="/auth">
-                {user ? <HomePage /> : <AuthPage />}
-              </Route>
-              <Route path="/auth/signup">
-                {user ? <HomePage /> : <AuthPage />}
-              </Route>
-              <Route path="/library">
-                {!user ? <AuthPage /> : <LibraryPage />}
-              </Route>
-              <Route path="/pricing">
-                <PricingPage />
-              </Route>
-              <Route path="/">
-                {!user ? <AuthPage /> : <HomePage />}
-              </Route>
-              <Route>404 Page Not Found</Route>
-            </Switch>
+      <div className="flex min-h-screen">
+        {user && <Sidebar />}
+        <div className="flex-1">
+          <div className="flex flex-col min-h-screen pb-24">
+            <div className="flex-1">
+              <Switch>
+                <Route path="/auth">
+                  {user ? <HomePage /> : <AuthPage />}
+                </Route>
+                <Route path="/auth/signup">
+                  {user ? <HomePage /> : <AuthPage />}
+                </Route>
+                <Route path="/library">
+                  {!user ? <AuthPage /> : <LibraryPage />}
+                </Route>
+                <Route path="/pricing">
+                  <PricingPage />
+                </Route>
+                <Route path="/profile">
+                  {!user ? <AuthPage /> : <div>Profile Page Coming Soon</div>}
+                </Route>
+                <Route path="/billing">
+                  {!user ? <AuthPage /> : <div>Billing Page Coming Soon</div>}
+                </Route>
+                <Route path="/">
+                  {!user ? <AuthPage /> : <HomePage />}
+                </Route>
+                <Route>404 Page Not Found</Route>
+              </Switch>
+            </div>
           </div>
+          <AudioPlayer />
         </div>
-        <AudioPlayer />
-      </>
+      </div>
     </>
   );
 }
