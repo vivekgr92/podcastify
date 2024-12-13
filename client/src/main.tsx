@@ -9,6 +9,7 @@ import HomePage from "./pages/HomePage";
 import AuthPage from "./pages/AuthPage";
 import LibraryPage from "./pages/LibraryPage";
 import PricingPage from "./pages/PricingPage";
+import AdminPage from "./pages/AdminPage";
 import { Loader2 } from "lucide-react";
 import { useUser } from "./hooks/use-user";
 import AudioPlayer from "./components/AudioPlayer";
@@ -50,6 +51,9 @@ function Router() {
                 </Route>
                 <Route path="/billing">
                   {!user ? <AuthPage /> : <div>Billing Page Coming Soon</div>}
+                </Route>
+                <Route path="/admin">
+                  {!user?.isAdmin ? <HomePage /> : <AdminPage />}
                 </Route>
                 <Route path="/">
                   {!user ? <AuthPage /> : <HomePage />}
