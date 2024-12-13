@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/toaster";
 import HomePage from "./pages/HomePage";
 import AuthPage from "./pages/AuthPage";
 import LibraryPage from "./pages/LibraryPage";
+import PricingPage from "./pages/PricingPage";
 import { Loader2 } from "lucide-react";
 import { useUser } from "./hooks/use-user";
 import AudioPlayer from "./components/AudioPlayer";
@@ -37,6 +38,9 @@ function Router() {
               </Route>
               <Route path="/library">
                 {!user ? <AuthPage /> : <LibraryPage />}
+              </Route>
+              <Route path="/pricing">
+                <PricingPage />
               </Route>
               <Route path="/">
                 {!user ? <AuthPage /> : <HomePage />}
