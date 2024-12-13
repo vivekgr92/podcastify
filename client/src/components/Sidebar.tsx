@@ -8,6 +8,7 @@ import {
   LogOut,
   User,
   CreditCard,
+  Users,
 } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { useUser } from "../hooks/use-user";

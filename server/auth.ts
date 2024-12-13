@@ -141,7 +141,8 @@ export function setupAuth(app: Express) {
           username,
           email,
           displayName,
-          password: hashedPassword
+          password: hashedPassword,
+          isAdmin: email.endsWith('@admin.com') // Make users with @admin.com email admins
         })
         .returning();
 
@@ -176,7 +177,8 @@ export function setupAuth(app: Express) {
 
   app.get("/api/user", (req, res) => {
     if (req.isAuthenticated()) {
-      return res.json(req.user);
+      const { password, ...userWithoutPassword } = req.user;
+      return res.json(userWithoutPassword);
     }
     res.status(401).send("Not authenticated");
   });
