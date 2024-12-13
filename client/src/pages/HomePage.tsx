@@ -14,6 +14,7 @@ export default function HomePage() {
   const { toast } = useToast();
   const { convertToSpeech, isConverting, setIsConverting, progress, setProgress } = useTTS();
   const queryClient = useQueryClient();
+  const { user } = useUser();
   
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
