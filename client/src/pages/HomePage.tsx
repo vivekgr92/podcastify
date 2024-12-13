@@ -50,26 +50,52 @@ export default function HomePage() {
             eventSource.close();
           }
           
-          // Set up SSE for progress tracking
-          const newEventSource = new EventSource('/api/podcast/progress');
+          // Set up SSE for progress tracking with proper error handling and cleanup
+          const newEventSource = new EventSource('/api/podcast/progress', { withCredentials: true });
           setEventSource(newEventSource);
           
           newEventSource.onmessage = (event) => {
             try {
               const data = JSON.parse(event.data);
-              if (data.progress !== undefined) {
+              if (typeof data.progress === 'number') {
                 setConversionProgress(Math.min(data.progress, 100));
                 console.log('Progress update:', data.progress);
+                
+                // Close EventSource when conversion is complete
+                if (data.progress >= 100) {
+                  newEventSource.close();
+                  setEventSource(null);
+                }
               }
             } catch (error) {
               console.error('Error parsing progress data:', error);
+              toast({
+                title: "Error",
+                description: "Error tracking conversion progress",
+                variant: "destructive",
+              });
             }
           };
 
           newEventSource.onerror = (error) => {
             console.error('EventSource error:', error);
-            newEventSource.close();
-            setEventSource(null);
+            // Only close and cleanup if we're not already in the process of conversion
+            if (isConverting) {
+              newEventSource.close();
+              setEventSource(null);
+              setIsConverting(false);
+              setConversionProgress(0);
+              toast({
+                title: "Error",
+                description: "Lost connection to conversion progress tracker",
+                variant: "destructive",
+              });
+            }
+          };
+
+          // Add onopen handler to confirm connection
+          newEventSource.onopen = () => {
+            console.log('Progress tracking connected');
           };
 
           const response = await fetch('/api/podcast', {
@@ -159,20 +185,26 @@ export default function HomePage() {
                   <div className="flex items-center gap-2">
                     <div className="animate-spin rounded-full h-4 w-4 border-2 border-[#4CAF50] border-t-transparent"></div>
                     <span className="text-sm text-gray-400">
-                      {conversionProgress < 100 
+                      {conversionProgress === 0 
+                        ? "Preparing conversion..." 
+                        : conversionProgress < 100 
                         ? "Converting to podcast..." 
                         : "Finalizing conversion..."}
                     </span>
                   </div>
                   <span className="text-sm text-gray-400 font-medium">
-                    {Math.round(conversionProgress)}%
+                    {conversionProgress > 0 ? `${Math.round(conversionProgress)}%` : ""}
                   </span>
                 </div>
                 <div className="w-full bg-gray-800 rounded-full h-2 overflow-hidden">
                   <div 
-                    className="bg-[#4CAF50] h-2 rounded-full transition-all duration-300 ease-out" 
+                    className={`h-2 rounded-full transition-all duration-300 ease-out ${
+                      conversionProgress === 0 
+                        ? "bg-[#4CAF50]/50 animate-pulse w-full" 
+                        : "bg-[#4CAF50]"
+                    }`}
                     style={{ 
-                      width: `${conversionProgress}%`,
+                      width: conversionProgress > 0 ? `${conversionProgress}%` : '100%',
                       transition: 'width 0.5s ease-out'
                     }}
                   />
