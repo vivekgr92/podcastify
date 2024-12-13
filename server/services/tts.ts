@@ -225,6 +225,8 @@ export class TTSService {
       // Copy intro file to audio folder if it exists in the root
       const rootIntroPath = path.resolve("podcast.mp3");
       const audioFolderIntroPath = path.resolve(audioFolder, "podcast.mp3");
+      console.log("\n\n======rootIntroPath", rootIntroPath);
+      console.log("\n\n======audioFolderIntroPath", audioFolderIntroPath);
       try {
         await fs.copyFile(rootIntroPath, audioFolderIntroPath);
         allFilePaths.push(audioFolderIntroPath);
