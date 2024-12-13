@@ -94,6 +94,19 @@ export default function Sidebar() {
             </Link>
           </Button>
           
+          {user?.isAdmin && (
+            <Button
+              variant={location === "/admin" ? "secondary" : "ghost"}
+              className="w-full justify-start gap-2"
+              asChild
+            >
+              <Link href="/admin">
+                <Users size={20} />
+                Admin Dashboard
+              </Link>
+            </Button>
+          )}
+          
           <Button
             variant={location === "/library" ? "secondary" : "ghost"}
             className="w-full justify-start gap-2"
