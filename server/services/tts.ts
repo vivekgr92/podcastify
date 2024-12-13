@@ -148,7 +148,7 @@ export class TTSService {
       const lines = rawText.split("\n");
 
       for (const line of lines) {
-        // Adjust regex to handle asterisks around speaker names (e.g., **Joe:**) 
+        // Adjust regex to handle asterisks around speaker names (e.g., **Joe:**)
         const match = line.match(/^\*?\*?(\w+)\*?\*?:\s*(.*)$/);
         if (match) {
           const [, speakerName, dialogue] = match;
@@ -181,7 +181,6 @@ export class TTSService {
       return [];
     }
   }
-
 
   private async synthesizeSpeech(
     text: string,
@@ -222,19 +221,50 @@ export class TTSService {
     try {
       const files = await fs.readdir(audioFolder);
       const audioFiles = files
-        .filter((file) => file.endsWith(".mp3"))
+        .filter((file) => file.endsWith(".mp3") && !file.includes("final_output"))
         .sort((a, b) => {
           const aNum = parseInt(a.match(/\d+/)?.[0] || "0");
           const bNum = parseInt(b.match(/\d+/)?.[0] || "0");
           return aNum - bNum;
         });
 
-      const filePaths = audioFiles.map((file) => path.join(audioFolder, file));
-      const command = `ffmpeg -i "concat:${filePaths.join("|")}" -acodec copy ${outputFile}`;
+      if (audioFiles.length === 0) {
+        throw new Error("No audio files found to merge");
+      }
 
-      execSync(command);
-      await logger.info(`Merged audio saved as ${outputFile}`);
+      // Create filelist with proper escaping and absolute paths
+      const filePaths = audioFiles.map((file) => path.resolve(audioFolder, file));
+      const concatFilePath = path.resolve(audioFolder, "concat_list.txt");
+
+      // Create concat list file for FFMPEG with proper escaping
+      const concatFileContent = filePaths
+        .map((file) => `file '${file.replace(/'/g, "'\\''")}'`)
+        .join("\n");
+      await fs.writeFile(concatFilePath, concatFileContent, "utf8");
+
+      await logger.info("Created concat list file with content:");
+      await logger.info(concatFileContent);
+
+      // Use FFMPEG to merge the files using the concat list
+      const outputFilePath = path.resolve(outputFile);
+      const command = `ffmpeg -f concat -safe 0 -i "${concatFilePath}" -c copy "${outputFilePath}"`;
+      
+      try {
+        execSync(command, { stdio: 'pipe' });
+        await logger.info(`Successfully merged audio saved as ${outputFile}`);
+      } catch (ffmpegError) {
+        await logger.error(`FFmpeg error: ${ffmpegError instanceof Error ? ffmpegError.message : String(ffmpegError)}`);
+        throw new Error("Failed to merge audio files with FFmpeg");
+      }
+
+      // Clean up concat list file
+      try {
+        await fs.unlink(concatFilePath);
+      } catch (cleanupError) {
+        await logger.warn(`Failed to clean up concat list file: ${cleanupError instanceof Error ? cleanupError.message : String(cleanupError)}`);
+      }
     } catch (error) {
+      await logger.error(`Error in mergeAudioFiles: ${error instanceof Error ? error.message : String(error)}`);
       throw new Error(
         `Failed to merge audio files: ${error instanceof Error ? error.message : String(error)}`,
       );
