@@ -92,6 +92,7 @@ export default function HomePage() {
         <div className="flex gap-4">
           <Button variant="ghost">Home</Button>
           <Button variant="ghost" onClick={() => setLocation('/library')}>Library</Button>
+          <Button variant="ghost" onClick={() => setLocation('/pricing')}>Pricing</Button>
           <Button variant="outline" onClick={() => setLocation('/auth/signup')}>Sign Up</Button>
           <Button onClick={() => setLocation('/auth')}>Login</Button>
         </div>
