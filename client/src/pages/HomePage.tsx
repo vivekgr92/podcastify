@@ -51,35 +51,60 @@ export default function HomePage() {
           }
           
           // Set up SSE for progress tracking with proper error handling and cleanup
-          const newEventSource = new EventSource('/api/podcast/progress', { withCredentials: true });
+          const newEventSource = new EventSource('/api/podcast/progress', { 
+            withCredentials: true 
+          });
+          
+          console.log('Setting up new EventSource for progress tracking');
           setEventSource(newEventSource);
           
+          // Handle incoming messages
           newEventSource.onmessage = (event) => {
             try {
               const data = JSON.parse(event.data);
-              console.log('Received progress data:', data);
+              console.log('Received progress event:', data);
               
-              if (typeof data.progress === 'number') {
+              if (data && typeof data.progress === 'number') {
                 const progress = Math.min(Math.round(data.progress), 100);
+                console.log('Updating progress:', progress);
                 setConversionProgress(progress);
-                console.log('Setting progress:', progress);
                 
-                // Close EventSource when conversion is complete
                 if (progress >= 100) {
-                  console.log('Conversion complete, closing EventSource');
+                  console.log('Conversion complete');
                   newEventSource.close();
                   setEventSource(null);
                   setIsConverting(false);
+                  setConversionProgress(100);
                 }
               }
             } catch (error) {
-              console.error('Error parsing progress data:', error);
+              console.error('Failed to parse progress data:', error);
               toast({
                 title: "Error",
-                description: "Error tracking conversion progress",
+                description: "Failed to track conversion progress",
                 variant: "destructive",
               });
             }
+          };
+          
+          // Handle connection opened
+          newEventSource.onopen = () => {
+            console.log('Progress tracking connected');
+            setIsConverting(true);
+            setConversionProgress(0);
+          };
+          
+          // Handle errors
+          newEventSource.onerror = (error) => {
+            console.error('Progress tracking error:', error);
+            newEventSource.close();
+            setEventSource(null);
+            setIsConverting(false);
+            toast({
+              title: "Error",
+              description: "Lost connection to progress tracker",
+              variant: "destructive",
+            });
           };
 
           newEventSource.onerror = (error) => {
@@ -185,11 +210,11 @@ export default function HomePage() {
             </div>
 
             {isConverting && (
-              <div className="w-full bg-gray-900 rounded-lg p-6 mb-12">
+              <div className="w-full bg-gray-900/90 backdrop-blur rounded-lg p-6 mb-12 shadow-xl">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div className="animate-spin rounded-full h-5 w-5 border-3 border-[#4CAF50] border-t-transparent"></div>
-                    <span className="text-base text-gray-300 font-medium">
+                    <div className="animate-spin rounded-full h-6 w-6 border-3 border-[#4CAF50] border-t-transparent"></div>
+                    <span className="text-lg text-white font-semibold">
                       {conversionProgress === 0 
                         ? "Preparing your podcast..." 
                         : conversionProgress < 100 
@@ -197,27 +222,33 @@ export default function HomePage() {
                         : "Finalizing your podcast..."}
                     </span>
                   </div>
-                  <span className="text-lg text-[#4CAF50] font-bold">
-                    {conversionProgress > 0 ? `${Math.round(conversionProgress)}%` : "0%"}
-                  </span>
+                  <div className="bg-[#4CAF50]/20 px-4 py-2 rounded-full">
+                    <span className="text-2xl text-[#4CAF50] font-bold tracking-wider">
+                      {conversionProgress}%
+                    </span>
+                  </div>
                 </div>
-                <div className="w-full bg-gray-800 rounded-full h-3 overflow-hidden">
+                <div className="w-full bg-gray-800/50 rounded-full h-4 overflow-hidden">
                   <div 
-                    className={`h-3 rounded-full transition-all duration-300 ease-out ${
-                      conversionProgress === 0 
-                        ? "bg-[#4CAF50]/30 animate-pulse w-full" 
-                        : "bg-gradient-to-r from-[#4CAF50] to-emerald-400"
-                    }`}
+                    className="h-4 rounded-full transition-all duration-300 ease-out bg-gradient-to-r from-[#4CAF50] via-emerald-400 to-[#4CAF50]"
                     style={{ 
-                      width: conversionProgress > 0 ? `${conversionProgress}%` : '100%',
-                      transition: 'width 0.5s ease-out'
+                      width: `${conversionProgress}%`,
+                      backgroundSize: '200% 100%',
+                      animation: 'gradient 2s linear infinite'
                     }}
                   />
                 </div>
-                <p className="text-sm text-gray-400 mt-3">
-                  {conversionProgress > 0 && conversionProgress < 100 
-                    ? "This may take a few minutes depending on the article length" 
-                    : ""}
+                <p className="text-sm text-gray-300 mt-4 flex items-center gap-2">
+                  <span className="inline-block w-2 h-2 rounded-full bg-[#4CAF50] animate-pulse"></span>
+                  {conversionProgress === 0 
+                    ? "Initializing conversion process..."
+                    : conversionProgress < 30 
+                    ? "Analyzing article content..."
+                    : conversionProgress < 60 
+                    ? "Converting text to speech..."
+                    : conversionProgress < 90 
+                    ? "Processing audio..."
+                    : "Almost done..."}
                 </p>
               </div>
             )}
