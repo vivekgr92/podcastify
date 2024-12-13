@@ -219,6 +219,20 @@ export class TTSService {
     outputFile: string,
   ): Promise<void> {
     try {
+      // Initialize array to hold all file paths
+      const allFilePaths: string[] = [];
+      
+      // Check for intro file and add it first if it exists
+      const introPath = path.resolve("podcast.mp3");
+      try {
+        await fs.access(introPath);
+        allFilePaths.push(introPath);
+        await logger.info("Found intro file podcast.mp3, adding to merge list");
+      } catch {
+        await logger.warn("Intro file podcast.mp3 not found, proceeding without intro");
+      }
+
+      // Get generated audio files
       const files = await fs.readdir(audioFolder);
       const audioFiles = files
         .filter((file) => file.endsWith(".mp3") && !file.includes("final_output"))
@@ -232,20 +246,20 @@ export class TTSService {
         throw new Error("No audio files found to merge");
       }
 
-      // Create filelist with proper escaping and absolute paths
-      const filePaths = audioFiles.map((file) => path.resolve(audioFolder, file));
-      const concatFilePath = path.resolve(audioFolder, "concat_list.txt");
+      // Add sorted audio files to the file paths array
+      allFilePaths.push(...audioFiles.map((file) => path.resolve(audioFolder, file)));
 
-      // Create concat list file for FFMPEG with proper escaping
-      const concatFileContent = filePaths
+      // Create concat list file
+      const concatFilePath = path.resolve(audioFolder, "concat_list.txt");
+      const concatFileContent = allFilePaths
         .map((file) => `file '${file.replace(/'/g, "'\\''")}'`)
         .join("\n");
+      
       await fs.writeFile(concatFilePath, concatFileContent, "utf8");
-
       await logger.info("Created concat list file with content:");
       await logger.info(concatFileContent);
 
-      // Use FFMPEG to merge the files using the concat list
+      // Use FFmpeg to merge the files
       const outputFilePath = path.resolve(outputFile);
       const command = `ffmpeg -f concat -safe 0 -i "${concatFilePath}" -c copy "${outputFilePath}"`;
       
