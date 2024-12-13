@@ -221,10 +221,12 @@ export class TTSService {
     try {
       // Initialize array to hold all file paths
       const allFilePaths: string[] = [];
-      
+
       // Copy intro file to audio folder if it exists in the root
       const rootIntroPath = path.resolve("podcast.mp3");
       const audioFolderIntroPath = path.resolve(audioFolder, "podcast.mp3");
+      console.log("\n\n======rootIntroPath", rootIntroPath);
+      console.log("\n\n======audioFolderIntroPath", audioFolderIntroPath);
       try {
         await fs.copyFile(rootIntroPath, audioFolderIntroPath);
         allFilePaths.push(audioFolderIntroPath);
@@ -236,7 +238,12 @@ export class TTSService {
       // Get generated audio files
       const files = await fs.readdir(audioFolder);
       const audioFiles = files
-        .filter((file) => file.endsWith(".mp3") && !file.includes("final_output") && file !== "podcast.mp3")
+        .filter(
+          (file) =>
+            file.endsWith(".mp3") &&
+            !file.includes("final_output") &&
+            file !== "podcast.mp3",
+        )
         .sort((a, b) => {
           const aNum = parseInt(a.match(/\d+/)?.[0] || "0");
           const bNum = parseInt(b.match(/\d+/)?.[0] || "0");
@@ -248,14 +255,16 @@ export class TTSService {
       }
 
       // Add sorted audio files to the file paths array
-      allFilePaths.push(...audioFiles.map((file) => path.resolve(audioFolder, file)));
+      allFilePaths.push(
+        ...audioFiles.map((file) => path.resolve(audioFolder, file)),
+      );
 
       // Create concat list file
       const concatFilePath = path.resolve(audioFolder, "concat_list.txt");
       const concatFileContent = allFilePaths
         .map((file) => `file '${file.replace(/'/g, "'\\''")}'`)
         .join("\n");
-      
+
       await fs.writeFile(concatFilePath, concatFileContent, "utf8");
       await logger.info("Created concat list file with content:");
       await logger.info(concatFileContent);
@@ -263,12 +272,14 @@ export class TTSService {
       // Use FFmpeg to merge the files
       const outputFilePath = path.resolve(outputFile);
       const command = `ffmpeg -f concat -safe 0 -i "${concatFilePath}" -c copy "${outputFilePath}"`;
-      
+
       try {
-        execSync(command, { stdio: 'pipe' });
+        execSync(command, { stdio: "pipe" });
         await logger.info(`Successfully merged audio saved as ${outputFile}`);
       } catch (ffmpegError) {
-        await logger.error(`FFmpeg error: ${ffmpegError instanceof Error ? ffmpegError.message : String(ffmpegError)}`);
+        await logger.error(
+          `FFmpeg error: ${ffmpegError instanceof Error ? ffmpegError.message : String(ffmpegError)}`,
+        );
         throw new Error("Failed to merge audio files with FFmpeg");
       }
 
@@ -276,25 +287,29 @@ export class TTSService {
       try {
         // Remove concat list file
         await fs.unlink(concatFilePath);
-        
+
         // Remove all intermediate audio files
         for (const file of audioFiles) {
           await fs.unlink(path.resolve(audioFolder, file));
         }
-        
+
         // Remove copied intro file if it exists
         try {
           await fs.unlink(audioFolderIntroPath);
         } catch (error) {
           // Ignore error if intro file doesn't exist
         }
-        
+
         await logger.info("Cleaned up temporary audio files");
       } catch (cleanupError) {
-        await logger.warn(`Failed to clean up some temporary files: ${cleanupError instanceof Error ? cleanupError.message : String(cleanupError)}`);
+        await logger.warn(
+          `Failed to clean up some temporary files: ${cleanupError instanceof Error ? cleanupError.message : String(cleanupError)}`,
+        );
       }
     } catch (error) {
-      await logger.error(`Error in mergeAudioFiles: ${error instanceof Error ? error.message : String(error)}`);
+      await logger.error(
+        `Error in mergeAudioFiles: ${error instanceof Error ? error.message : String(error)}`,
+      );
       throw new Error(
         `Failed to merge audio files: ${error instanceof Error ? error.message : String(error)}`,
       );
@@ -440,9 +455,13 @@ export class TTSService {
       // Clean up the audio-files directory after getting the final buffer
       try {
         await fs.rm(audioDir, { recursive: true, force: true });
-        await logger.info("Cleaned up audio-files directory after successful generation");
+        await logger.info(
+          "Cleaned up audio-files directory after successful generation",
+        );
       } catch (cleanupError) {
-        await logger.warn(`Failed to clean up audio-files directory: ${cleanupError instanceof Error ? cleanupError.message : String(cleanupError)}`);
+        await logger.warn(
+          `Failed to clean up audio-files directory: ${cleanupError instanceof Error ? cleanupError.message : String(cleanupError)}`,
+        );
       }
 
       this.emitProgress(100);
