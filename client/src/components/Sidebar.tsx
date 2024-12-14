@@ -126,7 +126,23 @@ export default function Sidebar() {
         </nav>
       </div>
 
-      <div className="flex-1" />
+      <ScrollArea className="flex-1 border-t px-6 py-4">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="font-semibold">Recent Conversions</h2>
+        </div>
+
+        <div className="space-y-1">
+          {playlists?.map((playlist) => (
+            <Button
+              key={playlist.id}
+              variant="ghost"
+              className="w-full justify-start"
+            >
+              {playlist.title}
+            </Button>
+          ))}
+        </div>
+      </ScrollArea>
 
       <div className="p-6 border-t space-y-2">
         {userStats && (

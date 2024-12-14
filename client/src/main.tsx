@@ -10,13 +10,10 @@ import AuthPage from "./pages/AuthPage";
 import LibraryPage from "./pages/LibraryPage";
 import PricingPage from "./pages/PricingPage";
 import AdminPage from "./pages/AdminPage";
-import ProfilePage from "./pages/ProfilePage";
-import BillingPage from "./pages/BillingPage";
 import { Loader2 } from "lucide-react";
 import { useUser } from "./hooks/use-user";
 import AudioPlayer from "./components/AudioPlayer";
 import Sidebar from "./components/Sidebar";
-
 
 function Router() {
   const { user, isLoading } = useUser();
@@ -50,18 +47,16 @@ function Router() {
                   <PricingPage />
                 </Route>
                 <Route path="/profile">
-                  {!user ? <AuthPage /> : <ProfilePage />}
+                  {!user ? <AuthPage /> : <div>Profile Page Coming Soon</div>}
                 </Route>
                 <Route path="/billing">
-                  {!user ? <AuthPage /> : <BillingPage />}
+                  {!user ? <AuthPage /> : <div>Billing Page Coming Soon</div>}
                 </Route>
                 <Route path="/admin">
                   {!user?.isAdmin ? <HomePage /> : <AdminPage />}
                 </Route>
                 <Route path="/">
-                  <div className={`min-h-screen ${!user ? 'bg-black text-white' : 'bg-background'}`}>
-                    <HomePage />
-                  </div>
+                  <HomePage />
                 </Route>
                 <Route>404 Page Not Found</Route>
               </Switch>
