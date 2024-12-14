@@ -59,7 +59,9 @@ function Router() {
                   {!user?.isAdmin ? <HomePage /> : <AdminPage />}
                 </Route>
                 <Route path="/">
-                  <HomePage />
+                  <div className={`min-h-screen ${!user ? 'bg-black text-white' : 'bg-background'}`}>
+                    <HomePage />
+                  </div>
                 </Route>
                 <Route>404 Page Not Found</Route>
               </Switch>
