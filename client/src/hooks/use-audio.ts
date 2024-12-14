@@ -1,154 +1,195 @@
-import { useState, useRef, useEffect } from "react";
-import type { Podcast } from "@db/schema";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
-interface AudioHookReturn {
-  isPlaying: boolean;
-  currentTime: number;
-  duration: number;
-  audioData: Podcast | null;
-  canvasRef: React.RefObject<HTMLCanvasElement>;
-  play: (podcast: Podcast) => Promise<void>;
-  togglePlay: () => Promise<void>;
-  setPosition: (time: number) => void;
-  setVolume: (value: number) => void;
+interface Podcast {
+  id: number;
+  title: string;
+  description: string;
+  audioUrl: string;
+  coverImage?: string;
 }
 
-export function useAudio(): AudioHookReturn {
-  const [audioData, setAudioData] = useState<Podcast | null>(null);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [currentTime, setCurrentTime] = useState<number>(0);
-  const [duration, setDuration] = useState<number>(0);
+export function useAudio() {
   const { toast } = useToast();
-  
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [audioData, setAudioData] = useState<Podcast | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Cleanup function to reset audio state
-  const cleanupAudio = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.src = '';
-      audioRef.current.load();
+  // Refs for audio elements
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const sourceNodeRef = useRef<AudioBufferSourceNode | null>(null);
+  const gainNodeRef = useRef<GainNode | null>(null);
+  const audioBufferRef = useRef<AudioBuffer | null>(null);
+  const startTimeRef = useRef(0);
+  const pausedAtRef = useRef(0);
+  const animationFrameRef = useRef<number>();
+
+  // Create or get AudioContext
+  const getAudioContext = useCallback(() => {
+    if (!audioContextRef.current) {
+      audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
     }
-    setIsPlaying(false);
-    setCurrentTime(0);
-    setDuration(0);
-  };
-
-  useEffect(() => {
-    return () => cleanupAudio();
+    return audioContextRef.current;
   }, []);
 
-  const play = async (podcast: Podcast): Promise<void> => {
-    try {
-      // Clean up previous audio
-      cleanupAudio();
+  // Clean up function
+  const cleanup = useCallback(() => {
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+    }
+    if (sourceNodeRef.current) {
+      sourceNodeRef.current.stop();
+      sourceNodeRef.current.disconnect();
+      sourceNodeRef.current = null;
+    }
+    if (gainNodeRef.current) {
+      gainNodeRef.current.disconnect();
+      gainNodeRef.current = null;
+    }
+    setIsPlaying(false);
+    pausedAtRef.current = 0;
+  }, []);
 
-      // Create new audio element
-      const audio = new Audio();
-      audioRef.current = audio;
+  // Start playback
+  const startPlayback = useCallback(async (offset = 0) => {
+    if (!audioBufferRef.current) return;
 
-      // Configure audio
-      audio.preload = 'auto';
+    const audioContext = getAudioContext();
+    if (audioContext.state === 'suspended') {
+      await audioContext.resume();
+    }
+
+    cleanup();
+
+    const sourceNode = audioContext.createBufferSource();
+    const gainNode = audioContext.createGain();
+
+    sourceNode.buffer = audioBufferRef.current;
+    sourceNode.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+
+    sourceNodeRef.current = sourceNode;
+    gainNodeRef.current = gainNode;
+
+    sourceNode.start(0, offset);
+    startTimeRef.current = audioContext.currentTime - offset;
+    setIsPlaying(true);
+
+    const updateTime = () => {
+      if (!isPlaying) return;
       
-      // Get base URL
+      const newTime = audioContext.currentTime - startTimeRef.current;
+      setCurrentTime(newTime);
+      
+      if (newTime < audioBufferRef.current!.duration) {
+        animationFrameRef.current = requestAnimationFrame(updateTime);
+      } else {
+        cleanup();
+        setCurrentTime(0);
+      }
+    };
+
+    animationFrameRef.current = requestAnimationFrame(updateTime);
+
+    sourceNode.onended = () => {
+      cleanup();
+      setCurrentTime(0);
+    };
+  }, [cleanup, getAudioContext, isPlaying]);
+
+  // Load and play audio
+  const play = useCallback(async (podcast: Podcast) => {
+    try {
+      setIsLoading(true);
+      cleanup();
+
+      const audioContext = getAudioContext();
+      if (audioContext.state === 'suspended') {
+        await audioContext.resume();
+      }
+
       const baseUrl = window.location.origin;
       const audioUrl = podcast.audioUrl.startsWith('http') 
         ? podcast.audioUrl 
         : `${baseUrl}${podcast.audioUrl.startsWith('/') ? '' : '/'}${podcast.audioUrl}`;
 
-      console.log('Loading audio from:', audioUrl);
+      const response = await fetch(audioUrl);
+      if (!response.ok) {
+        throw new Error('Failed to fetch audio file');
+      }
 
-      // Set up event listeners before setting source
-      audio.addEventListener('loadedmetadata', () => {
-        if (!isNaN(audio.duration) && audio.duration !== Infinity) {
-          setDuration(audio.duration);
-        }
-      });
-
-      audio.addEventListener('timeupdate', () => {
-        setCurrentTime(audio.currentTime);
-      });
-
-      audio.addEventListener('ended', () => {
-        setIsPlaying(false);
-        setCurrentTime(0);
-      });
-
-      // Set audio source and load
-      audio.src = audioUrl;
-      await audio.load();
-
-      // Update state
+      const arrayBuffer = await response.arrayBuffer();
+      const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+      
+      audioBufferRef.current = audioBuffer;
+      setDuration(audioBuffer.duration);
       setAudioData(podcast);
 
-      // Start playback
-      try {
-        await audio.play();
-        setIsPlaying(true);
-      } catch (error) {
-        console.error('Playback error:', error);
-        toast({
-          title: "Error",
-          description: "Unable to start playback. Please try again.",
-          variant: "destructive",
-        });
-      }
+      await startPlayback(0);
     } catch (error) {
-      console.error('Error setting up audio:', error);
+      console.error('Error loading audio:', error);
       toast({
         title: "Error",
-        description: "Failed to load audio. Please try again.",
+        description: "Failed to load audio file. Please try again.",
         variant: "destructive",
       });
-      cleanupAudio();
+      cleanup();
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }, [cleanup, getAudioContext, startPlayback, toast]);
 
-  const togglePlay = async (): Promise<void> => {
-    if (!audioRef.current || !audioData) return;
-
-    try {
-      if (isPlaying) {
-        audioRef.current.pause();
-        setIsPlaying(false);
-      } else {
-        await audioRef.current.play();
-        setIsPlaying(true);
+  // Toggle play/pause
+  const togglePlay = useCallback(async () => {
+    const audioContext = getAudioContext();
+    
+    if (isPlaying) {
+      audioContext.suspend();
+      pausedAtRef.current = audioContext.currentTime - startTimeRef.current;
+      setIsPlaying(false);
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
       }
-    } catch (error) {
-      console.error('Error toggling playback:', error);
-      toast({
-        title: "Error",
-        description: "Failed to control playback",
-        variant: "destructive",
-      });
+    } else if (audioBufferRef.current) {
+      await startPlayback(pausedAtRef.current);
     }
-  };
+  }, [isPlaying, getAudioContext, startPlayback]);
 
-  const setPosition = (time: number): void => {
-    if (audioRef.current) {
-      audioRef.current.currentTime = time;
-      setCurrentTime(time);
-    }
-  };
+  // Set playback position
+  const setPosition = useCallback((time: number) => {
+    if (!audioBufferRef.current || time < 0 || time > duration) return;
+    startPlayback(time);
+  }, [duration, startPlayback]);
 
-  const setVolume = (value: number): void => {
-    if (audioRef.current) {
-      audioRef.current.volume = value / 100;
+  // Set volume
+  const setVolume = useCallback((value: number) => {
+    if (gainNodeRef.current) {
+      gainNodeRef.current.gain.value = value / 100;
     }
-  };
+  }, []);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      cleanup();
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+        audioContextRef.current = null;
+      }
+    };
+  }, [cleanup]);
 
   return {
     isPlaying,
     currentTime,
     duration,
     audioData,
-    canvasRef,
     play,
     togglePlay,
     setPosition,
     setVolume,
+    isLoading,
   };
 }
