@@ -14,11 +14,11 @@ export default function AudioPlayer() {
     setVolume: setAudioVolume,
     audioData,
     canvasRef,
+    isLoading,
   } = useAudio();
 
   const [volume, setVolume] = useState(100);
   const [prevVolume, setPrevVolume] = useState(100);
-  const [isLoading, setIsLoading] = useState(false);
 
   const toggleMute = () => {
     if (volume > 0) {
@@ -30,15 +30,18 @@ export default function AudioPlayer() {
       setVolume(volumeToRestore);
       setAudioVolume(volumeToRestore);
     }
+    
+    // Update volume display immediately
+    setVolume(volume > 0 ? 0 : prevVolume || 100);
   };
 
   useEffect(() => {
     if (audioData) {
-      setVolume(prevVolume || 100);
-      setAudioVolume(prevVolume || 100);
-      setIsLoading(false);
+      const newVolume = prevVolume || 100;
+      setVolume(newVolume);
+      setAudioVolume(newVolume);
     }
-  }, [audioData, prevVolume]);
+  }, [audioData, prevVolume, setAudioVolume]);
 
   const VolumeIcon = volume === 0 ? VolumeX : volume < 50 ? Volume1 : Volume2;
 
