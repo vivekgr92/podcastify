@@ -206,27 +206,20 @@ export default function HomePage() {
                   <div className="flex items-center gap-3">
                     <div className="animate-spin rounded-full h-6 w-6 border-2 border-[#4CAF50] border-t-transparent"></div>
                     <span className="text-xl text-white font-semibold">
-                      {uploadState.status}
-                    </span>
-                  </div>
-                  <div className="bg-[#4CAF50]/20 px-6 py-3 rounded-full">
-                    <span className="text-3xl text-[#4CAF50] font-bold tracking-wider">
-                      {uploadState.progress}%
+                      Converting... {uploadState.progress}%
                     </span>
                   </div>
                 </div>
-                <div className="w-full bg-gray-800/50 rounded-full h-6 overflow-hidden">
+                <div className="relative w-full bg-gray-800/50 rounded-full h-8 overflow-hidden">
                   <div 
-                    className="h-full rounded-full transition-all duration-300 ease-out bg-[#4CAF50]"
-                    style={{ 
-                      width: `${uploadState.progress}%`
-                    }}
+                    className="absolute top-0 left-0 h-full rounded-full transition-all duration-300 ease-out bg-[#4CAF50]"
+                    style={{ width: `${uploadState.progress}%` }}
                   />
-                </div>
-                <div className="flex justify-between mt-2 text-sm text-gray-400">
-                  <span>0%</span>
-                  <span>50%</span>
-                  <span>100%</span>
+                  <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+                    <span className="text-white font-bold z-10">
+                      {uploadState.progress}% Complete
+                    </span>
+                  </div>
                 </div>
               </div>
             )}
