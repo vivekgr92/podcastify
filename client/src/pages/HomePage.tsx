@@ -40,130 +40,117 @@ export default function HomePage() {
         formData.append('file', file);
         
         try {
+          // Reset states and cleanup existing EventSource
+          if (eventSource) {
+            eventSource.close();
+            setEventSource(null);
+          }
           setConversionProgress(0);
           setIsConverting(true);
           
-          console.log('Starting file conversion...');
-          
-          // Close any existing EventSource
-          if (eventSource) {
-            eventSource.close();
-          }
-          
-          // Set up SSE for progress tracking with proper error handling and cleanup
-          const newEventSource = new EventSource('/api/podcast/progress', { 
+          // Create new EventSource for progress tracking
+          const source = new EventSource('/api/podcast/progress', { 
             withCredentials: true 
           });
           
-          console.log('Setting up new EventSource for progress tracking');
-          setEventSource(newEventSource);
+          source.onopen = () => {
+            console.log('Progress tracking connected');
+            setConversionProgress(1);
+          };
           
-          // Handle incoming messages
-          newEventSource.onmessage = (event) => {
+          source.onmessage = (event) => {
             try {
               const data = JSON.parse(event.data);
-              console.log('Received progress event:', data);
+              console.log('Progress update:', data);
               
               if (data && typeof data.progress === 'number') {
                 const progress = Math.min(Math.round(data.progress), 100);
-                console.log('Updating progress:', progress);
                 setConversionProgress(progress);
                 
                 if (progress >= 100) {
-                  console.log('Conversion complete');
-                  newEventSource.close();
+                  source.close();
                   setEventSource(null);
-                  setIsConverting(false);
-                  setConversionProgress(100);
+                  // Keep 100% visible briefly before resetting
+                  setTimeout(() => {
+                    setIsConverting(false);
+                    setConversionProgress(0);
+                  }, 1000);
                 }
               }
             } catch (error) {
-              console.error('Failed to parse progress data:', error);
-              toast({
-                title: "Error",
-                description: "Failed to track conversion progress",
-                variant: "destructive",
-              });
+              console.error('Progress parsing error:', error);
+              handleError(source, "Error processing progress update");
             }
           };
           
-          // Handle connection opened
-          newEventSource.onopen = () => {
-            console.log('Progress tracking connected');
-            setIsConverting(true);
-            setConversionProgress(0);
+          source.onerror = (error: Event) => {
+            console.error('Progress tracking error:', error);
+            handleError(source, "Lost connection to progress tracker. Please try again.");
           };
           
-          // Handle errors
-          newEventSource.onerror = (error) => {
-            console.error('Progress tracking error:', error);
-            newEventSource.close();
+          setEventSource(source);
+          
+          // Helper function to handle errors
+          const handleError = (source: EventSource, message: string) => {
+            source.close();
             setEventSource(null);
             setIsConverting(false);
+            setConversionProgress(0);
             toast({
               title: "Error",
-              description: "Lost connection to progress tracker",
+              description: message,
               variant: "destructive",
             });
           };
 
-          newEventSource.onerror = (error) => {
-            console.error('EventSource error:', error);
-            // Only close and cleanup if we're not already in the process of conversion
-            if (isConverting) {
-              newEventSource.close();
-              setEventSource(null);
-              setIsConverting(false);
-              setConversionProgress(0);
-              toast({
-                title: "Error",
-                description: "Lost connection to conversion progress tracker",
-                variant: "destructive",
-              });
+          try {
+            const response = await fetch('/api/podcast', {
+              method: 'POST',
+              body: formData,
+              credentials: 'include'
+            });
+            
+            if (!response.ok) {
+              const errorData = await response.text();
+              throw new Error(errorData || 'Failed to convert file');
             }
-          };
-
-          // Add onopen handler to confirm connection
-          newEventSource.onopen = () => {
-            console.log('Progress tracking connected');
-          };
-
-          const response = await fetch('/api/podcast', {
-            method: 'POST',
-            body: formData,
-            credentials: 'include'
-          });
-          
-          if (!response.ok) {
-            throw new Error('Failed to convert file');
+            
+            const podcast = await response.json();
+            console.log('Conversion successful:', podcast);
+            
+            // Wait for progress to reach 100%
+            const result = await new Promise((resolve, reject) => {
+              const timeout = setTimeout(() => {
+                reject(new Error('Conversion timed out'));
+              }, 300000); // 5 minute timeout
+              
+              const checkProgress = setInterval(() => {
+                if (conversionProgress >= 100) {
+                  clearInterval(checkProgress);
+                  clearTimeout(timeout);
+                  resolve(true);
+                }
+              }, 100);
+            });
+            
+            toast({
+              title: "Success",
+              description: "Your file has been converted successfully!",
+            });
+            
+            await queryClient.invalidateQueries({ queryKey: ['podcasts'] });
+            setLocation('/library');
+          } catch (error) {
+            console.error('File conversion error:', error);
+            handleError(source, error instanceof Error ? error.message : "Failed to convert your file. Please try again.");
           }
-          
-          const podcast = await response.json();
-          console.log('Conversion successful:', podcast);
-          setConversionProgress(100);
-          
-          toast({
-            title: "Success",
-            description: "Your file has been converted successfully!",
-          });
-          
-          await queryClient.invalidateQueries({ queryKey: ['podcasts'] });
-          setLocation('/library');
         } catch (error) {
-          console.error('File conversion error:', error);
+          console.error('File upload error:', error);
           toast({
             title: "Error",
-            description: "Failed to convert your file. Please try again.",
+            description: "Failed to upload your file. Please try again.",
             variant: "destructive",
           });
-        } finally {
-          if (eventSource) {
-            eventSource.close();
-            setEventSource(null);
-          }
-          setIsConverting(false);
-          setConversionProgress(0);
-          setFile(null);
         }
       } else {
         toast({
@@ -210,33 +197,51 @@ export default function HomePage() {
             </div>
 
             {isConverting && (
-              <div className="w-full bg-gray-900/90 backdrop-blur rounded-lg p-6 mb-12 shadow-xl">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="animate-spin rounded-full h-6 w-6 border-3 border-[#4CAF50] border-t-transparent"></div>
-                    <span className="text-lg text-white font-semibold">
-                      {conversionProgress === 0 
-                        ? "Preparing your podcast..." 
-                        : conversionProgress < 100 
-                        ? "Converting article to podcast" 
-                        : "Finalizing your podcast..."}
-                    </span>
+              <div className="w-full bg-gray-900/95 backdrop-blur-lg rounded-xl p-8 mb-12 shadow-2xl border border-gray-800">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-4">
+                    <div className="relative">
+                      <div className="animate-spin rounded-full h-8 w-8 border-4 border-[#4CAF50] border-t-transparent"></div>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="h-2 w-2 rounded-full bg-[#4CAF50] animate-pulse"></div>
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-xl font-semibold text-white block">
+                        {conversionProgress === 0 
+                          ? "Preparing your podcast..." 
+                          : conversionProgress < 30
+                          ? "Analyzing content..."
+                          : conversionProgress < 60
+                          ? "Converting to speech..."
+                          : conversionProgress < 90
+                          ? "Processing audio..."
+                          : "Finalizing..."}
+                      </span>
+                      <span className="text-sm text-gray-400">Please don't close this window</span>
+                    </div>
                   </div>
-                  <div className="bg-[#4CAF50]/20 px-4 py-2 rounded-full">
-                    <span className="text-2xl text-[#4CAF50] font-bold tracking-wider">
+                  <div className="bg-[#4CAF50]/10 px-6 py-3 rounded-full border border-[#4CAF50]/20">
+                    <span className="text-3xl text-[#4CAF50] font-bold tracking-wider">
                       {conversionProgress}%
                     </span>
                   </div>
                 </div>
-                <div className="w-full bg-gray-800/50 rounded-full h-4 overflow-hidden">
+                <div className="relative w-full bg-gray-800/50 rounded-full h-4 overflow-hidden">
                   <div 
-                    className="h-4 rounded-full transition-all duration-300 ease-out bg-gradient-to-r from-[#4CAF50] via-emerald-400 to-[#4CAF50]"
+                    className="absolute inset-0 bg-gradient-to-r from-[#4CAF50]/20 via-[#4CAF50]/10 to-transparent animate-pulse"
+                    style={{ transform: 'translateX(-50%)' }}
+                  />
+                  <div 
+                    className="relative h-full rounded-full transition-all duration-300 ease-out bg-gradient-to-r from-[#4CAF50] via-emerald-400 to-[#4CAF50]"
                     style={{ 
                       width: `${conversionProgress}%`,
                       backgroundSize: '200% 100%',
                       animation: 'gradient 2s linear infinite'
                     }}
-                  />
+                  >
+                    <div className="absolute right-0 top-0 h-full w-4 bg-white/20 blur-sm" />
+                  </div>
                 </div>
                 <p className="text-sm text-gray-300 mt-4 flex items-center gap-2">
                   <span className="inline-block w-2 h-2 rounded-full bg-[#4CAF50] animate-pulse"></span>
