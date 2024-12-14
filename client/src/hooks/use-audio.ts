@@ -88,8 +88,6 @@ export function useAudio(): AudioHookReturn {
       // Reset audio state and clear any previous errors
       audio.currentTime = 0;
       setCurrentTime(0);
-      audio.onerror = null;
-      audio.onended = null;
       
       // Construct the full audio URL with cache-busting
       const baseUrl = window.location.origin;
@@ -101,13 +99,47 @@ export function useAudio(): AudioHookReturn {
 
       // Set up new audio source with enhanced preload settings
       audio.preload = 'auto';
-      audio.crossOrigin = 'anonymous';
       audio.src = audioUrl;
+
+      // Set up error handling before loading
+      const loadPromise = new Promise<void>((resolve, reject) => {
+        const errorHandler = (e: Event) => {
+          console.error('Audio loading error:', e);
+          reject(new Error('Failed to load audio file'));
+        };
+        
+        const loadedHandler = () => {
+          resolve();
+        };
+        
+        audio.addEventListener('error', errorHandler, { once: true });
+        audio.addEventListener('canplaythrough', loadedHandler, { once: true });
+        
+        // Set timeout for loading
+        const timeout = setTimeout(() => {
+          audio.removeEventListener('error', errorHandler);
+          audio.removeEventListener('canplaythrough', loadedHandler);
+          reject(new Error('Audio loading timeout'));
+        }, 30000);
+        
+        // Cleanup on success
+        audio.addEventListener('canplaythrough', () => {
+          clearTimeout(timeout);
+        }, { once: true });
+      });
+
+      await loadPromise;
       
       // Add specific error handling for audio loading
       audio.onerror = (e) => {
         console.error('Audio loading error:', e);
-        throw new Error(`Failed to load audio file: ${e.toString()}`);
+        setIsPlaying(false);
+        setAudioData(null);
+        toast({
+          title: "Error",
+          description: "Failed to load audio file. Please try again.",
+          variant: "destructive",
+        });
       };
       
       // Set up error handling before loading
