@@ -79,112 +79,79 @@ export function useAudio(): AudioHookReturn {
 
       const audio = audioRef.current;
       
-      // Clean up existing audio and remove all event listeners
+      // Reset previous state
       if (isPlaying) {
         audio.pause();
-        setIsPlaying(false);
       }
-      
-      // Reset audio state and clear any previous errors
-      audio.currentTime = 0;
+      setIsPlaying(false);
       setCurrentTime(0);
+      audio.currentTime = 0;
       
-      // Construct the full audio URL with cache-busting
+      // Remove all previous event listeners
+      audio.removeEventListener('error', () => {});
+      audio.removeEventListener('canplaythrough', () => {});
+      audio.removeEventListener('canplay', () => {});
+      
+      // Construct the full audio URL
       const baseUrl = window.location.origin;
       const audioUrl = podcast.audioUrl.startsWith('http') 
         ? podcast.audioUrl 
-        : `${baseUrl}${podcast.audioUrl.startsWith('/') ? '' : '/'}${podcast.audioUrl}?t=${Date.now()}`;
+        : `${baseUrl}${podcast.audioUrl.startsWith('/') ? '' : '/'}${podcast.audioUrl}`;
 
       console.log('Playing audio from:', audioUrl);
 
-      // Set up new audio source with enhanced preload settings
+      // Update audio settings
       audio.preload = 'auto';
+      audio.crossOrigin = 'anonymous';
       audio.src = audioUrl;
 
-      // Set up error handling before loading
-      const loadPromise = new Promise<void>((resolve, reject) => {
+      // Create a promise to handle audio loading
+      await new Promise<void>((resolve, reject) => {
+        let hasError = false;
+
         const errorHandler = (e: Event) => {
+          hasError = true;
           console.error('Audio loading error:', e);
-          reject(new Error('Failed to load audio file'));
-        };
-        
-        const loadedHandler = () => {
-          resolve();
-        };
-        
-        audio.addEventListener('error', errorHandler, { once: true });
-        audio.addEventListener('canplaythrough', loadedHandler, { once: true });
-        
-        // Set timeout for loading
-        const timeout = setTimeout(() => {
           audio.removeEventListener('error', errorHandler);
           audio.removeEventListener('canplaythrough', loadedHandler);
-          reject(new Error('Audio loading timeout'));
-        }, 30000);
-        
-        // Cleanup on success
-        audio.addEventListener('canplaythrough', () => {
-          clearTimeout(timeout);
-        }, { once: true });
+          reject(new Error('Failed to load audio file'));
+        };
+
+        const loadedHandler = () => {
+          if (!hasError) {
+            audio.removeEventListener('error', errorHandler);
+            audio.removeEventListener('canplaythrough', loadedHandler);
+            resolve();
+          }
+        };
+
+        audio.addEventListener('error', errorHandler);
+        audio.addEventListener('canplaythrough', loadedHandler);
+
+        // Start loading the audio
+        audio.load();
       });
 
-      await loadPromise;
-      
-      // Add specific error handling for audio loading
-      audio.onerror = (e) => {
-        console.error('Audio loading error:', e);
-        setIsPlaying(false);
-        setAudioData(null);
-        toast({
-          title: "Error",
-          description: "Failed to load audio file. Please try again.",
-          variant: "destructive",
-        });
-      };
-      
-      // Set up error handling before loading
-      const errorHandler = (e: ErrorEvent) => {
-        console.error('Audio loading error:', e);
-        throw new Error('Failed to load audio file');
-      };
-      audio.addEventListener('error', errorHandler);
-      
+      // Update state after successful load
+      setAudioData(podcast);
+      if (!isNaN(audio.duration) && audio.duration !== Infinity) {
+        setDuration(audio.duration);
+      }
+
+      // Start playback
       try {
-        await audio.load();
-        
-        // Wait for audio to be ready with timeout
-        await new Promise<void>((resolve, reject) => {
-          const timeout = setTimeout(() => {
-            reject(new Error('Audio loading timeout'));
-          }, 15000); // Increased timeout for larger files
-
-          const handleCanPlay = () => {
-            clearTimeout(timeout);
-            audio.removeEventListener('canplay', handleCanPlay);
-            resolve();
-          };
-
-          audio.addEventListener('canplay', handleCanPlay);
-        });
-
-        // Update audio data only after successful load
-        setAudioData(podcast);
-        if (!isNaN(audio.duration) && audio.duration !== Infinity) {
-          setDuration(audio.duration);
-        }
-
-        // Start playback
         await audio.play();
         setIsPlaying(true);
-      } finally {
-        audio.removeEventListener('error', errorHandler);
+      } catch (playError) {
+        console.error('Playback error:', playError);
+        throw new Error('Failed to start playback');
       }
 
     } catch (error) {
       console.error('Error playing audio:', error);
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to play audio",
+        description: "Failed to play audio. Please try again.",
         variant: "destructive",
       });
       setIsPlaying(false);
