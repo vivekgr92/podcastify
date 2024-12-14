@@ -7,49 +7,62 @@ import { FileText, Upload, Headphones, Play, Plus } from "lucide-react";
 import { useDropzone } from "react-dropzone";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUser } from "../hooks/use-user";
+import { useConversion } from '../hooks/use-conversion';
 
 export default function HomePage() {
   const [, setLocation] = useLocation();
   const [file, setFile] = useState<File | null>(null);
   const { toast } = useToast();
-  const { convertToSpeech, isConverting, setIsConverting, progress, setProgress } = useTTS();
+  const { isConverting, conversionProgress, setIsConverting, setConversionProgress } = useConversion();
+  const { convertToSpeech } = useTTS();
   const queryClient = useQueryClient();
   const { user } = useUser();
+  const [recentConversions, setRecentConversions] = useState<any[]>(() => {
+    const stored = localStorage.getItem('recentConversions');
+    return stored ? JSON.parse(stored) : [];
+  });
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (file) {
       if (file.type === "text/plain" || file.type === "application/pdf") {
         setFile(file);
-        
+
         const formData = new FormData();
         formData.append('file', file);
-        
+
         try {
-          setProgress(0);
+          setConversionProgress(0);
           setIsConverting(true);
-          
+
           console.log('Starting file conversion...');
           const response = await fetch('/api/podcast', {
             method: 'POST',
             body: formData,
             credentials: 'include'
           });
-          
+
           if (!response.ok) {
             throw new Error('Failed to convert file');
           }
-          
+
           const podcast = await response.json();
           console.log('Conversion successful:', podcast);
           
+          const updatedConversions = [podcast, ...recentConversions];
+          setRecentConversions(updatedConversions);
+          localStorage.setItem('recentConversions', JSON.stringify(updatedConversions));
+
           toast({
             title: "Success",
             description: "Your file has been converted successfully!",
           });
-          
+
           await queryClient.invalidateQueries({ queryKey: ['podcasts'] });
-          setLocation('/library');
+          
+          // Don't navigate away, show the conversion in recent conversions
+          setIsConverting(false);
+          setConversionProgress(100);
         } catch (error) {
           console.error('File conversion error:', error);
           toast({
@@ -59,7 +72,7 @@ export default function HomePage() {
           });
         } finally {
           setIsConverting(false);
-          setProgress(0);
+          setConversionProgress(0);
         }
       } else {
         toast({
@@ -69,7 +82,7 @@ export default function HomePage() {
         });
       }
     }
-  }, [toast, setLocation, setIsConverting, setProgress, queryClient]);
+  }, [toast, setLocation, setIsConverting, setConversionProgress, queryClient]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -82,7 +95,9 @@ export default function HomePage() {
     multiple: false
   });
 
-  if (user) {
+  const authenticated = Boolean(user);
+  
+  if (authenticated) {
     return (
       <div className="min-h-screen bg-black text-white">
         <div className="max-w-4xl mx-auto px-6 py-12">
@@ -91,8 +106,8 @@ export default function HomePage() {
             <p className="text-gray-400">Upload any article and convert it into a natural-sounding podcast in seconds</p>
           </div>
 
-          <div 
-            {...getRootProps()} 
+          <div
+            {...getRootProps()}
             className={`border-2 border-dashed rounded-lg p-16 mb-12 transition-colors bg-gray-900/50
               ${isDragActive ? 'border-[#4CAF50] bg-[#4CAF50]/10' : 'border-gray-700 hover:border-[#4CAF50]'}`}
           >
@@ -132,12 +147,12 @@ export default function HomePage() {
             <div className="w-full bg-gray-900 rounded-lg p-4 mb-12">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-gray-400">Converting to podcast...</span>
-                <span className="text-sm text-gray-400">{Math.round(progress)}%</span>
+                <span className="text-sm text-gray-400">{Math.round(conversionProgress)}%</span>
               </div>
               <div className="w-full bg-gray-800 rounded-full h-2">
-                <div 
-                  className="bg-[#4CAF50] h-2 rounded-full transition-all duration-300" 
-                  style={{ width: `${progress}%` }}
+                <div
+                  className="bg-[#4CAF50] h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${conversionProgress}%` }}
                 />
               </div>
             </div>
@@ -145,9 +160,29 @@ export default function HomePage() {
 
           <div className="bg-gray-900/50 rounded-lg p-6">
             <h2 className="text-xl font-bold mb-4">Recent Conversions</h2>
-            <div className="text-gray-400 text-sm">
-              Your converted podcasts will appear here
-            </div>
+            {recentConversions.length > 0 ? (
+              <div className="space-y-4">
+                {recentConversions.map((podcast, index) => (
+                  <div key={index} className="flex items-center justify-between bg-gray-800 p-4 rounded-lg">
+                    <div>
+                      <h3 className="font-medium">{podcast.title}</h3>
+                      <p className="text-sm text-gray-400">Converted successfully</p>
+                    </div>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setLocation('/library')}
+                    >
+                      View in Library
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-gray-400 text-sm">
+                Your converted podcasts will appear here
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -177,15 +212,15 @@ export default function HomePage() {
             Convert any article into a professional, natural-sounding podcast in seconds with our AI-powered platform
           </p>
           <div className="flex justify-center gap-4">
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               onClick={() => setLocation('/auth')}
               className="bg-[#4CAF50] hover:bg-[#45a049] text-lg px-8"
             >
               Get Started Free
             </Button>
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               variant="outline"
               onClick={() => setLocation('/pricing')}
               className="text-lg px-8"
@@ -255,8 +290,8 @@ export default function HomePage() {
           <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
             Join thousands of content creators who are already using Podcastify to reach their audience in new ways.
           </p>
-          <Button 
-            size="lg" 
+          <Button
+            size="lg"
             onClick={() => setLocation('/auth')}
             className="bg-[#4CAF50] hover:bg-[#45a049] text-lg px-12"
           >
