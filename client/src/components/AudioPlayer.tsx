@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Play, Pause, SkipBack, SkipForward, Volume2, Volume1, VolumeX, Download } from "lucide-react";
@@ -25,10 +25,19 @@ export default function AudioPlayer() {
       setVolume(0);
       setAudioVolume(0);
     } else {
-      setVolume(prevVolume);
-      setAudioVolume(prevVolume);
+      const volumeToRestore = prevVolume || 100;
+      setVolume(volumeToRestore);
+      setAudioVolume(volumeToRestore);
     }
   };
+  
+  useEffect(() => {
+    // Reset volume when new audio is loaded
+    if (audioData) {
+      setVolume(prevVolume || 100);
+      setAudioVolume(prevVolume || 100);
+    }
+  }, [audioData, prevVolume]);
 
   const VolumeIcon = volume === 0 ? VolumeX : volume < 50 ? Volume1 : Volume2;
 
