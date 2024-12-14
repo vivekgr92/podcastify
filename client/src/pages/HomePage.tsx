@@ -41,58 +41,161 @@ export default function HomePage() {
         
         try {
           // Reset states and cleanup existing EventSource
-          if (eventSource) {
-            eventSource.close();
-            setEventSource(null);
-          }
+          const cleanupExistingSource = () => {
+            if (eventSource) {
+              if (eventSource.readyState !== EventSource.CLOSED) {
+                console.log('Closing existing EventSource connection');
+                eventSource.close();
+              }
+              setEventSource(null);
+            }
+          };
+
+          cleanupExistingSource();
           setConversionProgress(0);
           setIsConverting(true);
           
           // Create new EventSource for progress tracking
+          console.log('Initializing new EventSource connection');
           const source = new EventSource('/api/podcast/progress', { 
             withCredentials: true 
           });
+
+          // Track connection state and retries
+          let isConnected = false;
+          let retryCount = 0;
+          const MAX_RETRIES = 3;
           
-          source.onopen = () => {
-            console.log('Progress tracking connected');
-            setConversionProgress(1);
-          };
-          
-          source.onmessage = (event) => {
-            try {
-              const data = JSON.parse(event.data);
-              console.log('Progress update:', data);
-              
-              if (data && typeof data.progress === 'number') {
-                const progress = Math.min(Math.round(data.progress), 100);
-                setConversionProgress(progress);
-                
-                if (progress >= 100) {
+          const setupConnection = () => {
+            // Set initial connection timeout
+            const connectionTimeout = setTimeout(() => {
+              if (source.readyState !== EventSource.OPEN) {
+                console.error('EventSource connection timeout');
+                if (retryCount < MAX_RETRIES) {
+                  retryCount++;
+                  console.log(`Retrying connection (${retryCount}/${MAX_RETRIES})`);
                   source.close();
-                  setEventSource(null);
-                  // Keep 100% visible briefly before resetting
-                  setTimeout(() => {
-                    setIsConverting(false);
-                    setConversionProgress(0);
-                  }, 1000);
+                  setupConnection();
+                } else {
+                  handleError(source, "Failed to establish connection after multiple attempts");
                 }
               }
-            } catch (error) {
-              console.error('Progress parsing error:', error);
-              handleError(source, "Error processing progress update");
-            }
+            }, 5000);
+
+            source.onopen = () => {
+              console.log('Progress tracking connected');
+              isConnected = true;
+              retryCount = 0;
+              setConversionProgress(1);
+              clearTimeout(connectionTimeout);
+            };
+
+            source.onmessage = (event) => {
+              try {
+                if (!event.data) {
+                  console.warn('Received empty event data');
+                  return;
+                }
+
+                let data;
+                try {
+                  data = JSON.parse(event.data);
+                } catch (parseError) {
+                  console.error('Failed to parse event data:', event.data, parseError);
+                  return;
+                }
+
+                console.log('Progress update:', data);
+                
+                if (data && typeof data.progress === 'number') {
+                  const progress = Math.min(Math.round(data.progress), 100);
+                  setConversionProgress(progress);
+                  
+                  if (progress >= 100 || data.status === 'completed') {
+                    console.log('Conversion completed');
+                    source.close();
+                    setEventSource(null);
+                    // Keep 100% visible briefly before resetting
+                    setTimeout(() => {
+                      setIsConverting(false);
+                      setConversionProgress(0);
+                    }, 1500);
+                  }
+                }
+              } catch (error) {
+                console.error('Progress handling error:', error);
+                if (retryCount < MAX_RETRIES) {
+                  retryCount++;
+                  console.log(`Retrying after error (${retryCount}/${MAX_RETRIES})`);
+                  source.close();
+                  setupConnection();
+                } else {
+                  handleError(source, "Error processing progress updates");
+                }
+              }
+            };
+
+            source.onerror = (error) => {
+              console.error('Progress tracking error:', error);
+              
+              if (isConnected) {
+                toast({
+                  title: "Warning",
+                  description: "Progress tracking connection lost. Attempting to reconnect...",
+                  variant: "destructive",
+                });
+              }
+              
+              if (source.readyState === EventSource.CLOSED) {
+                if (retryCount < MAX_RETRIES) {
+                  retryCount++;
+                  console.log(`Retrying after error (${retryCount}/${MAX_RETRIES})`);
+                  setTimeout(() => setupConnection(), 1000 * retryCount);
+                } else {
+                  handleError(source, "Connection lost after multiple retry attempts");
+                }
+              }
+            };
           };
+
+          setupConnection();
           
           source.onerror = (error: Event) => {
             console.error('Progress tracking error:', error);
-            handleError(source, "Lost connection to progress tracker. Please try again.");
+            
+            // Only show error if we were previously connected
+            if (isConnected) {
+              toast({
+                title: "Warning",
+                description: "Progress tracking connection lost. Trying to reconnect...",
+                variant: "destructive",
+              });
+            }
+            
+            // If the connection is closed (not just temporarily disconnected)
+            if (source.readyState === EventSource.CLOSED) {
+              console.log('EventSource connection closed');
+              isConnected = false;
+              source.close();
+              setEventSource(null);
+              setIsConverting(false);
+              
+              toast({
+                title: "Error",
+                description: "Lost connection to progress tracker. Please try again.",
+                variant: "destructive",
+              });
+            }
           };
           
           setEventSource(source);
           
           // Helper function to handle errors
           const handleError = (source: EventSource, message: string) => {
-            source.close();
+            console.log('Handling error:', message);
+            if (source && source.readyState !== EventSource.CLOSED) {
+              source.close();
+            }
             setEventSource(null);
             setIsConverting(false);
             setConversionProgress(0);
@@ -102,6 +205,19 @@ export default function HomePage() {
               variant: "destructive",
             });
           };
+
+          // Cleanup function for component unmount
+          const cleanup = () => {
+            if (source && source.readyState !== EventSource.CLOSED) {
+              console.log('Cleaning up EventSource connection');
+              source.close();
+            }
+          };
+
+          // Add cleanup to component unmount
+          useEffect(() => {
+            return cleanup;
+          }, []);
 
           try {
             const response = await fetch('/api/podcast', {
