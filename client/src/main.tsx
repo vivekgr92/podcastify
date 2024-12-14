@@ -10,10 +10,13 @@ import AuthPage from "./pages/AuthPage";
 import LibraryPage from "./pages/LibraryPage";
 import PricingPage from "./pages/PricingPage";
 import AdminPage from "./pages/AdminPage";
+import ProfilePage from "./pages/ProfilePage";
+import BillingPage from "./pages/BillingPage";
 import { Loader2 } from "lucide-react";
 import { useUser } from "./hooks/use-user";
 import AudioPlayer from "./components/AudioPlayer";
 import Sidebar from "./components/Sidebar";
+
 
 function Router() {
   const { user, isLoading } = useUser();
@@ -47,10 +50,10 @@ function Router() {
                   <PricingPage />
                 </Route>
                 <Route path="/profile">
-                  {!user ? <AuthPage /> : <div>Profile Page Coming Soon</div>}
+                  {!user ? <AuthPage /> : <ProfilePage />}
                 </Route>
                 <Route path="/billing">
-                  {!user ? <AuthPage /> : <div>Billing Page Coming Soon</div>}
+                  {!user ? <AuthPage /> : <BillingPage />}
                 </Route>
                 <Route path="/admin">
                   {!user?.isAdmin ? <HomePage /> : <AdminPage />}
