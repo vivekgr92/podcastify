@@ -11,26 +11,18 @@ import { useUser } from "../hooks/use-user";
 export default function HomePage() {
   const [, setLocation] = useLocation();
   const [file, setFile] = useState<File | null>(null);
-  const [uploadState, setUploadState] = useState<{
-    isConverting: boolean;
-    progress: number;
-    status: string;
-  }>({
-    isConverting: false,
-    progress: 0,
-    status: "Ready"
-  });
+  const [isConverting, setIsConverting] = useState(false);
+  const [conversionProgress, setConversionProgress] = useState(0);
   const [eventSource, setEventSource] = useState<EventSource | null>(null);
   const { toast } = useToast();
   const { user } = useUser();
 
-  // Cleanup EventSource on unmount
+  // Cleanup EventSource on unmount or when conversion is complete
   useEffect(() => {
     return () => {
       if (eventSource) {
         console.log('Cleaning up EventSource');
         eventSource.close();
-        setEventSource(null);
       }
     };
   }, [eventSource]);
@@ -48,76 +40,93 @@ export default function HomePage() {
         formData.append('file', file);
         
         try {
-          // Reset state and close any existing EventSource
+          setConversionProgress(0);
+          setIsConverting(true);
+          
+          console.log('Starting file conversion...');
+          
+          // Close any existing EventSource
           if (eventSource) {
             eventSource.close();
-            setEventSource(null);
           }
           
-          setUploadState({
-            isConverting: true,
-            progress: 0,
-            status: "Starting conversion..."
-          });
-
-          // Create new EventSource for progress tracking
-          const source = new EventSource('/api/podcast/progress', { 
+          // Set up SSE for progress tracking with proper error handling and cleanup
+          const newEventSource = new EventSource('/api/podcast/progress', { 
             withCredentials: true 
           });
           
-          setEventSource(source);
-
-          source.onopen = () => {
-            console.log('Progress tracking connected');
-            setUploadState(prev => ({
-              ...prev,
-              status: "Connected to server..."
-            }));
-          };
-
-          source.onmessage = (event) => {
+          console.log('Setting up new EventSource for progress tracking');
+          setEventSource(newEventSource);
+          
+          // Handle incoming messages
+          newEventSource.onmessage = (event) => {
             try {
               const data = JSON.parse(event.data);
-              const progress = Math.min(Math.round(data.progress || 0), 100);
-              console.log('Progress update:', progress);
+              console.log('Received progress event:', data);
               
-              setUploadState(prev => ({
-                ...prev,
-                progress,
-                status: progress < 100 ? `Converting... ${progress}%` : "Finalizing..."
-              }));
-
-              if (progress >= 100) {
-                source.close();
-                setEventSource(null);
+              if (data && typeof data.progress === 'number') {
+                const progress = Math.min(Math.round(data.progress), 100);
+                console.log('Updating progress:', progress);
+                setConversionProgress(progress);
+                
+                if (progress >= 100) {
+                  console.log('Conversion complete');
+                  newEventSource.close();
+                  setEventSource(null);
+                  setIsConverting(false);
+                  setConversionProgress(100);
+                }
               }
             } catch (error) {
-              console.error('Progress tracking error:', error);
-              source.close();
-              setEventSource(null);
-              setUploadState(prev => ({
-                ...prev,
-                status: "Error tracking progress"
-              }));
+              console.error('Failed to parse progress data:', error);
+              toast({
+                title: "Error",
+                description: "Failed to track conversion progress",
+                variant: "destructive",
+              });
             }
           };
-
-          source.onerror = () => {
-            console.error('EventSource error');
-            source.close();
+          
+          // Handle connection opened
+          newEventSource.onopen = () => {
+            console.log('Progress tracking connected');
+            setIsConverting(true);
+            setConversionProgress(0);
+          };
+          
+          // Handle errors
+          newEventSource.onerror = (error) => {
+            console.error('Progress tracking error:', error);
+            newEventSource.close();
             setEventSource(null);
-            setUploadState(prev => ({
-              ...prev,
-              status: "Connection lost",
-              isConverting: false
-            }));
+            setIsConverting(false);
             toast({
               title: "Error",
               description: "Lost connection to progress tracker",
-              variant: "destructive"
+              variant: "destructive",
             });
           };
-          
+
+          newEventSource.onerror = (error) => {
+            console.error('EventSource error:', error);
+            // Only close and cleanup if we're not already in the process of conversion
+            if (isConverting) {
+              newEventSource.close();
+              setEventSource(null);
+              setIsConverting(false);
+              setConversionProgress(0);
+              toast({
+                title: "Error",
+                description: "Lost connection to conversion progress tracker",
+                variant: "destructive",
+              });
+            }
+          };
+
+          // Add onopen handler to confirm connection
+          newEventSource.onopen = () => {
+            console.log('Progress tracking connected');
+          };
 
           const response = await fetch('/api/podcast', {
             method: 'POST',
@@ -131,17 +140,11 @@ export default function HomePage() {
           
           const podcast = await response.json();
           console.log('Conversion successful:', podcast);
-          
-          setUploadState(prev => ({
-            ...prev,
-            progress: 100,
-            status: "Conversion complete!",
-            isConverting: false
-          }));
+          setConversionProgress(100);
           
           toast({
             title: "Success",
-            description: "Your file has been converted successfully!"
+            description: "Your file has been converted successfully!",
           });
           
           await queryClient.invalidateQueries({ queryKey: ['podcasts'] });
@@ -154,7 +157,13 @@ export default function HomePage() {
             variant: "destructive",
           });
         } finally {
-          setUploadState({isConverting:false, progress:0, status: "Ready"});
+          if (eventSource) {
+            eventSource.close();
+            setEventSource(null);
+          }
+          setIsConverting(false);
+          setConversionProgress(0);
+          setFile(null);
         }
       } else {
         toast({
@@ -200,27 +209,47 @@ export default function HomePage() {
               </div>
             </div>
 
-            {uploadState.isConverting && (
+            {isConverting && (
               <div className="w-full bg-gray-900/90 backdrop-blur rounded-lg p-6 mb-12 shadow-xl">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div className="animate-spin rounded-full h-6 w-6 border-2 border-[#4CAF50] border-t-transparent"></div>
-                    <span className="text-xl text-white font-semibold">
-                      Converting... {uploadState.progress}%
+                    <div className="animate-spin rounded-full h-6 w-6 border-3 border-[#4CAF50] border-t-transparent"></div>
+                    <span className="text-lg text-white font-semibold">
+                      {conversionProgress === 0 
+                        ? "Preparing your podcast..." 
+                        : conversionProgress < 100 
+                        ? "Converting article to podcast" 
+                        : "Finalizing your podcast..."}
+                    </span>
+                  </div>
+                  <div className="bg-[#4CAF50]/20 px-4 py-2 rounded-full">
+                    <span className="text-2xl text-[#4CAF50] font-bold tracking-wider">
+                      {conversionProgress}%
                     </span>
                   </div>
                 </div>
-                <div className="relative w-full bg-gray-800/50 rounded-full h-8 overflow-hidden">
+                <div className="w-full bg-gray-800/50 rounded-full h-4 overflow-hidden">
                   <div 
-                    className="absolute top-0 left-0 h-full rounded-full transition-all duration-300 ease-out bg-[#4CAF50]"
-                    style={{ width: `${uploadState.progress}%` }}
+                    className="h-4 rounded-full transition-all duration-300 ease-out bg-gradient-to-r from-[#4CAF50] via-emerald-400 to-[#4CAF50]"
+                    style={{ 
+                      width: `${conversionProgress}%`,
+                      backgroundSize: '200% 100%',
+                      animation: 'gradient 2s linear infinite'
+                    }}
                   />
-                  <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-                    <span className="text-white font-bold z-10">
-                      {uploadState.progress}% Complete
-                    </span>
-                  </div>
                 </div>
+                <p className="text-sm text-gray-300 mt-4 flex items-center gap-2">
+                  <span className="inline-block w-2 h-2 rounded-full bg-[#4CAF50] animate-pulse"></span>
+                  {conversionProgress === 0 
+                    ? "Initializing conversion process..."
+                    : conversionProgress < 30 
+                    ? "Analyzing article content..."
+                    : conversionProgress < 60 
+                    ? "Converting text to speech..."
+                    : conversionProgress < 90 
+                    ? "Processing audio..."
+                    : "Almost done..."}
+                </p>
               </div>
             )}
 
