@@ -258,31 +258,73 @@ export function registerRoutes(app: Express) {
   });
 
   // SSE endpoint for TTS progress updates
-  app.get("/api/tts/progress", (req, res) => {
+  app.get("/api/podcast/progress", (req, res) => {
     console.log('Client connected to SSE endpoint');
     
-    res.writeHead(200, {
-      "Content-Type": "text/event-stream",
-      "Cache-Control": "no-cache",
-      "Connection": "keep-alive",
-      "Access-Control-Allow-Origin": "*"
-    });
+    // Set headers for SSE
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    
+    // Flush headers immediately
+    res.flushHeaders();
 
     // Send initial progress
-    res.write(`data: ${JSON.stringify({ progress: 0 })}\n\n`);
+    const initialData = JSON.stringify({ progress: 0, status: 'started' });
+    res.write(`data: ${initialData}\n\n`);
 
     const sendProgress = (progress: number) => {
-      console.log('Sending progress update:', progress);
-      res.write(`data: ${JSON.stringify({ progress })}\n\n`);
+      if (!res.writableEnded) {
+        try {
+          const data = JSON.stringify({ 
+            progress: Math.min(Math.round(progress), 100),
+            status: progress >= 100 ? 'completed' : 'processing'
+          });
+          console.log('Sending progress update:', data);
+          res.write(`data: ${data}\n\n`);
+        } catch (error) {
+          console.error('Error sending progress:', error);
+          cleanup();
+        }
+      }
     };
+
+    const cleanup = () => {
+      console.log('Cleaning up SSE connection');
+      ttsService.removeProgressListener(sendProgress);
+      if (!res.writableEnded) {
+        try {
+          res.end();
+        } catch (error) {
+          console.error('Error ending response:', error);
+        }
+      }
+    };
+
+    // Keep connection alive
+    const keepAlive = setInterval(() => {
+      if (!res.writableEnded) {
+        res.write(': keepalive\n\n');
+      }
+    }, 30000);
 
     // Add this client to TTSService progress listeners
     ttsService.addProgressListener(sendProgress);
 
+    // Handle errors
+    req.on('error', (error) => {
+      console.error('SSE request error:', error);
+      clearInterval(keepAlive);
+      cleanup();
+    });
+
     // Remove listener when client disconnects
     req.on("close", () => {
       console.log('Client disconnected from SSE endpoint');
-      ttsService.removeProgressListener(sendProgress);
+      clearInterval(keepAlive);
+      cleanup();
     });
   });
 
