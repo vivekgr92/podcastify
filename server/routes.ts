@@ -287,6 +287,24 @@ export function registerRoutes(app: Express) {
   });
 
   // Text-to-speech conversion
+  // Calculate pricing estimate
+  app.post("/api/podcast/pricing", async (req, res) => {
+    try {
+      if (!req.user) return res.status(401).send("Not authenticated");
+
+      const { text } = req.body;
+      if (!text) {
+        return res.status(400).send("Text content is required");
+      }
+
+      const pricingDetails = await ttsService.calculatePricing(text);
+      res.json(pricingDetails);
+    } catch (error) {
+      console.error("Pricing calculation error:", error);
+      res.status(500).send("Failed to calculate pricing");
+    }
+  });
+
   app.post("/api/podcast", upload.single("file"), async (req, res) => {
     try {
       if (!req.user) return res.status(401).send("Not authenticated");
