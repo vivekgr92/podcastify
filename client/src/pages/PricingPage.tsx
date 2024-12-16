@@ -96,7 +96,7 @@ export default function PricingPage() {
                 ))}
               </ul>
 
-              <div className="mt-auto">
+              <div className="mt-auto pt-4">
                 <Button
                   className={`w-full ${
                     plan.popular ? "bg-[#4CAF50] hover:bg-[#45a049]" : ""
