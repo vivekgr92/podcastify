@@ -27,6 +27,21 @@ interface GenerationResult {
   response: GenerationResponse;
 }
 
+interface PricingDetails {
+  inputTokens: number;
+  outputTokens: number;
+  totalCost: number;
+  breakdown: {
+    inputCost: number;
+    outputCost: number;
+  };
+}
+
+const PRICING = {
+  INPUT_TOKEN_RATE: 0.0005 / 1000, // $0.0005 per 1K tokens
+  OUTPUT_TOKEN_RATE: 0.0005 / 1000, // $0.0005 per 1K tokens
+};
+
 const SPEAKERS: Speaker[] = ["Joe", "Sarah"];
 
 // Voice mapping for different speakers
@@ -145,21 +160,74 @@ export class TTSService {
   private async analyzeText(
     text: string,
   ): Promise<{ characters: number; words: number; tokens: number }> {
-    // Calculate the number of characters (including spaces)
-    const characters = text.length;
+    try {
+      const model = this.vertexAI.getGenerativeModel({
+        model: "gemini-1.5-flash-002",
+      });
 
-    // Calculate the number of words (split by spaces and filter out empty strings)
-    const words = text.split(/\s+/).filter((word) => word.length > 0).length;
+      // Get actual token count from Vertex AI
+      const tokenCount = await model.countTokens({
+        contents: [{ role: "user", parts: [{ text }] }],
+      });
 
-    // Estimate the number of tokens (using average 4 characters per token heuristic)
-    const tokens = Math.ceil(characters / 4);
+      const characters = text.length;
+      const words = text.split(/\s+/).filter((word) => word.length > 0).length;
 
-    // Log the analysis results
-    await logger.debug(
-      `Text analysis: characters=${characters}, words=${words}, tokens=${tokens}`,
-    );
+      await logger.debug(
+        `Text analysis: characters=${characters}, words=${words}, tokens=${tokenCount.totalTokens}`,
+      );
 
-    return { characters, words, tokens };
+      return { 
+        characters, 
+        words, 
+        tokens: tokenCount.totalTokens 
+      };
+    } catch (error) {
+      // Fallback to estimation if token counting fails
+      const characters = text.length;
+      const words = text.split(/\s+/).filter((word) => word.length > 0).length;
+      const tokens = Math.ceil(characters / 4);
+
+      await logger.warn(
+        `Failed to get exact token count, using estimation: ${error instanceof Error ? error.message : String(error)}`,
+      );
+
+      return { characters, words, tokens };
+    }
+  }
+
+  async calculatePricing(text: string): Promise<PricingDetails> {
+    try {
+      // Analyze input text
+      const { tokens: inputTokens } = await this.analyzeText(text);
+
+      // Estimate output tokens (conversation is typically 2-3x longer than input)
+      const estimatedOutputTokens = inputTokens * 2.5;
+
+      // Calculate costs
+      const inputCost = inputTokens * PRICING.INPUT_TOKEN_RATE;
+      const outputCost = estimatedOutputTokens * PRICING.OUTPUT_TOKEN_RATE;
+      const totalCost = inputCost + outputCost;
+
+      await logger.info(
+        `Pricing calculation: input_tokens=${inputTokens}, estimated_output_tokens=${estimatedOutputTokens}, total_cost=$${totalCost.toFixed(4)}`,
+      );
+
+      return {
+        inputTokens,
+        outputTokens: Math.ceil(estimatedOutputTokens),
+        totalCost,
+        breakdown: {
+          inputCost,
+          outputCost,
+        },
+      };
+    } catch (error) {
+      await logger.error(
+        `Error calculating pricing: ${error instanceof Error ? error.message : String(error)}`,
+      );
+      throw new Error('Failed to calculate pricing');
+    }
   }
 
   private async cleanGeneratedText(
@@ -370,7 +438,9 @@ export class TTSService {
         contents: [{ role: "user", parts: [{ text }] }],
       });
 
-      await logger.info(`\n--- Token Count ---\n${tokenCount}`);
+      await logger.info(
+        `\n--- Token Count --\n${JSON.stringify(tokenCount, null, 2)}`,
+      );
 
       const chunks = this.splitTextIntoChunks(text);
 
