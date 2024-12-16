@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useTTS } from "../hooks/use-tts";
 import { FileText, Upload, Headphones, Play, Plus, Menu } from "lucide-react";
+import { Logo } from "../components/Logo";
 import { useDropzone } from "react-dropzone";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUser } from "../hooks/use-user";
@@ -163,7 +164,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-black text-white">
       <nav className="relative flex justify-between items-center p-4 md:p-6">
-        <h1 className="text-xl font-bold text-[#4CAF50]">Podcastify</h1>
+        <Logo />
         
         {/* Mobile Menu Button */}
         <Button
