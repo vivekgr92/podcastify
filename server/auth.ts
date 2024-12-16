@@ -135,6 +135,9 @@ export function setupAuth(app: Express) {
 
       // Hash password and create user
       const hashedPassword = await crypto.hash(password);
+      const isAdmin = email.endsWith('@admin.com'); // Set admin flag for @admin.com emails
+      console.log('Creating user with admin status:', isAdmin);
+      
       const [newUser] = await db
         .insert(users)
         .values({
@@ -142,14 +145,21 @@ export function setupAuth(app: Express) {
           email,
           displayName,
           password: hashedPassword,
-          isAdmin: email.endsWith('@admin.com') // Make users with @admin.com email admins
+          isAdmin
         })
         .returning();
+
+      console.log('Created user:', { ...newUser, isAdmin: newUser.isAdmin });
 
       // Log in the new user
       req.login(newUser, (err) => {
         if (err) return next(err);
-        return res.json({ id: newUser.id, username: newUser.username });
+        return res.json({ 
+          id: newUser.id, 
+          username: newUser.username,
+          email: newUser.email,
+          isAdmin: newUser.isAdmin 
+        });
       });
     } catch (error) {
       next(error);
@@ -163,7 +173,12 @@ export function setupAuth(app: Express) {
 
       req.login(user, (err) => {
         if (err) return next(err);
-        return res.json({ id: user.id, username: user.username });
+        return res.json({ 
+          id: user.id, 
+          username: user.username,
+          email: user.email,
+          isAdmin: user.isAdmin 
+        });
       });
     })(req, res, next);
   });
