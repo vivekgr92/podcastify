@@ -67,7 +67,7 @@ export default function PricingPage() {
           {plans.map((plan) => (
             <div
               key={plan.name}
-              className={`relative rounded-2xl p-8 ${
+              className={`relative rounded-2xl p-8 flex flex-col h-full ${
                 plan.popular
                   ? "border-2 border-[#4CAF50] bg-[#4CAF50]/10"
                   : "border border-gray-800 bg-gray-900"
@@ -96,15 +96,17 @@ export default function PricingPage() {
                 ))}
               </ul>
 
-              <Button
-                className={`w-full ${
-                  plan.popular ? "bg-[#4CAF50] hover:bg-[#45a049]" : ""
-                }`}
-                variant={plan.popular ? "default" : "outline"}
-                onClick={() => setLocation('/auth/signup')}
-              >
-                {plan.buttonText}
-              </Button>
+              <div className="mt-auto">
+                <Button
+                  className={`w-full ${
+                    plan.popular ? "bg-[#4CAF50] hover:bg-[#45a049]" : ""
+                  }`}
+                  variant={plan.popular ? "default" : "outline"}
+                  onClick={() => setLocation('/auth/signup')}
+                >
+                  {plan.buttonText}
+                </Button>
+              </div>
             </div>
           ))}
         </div>
