@@ -103,7 +103,7 @@ export default function BillingPage() {
         {plans.map((plan) => (
           <div
             key={plan.name}
-            className={`relative rounded-2xl p-8 flex flex-col h-full ${
+            className={`relative rounded-2xl p-8 flex flex-col justify-between ${
               plan.popular
                 ? "border-2 border-[#4CAF50] bg-[#4CAF50]/10"
                 : "border border-gray-800 bg-gray-900"
@@ -132,7 +132,7 @@ export default function BillingPage() {
               ))}
             </ul>
 
-            <div className="mt-8">
+            <div className="mt-auto">
               <Button
                 className={`w-full ${
                   plan.popular ? "bg-[#4CAF50] hover:bg-[#45a049]" : ""
