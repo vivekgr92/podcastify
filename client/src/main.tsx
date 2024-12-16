@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+import { StrictMode, useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { Switch, Route } from "wouter";
 import "./index.css";
@@ -20,6 +20,12 @@ import Sidebar from "./components/Sidebar";
 
 function Router() {
   const { user, isLoading } = useUser();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location]);
 
   if (isLoading) {
     return (
@@ -31,8 +37,31 @@ function Router() {
 
   return (
     <>
-      <div className="flex min-h-screen">
-        {user && <Sidebar />}
+      <div className="flex min-h-screen relative">
+        {user && (
+          <>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden fixed top-4 left-4 z-50"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              <Menu className="h-6 w-6" />
+            </Button>
+            <>
+              <div
+                className={`fixed inset-0 bg-background/80 backdrop-blur-sm ${
+                  isMobileMenuOpen ? 'block' : 'hidden'
+                } md:hidden z-40`}
+                onClick={() => setIsMobileMenuOpen(false)}
+              />
+              <Sidebar
+                isMobileMenuOpen={isMobileMenuOpen}
+                setIsMobileMenuOpen={setIsMobileMenuOpen}
+              />
+            </>
+          </>
+        )}
         <div className="flex-1">
           <div className="flex flex-col min-h-screen pb-24">
             <div className="flex-1">
