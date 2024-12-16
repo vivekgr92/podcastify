@@ -135,7 +135,7 @@ export default function BillingPage() {
 
             <div className="mt-auto pt-4">
               <Button
-                className={`w-full ${
+                className={`w-full h-10 ${
                   plan.popular ? "bg-[#4CAF50] hover:bg-[#45a049]" : ""
                 }`}
                 variant={plan.popular ? "default" : "outline"}

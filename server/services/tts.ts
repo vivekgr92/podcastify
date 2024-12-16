@@ -442,6 +442,34 @@ export class TTSService {
         `\n--- Token Count --\n${JSON.stringify(tokenCount, null, 2)}`,
       );
 
+      // Calculate pricing based on token count using Vertex AI pricing
+      const inputTokens = tokenCount.totalTokens;
+      const estimatedOutputTokens = Math.ceil(inputTokens * 2.5); // Conversation typically 2.5x longer
+      
+      // Vertex AI pricing: $0.0005 per 1K tokens
+      const inputCost = (inputTokens / 1000) * PRICING.INPUT_TOKEN_RATE;
+      const outputCost = (estimatedOutputTokens / 1000) * PRICING.OUTPUT_TOKEN_RATE;
+      const totalCost = inputCost + outputCost;
+      
+      // Log detailed pricing breakdown
+      await logger.info(
+        `\n--- Vertex AI Pricing Details ---\n` +
+        `Input Tokens: ${inputTokens}\n` +
+        `Input Cost: $${inputCost.toFixed(4)} (${PRICING.INPUT_TOKEN_RATE}$ per 1K tokens)\n` +
+        `Estimated Output Tokens: ${estimatedOutputTokens}\n` +
+        `Output Cost: $${outputCost.toFixed(4)} (${PRICING.OUTPUT_TOKEN_RATE}$ per 1K tokens)\n` +
+        `Total Cost: $${totalCost.toFixed(4)}\n`
+      );
+
+      await logger.info(
+        `\n--- Pricing Details ---\n` +
+        `Input Tokens: ${inputTokens}\n` +
+        `Estimated Output Tokens: ${Math.ceil(estimatedOutputTokens)}\n` +
+        `Input Cost: $${inputCost.toFixed(4)}\n` +
+        `Output Cost: $${outputCost.toFixed(4)}\n` +
+        `Total Cost: $${totalCost.toFixed(4)}\n`
+      );
+
       const chunks = this.splitTextIntoChunks(text);
 
       // Process each chunk and generate conversation
