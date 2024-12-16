@@ -178,7 +178,9 @@ export function setupAuth(app: Express) {
   app.get("/api/user", (req, res) => {
     if (req.isAuthenticated()) {
       const { password, ...userWithoutPassword } = req.user;
-      return res.json(userWithoutPassword);
+      // Ensure isAdmin is included in the response
+      console.log('User data:', { ...userWithoutPassword, isAdmin: req.user.isAdmin });
+      return res.json({ ...userWithoutPassword, isAdmin: req.user.isAdmin });
     }
     res.status(401).send("Not authenticated");
   });
