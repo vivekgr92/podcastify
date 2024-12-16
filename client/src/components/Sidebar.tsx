@@ -50,7 +50,7 @@ export default function Sidebar({ isMobileMenuOpen = false, setIsMobileMenuOpen 
   return (
     <div className={`${
       isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-    } md:translate-x-0 fixed md:static top-0 left-0 w-64 h-screen bg-background border-r flex flex-col transition-transform duration-300 z-50`}>
+    } md:translate-x-0 fixed md:static top-0 left-0 w-64 h-screen bg-background border-r flex flex-col transition-all duration-300 ease-in-out shadow-lg md:shadow-none z-50`}>
       <div className="p-6">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-xl font-bold">PodcastApp</h1>
