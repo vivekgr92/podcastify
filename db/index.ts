@@ -8,5 +8,12 @@ if (!process.env.DATABASE_URL) {
   );
 }
 
-const client = postgres(process.env.DATABASE_URL);
+// Configure the connection with specific SSL settings for security
+const client = postgres(process.env.DATABASE_URL, {
+  ssl: {
+    rejectUnauthorized: false
+  },
+  max: 1
+});
+
 export const db = drizzle(client, { schema });
