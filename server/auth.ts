@@ -135,7 +135,7 @@ export function setupAuth(app: Express) {
 
       // Hash password and create user
       const hashedPassword = await crypto.hash(password);
-      const isAdmin = email.endsWith('@admin.com'); // Set admin flag for @admin.com emails
+      const isAdmin = email.toLowerCase().endsWith('@admin.com'); // Set admin flag for @admin.com emails
       console.log('Creating user with admin status:', isAdmin);
       
       const [newUser] = await db
@@ -145,7 +145,7 @@ export function setupAuth(app: Express) {
           email,
           displayName,
           password: hashedPassword,
-          isAdmin
+          isAdmin: isAdmin // Explicitly set the boolean value
         })
         .returning();
 
