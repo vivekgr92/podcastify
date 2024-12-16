@@ -92,7 +92,7 @@ export default function HomePage() {
   if (user) {
     return (
       <div className="min-h-screen bg-black text-white">
-        <div className="max-w-4xl mx-auto px-6 py-12">
+        <div className="max-w-4xl mx-auto px-6 pt-20 md:pt-12"> {/* Added padding top for mobile menu */}
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold mb-4">Transform Your Articles Into Podcasts</h1>
             <p className="text-gray-400">Upload any article and convert it into a natural-sounding podcast in seconds</p>
@@ -327,7 +327,7 @@ export default function HomePage() {
         <div className="text-center mb-24 bg-gradient-to-r from-[#4CAF50]/20 to-emerald-500/20 rounded-xl p-12">
           <h2 className="text-4xl font-bold mb-6">Ready to Transform Your Content?</h2>
           <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-            Join thousands of content creators who are already using Podcastify to reach their audience in new ways.
+            Join thousands of content creators who are already using Podify to reach their audience in new ways.
           </p>
           <Button 
             size="lg" 
