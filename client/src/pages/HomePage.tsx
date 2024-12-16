@@ -1,9 +1,9 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useTTS } from "../hooks/use-tts";
-import { FileText, Upload, Headphones, Play, Plus } from "lucide-react";
+import { FileText, Upload, Headphones, Play, Plus, Menu } from "lucide-react";
 import { useDropzone } from "react-dropzone";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUser } from "../hooks/use-user";
@@ -11,7 +11,13 @@ import { useUser } from "../hooks/use-user";
 export default function HomePage() {
   const [, setLocation] = useLocation();
   const [file, setFile] = useState<File | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { toast } = useToast();
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location]);
   const { convertToSpeech, isConverting, setIsConverting, progress, setProgress } = useTTS();
   const queryClient = useQueryClient();
   const { user } = useUser();
@@ -156,15 +162,82 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <nav className="flex flex-col md:flex-row justify-between items-center p-4 md:p-6 gap-4">
+      <nav className="relative flex justify-between items-center p-4 md:p-6">
         <h1 className="text-xl font-bold text-[#4CAF50]">Podcastify</h1>
-        <div className="flex flex-wrap justify-center gap-2 md:gap-4">
-          <Button variant="ghost" className="w-full md:w-auto">Home</Button>
-          <Button variant="ghost" onClick={() => setLocation('/library')} className="w-full md:w-auto">Library</Button>
-          <Button variant="ghost" onClick={() => setLocation('/pricing')} className="w-full md:w-auto">Pricing</Button>
-          <Button variant="outline" onClick={() => setLocation('/auth/signup')} className="w-full md:w-auto">Sign Up</Button>
-          <Button onClick={() => setLocation('/auth')} className="w-full md:w-auto">Login</Button>
+        
+        {/* Mobile Menu Button */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="md:hidden"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          <Menu className="h-6 w-6" />
+        </Button>
+
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex items-center gap-4">
+          <Button variant="ghost">Home</Button>
+          <Button variant="ghost" onClick={() => setLocation('/library')}>Library</Button>
+          <Button variant="ghost" onClick={() => setLocation('/pricing')}>Pricing</Button>
+          <Button variant="outline" onClick={() => setLocation('/auth/signup')}>Sign Up</Button>
+          <Button onClick={() => setLocation('/auth')}>Login</Button>
         </div>
+
+        {/* Mobile Navigation */}
+        {isMobileMenuOpen && (
+          <>
+            <div 
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden"
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
+            <div className="absolute top-full right-4 w-48 py-2 mt-2 bg-background border rounded-lg shadow-lg z-50 md:hidden">
+              <Button variant="ghost" className="w-full justify-start px-4" onClick={() => setIsMobileMenuOpen(false)}>
+                Home
+              </Button>
+              <Button 
+                variant="ghost" 
+                className="w-full justify-start px-4" 
+                onClick={() => {
+                  setLocation('/library');
+                  setIsMobileMenuOpen(false);
+                }}
+              >
+                Library
+              </Button>
+              <Button 
+                variant="ghost" 
+                className="w-full justify-start px-4"
+                onClick={() => {
+                  setLocation('/pricing');
+                  setIsMobileMenuOpen(false);
+                }}
+              >
+                Pricing
+              </Button>
+              <Button 
+                variant="ghost" 
+                className="w-full justify-start px-4"
+                onClick={() => {
+                  setLocation('/auth/signup');
+                  setIsMobileMenuOpen(false);
+                }}
+              >
+                Sign Up
+              </Button>
+              <Button 
+                variant="default" 
+                className="w-full justify-start px-4"
+                onClick={() => {
+                  setLocation('/auth');
+                  setIsMobileMenuOpen(false);
+                }}
+              >
+                Login
+              </Button>
+            </div>
+          </>
+        )}
       </nav>
 
       <main className="max-w-6xl mx-auto px-6 py-16">
