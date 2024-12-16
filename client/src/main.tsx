@@ -56,7 +56,13 @@ function Router() {
                   {!user ? <AuthPage /> : <BillingPage />}
                 </Route>
                 <Route path="/admin">
-                  {user && user.isAdmin ? <AdminPage /> : <HomePage />}
+                  {!user ? (
+                    <AuthPage />
+                  ) : user.isAdmin ? (
+                    <AdminPage />
+                  ) : (
+                    <HomePage />
+                  )}
                 </Route>
                 <Route path="/">
                   <HomePage />
