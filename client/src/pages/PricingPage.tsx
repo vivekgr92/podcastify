@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
+import { useLocation } from "wouter";
 
 const plans = [
   {
@@ -50,6 +51,8 @@ const plans = [
 ];
 
 export default function PricingPage() {
+  const [, setLocation] = useLocation();
+
   return (
     <div className="min-h-screen bg-black text-white">
       <main className="max-w-7xl mx-auto px-6 py-24">
@@ -98,6 +101,7 @@ export default function PricingPage() {
                   plan.popular ? "bg-[#4CAF50] hover:bg-[#45a049]" : ""
                 }`}
                 variant={plan.popular ? "default" : "outline"}
+                onClick={() => setLocation('/auth/signup')}
               >
                 {plan.buttonText}
               </Button>
