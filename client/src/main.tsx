@@ -12,10 +12,11 @@ import PricingPage from "./pages/PricingPage";
 import AdminPage from "./pages/AdminPage";
 import ProfilePage from "./pages/ProfilePage";
 import BillingPage from "./pages/BillingPage";
-import { Loader2 } from "lucide-react";
+import { Loader2, Menu } from "lucide-react";
 import { useUser } from "./hooks/use-user";
 import AudioPlayer from "./components/AudioPlayer";
 import Sidebar from "./components/Sidebar";
+import { Button } from "@/components/ui/button";
 
 
 function Router() {
@@ -48,18 +49,16 @@ function Router() {
             >
               <Menu className="h-6 w-6" />
             </Button>
-            <>
-              <div
-                className={`fixed inset-0 bg-background/80 backdrop-blur-sm ${
-                  isMobileMenuOpen ? 'block' : 'hidden'
-                } md:hidden z-40`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              />
-              <Sidebar
-                isMobileMenuOpen={isMobileMenuOpen}
-                setIsMobileMenuOpen={setIsMobileMenuOpen}
-              />
-            </>
+            <div
+              className={`fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
+                isMobileMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+              } md:hidden z-40`}
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
+            <Sidebar
+              isMobileMenuOpen={isMobileMenuOpen}
+              setIsMobileMenuOpen={setIsMobileMenuOpen}
+            />
           </>
         )}
         <div className="flex-1">
