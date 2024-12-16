@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
+import { Logo } from "./Logo";
 import { useUser } from "../hooks/use-user";
 import { useQuery } from "@tanstack/react-query";
 import type { Playlist } from "@db/schema";
@@ -53,7 +54,7 @@ export default function Sidebar({ isMobileMenuOpen = false, setIsMobileMenuOpen 
     } md:translate-x-0 fixed md:static top-0 left-0 w-64 h-screen bg-background border-r flex flex-col transition-all duration-300 ease-in-out shadow-lg md:shadow-none z-50`}>
       <div className="p-6">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-xl font-bold">PodcastApp</h1>
+          <Logo />
           <Button
             variant="ghost"
             size="icon"
