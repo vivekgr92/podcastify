@@ -103,11 +103,12 @@ export default function BillingPage() {
         {plans.map((plan) => (
           <div
             key={plan.name}
-            className={`relative rounded-2xl p-8 flex flex-col justify-between ${
+            className={`relative rounded-2xl p-8 flex flex-col ${
               plan.popular
                 ? "border-2 border-[#4CAF50] bg-[#4CAF50]/10"
                 : "border border-gray-800 bg-gray-900"
             }`}
+            style={{ minHeight: '600px' }}
           >
             {plan.popular && (
               <div className="absolute -top-4 left-1/2 -translate-x-1/2">
@@ -132,7 +133,7 @@ export default function BillingPage() {
               ))}
             </ul>
 
-            <div className="mt-auto">
+            <div className="mt-auto pt-4">
               <Button
                 className={`w-full ${
                   plan.popular ? "bg-[#4CAF50] hover:bg-[#45a049]" : ""

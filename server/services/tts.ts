@@ -140,6 +140,28 @@ export class TTSService {
     return chunks;
   }
 
+  // Function to calculate characters, words, and tokens in a text
+  // Now includes detailed logging for debug purposes
+  private async analyzeText(
+    text: string,
+  ): Promise<{ characters: number; words: number; tokens: number }> {
+    // Calculate the number of characters (including spaces)
+    const characters = text.length;
+
+    // Calculate the number of words (split by spaces and filter out empty strings)
+    const words = text.split(/\s+/).filter((word) => word.length > 0).length;
+
+    // Estimate the number of tokens (using average 4 characters per token heuristic)
+    const tokens = Math.ceil(characters / 4);
+
+    // Log the analysis results
+    await logger.debug(
+      `Text analysis: characters=${characters}, words=${words}, tokens=${tokens}`,
+    );
+
+    return { characters, words, tokens };
+  }
+
   private async cleanGeneratedText(
     rawText: string,
   ): Promise<ConversationPart[]> {
@@ -330,7 +352,7 @@ export class TTSService {
       await fs.mkdir(audioDir, { recursive: true });
 
       // Split text into manageable chunks
-      const chunks = this.splitTextIntoChunks(text);
+      this.analyzeText(text);
       const allConversations: ConversationPart[] = [];
       let lastResponse = "";
       let speakerIndex = 0;
@@ -342,6 +364,15 @@ export class TTSService {
       const model = this.vertexAI.getGenerativeModel({
         model: "gemini-1.5-flash-002",
       }) as GenerativeModel;
+
+      // Count tokens using proper content format
+      const tokenCount = await model.countTokens({
+        contents: [{ role: "user", parts: [{ text }] }],
+      });
+
+      await logger.info(`\n--- Token Count ---\n${tokenCount}`);
+
+      const chunks = this.splitTextIntoChunks(text);
 
       // Process each chunk and generate conversation
       for (let index = 0; index < chunks.length; index++) {
