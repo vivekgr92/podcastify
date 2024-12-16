@@ -156,31 +156,31 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <nav className="flex justify-between items-center p-6">
+      <nav className="flex flex-col md:flex-row justify-between items-center p-4 md:p-6 gap-4">
         <h1 className="text-xl font-bold text-[#4CAF50]">Podcastify</h1>
-        <div className="flex gap-4">
-          <Button variant="ghost">Home</Button>
-          <Button variant="ghost" onClick={() => setLocation('/library')}>Library</Button>
-          <Button variant="ghost" onClick={() => setLocation('/pricing')}>Pricing</Button>
-          <Button variant="outline" onClick={() => setLocation('/auth/signup')}>Sign Up</Button>
-          <Button onClick={() => setLocation('/auth')}>Login</Button>
+        <div className="flex flex-wrap justify-center gap-2 md:gap-4">
+          <Button variant="ghost" className="w-full md:w-auto">Home</Button>
+          <Button variant="ghost" onClick={() => setLocation('/library')} className="w-full md:w-auto">Library</Button>
+          <Button variant="ghost" onClick={() => setLocation('/pricing')} className="w-full md:w-auto">Pricing</Button>
+          <Button variant="outline" onClick={() => setLocation('/auth/signup')} className="w-full md:w-auto">Sign Up</Button>
+          <Button onClick={() => setLocation('/auth')} className="w-full md:w-auto">Login</Button>
         </div>
       </nav>
 
       <main className="max-w-6xl mx-auto px-6 py-16">
         {/* Hero Section */}
-        <div className="text-center mb-24">
-          <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-[#4CAF50] to-emerald-400 bg-clip-text text-transparent">
+        <div className="text-center mb-12 md:mb-24 px-4">
+          <h1 className="text-4xl md:text-6xl font-bold mb-4 md:mb-6 bg-gradient-to-r from-[#4CAF50] to-emerald-400 bg-clip-text text-transparent">
             Transform Your Articles Into Engaging Podcasts
           </h1>
-          <p className="text-xl text-gray-400 mb-12 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-400 mb-8 md:mb-12 max-w-2xl mx-auto">
             Convert any article into a professional, natural-sounding podcast in seconds with our AI-powered platform
           </p>
-          <div className="flex justify-center gap-4">
+          <div className="flex flex-col md:flex-row justify-center gap-4">
             <Button 
               size="lg" 
               onClick={() => setLocation('/auth')}
-              className="bg-[#4CAF50] hover:bg-[#45a049] text-lg px-8"
+              className="bg-[#4CAF50] hover:bg-[#45a049] text-lg px-8 w-full md:w-auto"
             >
               Get Started Free
             </Button>
@@ -188,7 +188,7 @@ export default function HomePage() {
               size="lg" 
               variant="outline"
               onClick={() => setLocation('/pricing')}
-              className="text-lg px-8"
+              className="text-lg px-8 w-full md:w-auto"
             >
               View Pricing
             </Button>
@@ -196,39 +196,39 @@ export default function HomePage() {
         </div>
 
         {/* Social Proof */}
-        <div className="text-center mb-24">
-          <div className="grid grid-cols-3 gap-8 mb-12">
-            <div className="p-6">
-              <h3 className="text-4xl font-bold text-[#4CAF50] mb-2">100K+</h3>
+        <div className="text-center mb-12 md:mb-24 px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 mb-8 md:mb-12">
+            <div className="p-4 md:p-6">
+              <h3 className="text-3xl md:text-4xl font-bold text-[#4CAF50] mb-2">100K+</h3>
               <p className="text-gray-400">Articles Converted</p>
             </div>
-            <div className="p-6">
-              <h3 className="text-4xl font-bold text-[#4CAF50] mb-2">50K+</h3>
+            <div className="p-4 md:p-6">
+              <h3 className="text-3xl md:text-4xl font-bold text-[#4CAF50] mb-2">50K+</h3>
               <p className="text-gray-400">Active Users</p>
             </div>
-            <div className="p-6">
-              <h3 className="text-4xl font-bold text-[#4CAF50] mb-2">4.9/5</h3>
+            <div className="p-4 md:p-6">
+              <h3 className="text-3xl md:text-4xl font-bold text-[#4CAF50] mb-2">4.9/5</h3>
               <p className="text-gray-400">User Rating</p>
             </div>
           </div>
-          <div className="flex justify-center gap-8">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon" className="h-8 opacity-50 hover:opacity-75 transition-opacity" />
-            <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google" className="h-8 opacity-50 hover:opacity-75 transition-opacity" />
-            <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Netflix" className="h-8 opacity-50 hover:opacity-75 transition-opacity" />
-            <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg" alt="Microsoft" className="h-8 opacity-50 hover:opacity-75 transition-opacity" />
+          <div className="flex flex-wrap justify-center gap-4 md:gap-8">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon" className="h-6 md:h-8 opacity-50 hover:opacity-75 transition-opacity" />
+            <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google" className="h-6 md:h-8 opacity-50 hover:opacity-75 transition-opacity" />
+            <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Netflix" className="h-6 md:h-8 opacity-50 hover:opacity-75 transition-opacity" />
+            <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg" alt="Microsoft" className="h-6 md:h-8 opacity-50 hover:opacity-75 transition-opacity" />
           </div>
         </div>
 
         {/* Features */}
-        <div className="mb-24">
-          <h2 className="text-3xl font-bold text-center mb-12">How It Works</h2>
-          <div className="grid grid-cols-3 gap-8">
-            <div className="p-8 rounded-lg bg-gray-900 transform hover:scale-105 transition-transform">
-              <div className="w-16 h-16 rounded-full bg-[#4CAF50]/20 flex items-center justify-center mb-6 mx-auto">
+        <div className="mb-12 md:mb-24 px-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12">How It Works</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
+            <div className="p-6 md:p-8 rounded-lg bg-gray-900 transform hover:scale-105 transition-transform">
+              <div className="w-16 h-16 rounded-full bg-[#4CAF50]/20 flex items-center justify-center mb-4 md:mb-6 mx-auto">
                 <FileText className="w-8 h-8 text-[#4CAF50]" />
               </div>
-              <h3 className="text-xl font-semibold mb-4">1. Upload Your Article</h3>
-              <p className="text-gray-400">Simply upload your article in any format (PDF, DOC, TXT) and let our AI do the magic</p>
+              <h3 className="text-lg md:text-xl font-semibold mb-3 md:mb-4">1. Upload Your Article</h3>
+              <p className="text-sm md:text-base text-gray-400">Simply upload your article in any format (PDF, DOC, TXT) and let our AI do the magic</p>
             </div>
 
             <div className="p-8 rounded-lg bg-gray-900 transform hover:scale-105 transition-transform">
