@@ -9,13 +9,21 @@ import {
   User,
   CreditCard,
   Users,
+  Menu,
+  X,
 } from "lucide-react";
+import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useUser } from "../hooks/use-user";
 import { useQuery } from "@tanstack/react-query";
 import type { Playlist } from "@db/schema";
 
-export default function Sidebar() {
+interface SidebarProps {
+  isMobileMenuOpen?: boolean;
+  setIsMobileMenuOpen?: (open: boolean) => void;
+}
+
+export default function Sidebar({ isMobileMenuOpen = false, setIsMobileMenuOpen }: SidebarProps) {
   const [location] = useLocation();
   const { logout, user } = useUser();
   
@@ -37,10 +45,24 @@ export default function Sidebar() {
     },
   });
 
+  //const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
-    <div className="w-64 h-screen bg-background border-r flex flex-col">
+    <div className={`${
+      isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+    } md:translate-x-0 fixed md:static top-0 left-0 w-64 h-screen bg-background border-r flex flex-col transition-transform duration-300 z-50`}>
       <div className="p-6">
-        <h1 className="text-xl font-bold mb-6">PodcastApp</h1>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-xl font-bold">PodcastApp</h1>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            onClick={() => setIsMobileMenuOpen && setIsMobileMenuOpen(false)}
+          >
+            <X className="h-6 w-6" />
+          </Button>
+        </div>
         
         {user && (
           <div className="mb-6 flex flex-col gap-2">
