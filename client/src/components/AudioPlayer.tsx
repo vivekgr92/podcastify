@@ -4,8 +4,6 @@ import { Slider } from "@/components/ui/slider";
 import {
   Play,
   Pause,
-  SkipBack,
-  SkipForward,
   Volume2,
   Volume1,
   VolumeX,
@@ -136,7 +134,7 @@ export default function AudioPlayer() {
                 onValueChange={(value) => setPlaybackSpeed(parseFloat(value))}
               >
                 <SelectTrigger className="w-[80px] bg-transparent text-white border-[#4CAF50]">
-                  <SelectValue>{playbackSpeed}x</SelectValue>
+                  <SelectValue placeholder="1x">{playbackSpeed}x</SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="0.5">0.5x</SelectItem>
