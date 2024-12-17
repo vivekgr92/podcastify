@@ -17,7 +17,6 @@ export default function LibraryPage() {
 
   const [isConverting, setIsConverting] = useState(false);
   const [conversionProgress, setConversionProgress] = useState(0);
-  const [currentPodcastId, setCurrentPodcastId] = useState<number | null>(null);
   
   const { data: podcasts, isLoading } = useQuery<Podcast[]>({
     queryKey: ["podcasts"],
@@ -33,8 +32,6 @@ export default function LibraryPage() {
     },
     staleTime: 30000,
     retry: 1,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false
   });
 
   if (isLoading) {
@@ -42,7 +39,7 @@ export default function LibraryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white relative">
+    <div className="min-h-screen bg-black text-white">
       <nav className="flex justify-between items-center p-6">
         <h1 className="text-xl font-bold text-[#4CAF50]">Podcastify</h1>
         <div className="flex gap-4">
@@ -53,7 +50,7 @@ export default function LibraryPage() {
         </div>
       </nav>
 
-      <main className="max-w-4xl mx-auto px-6 py-8 pb-32">
+      <main className="max-w-4xl mx-auto px-6 py-8 pb-24">
         <div className="flex flex-col gap-4 mb-8">
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold">Your Library</h1>
@@ -199,8 +196,8 @@ export default function LibraryPage() {
         </div>
       </main>
       
-      {/* Audio Player */}
-      <div className="fixed bottom-0 left-0 right-0 z-50">
+      {/* Audio Player - Only rendered in LibraryPage */}
+      <div className="fixed bottom-0 left-0 right-0">
         <AudioPlayer />
       </div>
     </div>
