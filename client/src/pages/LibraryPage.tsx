@@ -26,13 +26,25 @@ export default function LibraryPage() {
     retry: 1,
   });
 
-  const handlePlayPause = useCallback((podcast: Podcast) => {
-    if (audioData?.id === podcast.id) {
-      togglePlay();
-    } else {
-      play(podcast);
+  // Handle play/pause for any podcast in the library
+  const handlePlayPause = useCallback(async (podcast: Podcast) => {
+    try {
+      // If this podcast is already loaded and playing, pause it
+      if (audioData?.id === podcast.id && isPlaying) {
+        await togglePlay();
+      } else {
+        // Otherwise, play the selected podcast
+        await play(podcast);
+      }
+    } catch (error) {
+      console.error('Error playing podcast:', error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to play podcast",
+        variant: "destructive",
+      });
     }
-  }, [audioData?.id, play, togglePlay]);
+  }, [audioData?.id, isPlaying, play, togglePlay, toast]);
 
   if (!user) {
     return (
@@ -143,7 +155,8 @@ export default function LibraryPage() {
         </div>
       </main>
       
-      <AudioPlayer />
+      {/* Render AudioPlayer when user is authenticated */}
+      {user && <AudioPlayer />}
     </div>
   );
 }
