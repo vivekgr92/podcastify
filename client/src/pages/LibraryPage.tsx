@@ -61,6 +61,15 @@ export default function LibraryPage() {
 
   const handlePlayPause = useCallback(async (podcast: Podcast) => {
     try {
+      if (!user) {
+        toast({
+          title: "Error",
+          description: "Please login to play podcasts",
+          variant: "destructive"
+        });
+        return;
+      }
+
       if (audioData?.id === podcast.id) {
         await togglePlay();
       } else {
@@ -74,13 +83,7 @@ export default function LibraryPage() {
         variant: "destructive"
       });
     }
-  }, [audioData, play, togglePlay, toast]);
-
-  const createPlayButtonHandler = useCallback((podcast: Podcast) => (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    handlePlayPause(podcast);
-  }, [handlePlayPause]);
+  }, [audioData, play, togglePlay, toast, user]);
 
   return (
     <div className="min-h-screen bg-black text-white relative">
