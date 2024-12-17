@@ -29,67 +29,58 @@ export function useAudio(): AudioHookReturn {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { toast } = useToast();
 
-  // Initialize audio element
   useEffect(() => {
     const audio = new Audio();
     audioRef.current = audio;
-
-    // Restore last played podcast
+    
+    // Try to restore last played podcast
     const lastPlayedPodcast = localStorage.getItem('last-played-podcast');
     if (lastPlayedPodcast) {
       try {
         const podcast = JSON.parse(lastPlayedPodcast);
         const lastPosition = localStorage.getItem(`podcast-${podcast.id}-position`);
         
-        if (podcast.audioUrl) {
-          const baseUrl = window.location.origin;
-          const audioUrl = podcast.audioUrl.startsWith('http') 
-            ? podcast.audioUrl 
-            : `${baseUrl}${podcast.audioUrl.startsWith('/') ? '' : '/'}${podcast.audioUrl}`;
-
-          audio.src = audioUrl;
-          
-          const handleError = (error: Event) => {
-            console.error('Error loading audio:', error);
-            toast({
-              title: "Error",
-              description: "Failed to restore last played podcast",
-              variant: "destructive",
-            });
-            localStorage.removeItem('last-played-podcast');
-            audio.removeEventListener('error', handleError);
-          };
-          
-          audio.addEventListener('error', handleError);
-          
-          if (lastPosition) {
-            audio.currentTime = parseFloat(lastPosition);
-          }
-          
-          audio.addEventListener('loadedmetadata', () => {
-            setAudioData(podcast);
-            setDuration(audio.duration);
-            audio.removeEventListener('error', handleError);
-          });
-
-          audio.load();
+        // Set up the audio source immediately
+        const baseUrl = window.location.origin;
+        const audioUrl = podcast.audioUrl.startsWith('http') 
+          ? podcast.audioUrl 
+          : `${baseUrl}${podcast.audioUrl.startsWith('/') ? '' : '/'}${podcast.audioUrl}`;
+        
+        audio.src = audioUrl;
+        audio.load();
+        
+        if (lastPosition) {
+          audio.currentTime = parseFloat(lastPosition);
         }
+        
+        // Set the audio data after confirming the audio loads correctly
+        audio.addEventListener('loadedmetadata', () => {
+          setAudioData(podcast);
+        });
       } catch (error) {
         console.error('Error restoring last played podcast:', error);
         localStorage.removeItem('last-played-podcast');
       }
     }
+    
+    console.log('Audio element created');
 
     return () => {
       if (audio) {
+        // Save current position before cleanup
+        if (audioData) {
+          localStorage.setItem(`podcast-${audioData.id}-position`, audio.currentTime.toString());
+        }
         audio.pause();
         audio.src = '';
       }
     };
-  }, [toast]);
+  }, []);
 
   const play = useCallback(async (podcast: Podcast) => {
     try {
+      console.log('Starting to play podcast:', podcast);
+      
       let audio = audioRef.current;
       if (!audio) {
         audio = new Audio();
@@ -102,70 +93,71 @@ export function useAudio(): AudioHookReturn {
         audio.pause();
       }
 
+      // Update audio data first to ensure UI updates
+      setAudioData(podcast);
+      setIsPlaying(true);  // Set playing state immediately
+      
+      // Construct the audio URL
       const baseUrl = window.location.origin;
       const audioUrl = podcast.audioUrl.startsWith('http') 
         ? podcast.audioUrl 
         : `${baseUrl}${podcast.audioUrl.startsWith('/') ? '' : '/'}${podcast.audioUrl}`;
-
-      console.log('Attempting to play audio from URL:', audioUrl);
-
-      // Update audio data and UI state
-      setAudioData(podcast);
-      audio.src = audioUrl;
-
-      // Set up audio initialization with retry logic
-      let retryCount = 0;
-      const maxRetries = 3;
       
-      while (retryCount < maxRetries) {
-        try {
-          await new Promise((resolve, reject) => {
-            const loadTimeout = setTimeout(() => {
-              reject(new Error('Audio load timeout'));
-            }, 5000);
-
-            const handleCanPlay = () => {
-              clearTimeout(loadTimeout);
-              audio.removeEventListener('canplay', handleCanPlay);
-              audio.removeEventListener('error', handleError);
-              resolve(true);
-            };
-
-            const handleError = (e: Event) => {
-              clearTimeout(loadTimeout);
-              audio.removeEventListener('canplay', handleCanPlay);
-              audio.removeEventListener('error', handleError);
-              const audioError = audio.error;
-              reject(new Error(audioError?.message || 'Audio load failed'));
-            };
-
-            audio.addEventListener('canplay', handleCanPlay);
-            audio.addEventListener('error', handleError);
-            audio.load();
-          });
-
-          await audio.play();
-          audio.playbackRate = playbackSpeed;
-          setIsPlaying(true);
-          localStorage.setItem('last-played-podcast', JSON.stringify(podcast));
-          break;
-        } catch (error) {
-          retryCount++;
-          console.error(`Audio load attempt ${retryCount} failed:`, error);
-          if (retryCount === maxRetries) {
-            throw error;
-          }
-          await new Promise(resolve => setTimeout(resolve, 1000));
-        }
+      console.log('Audio URL:', audioUrl);
+      
+      // Test if the audio URL is accessible
+      const response = await fetch(audioUrl, { method: 'HEAD' });
+      if (!response.ok) {
+        throw new Error(`Audio file not accessible: ${response.status}`);
       }
+      console.log('Audio file is accessible');
+      
+      // Set up the audio source
+      if (!audio.src || audio.src !== audioUrl) {
+        console.log('Setting new audio source');
+        audio.src = audioUrl;
+        audio.load();
+      }
+
+      // Set up audio event listeners
+      const handleCanPlay = () => {
+        console.log('Audio can play');
+        audio.removeEventListener('canplay', handleCanPlay);
+      };
+
+      const handleError = (e: Event) => {
+        console.error('Audio error:', {
+          error: e,
+          currentSrc: audio.currentSrc,
+          readyState: audio.readyState,
+          networkState: audio.networkState,
+          errorMessage: audio.error?.message
+        });
+        toast({
+          title: "Error",
+          description: `Failed to load audio: ${audio.error?.message || 'Unknown error'}`,
+          variant: "destructive",
+        });
+      };
+
+      audio.addEventListener('canplay', handleCanPlay);
+      audio.addEventListener('error', handleError);
+
+      // Start playback
+      await audio.play();
+      audio.playbackRate = playbackSpeed;
+      setIsPlaying(true);
+      console.log('Audio playback started');
+
+      // Save last played podcast
+      localStorage.setItem('last-played-podcast', JSON.stringify(podcast));
     } catch (error) {
       console.error('Error playing audio:', error);
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to play audio. Please try again.",
+        description: "Failed to play audio. Please try again.",
         variant: "destructive",
       });
-      setIsPlaying(false);
     }
   }, [audioData, playbackSpeed, toast]);
 
@@ -179,6 +171,14 @@ export function useAudio(): AudioHookReturn {
         setIsPlaying(false);
         localStorage.setItem(`podcast-${audioData.id}-position`, audio.currentTime.toString());
       } else {
+        if (!audio.src) {
+          const baseUrl = window.location.origin;
+          const audioUrl = audioData.audioUrl.startsWith('http')
+            ? audioData.audioUrl
+            : `${baseUrl}${audioData.audioUrl.startsWith('/') ? '' : '/'}${audioData.audioUrl}`;
+          audio.src = audioUrl;
+        }
+
         await audio.play();
         audio.playbackRate = playbackSpeed;
         setIsPlaying(true);
@@ -187,14 +187,12 @@ export function useAudio(): AudioHookReturn {
       console.error('Error toggling play:', error);
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to toggle playback",
+        description: "Failed to toggle playback",
         variant: "destructive",
       });
-      setIsPlaying(false);
     }
   }, [audioData, isPlaying, playbackSpeed, toast]);
 
-  // Handle audio events
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -204,6 +202,10 @@ export function useAudio(): AudioHookReturn {
     };
 
     const handleLoadedMetadata = () => {
+      console.log('Audio metadata loaded:', {
+        duration: audio.duration,
+        currentSrc: audio.currentSrc
+      });
       setDuration(audio.duration);
       audio.playbackRate = playbackSpeed;
     };
@@ -215,34 +217,16 @@ export function useAudio(): AudioHookReturn {
       }
     };
 
-    const handleError = (e: Event) => {
-      const error = audio.error;
-      console.error('Audio error:', {
-        error,
-        code: error?.code,
-        message: error?.message,
-        currentSrc: audio.currentSrc
-      });
-      toast({
-        title: "Playback Error",
-        description: error?.message || "An error occurred during playback",
-        variant: "destructive",
-      });
-      setIsPlaying(false);
-    };
-
     audio.addEventListener('timeupdate', handleTimeUpdate);
     audio.addEventListener('loadedmetadata', handleLoadedMetadata);
     audio.addEventListener('ended', handleEnded);
-    audio.addEventListener('error', handleError);
 
     return () => {
       audio.removeEventListener('timeupdate', handleTimeUpdate);
       audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
       audio.removeEventListener('ended', handleEnded);
-      audio.removeEventListener('error', handleError);
     };
-  }, [audioData, playbackSpeed, toast]);
+  }, [audioData, playbackSpeed]);
 
   const setPosition = useCallback((time: number) => {
     const audio = audioRef.current;
