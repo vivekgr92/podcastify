@@ -14,7 +14,6 @@ import ProfilePage from "./pages/ProfilePage";
 import BillingPage from "./pages/BillingPage";
 import { Loader2, Menu } from "lucide-react";
 import { useUser } from "./hooks/use-user";
-import AudioPlayer from "./components/AudioPlayer";
 import Sidebar from "./components/Sidebar";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
@@ -60,7 +59,7 @@ function Router() {
             />
           </>
         )}
-        <div className="flex-1 overflow-auto pb-[90px]">
+        <div className="flex-1 overflow-auto">
           <Switch>
             <Route path="/auth">
               {user ? <HomePage /> : <AuthPage />}
@@ -90,7 +89,6 @@ function Router() {
           </Switch>
         </div>
       </div>
-      <AudioPlayer />
     </div>
   );
 }
