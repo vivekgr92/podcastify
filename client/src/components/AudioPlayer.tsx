@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
+import { useLocation } from "wouter";
 import {
   Play,
   Pause,
@@ -77,7 +78,7 @@ export default function AudioPlayer() {
 
   const VolumeIcon = volume === 0 ? VolumeX : volume < 50 ? Volume1 : Volume2;
 
-  const [, location] = useLocation();
+  const [location] = useLocation();
   // Only show audio player if we have audio data and we're on the library page
   if (!audioData || location !== '/library') {
     return null;
