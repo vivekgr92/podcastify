@@ -95,6 +95,12 @@ export function useAudio(): AudioHookReturn {
         audio = new Audio();
         audioRef.current = audio;
       }
+      
+      // Clear any existing audio
+      if (audioData?.id !== podcast.id) {
+        audio.pause();
+        audio.currentTime = 0;
+      }
 
       // Always update audio data first to ensure UI updates
       setAudioData(podcast);
