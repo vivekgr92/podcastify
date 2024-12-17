@@ -33,10 +33,11 @@ export function useAudio(): AudioHookReturn {
       
       // Set up audio event listeners with proper types
       const onTimeUpdate = (): void => {
-        setCurrentTime(audio.currentTime);
-        // Save position every 5 seconds
-        if (audioData && audio.currentTime % 5 < 1) {
-          localStorage.setItem(`podcast-position-${audioData.id}`, audio.currentTime.toString());
+        const currentPosition = audio.currentTime;
+        setCurrentTime(currentPosition);
+        // Save position more frequently (every second)
+        if (audioData) {
+          localStorage.setItem(`podcast-position-${audioData.id}`, currentPosition.toString());
         }
       };
 
@@ -142,10 +143,13 @@ export function useAudio(): AudioHookReturn {
       // Update state after successful load
       setAudioData(podcast);
       
-      if (!isSamePodcast) {
-        // Get saved position from localStorage
-        const savedPosition = localStorage.getItem(`podcast-position-${podcast.id}`);
-        audio.currentTime = savedPosition ? parseFloat(savedPosition) : 0;
+      // Always try to restore the last position, even for the same podcast
+      const savedPosition = localStorage.getItem(`podcast-position-${podcast.id}`);
+      if (savedPosition) {
+        const position = parseFloat(savedPosition);
+        if (!isNaN(position) && position > 0) {
+          audio.currentTime = position;
+        }
       }
 
       // Play the audio
@@ -188,6 +192,15 @@ export function useAudio(): AudioHookReturn {
             : `${window.location.origin}${audioData.audioUrl}`;
           audio.src = audioSrc;
           audio.load();
+          
+          // Restore position if source was reloaded
+          const savedPosition = localStorage.getItem(`podcast-position-${audioData.id}`);
+          if (savedPosition) {
+            const position = parseFloat(savedPosition);
+            if (!isNaN(position) && position > 0) {
+              audio.currentTime = position;
+            }
+          }
         }
         
         // Play with error handling
