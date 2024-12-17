@@ -341,21 +341,29 @@ app.get("/api/user/usage/check", async (req, res) => {
   try {
     if (!req.user) return res.status(401).send("Not authenticated");
 
-    // Get or create usage record
+    const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM format
+
+    // Get or create usage record for current month
     let [usage] = await db
       .select()
       .from(userUsage)
-      .where(eq(userUsage.userId, req.user.id))
+      .where(
+        and(
+          eq(userUsage.userId, req.user.id),
+          eq(userUsage.monthYear, currentMonth)
+        )
+      )
       .limit(1);
 
     if (!usage) {
-      // Create initial usage record if it doesn't exist
+      // Create initial usage record for current month if it doesn't exist
       const [newUsage] = await db
         .insert(userUsage)
         .values({
           userId: req.user.id,
           articlesConverted: 0,
           tokensUsed: 0,
+          monthYear: currentMonth,
         })
         .returning();
       usage = newUsage;
@@ -369,17 +377,26 @@ app.get("/api/user/usage/check", async (req, res) => {
       (usage.tokensUsed ?? 0) >= TOKEN_LIMIT
     );
 
+    const remainingArticles = Math.max(0, ARTICLE_LIMIT - (usage.articlesConverted ?? 0));
+    const remainingTokens = Math.max(0, TOKEN_LIMIT - (usage.tokensUsed ?? 0));
+
     res.json({
       hasReachedLimit,
       limits: {
         articles: {
           used: usage.articlesConverted || 0,
-          limit: ARTICLE_LIMIT
+          limit: ARTICLE_LIMIT,
+          remaining: remainingArticles
         },
         tokens: {
           used: usage.tokensUsed || 0,
-          limit: TOKEN_LIMIT
+          limit: TOKEN_LIMIT,
+          remaining: remainingTokens
         }
+      },
+      currentPeriod: {
+        month: currentMonth,
+        resetsOn: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1).toISOString()
       }
     });
   } catch (error) {
@@ -397,11 +414,17 @@ app.post("/api/podcast", upload.single("file"), async (req, res) => {
         return res.status(400).send("No file uploaded");
       }
 
-      // Get or create usage record
+      // Get or create usage record for current month
+      const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM format
       let [usage] = await db
         .select()
         .from(userUsage)
-        .where(eq(userUsage.userId, req.user.id))
+        .where(
+          and(
+            eq(userUsage.userId, req.user.id),
+            eq(userUsage.monthYear, currentMonth)
+          )
+        )
         .limit(1);
 
       if (!usage) {
@@ -411,6 +434,7 @@ app.post("/api/podcast", upload.single("file"), async (req, res) => {
             userId: req.user.id,
             articlesConverted: 0,
             tokensUsed: 0,
+            monthYear: currentMonth,
           })
           .returning();
       }
@@ -491,16 +515,17 @@ app.post("/api/podcast", upload.single("file"), async (req, res) => {
       const { audioBuffer, duration } = await ttsService.generateConversation(fileContent);
       const tokensUsed = Math.ceil(fileContent.length / 4); // Estimate tokens based on character count
 
-      // Update usage statistics
+      // Update usage statistics for the current month
       await db
         .insert(userUsage)
         .values({
           userId: req.user.id,
           articlesConverted: 1,
           tokensUsed: tokensUsed,
+          monthYear: currentMonth,
         })
         .onConflictDoUpdate({
-          target: [userUsage.userId],
+          target: [userUsage.userId, userUsage.monthYear],
           set: {
             articlesConverted: sql`${userUsage.articlesConverted} + 1`,
             tokensUsed: sql`${userUsage.tokensUsed} + ${tokensUsed}`,

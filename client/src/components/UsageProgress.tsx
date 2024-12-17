@@ -11,15 +11,27 @@ interface UsageLimits {
     articles: {
       used: number;
       limit: number;
+      remaining: number;
     };
     tokens: {
       used: number;
       limit: number;
+      remaining: number;
     };
+  };
+  currentPeriod: {
+    month: string;
+    resetsOn: string;
   };
 }
 
-export function UsageProgress({ showUpgradeButton = true }: { showUpgradeButton?: boolean }) {
+export function UsageProgress({ 
+  showUpgradeButton = true, 
+  onLimitReached 
+}: { 
+  showUpgradeButton?: boolean;
+  onLimitReached?: () => void;
+}) {
   const [, setLocation] = useLocation();
   const { data: usage, isLoading } = useQuery<UsageLimits>({
     queryKey: ["usage-limits"],
@@ -82,17 +94,39 @@ export function UsageProgress({ showUpgradeButton = true }: { showUpgradeButton?
         />
       </div>
 
+      <div className="text-xs text-muted-foreground mt-2">
+        Current period: {new Date(usage.currentPeriod.month).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}
+        <br />
+        Resets on: {new Date(usage.currentPeriod.resetsOn).toLocaleDateString()}
+      </div>
+
       {usage.hasReachedLimit && (
-        <div className="space-y-3">
-          <div className="bg-destructive/10 text-destructive rounded-lg p-3 text-sm">
-            You've reached your usage limit. Please upgrade your plan to continue using the service.
+        <div className="space-y-3 mt-4" onClick={() => onLimitReached?.()}>
+          <div className="bg-destructive/10 text-destructive rounded-lg p-4 text-sm cursor-pointer hover:bg-destructive/20 transition-colors">
+            <p className="font-semibold mb-2">Monthly Usage Limit Reached</p>
+            <p>You've reached your free tier limits for this month:</p>
+            <ul className="list-disc ml-4 mt-2 space-y-1">
+              {usage.limits.articles.used >= usage.limits.articles.limit && (
+                <li>Maximum {usage.limits.articles.limit} articles per month reached</li>
+              )}
+              {usage.limits.tokens.used >= usage.limits.tokens.limit && (
+                <li>Maximum {usage.limits.tokens.limit.toLocaleString()} tokens per month reached</li>
+              )}
+            </ul>
+            <p className="mt-2">Upgrade your plan to get:</p>
+            <ul className="list-disc ml-4 mt-2 space-y-1">
+              <li>Convert unlimited articles</li>
+              <li>Access premium voices</li>
+              <li>Priority processing</li>
+              <li>Advanced customization options</li>
+            </ul>
           </div>
           {showUpgradeButton && (
             <Button 
               className="w-full bg-[#4CAF50] hover:bg-[#45a049]"
               onClick={() => setLocation("/pricing")}
             >
-              View Pricing Plans
+              Upgrade Now
             </Button>
           )}
         </div>

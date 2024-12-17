@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, integer, timestamp, jsonb, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, integer, timestamp, jsonb, boolean, uniqueIndex } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -73,11 +73,14 @@ export type Progress = z.infer<typeof selectProgressSchema>;
 
 export const userUsage = pgTable("user_usage", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  userId: integer("user_id").references(() => users.id).unique(),
+  userId: integer("user_id").references(() => users.id),
   articlesConverted: integer("articles_converted").default(0),
   tokensUsed: integer("tokens_used").default(0),
   lastConversion: timestamp("last_conversion").defaultNow(),
-});
+  monthYear: text("month_year").notNull().default(sql`to_char(CURRENT_DATE, 'YYYY-MM')`),
+}, (table) => ({
+  unq: uniqueIndex('user_usage_user_id_month_year_unique').on(table.userId, table.monthYear)
+}));
 
 export const insertUserUsageSchema = createInsertSchema(userUsage);
 export const selectUserUsageSchema = createSelectSchema(userUsage);

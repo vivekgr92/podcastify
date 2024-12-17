@@ -101,7 +101,10 @@ export default function HomePage() {
           
           {user && (
             <div className="mb-8">
-              <UsageProgress showUpgradeButton={true} />
+              <UsageProgress 
+                showUpgradeButton={true}
+                onLimitReached={() => setLocation('/pricing')}
+              />
             </div>
           )}
 
