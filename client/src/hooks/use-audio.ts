@@ -89,7 +89,7 @@ export function useAudio(): AudioHookReturn {
   }, [audioData, toast, playbackSpeed]);
 
   const play = useCallback(async (podcast: Podcast) => {
-    const audio = audioRef.current;
+    let audio = audioRef.current;
     if (!audio) {
       audio = new Audio();
       audioRef.current = audio;
