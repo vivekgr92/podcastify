@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import type { Podcast } from "@db/schema";
-import { Share2, Play, Pause, Download } from "lucide-react";
+import { Share2, Play, Pause, Trash2, AlertCircle } from "lucide-react";
 import { useLocation } from "wouter";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAudio } from "../hooks/use-audio";
 import AudioPlayer from "../components/AudioPlayer";
 import { useToast } from "@/hooks/use-toast";
@@ -13,7 +14,8 @@ import { cn } from "@/lib/utils";
 export default function LibraryPage() {
   const [, setLocation] = useLocation();
   const { user } = useUser();
-  const { play, isPlaying, audioData, togglePlay } = useAudio();
+  const queryClient = useQueryClient();
+const { play, isPlaying, audioData, togglePlay } = useAudio();
   const { toast } = useToast();
 
   const { data: podcasts, isLoading } = useQuery<Podcast[]>({
@@ -123,24 +125,39 @@ export default function LibraryPage() {
                     )}
                   </Button>
                   <Button
-                    variant="default"
+                    variant="outline"
                     size="sm"
-                    className="flex items-center gap-2"
-                    onClick={() => {
-                      const link = document.createElement("a");
-                      const baseUrl = window.location.origin;
-                      const audioUrl = podcast.audioUrl.startsWith("http")
-                        ? podcast.audioUrl
-                        : `${baseUrl}${podcast.audioUrl}`;
-                      link.href = audioUrl;
-                      link.download = `${podcast.title}.mp3`;
-                      document.body.appendChild(link);
-                      link.click();
-                      document.body.removeChild(link);
+                    className="flex items-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-500"
+                    onClick={async () => {
+                      try {
+                        const response = await fetch(`/api/podcasts/${podcast.id}`, {
+                          method: 'DELETE',
+                          credentials: 'include'
+                        });
+                        
+                        if (!response.ok) {
+                          throw new Error('Failed to delete podcast');
+                        }
+                        
+                        toast({
+                          title: "Success",
+                          description: "Podcast deleted successfully",
+                        });
+                        
+                        // Invalidate the podcasts query to refresh the list
+                        await queryClient.invalidateQueries({ queryKey: ['podcasts'] });
+                      } catch (error) {
+                        console.error('Error deleting podcast:', error);
+                        toast({
+                          title: "Error",
+                          description: error instanceof Error ? error.message : "Failed to delete podcast",
+                          variant: "destructive",
+                        });
+                      }
                     }}
                   >
-                    <Download size={16} />
-                    Download
+                    <Trash2 size={16} />
+                    Delete
                   </Button>
                   <Button 
                     variant="outline" 
