@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Play, Pause, SkipBack, SkipForward, Volume2, Volume1, VolumeX, Download } from "lucide-react";
 import { useAudio } from "../hooks/use-audio";
 
 export default function AudioPlayer() {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [volume, setVolume] = useState(100);
+  const [prevVolume, setPrevVolume] = useState(100);
+  
   const {
     isPlaying,
     currentTime,
@@ -16,8 +20,11 @@ export default function AudioPlayer() {
     canvasRef,
   } = useAudio();
 
-  const [volume, setVolume] = useState(100);
-  const [prevVolume, setPrevVolume] = useState(100);
+  useEffect(() => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio();
+    }
+  }, []);
 
   const toggleMute = () => {
     if (volume > 0) {
@@ -145,6 +152,7 @@ export default function AudioPlayer() {
               className="w-[100px]"
             />
           </div>
+
           {/* Download Button */}
           {audioData && (
             <Button
@@ -152,7 +160,6 @@ export default function AudioPlayer() {
               size="icon"
               onClick={() => {
                 const link = document.createElement('a');
-                // Get the base URL without any path
                 const baseUrl = window.location.origin;
                 const audioUrl = audioData.audioUrl.startsWith('http') 
                   ? audioData.audioUrl 
