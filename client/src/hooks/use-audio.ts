@@ -7,6 +7,8 @@ interface AudioHookReturn {
   currentTime: number;
   duration: number;
   audioData: Podcast | null;
+  playlist: Podcast[];
+  currentIndex: number;
   canvasRef: React.RefObject<HTMLCanvasElement>;
   playbackSpeed: number;
   play: (podcast: Podcast) => void;
@@ -16,10 +18,17 @@ interface AudioHookReturn {
   setPlaybackSpeed: (speed: number) => void;
   fastForward: () => void;
   rewind: () => void;
+  next: () => void;
+  previous: () => void;
+  addToPlaylist: (podcast: Podcast) => void;
+  removeFromPlaylist: (podcastId: number) => void;
+  clearPlaylist: () => void;
 }
 
 export function useAudio(): AudioHookReturn {
   const [audioData, setAudioData] = useState<Podcast | null>(null);
+  const [playlist, setPlaylist] = useState<Podcast[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(-1);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -299,11 +308,100 @@ export function useAudio(): AudioHookReturn {
     }
   }, [setPosition]);
 
+  const next = useCallback(async () => {
+    if (currentIndex < playlist.length - 1) {
+      const nextPodcast = playlist[currentIndex + 1];
+      await play(nextPodcast);
+      setCurrentIndex(currentIndex + 1);
+    }
+  }, [currentIndex, playlist, play]);
+
+  const previous = useCallback(async () => {
+    if (currentIndex > 0) {
+      const prevPodcast = playlist[currentIndex - 1];
+      await play(prevPodcast);
+      setCurrentIndex(currentIndex - 1);
+    }
+  }, [currentIndex, playlist, play]);
+
+  const addToPlaylist = useCallback((podcast: Podcast) => {
+    setPlaylist(prev => {
+      // Don't add if already in playlist
+      if (prev.some(p => p.id === podcast.id)) {
+        toast({
+          title: "Already in playlist",
+          description: "This podcast is already in your playlist",
+        });
+        return prev;
+      }
+      
+      const newPlaylist = [...prev, podcast];
+      // If this is the first track, set it as current
+      if (prev.length === 0) {
+        setCurrentIndex(0);
+        play(podcast).catch(console.error);
+      }
+      return newPlaylist;
+    });
+  }, [currentIndex, play, toast]);
+
+  const removeFromPlaylist = useCallback((podcastId: number) => {
+    setPlaylist(prev => {
+      const index = prev.findIndex(p => p.id === podcastId);
+      if (index === -1) return prev;
+      
+      const newPlaylist = prev.filter(p => p.id !== podcastId);
+      
+      // Adjust currentIndex if necessary
+      if (index <= currentIndex) {
+        setCurrentIndex(curr => Math.max(-1, curr - 1));
+      }
+      
+      return newPlaylist;
+    });
+  }, [currentIndex]);
+
+  const clearPlaylist = useCallback(() => {
+    setPlaylist([]);
+    setCurrentIndex(-1);
+    setAudioData(null);
+    const audio = audioRef.current;
+    if (audio) {
+      audio.pause();
+      audio.src = '';
+    }
+    setIsPlaying(false);
+  }, []);
+
+  // Auto-play next track when current track ends
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const handleEnded = () => {
+      if (currentIndex < playlist.length - 1) {
+        next();
+      } else {
+        setIsPlaying(false);
+        if (audioData) {
+          localStorage.removeItem(`podcast-${audioData.id}-position`);
+        }
+      }
+    };
+
+    audio.addEventListener('ended', handleEnded);
+    return () => {
+      audio.removeEventListener('ended', handleEnded);
+    };
+  }, [audioData, currentIndex, playlist.length, next]);
+
   return {
     isPlaying,
     currentTime,
     duration,
     audioData,
+    playlist,
+    currentIndex,
     canvasRef,
     playbackSpeed,
     play,
@@ -313,5 +411,10 @@ export function useAudio(): AudioHookReturn {
     setPlaybackSpeed: changePlaybackSpeed,
     fastForward,
     rewind,
+    next,
+    previous,
+    addToPlaylist,
+    removeFromPlaylist,
+    clearPlaylist,
   };
 }

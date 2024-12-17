@@ -7,7 +7,16 @@ import {
   Download,
   Rewind,
   FastForward,
+  SkipBack,
+  SkipForward,
+  List,
+  X,
 } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -15,8 +24,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAudio } from "../hooks/use-audio";
 import { useUser } from "../hooks/use-user";
+import { cn } from "@/lib/utils";
 
 export default function AudioPlayer() {
   const {
@@ -27,11 +38,16 @@ export default function AudioPlayer() {
     setPosition,
     setVolume: setAudioVolume,
     audioData,
+    playlist,
+    currentIndex,
     playbackSpeed,
     setPlaybackSpeed,
     fastForward,
     rewind,
     play,
+    next,
+    previous,
+    removeFromPlaylist,
   } = useAudio();
 
   const { user } = useUser();
@@ -63,7 +79,6 @@ export default function AudioPlayer() {
     document.body.removeChild(link);
   };
 
-  // Only render if there's audio data and user is authenticated
   // Only render if we have a user
   if (!user) {
     return null;
@@ -114,6 +129,21 @@ export default function AudioPlayer() {
             <Button
               variant="ghost"
               size="icon"
+              className={`text-white hover:text-white ${
+                currentIndex > 0
+                  ? 'hover:bg-[#4CAF50]/20'
+                  : 'opacity-50 cursor-not-allowed'
+              }`}
+              onClick={previous}
+              disabled={!audioData || currentIndex <= 0}
+              title={`Previous track ${currentIndex > 0 ? `(${playlist[currentIndex - 1]?.title})` : ''}`}
+            >
+              <SkipBack className="h-5 w-5" />
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="icon"
               className="text-white hover:text-white hover:bg-[#4CAF50]/20"
               onClick={rewind}
               disabled={!audioData}
@@ -150,6 +180,21 @@ export default function AudioPlayer() {
               title="Fast forward 10 seconds"
             >
               <FastForward className="h-5 w-5" />
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              className={`text-white hover:text-white ${
+                currentIndex < playlist.length - 1
+                  ? 'hover:bg-[#4CAF50]/20'
+                  : 'opacity-50 cursor-not-allowed'
+              }`}
+              onClick={next}
+              disabled={!audioData || currentIndex >= playlist.length - 1}
+              title={`Next track ${currentIndex < playlist.length - 1 ? `(${playlist[currentIndex + 1]?.title})` : ''}`}
+            >
+              <SkipForward className="h-5 w-5" />
             </Button>
 
             <Select
@@ -189,7 +234,7 @@ export default function AudioPlayer() {
           </div>
         </div>
 
-        {/* Right section - Volume & Download */}
+        {/* Right section - Volume & Playlist */}
         <div className="flex items-center gap-4 min-w-[150px]">
           <Slider
             defaultValue={[100]}
@@ -199,18 +244,100 @@ export default function AudioPlayer() {
             onValueChange={([value]) => setAudioVolume(value)}
             className={`w-24 ${!audioData ? 'opacity-50' : ''}`}
           />
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleDownload}
-            disabled={!audioData}
-            className={`text-white hover:text-white ${
-              audioData ? 'hover:bg-[#4CAF50]/20' : 'opacity-50 cursor-not-allowed'
-            }`}
-            title="Download audio"
-          >
-            <Download className="h-5 w-5" />
-          </Button>
+          <div className="flex items-center gap-2">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  disabled={!audioData}
+                  className={`text-white hover:text-white relative ${
+                    audioData ? 'hover:bg-[#4CAF50]/20' : 'opacity-50 cursor-not-allowed'
+                  }`}
+                  title={`Playlist (${playlist.length} items)`}
+                >
+                  <List className="h-5 w-5" />
+                  {playlist.length > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-[#4CAF50] text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                      {playlist.length}
+                    </span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 p-0 bg-black border-gray-800">
+                <ScrollArea className="h-[300px]">
+                  <div className="p-4">
+                    <h4 className="text-sm font-medium text-white mb-4">Current Playlist</h4>
+                    {playlist.length === 0 ? (
+                      <p className="text-sm text-gray-400">No items in playlist</p>
+                    ) : (
+                      <div className="space-y-2">
+                        {playlist.map((item, index) => (
+                          <div
+                            key={item.id}
+                            className={cn(
+                              "flex items-center gap-3 p-2 rounded-md",
+                              index === currentIndex
+                                ? "bg-[#4CAF50]/20"
+                                : "hover:bg-gray-800/50"
+                            )}
+                          >
+                            <button
+                              className="flex-1 flex items-center gap-3 min-w-0 text-left"
+                              onClick={() => play(item)}
+                            >
+                              <div className={`w-8 h-8 rounded flex items-center justify-center ${
+                                item.coverImage ? '' : 'bg-[#4CAF50]/20'
+                              }`}>
+                                {item.coverImage ? (
+                                  <img
+                                    src={item.coverImage}
+                                    alt={item.title}
+                                    className="w-full h-full rounded object-cover"
+                                  />
+                                ) : (
+                                  <Volume2 className="h-4 w-4 text-white" />
+                                )}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium text-white truncate">
+                                  {item.title}
+                                </p>
+                                <p className="text-xs text-gray-400 truncate">
+                                  {item.description}
+                                </p>
+                              </div>
+                            </button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 text-gray-400 hover:text-white hover:bg-red-500/20"
+                              onClick={() => removeFromPlaylist(item.id)}
+                            >
+                              <X className="h-4 w-4" />
+                              <span className="sr-only">Remove from playlist</span>
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </ScrollArea>
+              </PopoverContent>
+            </Popover>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleDownload}
+              disabled={!audioData}
+              className={`text-white hover:text-white ${
+                audioData ? 'hover:bg-[#4CAF50]/20' : 'opacity-50 cursor-not-allowed'
+              }`}
+              title="Download audio"
+            >
+              <Download className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
       </div>
     </div>

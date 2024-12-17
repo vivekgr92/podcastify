@@ -31,17 +31,20 @@ interface GenerationResult {
 
 interface PricingDetails {
   inputTokens: number;
-  outputTokens: number;
+  estimatedOutputTokens: number;
   totalCost: number;
   breakdown: {
     inputCost: number;
     outputCost: number;
+    ttsCost: number;
   };
 }
 
 const PRICING = {
   INPUT_TOKEN_RATE: 0.0005 / 1000, // $0.0005 per 1K tokens
   OUTPUT_TOKEN_RATE: 0.0005 / 1000, // $0.0005 per 1K tokens
+  TTS_RATE_STANDARD: 4.0 / 1000000, // $4 per 1M characters
+  TTS_RATE_WAVENET: 16.0 / 1000000, // $16 per 1M characters
 };
 
 const SPEAKERS: Speaker[] = ["Joe", "Sarah"];
@@ -207,10 +210,11 @@ export class TTSService {
     return characters * costPerCharacter;
   }
 
-  private async calculateTextToConversation(
-    model: GenerativeModel,
-    text: string,
-  ) {
+  async calculatePricing(text: string): Promise<PricingDetails> {
+    const model = this.vertexAI.getGenerativeModel({
+      model: "gemini-1.5-flash-002",
+    });
+
     // Count tokens using the proper content format for the Vertex AI model
     const tokenCount = await model.countTokens({
       contents: [{ role: "user", parts: [{ text }] }],
@@ -222,33 +226,38 @@ export class TTSService {
     // Estimate output tokens assuming the conversation length is typically 2.5x longer than input
     const estimatedOutputTokens = Math.ceil(inputTokens * 2.5);
 
-    // Define Vertex AI pricing: $0.0005 per 1K tokens
+    // Calculate costs
     const inputCost = (inputTokens / 1000) * PRICING.INPUT_TOKEN_RATE;
-    const outputCost =
-      (estimatedOutputTokens / 1000) * PRICING.OUTPUT_TOKEN_RATE;
-    const totalCost = inputCost + outputCost;
+    const outputCost = (estimatedOutputTokens / 1000) * PRICING.OUTPUT_TOKEN_RATE;
+    
+    // Estimate TTS cost (using standard voice rate)
+    const estimatedCharacters = text.length * 2.5; // Estimate conversation length
+    const ttsCost = estimatedCharacters * PRICING.TTS_RATE_STANDARD;
 
-    // Log detailed pricing breakdown for better transparency
-    await logger.info(
-      `\n--- Vertex AI Pricing Details ---\n` +
-        `Input Tokens: ${inputTokens}\n` +
-        `Input Cost: $${inputCost.toFixed(4)} (${PRICING.INPUT_TOKEN_RATE}$ per 1K tokens)\n` +
-        `Estimated Output Tokens: ${estimatedOutputTokens}\n` +
-        `Output Cost: $${outputCost.toFixed(4)} (${PRICING.OUTPUT_TOKEN_RATE}$ per 1K tokens)\n` +
-        `Total Cost: $${totalCost.toFixed(4)}\n`,
-    );
+    const totalCost = inputCost + outputCost + ttsCost;
 
-    // Log a simplified breakdown for easier access
+    // Log pricing breakdown
     await logger.info(
       `\n--- Pricing Details ---\n` +
         `Input Tokens: ${inputTokens}\n` +
-        `Estimated Output Tokens: ${Math.ceil(estimatedOutputTokens)}\n` +
+        `Estimated Output Tokens: ${estimatedOutputTokens}\n` +
+        `Estimated Characters for TTS: ${estimatedCharacters}\n` +
         `Input Cost: $${inputCost.toFixed(4)}\n` +
         `Output Cost: $${outputCost.toFixed(4)}\n` +
-        `Total Cost: $${totalCost.toFixed(4)}\n`,
+        `TTS Cost: $${ttsCost.toFixed(4)}\n` +
+        `Total Cost: $${totalCost.toFixed(4)}\n`
     );
 
-    return totalCost; // Return the total cost for further use if needed
+    return {
+      inputTokens,
+      estimatedOutputTokens,
+      totalCost,
+      breakdown: {
+        inputCost,
+        outputCost,
+        ttsCost
+      }
+    };
   }
 
   private async cleanGeneratedText(
@@ -297,23 +306,22 @@ export class TTSService {
     turns: Array<{ text: string; speaker: string }>,
     index: number,
   ): Promise<string> {
-    //const voiceName = SPEAKER_VOICE_MAP[speaker]; // Assuming SPEAKER_VOICE_MAP exists
     const outputFile = path.join("audio-files", `${index}.mp3`);
 
     try {
-      const multiSpeakerMarkup = turns.map((turn) => ({
-        text: turn.text,
-        speaker: turn.speaker, // Use speaker identifiers
-      }));
-
       const request = {
-        input: { multiSpeakerMarkup },
+        input: {
+          ssml: `<speak>${turns.map(turn => 
+            `<voice name="${turn.speaker === 'Joe' ? SPEAKER_VOICE_MAP.Joe : SPEAKER_VOICE_MAP.Sarah}">
+              ${turn.text}
+            </voice>`
+          ).join('\n')}</speak>`
+        },
         voice: {
           languageCode: "en-US",
-          name: "en-US-Studio-Multispeaker", // Use the special multi-speaker voice
         },
         audioConfig: {
-          audioEncoding: "MP3",
+          audioEncoding: protos.google.cloud.texttospeech.v1.AudioEncoding.MP3,
         },
       };
 
@@ -323,8 +331,12 @@ export class TTSService {
       // Ensure the directory exists
       await fs.mkdir("audio-files", { recursive: true });
 
+      if (!response.audioContent) {
+        throw new Error("No audio content received from Text-to-Speech API");
+      }
+
       // Write the synthesized audio to the specified file
-      await fs.writeFile(outputFile, response.audioContent as Buffer);
+      await fs.writeFile(outputFile, response.audioContent);
       await logger.info(`Audio content written to file "${outputFile}"`);
 
       // Return the file path of the generated speech
@@ -419,9 +431,9 @@ export class TTSService {
 
       // Re-encode all files to ensure compatibility (constant bitrates, same sample rate)
       const reencodedFiles = [];
-      for (const [idx, file] of allFilePaths.entries()) {
-        const inputFilePath = file;
-        const reencodedFilePath = path.resolve(audioFolder, `temp_${idx}.mp3`);
+      for (let i = 0; i < allFilePaths.length; i++) {
+        const inputFilePath = allFilePaths[i];
+        const reencodedFilePath = path.resolve(audioFolder, `temp_${i}.mp3`);
 
         execSync(
           `ffmpeg -y -i "${inputFilePath}" -acodec libmp3lame -ar 44100 -b:a 192k "${reencodedFilePath}"`,
@@ -491,7 +503,9 @@ export class TTSService {
         model: "gemini-1.5-flash-002",
       }) as GenerativeModel;
 
-      const ttsCost = await this.calculateTextToConversation(model, text);
+      // Calculate the cost estimation for this conversation
+      const pricingDetails = await this.calculatePricing(text);
+      const ttsCost = pricingDetails.totalCost;
 
       const chunks = this.splitTextIntoChunks(text);
 
