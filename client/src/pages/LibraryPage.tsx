@@ -39,7 +39,7 @@ export default function LibraryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-black text-white relative">
       <nav className="flex justify-between items-center p-6">
         <h1 className="text-xl font-bold text-[#4CAF50]">Podcastify</h1>
         <div className="flex gap-4">
@@ -50,7 +50,7 @@ export default function LibraryPage() {
         </div>
       </nav>
 
-      <main className="max-w-4xl mx-auto px-6 py-8 pb-24">
+      <main className="max-w-4xl mx-auto px-6 py-8 pb-32">
         <div className="flex flex-col gap-4 mb-8">
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold">Your Library</h1>
@@ -89,23 +89,12 @@ export default function LibraryPage() {
                     className="rounded-full bg-[#4CAF50] hover:bg-[#45a049] h-10 w-10 p-0 flex items-center justify-center"
                     onClick={async () => {
                       try {
-                        console.log('Before play action:', { 
-                          isPlaying, 
-                          audioData,
-                          podcastId: podcast.id 
-                        });
-
                         if (isPlaying && audioData?.id === podcast.id) {
                           await togglePlay();
                         } else {
+                          console.log('Attempting to play podcast:', podcast);
                           await play(podcast);
                         }
-
-                        console.log('After play action:', { 
-                          isPlaying: !isPlaying, 
-                          audioData: podcast,
-                          action: isPlaying && audioData?.id === podcast.id ? 'toggle' : 'play'
-                        });
                       } catch (error) {
                         console.error('Failed to play audio:', error);
                         toast({
@@ -207,8 +196,10 @@ export default function LibraryPage() {
         </div>
       </main>
       
-      {/* Audio Player - Always render but visibility controlled by component */}
-      <AudioPlayer />
+      {/* Audio Player */}
+      <div className="fixed bottom-0 left-0 right-0 z-50">
+        <AudioPlayer />
+      </div>
     </div>
   );
 }
