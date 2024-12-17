@@ -8,6 +8,7 @@ import { Logo } from "../components/Logo";
 import { useDropzone } from "react-dropzone";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUser } from "../hooks/use-user";
+import { UsageProgress } from "@/components/UsageProgress";
 
 export default function HomePage() {
   const [, setLocation] = useLocation();
@@ -93,10 +94,16 @@ export default function HomePage() {
     return (
       <div className="min-h-screen bg-black text-white">
         <div className="max-w-4xl mx-auto px-6 pt-20 md:pt-12"> {/* Added padding top for mobile menu */}
-          <div className="text-center mb-12">
+          <div className="text-center mb-8">
             <h1 className="text-4xl font-bold mb-4">Transform Your Articles Into Podcasts</h1>
             <p className="text-gray-400">Upload any article and convert it into a natural-sounding podcast in seconds</p>
           </div>
+          
+          {user && (
+            <div className="mb-8">
+              <UsageProgress showUpgradeButton={true} />
+            </div>
+          )}
 
           <div 
             {...getRootProps()} 

@@ -8,11 +8,11 @@ import { promises as fs } from "fs";
 import * as fsSync from "fs";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import { podcasts, playlists, playlistItems, progress } from "@db/schema";
+import { podcasts, playlists, playlistItems, progress, userUsage } from "@db/schema";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-import { eq, and } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 import { ttsService } from "./services/tts";
 import pdfParse from 'pdf-parse/lib/pdf-parse.js';
 
@@ -305,13 +305,134 @@ export function registerRoutes(app: Express) {
     }
   });
 
-  app.post("/api/podcast", upload.single("file"), async (req, res) => {
+  // Get user usage stats
+app.get("/api/user/usage", async (req, res) => {
+  try {
+    if (!req.user) return res.status(401).send("Not authenticated");
+
+    const [usage] = await db
+      .select()
+      .from(userUsage)
+      .where(eq(userUsage.userId, req.user.id))
+      .limit(1);
+
+    if (!usage) {
+      // Create initial usage record if it doesn't exist
+      const [newUsage] = await db
+        .insert(userUsage)
+        .values({
+          userId: req.user.id,
+          articlesConverted: 0,
+          tokensUsed: 0,
+        })
+        .returning();
+      return res.json(newUsage);
+    }
+
+    res.json(usage);
+  } catch (error) {
+    console.error("Error fetching user usage:", error);
+    res.status(500).send("Failed to fetch usage stats");
+  }
+});
+
+// Check if user has reached usage limits
+app.get("/api/user/usage/check", async (req, res) => {
+  try {
+    if (!req.user) return res.status(401).send("Not authenticated");
+
+    // Get or create usage record
+    let [usage] = await db
+      .select()
+      .from(userUsage)
+      .where(eq(userUsage.userId, req.user.id))
+      .limit(1);
+
+    if (!usage) {
+      // Create initial usage record if it doesn't exist
+      const [newUsage] = await db
+        .insert(userUsage)
+        .values({
+          userId: req.user.id,
+          articlesConverted: 0,
+          tokensUsed: 0,
+        })
+        .returning();
+      usage = newUsage;
+    }
+
+    const ARTICLE_LIMIT = 3;
+    const TOKEN_LIMIT = 50000;
+
+    const hasReachedLimit = (
+      (usage.articlesConverted ?? 0) >= ARTICLE_LIMIT || 
+      (usage.tokensUsed ?? 0) >= TOKEN_LIMIT
+    );
+
+    res.json({
+      hasReachedLimit,
+      limits: {
+        articles: {
+          used: usage.articlesConverted || 0,
+          limit: ARTICLE_LIMIT
+        },
+        tokens: {
+          used: usage.tokensUsed || 0,
+          limit: TOKEN_LIMIT
+        }
+      }
+    });
+  } catch (error) {
+    console.error("Error checking usage limits:", error);
+    res.status(500).send("Failed to check usage limits");
+  }
+});
+
+app.post("/api/podcast", upload.single("file"), async (req, res) => {
     try {
       if (!req.user) return res.status(401).send("Not authenticated");
 
       const file = req.file;
       if (!file) {
         return res.status(400).send("No file uploaded");
+      }
+
+      // Get or create usage record
+      let [usage] = await db
+        .select()
+        .from(userUsage)
+        .where(eq(userUsage.userId, req.user.id))
+        .limit(1);
+
+      if (!usage) {
+        [usage] = await db
+          .insert(userUsage)
+          .values({
+            userId: req.user.id,
+            articlesConverted: 0,
+            tokensUsed: 0,
+          })
+          .returning();
+      }
+
+      // Check usage limits before processing
+      const ARTICLE_LIMIT = 3;
+      const TOKEN_LIMIT = 50000;
+
+      if ((usage.articlesConverted ?? 0) >= ARTICLE_LIMIT || (usage.tokensUsed ?? 0) >= TOKEN_LIMIT) {
+        return res.status(403).json({
+          error: "Usage limit reached",
+          limits: {
+            articles: {
+              used: usage.articlesConverted ?? 0,
+              limit: ARTICLE_LIMIT
+            },
+            tokens: {
+              used: usage.tokensUsed ?? 0,
+              limit: TOKEN_LIMIT
+            }
+          }
+        });
       }
 
       // Validate file type and read content
@@ -344,15 +465,48 @@ export function registerRoutes(app: Express) {
           .replace(/\s+/g, ' ')
           .trim();
 
-        console.log("Processed file content sample:", fileContent.substring(0, 200) + "...");
-      } catch (error) {
-        console.error("Error reading file:", error);
-        return res.status(400).send("Unable to process file. Please ensure it's a valid PDF or text file.");
-      }
+        // Calculate estimated tokens (1 token ≈ 4 characters)
+        const estimatedTokens = Math.ceil(fileContent.length / 4);
+        
+        // Check if this conversion would exceed the token limit
+        if ((usage.tokensUsed ?? 0) + estimatedTokens > TOKEN_LIMIT) {
+          return res.status(403).json({
+            error: "Token limit would be exceeded",
+            limits: {
+              articles: {
+                used: usage.articlesConverted ?? 0,
+                limit: ARTICLE_LIMIT
+              },
+              tokens: {
+                used: usage.tokensUsed ?? 0,
+                limit: TOKEN_LIMIT,
+                estimated: estimatedTokens
+              }
+            }
+          });
+        }
 
-      // Generate audio using TTS service
-      const { audioBuffer, duration } =
-        await ttsService.generateConversation(fileContent);
+        console.log("Processed file content sample:", fileContent.substring(0, 200) + "...");
+
+      const { audioBuffer, duration } = await ttsService.generateConversation(fileContent);
+      const tokensUsed = Math.ceil(fileContent.length / 4); // Estimate tokens based on character count
+
+      // Update usage statistics
+      await db
+        .insert(userUsage)
+        .values({
+          userId: req.user.id,
+          articlesConverted: 1,
+          tokensUsed: tokensUsed,
+        })
+        .onConflictDoUpdate({
+          target: [userUsage.userId],
+          set: {
+            articlesConverted: sql`${userUsage.articlesConverted} + 1`,
+            tokensUsed: sql`${userUsage.tokensUsed} + ${tokensUsed}`,
+            lastConversion: new Date(),
+          },
+        });
 
       // Save the audio file
       const audioFileName = `${Date.now()}-${file.originalname}.mp3`;
@@ -377,5 +531,9 @@ export function registerRoutes(app: Express) {
       console.error("Podcast generation error:", error);
       res.status(500).send("Failed to generate podcast");
     }
-  });
+  } catch (error) {
+    console.error("File processing error:", error);
+    res.status(500).send("Failed to process file");
+  }
+});
 }

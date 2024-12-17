@@ -70,3 +70,16 @@ export const insertProgressSchema = createInsertSchema(progress);
 export const selectProgressSchema = createSelectSchema(progress);
 export type InsertProgress = z.infer<typeof insertProgressSchema>;
 export type Progress = z.infer<typeof selectProgressSchema>;
+
+export const userUsage = pgTable("user_usage", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  userId: integer("user_id").references(() => users.id).unique(),
+  articlesConverted: integer("articles_converted").default(0),
+  tokensUsed: integer("tokens_used").default(0),
+  lastConversion: timestamp("last_conversion").defaultNow(),
+});
+
+export const insertUserUsageSchema = createInsertSchema(userUsage);
+export const selectUserUsageSchema = createSelectSchema(userUsage);
+export type InsertUserUsage = z.infer<typeof insertUserUsageSchema>;
+export type UserUsage = z.infer<typeof selectUserUsageSchema>;
