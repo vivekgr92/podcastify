@@ -8,6 +8,7 @@ import AudioPlayer from "../components/AudioPlayer";
 import { useToast } from "@/hooks/use-toast";
 import { useCallback } from "react";
 import { useUser } from "../hooks/use-user";
+import { cn } from "@/lib/utils";
 
 export default function LibraryPage() {
   const [, setLocation] = useLocation();
@@ -27,13 +28,13 @@ export default function LibraryPage() {
   });
 
   // Handle play/pause for any podcast in the library
-  const handlePlayPause = useCallback(async (podcast: Podcast) => {
+  const handlePlay = useCallback(async (podcast: Podcast) => {
     try {
-      // If this podcast is already loaded and playing, pause it
-      if (audioData?.id === podcast.id && isPlaying) {
+      if (audioData?.id === podcast.id) {
+        // If this podcast is already loaded, just toggle play/pause
         await togglePlay();
       } else {
-        // Otherwise, play the selected podcast
+        // Load and play the new podcast
         await play(podcast);
       }
     } catch (error) {
@@ -44,7 +45,7 @@ export default function LibraryPage() {
         variant: "destructive",
       });
     }
-  }, [audioData?.id, isPlaying, play, togglePlay, toast]);
+  }, [play, togglePlay, audioData, toast]);
 
   if (!user) {
     return (
@@ -100,11 +101,16 @@ export default function LibraryPage() {
                   <Button
                     variant="default"
                     size="icon"
-                    className="rounded-full bg-[#4CAF50] hover:bg-[#45a049] h-10 w-10 p-0 flex items-center justify-center"
-                    onClick={() => handlePlayPause(podcast)}
-                    title={isPlaying && audioData?.id === podcast.id ? "Pause" : "Play"}
+                    className={cn(
+                      "rounded-full h-10 w-10 p-0 flex items-center justify-center",
+                      audioData?.id === podcast.id
+                        ? "bg-[#45a049] hover:bg-[#3d8b3f]"
+                        : "bg-[#4CAF50] hover:bg-[#45a049]"
+                    )}
+                    onClick={() => handlePlay(podcast)}
+                    title={audioData?.id === podcast.id && isPlaying ? "Pause" : "Play"}
                   >
-                    {isPlaying && audioData?.id === podcast.id ? (
+                    {audioData?.id === podcast.id && isPlaying ? (
                       <Pause className="h-5 w-5 text-white" />
                     ) : (
                       <Play className="h-5 w-5 text-white ml-0.5" />

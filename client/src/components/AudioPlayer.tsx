@@ -98,10 +98,12 @@ export default function AudioPlayer() {
             </Button>
 
             <Button
-              onClick={togglePlay}
+              onClick={() => audioData && togglePlay()}
               variant="outline"
               size="icon"
               className="h-10 w-10 rounded-full bg-[#4CAF50] hover:bg-[#45a049] border-none text-white"
+              title={isPlaying ? "Pause" : "Play"}
+              disabled={!audioData}
             >
               {isPlaying ? (
                 <Pause className="h-5 w-5" />
