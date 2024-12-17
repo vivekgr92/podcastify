@@ -41,14 +41,128 @@ export function useAudio(): AudioHookReturn {
     };
   }, []);
 
+  // Load last played audio and position on mount
+  useEffect(() => {
+    const loadLastPlayed = async () => {
+      try {
+        // Get last played podcast data
+        const lastPlayedPodcast = localStorage.getItem('last-played-podcast');
+        if (!lastPlayedPodcast) return;
+
+        const podcast = JSON.parse(lastPlayedPodcast);
+        setAudioData(podcast);
+        
+        // Create new audio element if needed
+        if (!audioRef.current) {
+          audioRef.current = new Audio();
+        }
+
+        const audio = audioRef.current;
+        
+        // Set up audio source
+        const audioUrl = podcast.audioUrl.startsWith('http')
+          ? podcast.audioUrl
+          : `${window.location.origin}${podcast.audioUrl}`;
+        
+        // Only set src if it's different
+        if (audio.src !== audioUrl) {
+          audio.src = audioUrl;
+          
+          // Load saved position
+          const savedPosition = localStorage.getItem(`podcast-${podcast.id}-position`);
+          if (savedPosition) {
+            const position = parseFloat(savedPosition);
+            if (!isNaN(position) && position > 0) {
+              // Wait for metadata to load before setting position
+              const handleMetadata = () => {
+                const validPosition = Math.min(position, audio.duration);
+                audio.currentTime = validPosition;
+                setCurrentTime(validPosition);
+                
+                // Update progress on server
+                fetch('/api/progress', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    podcastId: podcast.id,
+                    position: validPosition,
+                    completed: false,
+                  }),
+                }).catch(err => console.error('Failed to update progress:', err));
+              };
+
+              if (audio.readyState >= 1) {
+                handleMetadata();
+              } else {
+                audio.addEventListener('loadedmetadata', handleMetadata, { once: true });
+              }
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error loading last played podcast:', error);
+      }
+    };
+    
+    loadLastPlayed();
+
+    // Save position and cleanup on unmount
+    const savePosition = () => {
+      const audio = audioRef.current;
+      if (audio && audioData) {
+        const currentPosition = audio.currentTime;
+        localStorage.setItem(`podcast-${audioData.id}-position`, currentPosition.toString());
+        localStorage.setItem('last-played-podcast', JSON.stringify(audioData));
+      }
+    };
+
+    // Add beforeunload event listener to save position when closing tab
+    window.addEventListener('beforeunload', savePosition);
+
+    // Cleanup
+    return () => {
+      const audio = audioRef.current;
+      if (audio) {
+        audio.pause();
+        savePosition();
+      }
+      window.removeEventListener('beforeunload', savePosition);
+    };
+  }, [audioData]);
+
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
-    const handleTimeUpdate = () => {
+    const handleTimeUpdate = async () => {
       setCurrentTime(audio.currentTime);
       if (audioData) {
-        localStorage.setItem(`podcast-${audioData.id}-position`, audio.currentTime.toString());
+        // Only save position every second to reduce storage writes
+        if (Math.floor(audio.currentTime) !== Math.floor(currentTime)) {
+          localStorage.setItem(`podcast-${audioData.id}-position`, audio.currentTime.toString());
+          localStorage.setItem('last-played-podcast', JSON.stringify(audioData));
+          
+          // Update progress on server every 5 seconds
+          if (Math.floor(audio.currentTime) % 5 === 0) {
+            try {
+              await fetch('/api/progress', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  podcastId: audioData.id,
+                  position: audio.currentTime,
+                  completed: audio.currentTime >= audio.duration - 1,
+                }),
+              });
+            } catch (error) {
+              console.error('Failed to update progress on server:', error);
+            }
+          }
+        }
       }
     };
 
@@ -96,10 +210,10 @@ export function useAudio(): AudioHookReturn {
         audioRef.current = audio;
       }
       
-      // Clear any existing audio
-      if (audioData?.id !== podcast.id) {
+      // Save current position before switching
+      if (audioData && audioData.id !== podcast.id) {
+        localStorage.setItem(`podcast-${audioData.id}-position`, audio.currentTime.toString());
         audio.pause();
-        audio.currentTime = 0;
       }
 
       // Always update audio data first to ensure UI updates
@@ -114,15 +228,27 @@ export function useAudio(): AudioHookReturn {
       if (!audio.src || audio.src !== audioUrl) {
         audio.src = audioUrl;
         
+        // Load saved position
         const savedPosition = localStorage.getItem(`podcast-${podcast.id}-position`);
         if (savedPosition) {
           const position = parseFloat(savedPosition);
-          if (!isNaN(position) && position > 0) {
-            audio.currentTime = position;
+          const handleMetadata = () => {
+            if (!isNaN(position) && position > 0) {
+              const validPosition = Math.min(position, audio.duration);
+              audio.currentTime = validPosition;
+              setCurrentTime(validPosition);
+            }
+          };
+
+          if (audio.readyState >= 1) {
+            handleMetadata();
+          } else {
+            audio.addEventListener('loadedmetadata', handleMetadata, { once: true });
           }
         }
       }
 
+      localStorage.setItem('last-played-podcast', JSON.stringify(podcast));
       await audio.play();
       audio.playbackRate = playbackSpeed;
       setIsPlaying(true);
