@@ -12,8 +12,8 @@ import { useUser } from "../hooks/use-user";
 export default function LibraryPage() {
   const [, setLocation] = useLocation();
   const { user } = useUser();
-  const { toast } = useToast();
   const { play, isPlaying, audioData, togglePlay } = useAudio();
+  const { toast } = useToast();
 
   const { data: podcasts, isLoading } = useQuery<Podcast[]>({
     queryKey: ["podcasts"],
@@ -26,25 +26,13 @@ export default function LibraryPage() {
     retry: 1,
   });
 
-  const handlePlayPause = useCallback(
-    async (podcast: Podcast) => {
-      try {
-        if (audioData?.id === podcast.id) {
-          await togglePlay();
-        } else {
-          await play(podcast);
-        }
-      } catch (error) {
-        console.error("Failed to play audio:", error);
-        toast({
-          title: "Error",
-          description: error instanceof Error ? error.message : "Failed to play audio",
-          variant: "destructive",
-        });
-      }
-    },
-    [audioData?.id, play, togglePlay, toast]
-  );
+  const handlePlayPause = useCallback((podcast: Podcast) => {
+    if (audioData?.id === podcast.id) {
+      togglePlay();
+    } else {
+      play(podcast);
+    }
+  }, [audioData?.id, play, togglePlay]);
 
   if (!user) {
     return (
