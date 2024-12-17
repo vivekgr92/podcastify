@@ -95,10 +95,6 @@ export default function LibraryPage() {
                         if (isPlaying && audioData?.id === podcast.id) {
                           await togglePlay();
                         } else {
-                          toast({
-                            title: "Loading",
-                            description: "Loading audio...",
-                          });
                           console.log('Attempting to play podcast:', podcast);
                           await play(podcast);
                         }
@@ -106,9 +102,8 @@ export default function LibraryPage() {
                         console.error('Failed to play audio:', error);
                         toast({
                           title: "Error",
-                          description: error instanceof Error ? error.message : "Failed to play audio. Please try again.",
-                          variant: "destructive",
-                          duration: 5000
+                          description: "Failed to play audio. Please try again.",
+                          variant: "destructive"
                         });
                       }
                     }}
