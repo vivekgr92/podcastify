@@ -31,7 +31,7 @@ const [conversionProgress, setConversionProgress] = useState(0);
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-black text-white relative">
       <nav className="flex justify-between items-center p-6">
         <h1 className="text-xl font-bold text-[#4CAF50]">Podcastify</h1>
         <div className="flex gap-4">

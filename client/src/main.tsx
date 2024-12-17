@@ -1,4 +1,4 @@
-import { StrictMode, useState, useEffect } from "react";
+import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Switch, Route } from "wouter";
 import "./index.css";
@@ -17,13 +17,12 @@ import { useUser } from "./hooks/use-user";
 import AudioPlayer from "./components/AudioPlayer";
 import Sidebar from "./components/Sidebar";
 import { Button } from "@/components/ui/button";
-
+import { useState, useEffect } from "react";
 
 function Router() {
   const { user, isLoading } = useUser();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Close mobile menu when route changes
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location]);
@@ -37,8 +36,8 @@ function Router() {
   }
 
   return (
-    <>
-      <div className="flex min-h-screen relative">
+    <div className="flex flex-col min-h-screen bg-black">
+      <div className="flex flex-1">
         {user && (
           <>
             <Button
@@ -61,48 +60,38 @@ function Router() {
             />
           </>
         )}
-        <div className="flex-1">
-          <div className="flex flex-col min-h-screen">
-            <div className="flex-1 pb-24">
-              <Switch>
-                <Route path="/auth">
-                  {user ? <HomePage /> : <AuthPage />}
-                </Route>
-                <Route path="/auth/signup">
-                  {user ? <HomePage /> : <AuthPage />}
-                </Route>
-                <Route path="/library">
-                  {!user ? <AuthPage /> : <LibraryPage />}
-                </Route>
-                <Route path="/pricing">
-                  <PricingPage />
-                </Route>
-                <Route path="/profile">
-                  {!user ? <AuthPage /> : <ProfilePage />}
-                </Route>
-                <Route path="/billing">
-                  {!user ? <AuthPage /> : <BillingPage />}
-                </Route>
-                <Route path="/admin">
-                  {!user ? (
-                    <AuthPage />
-                  ) : user.isAdmin ? (
-                    <AdminPage />
-                  ) : (
-                    <HomePage />
-                  )}
-                </Route>
-                <Route path="/">
-                  <HomePage />
-                </Route>
-                <Route>404 Page Not Found</Route>
-              </Switch>
-            </div>
-          </div>
+        <div className="flex-1 overflow-auto pb-[90px]">
+          <Switch>
+            <Route path="/auth">
+              {user ? <HomePage /> : <AuthPage />}
+            </Route>
+            <Route path="/auth/signup">
+              {user ? <HomePage /> : <AuthPage />}
+            </Route>
+            <Route path="/library">
+              {!user ? <AuthPage /> : <LibraryPage />}
+            </Route>
+            <Route path="/pricing">
+              <PricingPage />
+            </Route>
+            <Route path="/profile">
+              {!user ? <AuthPage /> : <ProfilePage />}
+            </Route>
+            <Route path="/billing">
+              {!user ? <AuthPage /> : <BillingPage />}
+            </Route>
+            <Route path="/admin">
+              {!user ? <AuthPage /> : user.isAdmin ? <AdminPage /> : <HomePage />}
+            </Route>
+            <Route path="/">
+              <HomePage />
+            </Route>
+            <Route>404 Page Not Found</Route>
+          </Switch>
         </div>
-        <AudioPlayer />
       </div>
-    </>
+      <AudioPlayer />
+    </div>
   );
 }
 
