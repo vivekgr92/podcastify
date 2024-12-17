@@ -16,14 +16,22 @@ export default function LibraryPage() {
   const queryClient = useQueryClient();
 
   const [isConverting, setIsConverting] = useState(false);
-const [conversionProgress, setConversionProgress] = useState(0);
+  const [conversionProgress, setConversionProgress] = useState(0);
+  
   const { data: podcasts, isLoading } = useQuery<Podcast[]>({
     queryKey: ["podcasts"],
     queryFn: async () => {
-      const res = await fetch("/api/podcasts");
-      if (!res.ok) throw new Error("Failed to fetch podcasts");
-      return res.json();
+      try {
+        const res = await fetch("/api/podcasts");
+        if (!res.ok) throw new Error("Failed to fetch podcasts");
+        return res.json();
+      } catch (error) {
+        console.error("Failed to fetch podcasts:", error);
+        throw error;
+      }
     },
+    staleTime: 30000,
+    retry: 1,
   });
 
   if (isLoading) {
@@ -31,7 +39,7 @@ const [conversionProgress, setConversionProgress] = useState(0);
   }
 
   return (
-    <div className="min-h-screen bg-black text-white relative">
+    <div className="min-h-screen bg-black text-white">
       <nav className="flex justify-between items-center p-6">
         <h1 className="text-xl font-bold text-[#4CAF50]">Podcastify</h1>
         <div className="flex gap-4">
@@ -42,7 +50,7 @@ const [conversionProgress, setConversionProgress] = useState(0);
         </div>
       </nav>
 
-      <main className="max-w-4xl mx-auto px-6 py-8">
+      <main className="max-w-4xl mx-auto px-6 py-8 pb-24">
         <div className="flex flex-col gap-4 mb-8">
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold">Your Library</h1>
@@ -79,11 +87,21 @@ const [conversionProgress, setConversionProgress] = useState(0);
                     variant="default" 
                     size="icon" 
                     className="rounded-full bg-[#4CAF50] hover:bg-[#45a049] h-10 w-10 p-0 flex items-center justify-center"
-                    onClick={() => {
-                      if (isPlaying && audioData?.id === podcast.id) {
-                        togglePlay();
-                      } else {
-                        play(podcast);
+                    onClick={async () => {
+                      try {
+                        if (isPlaying && audioData?.id === podcast.id) {
+                          await togglePlay();
+                        } else {
+                          console.log('Attempting to play podcast:', podcast);
+                          await play(podcast);
+                        }
+                      } catch (error) {
+                        console.error('Failed to play audio:', error);
+                        toast({
+                          title: "Error",
+                          description: "Failed to play audio. Please try again.",
+                          variant: "destructive"
+                        });
                       }
                     }}
                   >
@@ -136,7 +154,6 @@ const [conversionProgress, setConversionProgress] = useState(0);
                           description: "Podcast deleted successfully"
                         });
                         
-                        // Invalidate and refetch podcasts
                         await queryClient.invalidateQueries({ queryKey: ['podcasts'] });
                       } catch (error) {
                         toast({
@@ -178,6 +195,11 @@ const [conversionProgress, setConversionProgress] = useState(0);
           )}
         </div>
       </main>
+      
+      {/* Audio Player - Only rendered in LibraryPage */}
+      <div className="fixed bottom-0 left-0 right-0">
+        <AudioPlayer />
+      </div>
     </div>
   );
 }
