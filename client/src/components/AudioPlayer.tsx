@@ -59,7 +59,7 @@ export default function AudioPlayer() {
   };
 
   return (
-    <div className={`fixed bottom-0 left-0 right-0 bg-black/95 backdrop-blur-sm border-t border-gray-800 shadow-lg z-[100] transition-all duration-300 ${!audioData ? 'h-0' : 'h-24'}`}>
+    <div className={`fixed bottom-0 left-0 right-0 bg-black/95 backdrop-blur-sm border-t border-gray-800 shadow-lg z-[100] transition-all duration-300 ${!audioData ? 'translate-y-full' : 'translate-y-0'} h-24`}>
       <canvas
         ref={canvasRef}
         className="absolute top-0 left-0 right-0 h-1 bg-[#4CAF50]/20"

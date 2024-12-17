@@ -89,22 +89,23 @@ export function useAudio(): AudioHookReturn {
   }, [audioData, toast, playbackSpeed]);
 
   const play = useCallback(async (podcast: Podcast) => {
-    let audio = audioRef.current;
-    if (!audio) {
-      audio = new Audio();
-      audioRef.current = audio;
-    }
-
     try {
+      let audio = audioRef.current;
+      if (!audio) {
+        audio = new Audio();
+        audioRef.current = audio;
+      }
+
       // Always update audio data first to ensure UI updates
       setAudioData(podcast);
       
       // Set up the audio source if it's a new podcast or source has changed
-      if (!audioData || audioData.id !== podcast.id) {
-        const audioUrl = podcast.audioUrl.startsWith('http')
-          ? podcast.audioUrl
-          : `${window.location.origin}${podcast.audioUrl}`;
-        
+      const audioUrl = podcast.audioUrl.startsWith('http')
+        ? podcast.audioUrl
+        : `${window.location.origin}${podcast.audioUrl}`;
+      
+      // If it's a new podcast or the source has changed
+      if (!audio.src || audio.src !== audioUrl) {
         audio.src = audioUrl;
         
         const savedPosition = localStorage.getItem(`podcast-${podcast.id}-position`);
@@ -127,7 +128,7 @@ export function useAudio(): AudioHookReturn {
         variant: "destructive",
       });
     }
-  }, [audioData, playbackSpeed, toast]);
+  }, [playbackSpeed, toast]);
 
   const togglePlay = useCallback(async () => {
     const audio = audioRef.current;
