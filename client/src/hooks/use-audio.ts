@@ -11,18 +11,20 @@ interface AudioHookReturn {
   currentIndex: number;
   canvasRef: React.RefObject<HTMLCanvasElement>;
   playbackSpeed: number;
-  play: (podcast: Podcast) => void;
-  togglePlay: () => void;
+  play: (podcast: Podcast) => Promise<void>;
+  togglePlay: () => Promise<void>;
   setPosition: (time: number) => void;
   setVolume: (value: number) => void;
   setPlaybackSpeed: (speed: number) => void;
   fastForward: () => void;
   rewind: () => void;
-  next: () => void;
-  previous: () => void;
+  next: () => Promise<void>;
+  previous: () => Promise<void>;
   addToPlaylist: (podcast: Podcast) => void;
   removeFromPlaylist: (podcastId: number) => void;
   clearPlaylist: () => void;
+  setCurrentIndex: (index: number) => void;
+  setPlaylist: (playlist: Podcast[]) => void;
 }
 
 export function useAudio(): AudioHookReturn {
@@ -416,5 +418,7 @@ export function useAudio(): AudioHookReturn {
     addToPlaylist,
     removeFromPlaylist,
     clearPlaylist,
+    setCurrentIndex,
+    setPlaylist,
   };
 }
