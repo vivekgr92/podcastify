@@ -62,13 +62,22 @@ export function useAudio(): AudioHookReturn {
         audio.pause();
       }
 
-      // Update audio data and playing state
+      // Ensure state updates happen in the correct order
       setAudioData(podcast);
-      setIsPlaying(true);
-      
-      // Force a re-render by updating state
       setCurrentTime(0);
       setDuration(0);
+      setIsPlaying(true);
+      
+      console.log('Audio states updated:', { 
+        podcastId: podcast.id,
+        podcastTitle: podcast.title,
+        isPlaying: true, 
+        currentTime: 0, 
+        duration: 0,
+        audioUrl: podcast.audioUrl
+      });
+      
+      console.log('Audio states updated:', { podcast, isPlaying: true });
       
       // Construct the audio URL
       const baseUrl = window.location.origin;
