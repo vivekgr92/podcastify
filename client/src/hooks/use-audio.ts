@@ -85,15 +85,15 @@ export function useAudio(): AudioHookReturn {
         localStorage.setItem(`podcast-${audioData.id}-position`, audio.currentTime.toString());
       }
 
-      // Pause current playback before switching
-      if (isPlaying) {
-        audio.pause();
-      }
-
       const audioUrl = constructAudioUrl(podcast.audioUrl);
       
       // Only reload audio if it's a different podcast
       if (audio.src !== audioUrl) {
+        // Pause current playback before switching
+        if (isPlaying) {
+          audio.pause();
+        }
+
         try {
           const response = await fetch(audioUrl, { method: 'HEAD' });
           if (!response.ok) {
@@ -125,12 +125,15 @@ export function useAudio(): AudioHookReturn {
         });
       }
 
+      // Update state before playing
       setAudioData(podcast);
+      localStorage.setItem('last-played-podcast', JSON.stringify(podcast));
+
+      // Play the audio
       await audio.play();
       audio.playbackRate = playbackSpeed;
       setIsPlaying(true);
 
-      localStorage.setItem('last-played-podcast', JSON.stringify(podcast));
     } catch (error) {
       console.error('Error playing audio:', error);
       setIsPlaying(false);
