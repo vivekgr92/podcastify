@@ -30,11 +30,14 @@ export default function LibraryPage() {
   // Handle play/pause for any podcast in the library
   const handlePlay = useCallback(async (podcast: Podcast) => {
     try {
-      if (audioData?.id === podcast.id) {
-        // If this podcast is already loaded, just toggle play/pause
+      if (audioData?.id === podcast.id && isPlaying) {
+        // If this podcast is currently playing, pause it
+        await togglePlay();
+      } else if (audioData?.id === podcast.id && !isPlaying) {
+        // If this podcast is loaded but paused, resume it
         await togglePlay();
       } else {
-        // Load and play the new podcast
+        // Load and play a new podcast
         await play(podcast);
       }
     } catch (error) {
@@ -45,7 +48,10 @@ export default function LibraryPage() {
         variant: "destructive",
       });
     }
-  }, [play, togglePlay, audioData, toast]);
+  }, [play, togglePlay, audioData, isPlaying, toast]);
+
+  // Ensure AudioPlayer is rendered only when we have audio data
+  const shouldShowPlayer = Boolean(user && (audioData || isPlaying));
 
   if (!user) {
     return (
