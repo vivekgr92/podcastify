@@ -9,8 +9,8 @@ import { execSync } from "child_process";
 
 // Define the speaker to voice mapping
 const SPEAKER_VOICE_MAP = {
-  Joe: "en-US-Neural2-D", // Male voice for Joe
-  Sarah: "en-US-Neural2-F", // Female voice for Sarah
+  Joe: 'en-US-Neural2-D',   // Male voice for Joe
+  Sarah: 'en-US-Neural2-F'  // Female voice for Sarah
 };
 
 type Speaker = keyof typeof SPEAKER_VOICE_MAP;
@@ -46,8 +46,8 @@ interface PricingDetails {
 }
 
 const PRICING = {
-  INPUT_TOKEN_RATE: 0.0000375, // Cost per 1K input tokens
-  OUTPUT_TOKEN_RATE: 0.00015, // Cost per 1K output tokens
+  INPUT_TOKEN_RATE: 0.0005,  // Cost per 1K input tokens
+  OUTPUT_TOKEN_RATE: 0.0005  // Cost per 1K output tokens
 };
 
 const SPEAKERS: Speaker[] = ["Joe", "Sarah"];
@@ -200,7 +200,7 @@ export class TTSService {
 
   private calculateTtsCost(characters: number, useWaveNet: boolean): number {
     const charactersPerMillion = 1000000;
-    const standardRate = 16.0 / charactersPerMillion; // $4 per 1 million characters for Standard voices
+    const standardRate = 4.0 / charactersPerMillion; // $4 per 1 million characters for Standard voices
     const wavenetRate = 16.0 / charactersPerMillion; // $16 per 1 million characters for WaveNet voices
 
     const costPerCharacter = useWaveNet ? wavenetRate : standardRate;
@@ -303,28 +303,24 @@ export class TTSService {
       const multiSpeakerMarkup = turns.map((turn) => ({
         text: turn.text,
         speaker: turn.speaker,
-        voiceName: SPEAKER_VOICE_MAP[turn.speaker],
+        voiceName: SPEAKER_VOICE_MAP[turn.speaker]
       }));
 
-      const request: protos.google.cloud.texttospeech.v1.ISynthesizeSpeechRequest =
-        {
-          input: {
-            text: multiSpeakerMarkup.map((t) => `${t.text}`).join("\n"),
-          },
-          voice: {
-            languageCode: "en-US",
-            name: multiSpeakerMarkup[0].voiceName,
-            ssmlGender:
-              protos.google.cloud.texttospeech.v1.SsmlVoiceGender.NEUTRAL,
-          },
-          audioConfig: {
-            audioEncoding:
-              protos.google.cloud.texttospeech.v1.AudioEncoding.MP3,
-            speakingRate: 1.0,
-            pitch: 0.0,
-            volumeGainDb: 0.0,
-          },
-        };
+      const request: protos.google.cloud.texttospeech.v1.ISynthesizeSpeechRequest = {
+        input: { text: multiSpeakerMarkup.map(t => `${t.text}`).join('\n') },
+        voice: {
+          languageCode: "en-US",
+          name: multiSpeakerMarkup[0].voiceName,
+          ssmlGender: protos.google.cloud.texttospeech.v1.SsmlVoiceGender.NEUTRAL
+        },
+        audioConfig: {
+          audioEncoding: protos.google.cloud.texttospeech.v1.AudioEncoding.MP3,
+          speakingRate: 1.0,
+          pitch: 0.0,
+          volumeGainDb: 0.0
+        },
+      };
+
 
       // Perform the text-to-speech request
       const response = (await this.ttsClient.synthesizeSpeech(request))[0];
@@ -485,8 +481,7 @@ export class TTSService {
 
       // Calculate costs
       const inputCost = (inputTokens / 1000) * PRICING.INPUT_TOKEN_RATE;
-      const outputCost =
-        (estimatedOutputTokens / 1000) * PRICING.OUTPUT_TOKEN_RATE;
+      const outputCost = (estimatedOutputTokens / 1000) * PRICING.OUTPUT_TOKEN_RATE;
       const totalCost = inputCost + outputCost;
 
       return {
@@ -499,9 +494,7 @@ export class TTSService {
         },
       };
     } catch (error) {
-      throw new Error(
-        `Failed to calculate pricing: ${error instanceof Error ? error.message : String(error)}`,
-      );
+      throw new Error(`Failed to calculate pricing: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 
@@ -617,6 +610,7 @@ export class TTSService {
         logger.log(`${part.speaker}: ${part.text}`);
       });
       await logger.log("--- End of Conversation ---\n");
+
 
       // Variables to track the total cost
       let totalCost = 0;

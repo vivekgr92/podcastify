@@ -8,15 +8,12 @@ import AudioPlayer from "../components/AudioPlayer";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { useUser } from "@/hooks/use-user";
 
 export default function LibraryPage() {
   const [, setLocation] = useLocation();
-  const { play, isPlaying, audioData, togglePlay, cleanup } = useAudio();
+  const { play, isPlaying, audioData, togglePlay } = useAudio();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const { logout } = useUser();
-  if (!logout) return null;
 
   const [isConverting, setIsConverting] = useState(false);
   const [conversionProgress, setConversionProgress] = useState(0);
@@ -52,34 +49,7 @@ export default function LibraryPage() {
           <Button variant="ghost" onClick={() => setLocation('/')}>Home</Button>
           <Button variant="ghost">Library</Button>
           <Button variant="outline" onClick={() => setLocation('/auth/signup')}>Sign Up</Button>
-          <Button 
-            onClick={async () => {
-              try {
-                // First cleanup the audio player
-                cleanup();
-                
-                // Wait a bit to ensure cleanup is complete
-                await new Promise(resolve => setTimeout(resolve, 100));
-                
-                // Then perform logout
-                await logout();
-                
-                // Navigate to auth page
-                setLocation('/auth');
-              } catch (error) {
-                console.error('Logout failed:', error);
-                toast({
-                  title: "Error",
-                  description: "Failed to logout. Please try again.",
-                  variant: "destructive"
-                });
-              }
-            }}
-            variant="outline"
-            className="bg-red-500 hover:bg-red-600 text-white hover:text-white border-none"
-          >
-            Logout
-          </Button>
+          <Button onClick={() => setLocation('/auth')}>Login</Button>
         </div>
       </nav>
 
