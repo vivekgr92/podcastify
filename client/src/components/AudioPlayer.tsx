@@ -80,9 +80,8 @@ export default function AudioPlayer() {
   return (
     <div className={`w-full h-24 bg-black border-t border-gray-800 fixed bottom-0 left-0 right-0 z-50 ${!audioData ? 'hidden' : ''}`}>
       <div className="h-full mx-auto px-4 flex items-center justify-between gap-4 max-w-screen-2xl">
-        {audioData && (
+        {audioData ? (
           <>
-            {/* Track Info */}
             <div className="flex items-center gap-4 min-w-[200px] max-w-[300px]">
               <div className="w-12 h-12 bg-[#4CAF50]/20 rounded-lg flex items-center justify-center">
                 {audioData.coverImage ? (
@@ -105,7 +104,6 @@ export default function AudioPlayer() {
               </div>
             </div>
 
-            {/* Playback Controls */}
             <div className="flex flex-col items-center gap-2 flex-1 max-w-[600px]">
               <div className="flex items-center gap-4">
                 <Button 
@@ -174,7 +172,6 @@ export default function AudioPlayer() {
               </div>
             </div>
 
-            {/* Volume Controls */}
             <div className="flex items-center gap-2 min-w-[150px]">
               <Button
                 variant="ghost"
@@ -193,7 +190,6 @@ export default function AudioPlayer() {
               />
             </div>
 
-            {/* Download Button */}
             <Button
               variant="ghost"
               size="icon"
