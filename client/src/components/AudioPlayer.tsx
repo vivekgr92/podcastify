@@ -1,11 +1,28 @@
 import { useRef, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
-import { Play, Pause, SkipBack, SkipForward, Volume2, Volume1, VolumeX, Download } from "lucide-react";
+import {
+  Play,
+  Pause,
+  SkipBack,
+  SkipForward,
+  Volume2,
+  Volume1,
+  VolumeX,
+  Download,
+  Rewind,
+  FastForward,
+} from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useAudio } from "../hooks/use-audio";
 
 export default function AudioPlayer() {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [volume, setVolume] = useState(100);
   const [prevVolume, setPrevVolume] = useState(100);
   
@@ -18,13 +35,11 @@ export default function AudioPlayer() {
     setVolume: setAudioVolume,
     audioData,
     canvasRef,
+    playbackSpeed,
+    setPlaybackSpeed,
+    fastForward,
+    rewind,
   } = useAudio();
-
-  useEffect(() => {
-    if (!audioRef.current) {
-      audioRef.current = new Audio();
-    }
-  }, []);
 
   const toggleMute = () => {
     if (volume > 0) {
@@ -85,8 +100,10 @@ export default function AudioPlayer() {
                 size="icon"
                 className="text-white hover:text-white hover:bg-[#4CAF50]/20"
                 disabled={!audioData}
+                onClick={rewind}
+                title="Rewind 10 seconds"
               >
-                <SkipBack className="h-5 w-5" />
+                <Rewind className="h-5 w-5" />
               </Button>
               
               <Button 
@@ -108,9 +125,26 @@ export default function AudioPlayer() {
                 size="icon"
                 className="text-white hover:text-white hover:bg-[#4CAF50]/20"
                 disabled={!audioData}
+                onClick={fastForward}
+                title="Fast forward 10 seconds"
               >
-                <SkipForward className="h-5 w-5" />
+                <FastForward className="h-5 w-5" />
               </Button>
+
+              <Select
+                value={playbackSpeed.toString()}
+                onValueChange={(value) => setPlaybackSpeed(parseFloat(value))}
+              >
+                <SelectTrigger className="w-[80px] bg-transparent text-white border-[#4CAF50]">
+                  <SelectValue>{playbackSpeed}x</SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="0.5">0.5x</SelectItem>
+                  <SelectItem value="1">1x</SelectItem>
+                  <SelectItem value="1.5">1.5x</SelectItem>
+                  <SelectItem value="2">2x</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="flex items-center gap-2 w-full">
