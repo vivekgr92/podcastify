@@ -6,18 +6,19 @@ import { useLocation } from "wouter";
 import { useAudio } from "../hooks/use-audio";
 import AudioPlayer from "../components/AudioPlayer";
 import { useToast } from "@/hooks/use-toast";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useUser } from "../hooks/use-user";
 
 export default function LibraryPage() {
+  // All hooks at the top of component
   const [, setLocation] = useLocation();
-  const { play, isPlaying, audioData, togglePlay } = useAudio();
-  const { toast } = useToast();
   const { user } = useUser();
-  
+  const { toast } = useToast();
+  const { play, isPlaying, audioData, togglePlay } = useAudio();
   const [isConverting, setIsConverting] = useState(false);
   const [conversionProgress, setConversionProgress] = useState(0);
-  
+
+  // All hooks at the top
   const { data: podcasts, isLoading } = useQuery<Podcast[]>({
     queryKey: ["podcasts"],
     queryFn: async () => {
@@ -33,6 +34,36 @@ export default function LibraryPage() {
     staleTime: 30000,
     retry: 1,
   });
+
+  // Callbacks after hooks
+  const handlePlayPause = useCallback(
+    async (podcast: Podcast) => {
+      try {
+        if (audioData?.id === podcast.id) {
+          await togglePlay();
+        } else {
+          await play(podcast);
+        }
+      } catch (error) {
+        console.error('Failed to play audio:', error);
+        toast({
+          title: "Error",
+          description: error instanceof Error ? error.message : "Failed to play audio. Please try again.",
+          variant: "destructive"
+        });
+      }
+    },
+    [audioData, play, togglePlay, toast]
+  );
+
+  useEffect(() => {
+    if (isPlaying && audioData && podcasts) {
+      const playingPodcast = podcasts.find(p => p.id === audioData.id);
+      if (playingPodcast) {
+        setLocation(window.location.pathname);
+      }
+    }
+  }, [isPlaying, audioData, podcasts, setLocation]);
 
   // Redirect to login if not authenticated
   if (!user) {
@@ -58,37 +89,6 @@ export default function LibraryPage() {
       </div>
     );
   }
-
-  const handlePlayPause = useCallback(async (podcast: Podcast) => {
-    try {
-      if (audioData?.id === podcast.id) {
-        // If the same podcast is already loaded, just toggle play/pause
-        await togglePlay();
-      } else {
-        // Otherwise, load and play the new podcast
-        await play(podcast);
-      }
-    } catch (error) {
-      console.error('Failed to play audio:', error);
-      toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to play audio. Please try again.",
-        variant: "destructive"
-      });
-    }
-  }, [audioData, play, togglePlay, toast]);
-
-  // Ensure audio player is properly synced with library state
-  useEffect(() => {
-    if (isPlaying && audioData) {
-      // Update currently playing podcast in library view
-      const playingPodcast = podcasts?.find(p => p.id === audioData.id);
-      if (playingPodcast) {
-        // Force re-render of the podcast list item
-        setLocation(location);
-      }
-    }
-  }, [isPlaying, audioData, podcasts, location, setLocation]);
 
   return (
     <div className="min-h-screen bg-black text-white relative">

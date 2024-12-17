@@ -61,7 +61,7 @@ export default function AudioPlayer() {
   }
 
   return (
-    <div className="w-full h-24 bg-black border-t border-gray-800 fixed bottom-0 left-0 right-0 z-50 transition-all duration-300">
+    <div className="w-full h-24 bg-black border-t border-gray-800 fixed bottom-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out">
       <div className="h-full mx-auto px-4 flex items-center justify-between gap-4 max-w-screen-2xl">
         <div className="flex items-center gap-4 min-w-[200px] max-w-[300px]">
           <div className="w-12 h-12 bg-[#4CAF50]/20 rounded-lg flex items-center justify-center">
