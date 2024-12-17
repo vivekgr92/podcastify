@@ -148,17 +148,28 @@ export function registerRoutes(app: Express) {
         )
         .limit(1);
 
-      // Calculate pricing and tokens
-      const pricingDetails = await ttsService.calculatePricing(fileContent);
-      const estimatedTokens = pricingDetails.inputTokens + pricingDetails.estimatedOutputTokens;
+      try {
+        // Calculate pricing and token usage
+        const pricingDetails = await ttsService.calculatePricing(fileContent);
+        const totalInputTokens = pricingDetails?.inputTokens || 0;
+        const totalOutputTokens = pricingDetails?.estimatedOutputTokens || 0;
+        const totalTokens = totalInputTokens + totalOutputTokens;
 
-      // Check usage limits
-      const currentArticles = usage?.articlesConverted || 0;
-      const currentTokens = usage?.tokensUsed || 0;
-      const wouldExceedArticles = currentArticles >= ARTICLE_LIMIT;
-      const wouldExceedTokens = (currentTokens + estimatedTokens) > TOKEN_LIMIT;
-      const remainingArticles = Math.max(0, ARTICLE_LIMIT - currentArticles);
-      const remainingTokens = Math.max(0, TOKEN_LIMIT - currentTokens);
+        // Log token calculation details
+        await logger.info([
+          `Token calculation for user ${user.id}:`,
+          `Input tokens: ${totalInputTokens}`,
+          `Estimated output tokens: ${totalOutputTokens}`,
+          `Total tokens: ${totalTokens}`
+        ]);
+
+        // Check usage limits
+        const currentArticles = usage?.articlesConverted || 0;
+        const currentTokens = usage?.tokensUsed || 0;
+        const wouldExceedArticles = currentArticles >= ARTICLE_LIMIT;
+        const wouldExceedTokens = (currentTokens + totalTokens) > TOKEN_LIMIT;
+        const remainingArticles = Math.max(0, ARTICLE_LIMIT - currentArticles);
+        const remainingTokens = Math.max(0, TOKEN_LIMIT - currentTokens);
 
       if (wouldExceedArticles || wouldExceedTokens) {
         await logger.info([
@@ -181,11 +192,15 @@ export function registerRoutes(app: Express) {
               used: currentTokens,
               limit: TOKEN_LIMIT,
               remaining: remainingTokens,
-              estimated: estimatedTokens,
+              estimated: totalTokens,
               wouldExceed: wouldExceedTokens
             }
           },
-          pricing: pricingDetails,
+          pricing: {
+            inputTokens: totalInputTokens,
+            estimatedOutputTokens: totalOutputTokens,
+            estimatedCost: pricingDetails.totalCost || 0
+          },
           upgradePlans: {
             monthly: {
               name: "Pro",
@@ -222,7 +237,7 @@ export function registerRoutes(app: Express) {
             .values({
               userId: user.id,
               articlesConverted: currentArticles + 1,
-              tokensUsed: currentTokens + estimatedTokens,
+              tokensUsed: sql`${userUsage.tokensUsed} + ${totalTokens}`,
               monthYear: currentMonth,
               lastConversion: new Date(),
             })
@@ -230,7 +245,7 @@ export function registerRoutes(app: Express) {
               target: [userUsage.userId, userUsage.monthYear],
               set: {
                 articlesConverted: sql`${userUsage.articlesConverted} + 1`,
-                tokensUsed: sql`${userUsage.tokensUsed} + ${estimatedTokens}`,
+                tokensUsed: sql`${userUsage.tokensUsed} + ${totalTokens}`,
                 lastConversion: new Date(),
               },
             })
@@ -601,18 +616,74 @@ export function registerRoutes(app: Express) {
   // Calculate pricing estimate
   app.post("/api/podcast/pricing", async (req, res) => {
     try {
-      if (!req.user) return res.status(401).send("Not authenticated");
+      if (!req.user) {
+        return res.status(401).json({
+          error: "Not authenticated",
+          type: "auth"
+        });
+      }
 
       const { text } = req.body;
       if (!text) {
-        return res.status(400).send("Text content is required");
+        return res.status(400).json({
+          error: "Text content is required",
+          type: "validation"
+        });
       }
 
       const pricingDetails = await ttsService.calculatePricing(text);
-      res.json(pricingDetails);
+      if (!pricingDetails) {
+        throw new Error("Failed to calculate pricing details");
+      }
+
+      const currentMonth = new Date().toISOString().slice(0, 7);
+      const [usage] = await db
+        .select()
+        .from(userUsage)
+        .where(
+          and(
+            eq(userUsage.userId, req.user.id),
+            eq(userUsage.monthYear, currentMonth)
+          )
+        )
+        .limit(1);
+
+      const currentArticles = usage?.articlesConverted || 0;
+      const currentTokens = usage?.tokensUsed || 0;
+      const totalTokens = (pricingDetails.inputTokens || 0) + (pricingDetails.estimatedOutputTokens || 0);
+
+      res.json({
+        ...pricingDetails,
+        currentUsage: {
+          articles: currentArticles,
+          tokens: currentTokens,
+        },
+        limits: {
+          articles: {
+            used: currentArticles,
+            limit: ARTICLE_LIMIT,
+            remaining: Math.max(0, ARTICLE_LIMIT - currentArticles),
+            wouldExceed: currentArticles >= ARTICLE_LIMIT
+          },
+          tokens: {
+            used: currentTokens,
+            limit: TOKEN_LIMIT,
+            remaining: Math.max(0, TOKEN_LIMIT - currentTokens),
+            wouldExceed: (currentTokens + totalTokens) > TOKEN_LIMIT,
+            estimated: totalTokens
+          }
+        }
+      });
     } catch (error) {
-      console.error("Pricing calculation error:", error);
-      res.status(500).send("Failed to calculate pricing");
+      await logger.error([
+        'Error calculating pricing:',
+        error instanceof Error ? error.message : String(error)
+      ]);
+      res.status(500).json({
+        error: "Failed to calculate pricing",
+        type: "server",
+        message: error instanceof Error ? error.message : "Unknown error"
+      });
     }
   });
 
