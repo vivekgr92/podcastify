@@ -8,12 +8,14 @@ import AudioPlayer from "../components/AudioPlayer";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { useUser } from "../hooks/use-user";
 
 export default function LibraryPage() {
   const [, setLocation] = useLocation();
   const { play, isPlaying, audioData, togglePlay } = useAudio();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { user } = useUser();
 
   const [isConverting, setIsConverting] = useState(false);
   const [conversionProgress, setConversionProgress] = useState(0);
@@ -34,22 +36,50 @@ export default function LibraryPage() {
     retry: 1,
   });
 
-  if (isLoading) {
-    return <div className="p-6">Loading...</div>;
+  // Redirect to login if not authenticated
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-black text-white p-6">
+        <div className="max-w-md mx-auto text-center">
+          <h1 className="text-2xl font-bold mb-4">Please Login</h1>
+          <p className="mb-4">You need to be logged in to access your library.</p>
+          <Button onClick={() => setLocation('/auth')} className="bg-[#4CAF50] hover:bg-[#45a049]">
+            Login
+          </Button>
+        </div>
+      </div>
+    );
   }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-black text-white p-6">
+        <div className="max-w-md mx-auto text-center">
+          <p>Loading your library...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const handlePlayPause = async (podcast: Podcast) => {
+    try {
+      if (isPlaying && audioData?.id === podcast.id) {
+        await togglePlay();
+      } else {
+        await play(podcast);
+      }
+    } catch (error) {
+      console.error('Failed to play audio:', error);
+      toast({
+        title: "Error",
+        description: "Failed to play audio. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-black text-white relative">
-      <nav className="flex justify-between items-center p-6">
-        <h1 className="text-xl font-bold text-[#4CAF50]">Podcastify</h1>
-        <div className="flex gap-4">
-          <Button variant="ghost" onClick={() => setLocation('/')}>Home</Button>
-          <Button variant="ghost">Library</Button>
-          <Button variant="outline" onClick={() => setLocation('/auth/signup')}>Sign Up</Button>
-          <Button onClick={() => setLocation('/auth')}>Login</Button>
-        </div>
-      </nav>
-
       <main className="max-w-4xl mx-auto px-6 py-8 pb-32">
         <div className="flex flex-col gap-4 mb-8">
           <div className="flex justify-between items-center">
@@ -58,6 +88,7 @@ export default function LibraryPage() {
               Convert New Podcast
             </Button>
           </div>
+
           {isConverting && (
             <div className="w-full bg-gray-900 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
@@ -87,23 +118,7 @@ export default function LibraryPage() {
                     variant="default" 
                     size="icon" 
                     className="rounded-full bg-[#4CAF50] hover:bg-[#45a049] h-10 w-10 p-0 flex items-center justify-center"
-                    onClick={async () => {
-                      try {
-                        if (isPlaying && audioData?.id === podcast.id) {
-                          await togglePlay();
-                        } else {
-                          console.log('Attempting to play podcast:', podcast);
-                          await play(podcast);
-                        }
-                      } catch (error) {
-                        console.error('Failed to play audio:', error);
-                        toast({
-                          title: "Error",
-                          description: "Failed to play audio. Please try again.",
-                          variant: "destructive"
-                        });
-                      }
-                    }}
+                    onClick={() => handlePlayPause(podcast)}
                   >
                     {isPlaying && audioData?.id === podcast.id ? (
                       <Pause className="h-5 w-5 text-black fill-black" />
@@ -133,38 +148,7 @@ export default function LibraryPage() {
                   </Button>
                   <Button variant="outline" size="sm" className="flex items-center gap-2">
                     <Share2 size={16} />
-                    Share with Friends
-                  </Button>
-                  <Button 
-                    variant="destructive" 
-                    size="sm"
-                    onClick={async () => {
-                      try {
-                        const response = await fetch(`/api/podcasts/${podcast.id}`, {
-                          method: 'DELETE',
-                          credentials: 'include'
-                        });
-                        
-                        if (!response.ok) {
-                          throw new Error('Failed to delete podcast');
-                        }
-                        
-                        toast({
-                          title: "Success",
-                          description: "Podcast deleted successfully"
-                        });
-                        
-                        await queryClient.invalidateQueries({ queryKey: ['podcasts'] });
-                      } catch (error) {
-                        toast({
-                          title: "Error",
-                          description: "Failed to delete podcast",
-                          variant: "destructive"
-                        });
-                      }
-                    }}
-                  >
-                    Delete
+                    Share
                   </Button>
                 </div>
               </div>
@@ -175,20 +159,7 @@ export default function LibraryPage() {
               <div className="flex flex-col">
                 <div className="mb-4">
                   <h3 className="text-lg font-medium mb-2">Welcome to Your Podcast Library</h3>
-                  <p className="text-sm text-gray-400">This is a sample podcast to help you get started. Try out the buttons below!</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Button 
-                    variant="default" 
-                    size="icon" 
-                    className="rounded-full bg-[#4CAF50] hover:bg-[#45a049] h-10 w-10 p-0 flex items-center justify-center"
-                  >
-                    <Play className="h-5 w-5 text-black fill-black" />
-                  </Button>
-                  <Button variant="outline" size="sm" className="h-9 flex items-center gap-2">
-                    <Share2 size={16} />
-                    Share with Friends
-                  </Button>
+                  <p className="text-sm text-gray-400">Your library is empty. Convert your first podcast to get started!</p>
                 </div>
               </div>
             </div>
@@ -196,10 +167,8 @@ export default function LibraryPage() {
         </div>
       </main>
       
-      {/* Audio Player */}
-      <div className="fixed bottom-0 left-0 right-0 z-50">
-        <AudioPlayer />
-      </div>
+      {/* AudioPlayer will only render if user is authenticated and there's audio data */}
+      {audioData && <AudioPlayer />}
     </div>
   );
 }
