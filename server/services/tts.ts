@@ -200,7 +200,7 @@ export class TTSService {
 
   private calculateTtsCost(characters: number, useWaveNet: boolean): number {
     const charactersPerMillion = 1000000;
-    const standardRate = 4.0 / charactersPerMillion; // $4 per 1 million characters for Standard voices
+    const standardRate = 16.0 / charactersPerMillion; // $4 per 1 million characters for Standard voices
     const wavenetRate = 16.0 / charactersPerMillion; // $16 per 1 million characters for WaveNet voices
 
     const costPerCharacter = useWaveNet ? wavenetRate : standardRate;
