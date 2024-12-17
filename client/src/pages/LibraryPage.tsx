@@ -33,6 +33,8 @@ export default function LibraryPage() {
     },
     staleTime: 30000,
     retry: 1,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false
   });
 
   if (isLoading) {
