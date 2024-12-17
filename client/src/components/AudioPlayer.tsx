@@ -11,6 +11,8 @@ import {
   SkipForward,
   List,
   X,
+  ArrowUp,
+  ArrowDown,
 } from "lucide-react";
 import {
   Popover,
@@ -40,6 +42,8 @@ export default function AudioPlayer() {
     audioData,
     playlist,
     currentIndex,
+    setCurrentIndex,
+    setPlaylist,
     playbackSpeed,
     setPlaybackSpeed,
     fastForward,
@@ -264,39 +268,49 @@ export default function AudioPlayer() {
                   )}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-80 p-0 bg-black border-gray-800">
-                <ScrollArea className="h-[300px]">
-                  <div className="p-4">
-                    <h4 className="text-sm font-medium text-white mb-4">Current Playlist</h4>
+              <PopoverContent className="w-[400px] p-0 bg-black border-gray-800">
+                <div className="p-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="text-sm font-medium text-white">Current Playlist</h4>
+                    <span className="text-xs text-gray-400">{playlist.length} tracks</span>
+                  </div>
+                  <ScrollArea className="h-[400px] pr-4">
                     {playlist.length === 0 ? (
-                      <p className="text-sm text-gray-400">No items in playlist</p>
+                      <div className="flex flex-col items-center justify-center h-[200px] text-center">
+                        <Volume2 className="h-8 w-8 text-gray-400 mb-2" />
+                        <p className="text-sm text-gray-400">No items in playlist</p>
+                        <p className="text-xs text-gray-500 mt-1">Add tracks from your library</p>
+                      </div>
                     ) : (
                       <div className="space-y-2">
                         {playlist.map((item, index) => (
                           <div
                             key={item.id}
                             className={cn(
-                              "flex items-center gap-3 p-2 rounded-md",
+                              "group flex items-center gap-3 p-3 rounded-lg transition-all duration-200",
                               index === currentIndex
                                 ? "bg-[#4CAF50]/20"
                                 : "hover:bg-gray-800/50"
                             )}
                           >
+                            <div className="flex-shrink-0 text-sm text-gray-400 w-6 text-center">
+                              {index + 1}
+                            </div>
                             <button
                               className="flex-1 flex items-center gap-3 min-w-0 text-left"
                               onClick={() => play(item)}
                             >
-                              <div className={`w-8 h-8 rounded flex items-center justify-center ${
+                              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                                 item.coverImage ? '' : 'bg-[#4CAF50]/20'
                               }`}>
                                 {item.coverImage ? (
                                   <img
                                     src={item.coverImage}
                                     alt={item.title}
-                                    className="w-full h-full rounded object-cover"
+                                    className="w-full h-full rounded-lg object-cover"
                                   />
                                 ) : (
-                                  <Volume2 className="h-4 w-4 text-white" />
+                                  <Volume2 className="h-5 w-5 text-white" />
                                 )}
                               </div>
                               <div className="flex-1 min-w-0">
@@ -308,21 +322,65 @@ export default function AudioPlayer() {
                                 </p>
                               </div>
                             </button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8 text-gray-400 hover:text-white hover:bg-red-500/20"
-                              onClick={() => removeFromPlaylist(item.id)}
-                            >
-                              <X className="h-4 w-4" />
-                              <span className="sr-only">Remove from playlist</span>
-                            </Button>
+                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                              {index !== 0 && (
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8 text-gray-400 hover:text-white hover:bg-[#4CAF50]/20"
+                                  onClick={() => {
+                                    const newPlaylist = [...playlist];
+                                    [newPlaylist[index], newPlaylist[index - 1]] = 
+                                    [newPlaylist[index - 1], newPlaylist[index]];
+                                    if (index === currentIndex) {
+                                      setCurrentIndex(index - 1);
+                                    } else if (index - 1 === currentIndex) {
+                                      setCurrentIndex(index);
+                                    }
+                                    setPlaylist(newPlaylist);
+                                  }}
+                                >
+                                  <ArrowUp className="h-4 w-4" />
+                                  <span className="sr-only">Move up</span>
+                                </Button>
+                              )}
+                              {index !== playlist.length - 1 && (
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8 text-gray-400 hover:text-white hover:bg-[#4CAF50]/20"
+                                  onClick={() => {
+                                    const newPlaylist = [...playlist];
+                                    [newPlaylist[index], newPlaylist[index + 1]] = 
+                                    [newPlaylist[index + 1], newPlaylist[index]];
+                                    if (index === currentIndex) {
+                                      setCurrentIndex(index + 1);
+                                    } else if (index + 1 === currentIndex) {
+                                      setCurrentIndex(index);
+                                    }
+                                    setPlaylist(newPlaylist);
+                                  }}
+                                >
+                                  <ArrowDown className="h-4 w-4" />
+                                  <span className="sr-only">Move down</span>
+                                </Button>
+                              )}
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 text-gray-400 hover:text-white hover:bg-red-500/20"
+                                onClick={() => removeFromPlaylist(item.id)}
+                              >
+                                <X className="h-4 w-4" />
+                                <span className="sr-only">Remove from playlist</span>
+                              </Button>
+                            </div>
                           </div>
                         ))}
                       </div>
                     )}
-                  </div>
-                </ScrollArea>
+                  </ScrollArea>
+                </div>
               </PopoverContent>
             </Popover>
             <Button
