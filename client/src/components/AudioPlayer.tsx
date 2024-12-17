@@ -42,7 +42,7 @@ export default function AudioPlayer() {
   };
 
   const handleDownload = () => {
-    if (!audioData || !user) return;
+    if (!audioData) return;
     const link = document.createElement("a");
     const baseUrl = window.location.origin;
     const audioUrl = audioData.audioUrl.startsWith("http")
@@ -55,7 +55,7 @@ export default function AudioPlayer() {
     document.body.removeChild(link);
   };
 
-  // Only render if user is authenticated and there is audio data
+  // Only render if there's audio data and user is authenticated
   if (!user || !audioData) {
     return null;
   }
