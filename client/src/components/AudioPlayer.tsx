@@ -4,7 +4,6 @@ import {
   Play,
   Pause,
   Volume2,
-  Download,
   Rewind,
   FastForward,
   SkipBack,
@@ -69,19 +68,7 @@ export default function AudioPlayer() {
     await togglePlay();
   };
 
-  const handleDownload = () => {
-    if (!audioData) return;
-    const link = document.createElement("a");
-    const baseUrl = window.location.origin;
-    const audioUrl = audioData.audioUrl.startsWith("http")
-      ? audioData.audioUrl
-      : `${baseUrl}${audioData.audioUrl}`;
-    link.href = audioUrl;
-    link.download = `${audioData.title}.mp3`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+  
 
   // Only render if we have a user
   if (!user) {
@@ -383,18 +370,7 @@ export default function AudioPlayer() {
                 </div>
               </PopoverContent>
             </Popover>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleDownload}
-              disabled={!audioData}
-              className={`text-white hover:text-white ${
-                audioData ? 'hover:bg-[#4CAF50]/20' : 'opacity-50 cursor-not-allowed'
-              }`}
-              title="Download audio"
-            >
-              <Download className="h-5 w-5" />
-            </Button>
+            
           </div>
         </div>
       </div>

@@ -16,8 +16,6 @@ import pdfParse from 'pdf-parse/lib/pdf-parse.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-import { ttsService } from "./services/tts";
-import pdfParse from 'pdf-parse/lib/pdf-parse.js';
 
 // Configure multer for file uploads
 // Constants for usage limits
@@ -208,7 +206,8 @@ export function registerRoutes(app: Express) {
                 "2 months free"
               ]
             }
-          }
+          },
+          type: "usage_limit"
         });
       }
 
@@ -401,35 +400,84 @@ export function registerRoutes(app: Express) {
   // Delete podcast
   app.delete("/api/podcasts/:id", async (req, res) => {
     try {
-      if (!req.user) return res.status(401).send("Not authenticated");
-
-      const [podcast] = await db
-        .delete(podcasts)
-        .where(
-          and(
-            eq(podcasts.id, parseInt(req.params.id)),
-            eq(podcasts.userId, req.user.id),
-          ),
-        )
-        .returning();
-
-      if (!podcast) {
-        return res.status(404).send("Podcast not found or unauthorized");
+      if (!req.user) {
+        return res.status(401).json({ 
+          error: "Not authenticated",
+          type: "auth"
+        });
       }
 
+      const podcastId = parseInt(req.params.id);
+      if (isNaN(podcastId)) {
+        return res.status(400).json({
+          error: "Invalid podcast ID",
+          type: "validation"
+        });
+      }
+
+      // Log the deletion attempt
+      await logger.info(`Attempting to delete podcast ${podcastId} by user ${req.user.id}`);
+
+      // First fetch the podcast to get the file path
+      const [podcast] = await db
+        .select()
+        .from(podcasts)
+        .where(
+          and(
+            eq(podcasts.id, podcastId),
+            eq(podcasts.userId, req.user.id)
+          )
+        )
+        .limit(1);
+
+      if (!podcast) {
+        return res.status(404).json({ 
+          error: "Podcast not found or unauthorized",
+          type: "not_found"
+        });
+      }
+
+      // Delete the audio file if it exists
       if (podcast.audioUrl) {
-        const filePath = path.join(".", podcast.audioUrl);
+        const filePath = path.join(__dirname, "..", podcast.audioUrl);
         try {
           await fs.unlink(filePath);
+          await logger.info(`Successfully deleted audio file for podcast ${podcastId}`);
         } catch (error) {
-          console.error("Error deleting audio file:", error);
+          await logger.error(`Error deleting audio file for podcast ${podcastId}: ${error instanceof Error ? error.message : String(error)}`);
+          // Log error but continue with database deletion
         }
       }
 
-      res.json({ message: "Podcast deleted successfully" });
+      // Delete the database record
+      const [deletedPodcast] = await db
+        .delete(podcasts)
+        .where(
+          and(
+            eq(podcasts.id, podcastId),
+            eq(podcasts.userId, req.user.id)
+          )
+        )
+        .returning();
+
+      if (!deletedPodcast) {
+        throw new Error("Failed to delete podcast from database");
+      }
+
+      await logger.info(`Successfully deleted podcast ${podcastId} from database`);
+
+      res.json({ 
+        message: "Podcast deleted successfully",
+        id: podcastId
+      });
     } catch (error) {
-      console.error("Delete podcast error:", error);
-      res.status(500).send("Failed to delete podcast");
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      await logger.error(`Error deleting podcast: ${errorMessage}`);
+      res.status(500).json({ 
+        error: "Failed to delete podcast",
+        type: "server",
+        message: errorMessage
+      });
     }
   });
 
