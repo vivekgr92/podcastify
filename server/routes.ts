@@ -40,43 +40,97 @@ export function registerRoutes(app: Express) {
   // Serve static files from uploads directory with proper audio streaming support
   app.get('/uploads/:filename', async (req, res) => {
     const filename = req.params.filename;
-    const filePath = path.join(__dirname, '..', 'uploads', filename);
+    // Sanitize filename to prevent directory traversal
+    const sanitizedFilename = path.basename(filename);
+    const filePath = path.join(__dirname, '..', 'uploads', sanitizedFilename);
 
     try {
+      // Check if file exists
+      if (!fsSync.existsSync(filePath)) {
+        console.error(`File not found: ${filePath}`);
+        res.status(404).send('File not found');
+        return;
+      }
+
       const stat = await fs.stat(filePath);
       const fileSize = stat.size;
       const range = req.headers.range;
 
+      // Determine content type based on file extension
+      const ext = path.extname(filename).toLowerCase();
+      const contentType = ext === '.mp3' ? 'audio/mpeg' :
+                         ext === '.wav' ? 'audio/wav' :
+                         ext === '.ogg' ? 'audio/ogg' :
+                         ext === '.m4a' ? 'audio/mp4' :
+                         'application/octet-stream';
+
+      // Handle range requests for audio streaming
       if (range) {
         const parts = range.replace(/bytes=/, "").split("-");
         const start = parseInt(parts[0], 10);
         let end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
         
+        // Validate range request
         if (isNaN(start) || isNaN(end) || start >= fileSize || start > end || end >= fileSize) {
-          res.status(416).send('Requested range not satisfiable');
+          res.status(416).header({
+            'Content-Range': `bytes */${fileSize}`
+          }).send('Requested range not satisfiable');
           return;
         }
+
+        // Limit chunk size to prevent memory issues
+        const maxChunkSize = 1024 * 1024; // 1MB
+        if ((end - start) > maxChunkSize) {
+          end = start + maxChunkSize - 1;
+        }
+
         const chunksize = (end - start) + 1;
         const file = fsSync.createReadStream(filePath, { start, end });
         const head = {
           'Content-Range': `bytes ${start}-${end}/${fileSize}`,
           'Accept-Ranges': 'bytes',
           'Content-Length': chunksize,
-          'Content-Type': 'audio/mpeg',
+          'Content-Type': contentType,
+          'Cache-Control': 'no-cache',
         };
+
         res.writeHead(206, head);
         file.pipe(res);
+
+        // Handle stream errors
+        file.on('error', (error) => {
+          console.error('Error streaming file:', error);
+          if (!res.headersSent) {
+            res.status(500).send('Error streaming file');
+          }
+          file.destroy();
+        });
       } else {
+        // Send entire file
         const head = {
           'Content-Length': fileSize,
-          'Content-Type': 'audio/mpeg',
+          'Content-Type': contentType,
+          'Accept-Ranges': 'bytes',
+          'Cache-Control': 'no-cache',
         };
         res.writeHead(200, head);
-        fsSync.createReadStream(filePath).pipe(res);
+        const file = fsSync.createReadStream(filePath);
+        file.pipe(res);
+
+        // Handle stream errors
+        file.on('error', (error) => {
+          console.error('Error streaming file:', error);
+          if (!res.headersSent) {
+            res.status(500).send('Error streaming file');
+          }
+          file.destroy();
+        });
       }
     } catch (error) {
       console.error('Error streaming audio:', error);
-      res.status(500).send('Error streaming audio file');
+      if (!res.headersSent) {
+        res.status(500).send('Error streaming audio file');
+      }
     }
   });
 
