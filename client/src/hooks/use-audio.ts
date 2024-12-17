@@ -38,20 +38,25 @@ export function useAudio(): AudioHookReturn {
     if (lastPlayedPodcast) {
       try {
         const podcast = JSON.parse(lastPlayedPodcast);
-        setAudioData(podcast);
-        // Restore the last position if available
         const lastPosition = localStorage.getItem(`podcast-${podcast.id}-position`);
-        if (lastPosition) {
-          audio.currentTime = parseFloat(lastPosition);
-        }
         
         // Set up the audio source immediately
         const baseUrl = window.location.origin;
         const audioUrl = podcast.audioUrl.startsWith('http') 
           ? podcast.audioUrl 
           : `${baseUrl}${podcast.audioUrl.startsWith('/') ? '' : '/'}${podcast.audioUrl}`;
+        
         audio.src = audioUrl;
         audio.load();
+        
+        if (lastPosition) {
+          audio.currentTime = parseFloat(lastPosition);
+        }
+        
+        // Set the audio data after confirming the audio loads correctly
+        audio.addEventListener('loadedmetadata', () => {
+          setAudioData(podcast);
+        });
       } catch (error) {
         console.error('Error restoring last played podcast:', error);
         localStorage.removeItem('last-played-podcast');
