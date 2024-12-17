@@ -34,6 +34,10 @@ export function useAudio(): AudioHookReturn {
       // Set up audio event listeners with proper types
       const onTimeUpdate = (): void => {
         setCurrentTime(audio.currentTime);
+        // Save position every 5 seconds
+        if (audioData && audio.currentTime % 5 < 1) {
+          localStorage.setItem(`podcast-position-${audioData.id}`, audio.currentTime.toString());
+        }
       };
 
       const onLoadedMetadata = (): void => {
@@ -43,6 +47,17 @@ export function useAudio(): AudioHookReturn {
 
       const onEnded = (): void => {
         setIsPlaying(false);
+        // Clear saved position when podcast ends
+        if (audioData) {
+          localStorage.removeItem(`podcast-position-${audioData.id}`);
+        }
+      };
+
+      const onPause = (): void => {
+        // Save position when paused
+        if (audioData) {
+          localStorage.setItem(`podcast-position-${audioData.id}`, audio.currentTime.toString());
+        }
       };
 
       const onError = (e: Event): void => {
@@ -58,18 +73,24 @@ export function useAudio(): AudioHookReturn {
       audio.addEventListener('timeupdate', onTimeUpdate);
       audio.addEventListener('loadedmetadata', onLoadedMetadata);
       audio.addEventListener('ended', onEnded);
+      audio.addEventListener('pause', onPause);
       audio.addEventListener('error', onError);
 
       return () => {
+        // Save position before unmounting
+        if (audioData) {
+          localStorage.setItem(`podcast-position-${audioData.id}`, audio.currentTime.toString());
+        }
         audio.removeEventListener('timeupdate', onTimeUpdate);
         audio.removeEventListener('loadedmetadata', onLoadedMetadata);
         audio.removeEventListener('ended', onEnded);
+        audio.removeEventListener('pause', onPause);
         audio.removeEventListener('error', onError);
         audio.pause();
         audio.src = '';
       };
     }
-  }, []);
+  }, [audioData, toast]);
 
   const play = async (podcast: Podcast) => {
     try {
@@ -84,7 +105,6 @@ export function useAudio(): AudioHookReturn {
       // Construct audio URL
       let audioSrc = podcast.audioUrl;
       if (!audioSrc.startsWith('http')) {
-        // Get the base URL without any path
         const baseUrl = window.location.origin;
         audioSrc = `${baseUrl}${audioSrc}`;
       }
@@ -113,9 +133,6 @@ export function useAudio(): AudioHookReturn {
         audio.addEventListener('error', onError);
       });
 
-      // Force load the audio
-      audio.load();
-
       // Load the audio
       audio.load();
       
@@ -126,7 +143,9 @@ export function useAudio(): AudioHookReturn {
       setAudioData(podcast);
       
       if (!isSamePodcast) {
-        audio.currentTime = 0;
+        // Get saved position from localStorage
+        const savedPosition = localStorage.getItem(`podcast-position-${podcast.id}`);
+        audio.currentTime = savedPosition ? parseFloat(savedPosition) : 0;
       }
 
       // Play the audio
