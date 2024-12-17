@@ -7,13 +7,7 @@ import fs from "fs/promises";
 import * as util from "util";
 import { execSync } from "child_process";
 
-// Define the speaker to voice mapping
-const SPEAKER_VOICE_MAP = {
-  Joe: 'en-US-Neural2-D',   // Male voice for Joe
-  Sarah: 'en-US-Neural2-F'  // Female voice for Sarah
-};
-
-type Speaker = keyof typeof SPEAKER_VOICE_MAP;
+type Speaker = "Joe" | "Sarah";
 type ProgressListener = (progress: number) => void;
 
 interface ConversationPart {
@@ -46,11 +40,17 @@ interface PricingDetails {
 }
 
 const PRICING = {
-  INPUT_TOKEN_RATE: 0.0005,  // Cost per 1K input tokens
-  OUTPUT_TOKEN_RATE: 0.0005  // Cost per 1K output tokens
+  INPUT_TOKEN_RATE: 0.0005 / 1000, // $0.0005 per 1K tokens
+  OUTPUT_TOKEN_RATE: 0.0005 / 1000, // $0.0005 per 1K tokens
 };
 
 const SPEAKERS: Speaker[] = ["Joe", "Sarah"];
+
+// Voice mapping for different speakers
+const SPEAKER_VOICE_MAP = {
+  Joe: "en-US-Wavenet-D", // Male voice
+  Sarah: "en-US-Wavenet-F", // Female voice
+};
 
 // System prompts for different stages of conversation
 // Generation configuration
@@ -294,36 +294,31 @@ export class TTSService {
   }
 
   private async synthesizeSpeechMultiSpeaker(
-    turns: Array<{ text: string; speaker: Speaker }>,
+    turns: Array<{ text: string; speaker: string }>,
     index: number,
   ): Promise<string> {
+    //const voiceName = SPEAKER_VOICE_MAP[speaker]; // Assuming SPEAKER_VOICE_MAP exists
     const outputFile = path.join("audio-files", `${index}.mp3`);
 
     try {
       const multiSpeakerMarkup = turns.map((turn) => ({
         text: turn.text,
-        speaker: turn.speaker,
-        voiceName: SPEAKER_VOICE_MAP[turn.speaker]
+        speaker: turn.speaker, // Use speaker identifiers
       }));
 
-      const request: protos.google.cloud.texttospeech.v1.ISynthesizeSpeechRequest = {
-        input: { text: multiSpeakerMarkup.map(t => `${t.text}`).join('\n') },
+      const request = {
+        input: { multiSpeakerMarkup },
         voice: {
           languageCode: "en-US",
-          name: multiSpeakerMarkup[0].voiceName,
-          ssmlGender: protos.google.cloud.texttospeech.v1.SsmlVoiceGender.NEUTRAL
+          name: "en-US-Studio-Multispeaker", // Use the special multi-speaker voice
         },
         audioConfig: {
-          audioEncoding: protos.google.cloud.texttospeech.v1.AudioEncoding.MP3,
-          speakingRate: 1.0,
-          pitch: 0.0,
-          volumeGainDb: 0.0
+          audioEncoding: "MP3",
         },
       };
 
-
       // Perform the text-to-speech request
-      const response = (await this.ttsClient.synthesizeSpeech(request))[0];
+      const [response] = await this.ttsClient.synthesizeSpeech(request);
 
       // Ensure the directory exists
       await fs.mkdir("audio-files", { recursive: true });
@@ -357,7 +352,7 @@ export class TTSService {
           name: voiceName,
         },
         audioConfig: {
-          audioEncoding: protos.google.cloud.texttospeech.v1.AudioEncoding.MP3,
+          audioEncoding: "MP3",
         },
       });
 
@@ -469,38 +464,9 @@ export class TTSService {
     }
   }
 
-  async calculatePricing(text: string): Promise<PricingDetails> {
-    try {
-      const model = this.vertexAI.getGenerativeModel({
-        model: "gemini-1.5-flash-002",
-      });
-
-      // Get token counts
-      const { tokens: inputTokens } = await this.analyzeText(text);
-      const estimatedOutputTokens = Math.ceil(inputTokens * 2.5);
-
-      // Calculate costs
-      const inputCost = (inputTokens / 1000) * PRICING.INPUT_TOKEN_RATE;
-      const outputCost = (estimatedOutputTokens / 1000) * PRICING.OUTPUT_TOKEN_RATE;
-      const totalCost = inputCost + outputCost;
-
-      return {
-        inputTokens,
-        outputTokens: estimatedOutputTokens,
-        totalCost,
-        breakdown: {
-          inputCost,
-          outputCost,
-        },
-      };
-    } catch (error) {
-      throw new Error(`Failed to calculate pricing: ${error instanceof Error ? error.message : String(error)}`);
-    }
-  }
-
   async generateConversation(
     text: string,
-  ): Promise<{ audioBuffer: Buffer; duration: number; error?: string }> {
+  ): Promise<{ audioBuffer: Buffer; duration: number }> {
     try {
       // Ensure audio-files directory exists and is empty
       const audioDir = "audio-files";
@@ -611,8 +577,37 @@ export class TTSService {
       });
       await logger.log("--- End of Conversation ---\n");
 
+      // await logger.log("\n--- Full Generated Conversation ---");
+      // // Prepare input for synthesizeSpeechMultiSpeak and log conversation
+      // const turns = allConversations.map((part) => {
+      //   logger.log(`${part.speaker}: ${part.text}`);
+      //   return { text: part.text, speaker: part.speaker };
+      // });
 
-      // Variables to track the total cost
+      // await logger.log("--- End of Conversation ---\n");
+
+      // await logger.log("\n--- Full Generated Conversation ---");
+
+      // // Prepare input for synthesizeSpeechMultiSpeaker and log conversation
+      // const turns = allConversations.map((part) => {
+      //   // Replace speaker names with "R" for Joe and "S" for Sarah
+      //   const mappedSpeaker =
+      //     part.speaker === "Joe"
+      //       ? "R"
+      //       : part.speaker === "Sarah"
+      //         ? "S"
+      //         : part.speaker;
+
+      //   // Log the conversation with the updated speaker names
+      //   logger.log(`${mappedSpeaker}: ${part.text}`);
+
+      //   // Return the modified turn
+      //   return { text: part.text, speaker: mappedSpeaker };
+      // });
+
+      // await logger.log("--- End of Conversation ---\n");
+
+      // // Variables to track the total cost
       let totalCost = 0;
       const useWaveNet = false; // Set to true if you are using WaveNet voices
 
@@ -637,7 +632,10 @@ export class TTSService {
           `Cost for part ${i + 1} (Speaker: ${speaker}): $${cost.toFixed(4)}`,
         );
 
+        // Generate the MultiSpeak
         const audioFile = await this.synthesizeSpeech(text, speaker, i);
+
+        // const audioFile = await this.synthesizeSpeech(text, speaker, i);
         audioFiles.push(audioFile);
 
         // Update progress for audio generation (50-100%)

@@ -33,44 +33,10 @@ export function useAudio(): AudioHookReturn {
     const audio = new Audio();
     audioRef.current = audio;
     
-    // Try to restore last played podcast
-    const lastPlayedPodcast = localStorage.getItem('last-played-podcast');
-    if (lastPlayedPodcast) {
-      try {
-        const podcast = JSON.parse(lastPlayedPodcast);
-        const lastPosition = localStorage.getItem(`podcast-${podcast.id}-position`);
-        
-        // Set up the audio source immediately
-        const baseUrl = window.location.origin;
-        const audioUrl = podcast.audioUrl.startsWith('http') 
-          ? podcast.audioUrl 
-          : `${baseUrl}${podcast.audioUrl.startsWith('/') ? '' : '/'}${podcast.audioUrl}`;
-        
-        audio.src = audioUrl;
-        audio.load();
-        
-        if (lastPosition) {
-          audio.currentTime = parseFloat(lastPosition);
-        }
-        
-        // Set the audio data after confirming the audio loads correctly
-        audio.addEventListener('loadedmetadata', () => {
-          setAudioData(podcast);
-        });
-      } catch (error) {
-        console.error('Error restoring last played podcast:', error);
-        localStorage.removeItem('last-played-podcast');
-      }
-    }
-    
     console.log('Audio element created');
 
     return () => {
       if (audio) {
-        // Save current position before cleanup
-        if (audioData) {
-          localStorage.setItem(`podcast-${audioData.id}-position`, audio.currentTime.toString());
-        }
         audio.pause();
         audio.src = '';
       }
@@ -95,7 +61,6 @@ export function useAudio(): AudioHookReturn {
 
       // Update audio data first to ensure UI updates
       setAudioData(podcast);
-      setIsPlaying(true);  // Set playing state immediately
       
       // Construct the audio URL
       const baseUrl = window.location.origin;
