@@ -89,17 +89,14 @@ export default function LibraryPage() {
                     className="rounded-full bg-[#4CAF50] hover:bg-[#45a049] h-10 w-10 p-0 flex items-center justify-center"
                     onClick={async () => {
                       try {
+                        console.log('Play button clicked:', { isPlaying, audioData, podcast });
                         if (isPlaying && audioData?.id === podcast.id) {
+                          console.log('Toggling current podcast');
                           await togglePlay();
                         } else {
-                          console.log('Attempting to play podcast:', podcast);
-                          try {
-                            await play(podcast);
-                            console.log('Play function completed');
-                          } catch (error) {
-                            console.error('Error in play function:', error);
-                            throw error;
-                          }
+                          console.log('Playing new podcast:', podcast);
+                          await play(podcast);
+                          console.log('New podcast playback started');
                         }
                       } catch (error) {
                         console.error('Failed to play audio:', error);
