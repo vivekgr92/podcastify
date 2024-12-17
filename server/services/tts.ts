@@ -1,8 +1,10 @@
 import { VertexAI, GenerativeModel } from "@google-cloud/vertexai";
-import { TextToSpeechClient } from "@google-cloud/text-to-speech";
+import { TextToSpeechClient, protos } from "@google-cloud/text-to-speech";
+import { promisify } from 'util';
 import { logger } from "./logging";
 import path from "path";
 import fs from "fs/promises";
+import * as util from "util";
 import { execSync } from "child_process";
 
 type Speaker = "Joe" | "Sarah";
@@ -177,10 +179,10 @@ export class TTSService {
         `Text analysis: characters=${characters}, words=${words}, tokens=${tokenCount.totalTokens}`,
       );
 
-      return { 
-        characters, 
-        words, 
-        tokens: tokenCount.totalTokens 
+      return {
+        characters,
+        words,
+        tokens: tokenCount.totalTokens,
       };
     } catch (error) {
       // Fallback to estimation if token counting fails
@@ -196,38 +198,57 @@ export class TTSService {
     }
   }
 
-  async calculatePricing(text: string): Promise<PricingDetails> {
-    try {
-      // Analyze input text
-      const { tokens: inputTokens } = await this.analyzeText(text);
+  private calculateTtsCost(characters: number, useWaveNet: boolean): number {
+    const charactersPerMillion = 1000000;
+    const standardRate = 4.0 / charactersPerMillion; // $4 per 1 million characters for Standard voices
+    const wavenetRate = 16.0 / charactersPerMillion; // $16 per 1 million characters for WaveNet voices
 
-      // Estimate output tokens (conversation is typically 2-3x longer than input)
-      const estimatedOutputTokens = inputTokens * 2.5;
+    const costPerCharacter = useWaveNet ? wavenetRate : standardRate;
+    return characters * costPerCharacter;
+  }
 
-      // Calculate costs
-      const inputCost = inputTokens * PRICING.INPUT_TOKEN_RATE;
-      const outputCost = estimatedOutputTokens * PRICING.OUTPUT_TOKEN_RATE;
-      const totalCost = inputCost + outputCost;
+  private async calculateTextToConversation(
+    model: GenerativeModel,
+    text: string,
+  ) {
+    // Count tokens using the proper content format for the Vertex AI model
+    const tokenCount = await model.countTokens({
+      contents: [{ role: "user", parts: [{ text }] }],
+    });
 
-      await logger.info(
-        `Pricing calculation: input_tokens=${inputTokens}, estimated_output_tokens=${estimatedOutputTokens}, total_cost=$${totalCost.toFixed(4)}`,
-      );
+    // Calculate the number of input tokens
+    const inputTokens = tokenCount.totalTokens;
 
-      return {
-        inputTokens,
-        outputTokens: Math.ceil(estimatedOutputTokens),
-        totalCost,
-        breakdown: {
-          inputCost,
-          outputCost,
-        },
-      };
-    } catch (error) {
-      await logger.error(
-        `Error calculating pricing: ${error instanceof Error ? error.message : String(error)}`,
-      );
-      throw new Error('Failed to calculate pricing');
-    }
+    // Estimate output tokens assuming the conversation length is typically 2.5x longer than input
+    const estimatedOutputTokens = Math.ceil(inputTokens * 2.5);
+
+    // Define Vertex AI pricing: $0.0005 per 1K tokens
+    const inputCost = (inputTokens / 1000) * PRICING.INPUT_TOKEN_RATE;
+    const outputCost =
+      (estimatedOutputTokens / 1000) * PRICING.OUTPUT_TOKEN_RATE;
+    const totalCost = inputCost + outputCost;
+
+    // Log detailed pricing breakdown for better transparency
+    await logger.info(
+      `\n--- Vertex AI Pricing Details ---\n` +
+        `Input Tokens: ${inputTokens}\n` +
+        `Input Cost: $${inputCost.toFixed(4)} (${PRICING.INPUT_TOKEN_RATE}$ per 1K tokens)\n` +
+        `Estimated Output Tokens: ${estimatedOutputTokens}\n` +
+        `Output Cost: $${outputCost.toFixed(4)} (${PRICING.OUTPUT_TOKEN_RATE}$ per 1K tokens)\n` +
+        `Total Cost: $${totalCost.toFixed(4)}\n`,
+    );
+
+    // Log a simplified breakdown for easier access
+    await logger.info(
+      `\n--- Pricing Details ---\n` +
+        `Input Tokens: ${inputTokens}\n` +
+        `Estimated Output Tokens: ${Math.ceil(estimatedOutputTokens)}\n` +
+        `Input Cost: $${inputCost.toFixed(4)}\n` +
+        `Output Cost: $${outputCost.toFixed(4)}\n` +
+        `Total Cost: $${totalCost.toFixed(4)}\n`,
+    );
+
+    return totalCost; // Return the total cost for further use if needed
   }
 
   private async cleanGeneratedText(
@@ -272,6 +293,52 @@ export class TTSService {
     }
   }
 
+  private async synthesizeSpeechMultiSpeaker(
+    turns: Array<{ text: string; speaker: string }>,
+    outputFile: string,
+  ): Promise<void> {
+    try {
+      const request = {
+        input: {
+          text: turns.map(turn => `${turn.speaker}: ${turn.text}`).join('\n')
+        },
+        voice: {
+          languageCode: 'en-US',
+          name: 'en-US-Studio-O',  // Using a studio voice that supports multi-speaker
+          customVoice: {
+            model: 'multispeaker',
+            reportedUsage: 'MULTI_SPEAKER_CONVERSATION'
+          }
+        },
+        audioConfig: {
+          audioEncoding: 'MP3',
+          pitch: 0,
+          speakingRate: 1,
+        },
+      };
+
+      // Perform the text-to-speech request using the ttsClient
+      const [response] = await this.ttsClient.synthesizeSpeech(request);
+
+      if (response.audioContent) {
+        // Ensure the directory exists
+        await fs.mkdir(path.dirname(outputFile), { recursive: true });
+        
+        // Write the synthesized audio to the specified file
+        await fs.writeFile(outputFile, response.audioContent as Buffer);
+        await logger.info(`Audio content written to file "${outputFile}"`);
+      } else {
+        await logger.error("No audio content received in the response.");
+        throw new Error("No audio content received");
+      }
+    } catch (err) {
+      await logger.error(`Error during Text-to-Speech request: ${err instanceof Error ? err.message : String(err)}`);
+      throw new Error(
+        `Failed to synthesize speech: ${err instanceof Error ? err.message : String(err)}`,
+      );
+    }
+  }
+
   private async synthesizeSpeech(
     text: string,
     speaker: Speaker,
@@ -309,14 +376,11 @@ export class TTSService {
     outputFile: string,
   ): Promise<void> {
     try {
-      // Initialize array to hold all file paths
       const allFilePaths: string[] = [];
-
-      // Copy intro file to audio folder if it exists in the root
       const rootIntroPath = path.resolve("podcast.mp3");
       const audioFolderIntroPath = path.resolve(audioFolder, "podcast.mp3");
-      console.log("\n\n======rootIntroPath", rootIntroPath);
-      console.log("\n\n======audioFolderIntroPath", audioFolderIntroPath);
+
+      // Add intro file if it exists
       try {
         await fs.copyFile(rootIntroPath, audioFolderIntroPath);
         allFilePaths.push(audioFolderIntroPath);
@@ -325,7 +389,7 @@ export class TTSService {
         await logger.warn("Intro file podcast.mp3 not found in root directory");
       }
 
-      // Get generated audio files
+      // Read and sort audio files based on their numeric order
       const files = await fs.readdir(audioFolder);
       const audioFiles = files
         .filter(
@@ -335,8 +399,11 @@ export class TTSService {
             file !== "podcast.mp3",
         )
         .sort((a, b) => {
-          const aNum = parseInt(a.match(/\d+/)?.[0] || "0");
-          const bNum = parseInt(b.match(/\d+/)?.[0] || "0");
+          // Extract numeric order for sorting
+          const aMatch = a.match(/_(\d+)\.mp3$/);
+          const bMatch = b.match(/_(\d+)\.mp3$/);
+          const aNum = aMatch ? parseInt(aMatch[1], 10) : 0;
+          const bNum = bMatch ? parseInt(bMatch[1], 10) : 0;
           return aNum - bNum;
         });
 
@@ -344,56 +411,50 @@ export class TTSService {
         throw new Error("No audio files found to merge");
       }
 
+      // Log sorted file order for debugging
+      await logger.info("Merging the following files in order:");
+      audioFiles.forEach((file) => logger.info(file));
+
       // Add sorted audio files to the file paths array
       allFilePaths.push(
         ...audioFiles.map((file) => path.resolve(audioFolder, file)),
       );
 
-      // Create concat list file
+      // Re-encode all files to ensure compatibility (constant bitrates, same sample rate)
+      const reencodedFiles = [];
+      for (const [idx, file] of allFilePaths.entries()) {
+        const inputFilePath = file;
+        const reencodedFilePath = path.resolve(audioFolder, `temp_${idx}.mp3`);
+
+        execSync(
+          `ffmpeg -y -i "${inputFilePath}" -acodec libmp3lame -ar 44100 -b:a 192k "${reencodedFilePath}"`,
+        );
+        reencodedFiles.push(reencodedFilePath);
+      }
+
+      // Create a concat list file for FFmpeg
       const concatFilePath = path.resolve(audioFolder, "concat_list.txt");
-      const concatFileContent = allFilePaths
+      const concatFileContent = reencodedFiles
         .map((file) => `file '${file.replace(/'/g, "'\\''")}'`)
         .join("\n");
-
       await fs.writeFile(concatFilePath, concatFileContent, "utf8");
-      await logger.info("Created concat list file with content:");
-      await logger.info(concatFileContent);
 
-      // Use FFmpeg to merge the files
+      // Merge all audio files using FFmpeg
       const outputFilePath = path.resolve(outputFile);
       const command = `ffmpeg -f concat -safe 0 -i "${concatFilePath}" -c copy "${outputFilePath}"`;
 
-      try {
-        execSync(command, { stdio: "pipe" });
-        await logger.info(`Successfully merged audio saved as ${outputFile}`);
-      } catch (ffmpegError) {
-        await logger.error(
-          `FFmpeg error: ${ffmpegError instanceof Error ? ffmpegError.message : String(ffmpegError)}`,
-        );
-        throw new Error("Failed to merge audio files with FFmpeg");
-      }
+      execSync(command, { stdio: "pipe" });
+      await logger.info(`Successfully merged audio saved as ${outputFile}`);
 
-      // Clean up all temporary files
+      // Clean up temporary files
       try {
-        // Remove concat list file
         await fs.unlink(concatFilePath);
-
-        // Remove all intermediate audio files
-        for (const file of audioFiles) {
-          await fs.unlink(path.resolve(audioFolder, file));
+        for (const file of reencodedFiles) {
+          await fs.unlink(file);
         }
-
-        // Remove copied intro file if it exists
-        try {
-          await fs.unlink(audioFolderIntroPath);
-        } catch (error) {
-          // Ignore error if intro file doesn't exist
-        }
-
-        await logger.info("Cleaned up temporary audio files");
       } catch (cleanupError) {
         await logger.warn(
-          `Failed to clean up some temporary files: ${cleanupError instanceof Error ? cleanupError.message : String(cleanupError)}`,
+          `Failed to clean up temporary files: ${cleanupError instanceof Error ? cleanupError.message : String(cleanupError)}`,
         );
       }
     } catch (error) {
@@ -433,42 +494,7 @@ export class TTSService {
         model: "gemini-1.5-flash-002",
       }) as GenerativeModel;
 
-      // Count tokens using proper content format
-      const tokenCount = await model.countTokens({
-        contents: [{ role: "user", parts: [{ text }] }],
-      });
-
-      await logger.info(
-        `\n--- Token Count --\n${JSON.stringify(tokenCount, null, 2)}`,
-      );
-
-      // Calculate pricing based on token count using Vertex AI pricing
-      const inputTokens = tokenCount.totalTokens;
-      const estimatedOutputTokens = Math.ceil(inputTokens * 2.5); // Conversation typically 2.5x longer
-      
-      // Vertex AI pricing: $0.0005 per 1K tokens
-      const inputCost = (inputTokens / 1000) * PRICING.INPUT_TOKEN_RATE;
-      const outputCost = (estimatedOutputTokens / 1000) * PRICING.OUTPUT_TOKEN_RATE;
-      const totalCost = inputCost + outputCost;
-      
-      // Log detailed pricing breakdown
-      await logger.info(
-        `\n--- Vertex AI Pricing Details ---\n` +
-        `Input Tokens: ${inputTokens}\n` +
-        `Input Cost: $${inputCost.toFixed(4)} (${PRICING.INPUT_TOKEN_RATE}$ per 1K tokens)\n` +
-        `Estimated Output Tokens: ${estimatedOutputTokens}\n` +
-        `Output Cost: $${outputCost.toFixed(4)} (${PRICING.OUTPUT_TOKEN_RATE}$ per 1K tokens)\n` +
-        `Total Cost: $${totalCost.toFixed(4)}\n`
-      );
-
-      await logger.info(
-        `\n--- Pricing Details ---\n` +
-        `Input Tokens: ${inputTokens}\n` +
-        `Estimated Output Tokens: ${Math.ceil(estimatedOutputTokens)}\n` +
-        `Input Cost: $${inputCost.toFixed(4)}\n` +
-        `Output Cost: $${outputCost.toFixed(4)}\n` +
-        `Total Cost: $${totalCost.toFixed(4)}\n`
-      );
+      const ttsCost = await this.calculateTextToConversation(model, text);
 
       const chunks = this.splitTextIntoChunks(text);
 
@@ -548,28 +574,90 @@ export class TTSService {
       }
 
       // Print full conversation for debugging
+      // await logger.log("\n--- Full Generated Conversation ---");
+      // allConversations.forEach((part) => {
+      //   logger.log(`${part.speaker}: ${part.text}`);
+      // });
+      // await logger.log("--- End of Conversation ---\n");
+
+      // await logger.log("\n--- Full Generated Conversation ---");
+      // // Prepare input for synthesizeSpeechMultiSpeak and log conversation
+      // const turns = allConversations.map((part) => {
+      //   logger.log(`${part.speaker}: ${part.text}`);
+      //   return { text: part.text, speaker: part.speaker };
+      // });
+
+      // await logger.log("--- End of Conversation ---\n");
+
       await logger.log("\n--- Full Generated Conversation ---");
-      allConversations.forEach((part) => {
-        logger.log(`${part.speaker}: ${part.text}`);
+
+      // Prepare input for synthesizeSpeechMultiSpeaker and log conversation
+      const turns = allConversations.map((part) => {
+        // Replace speaker names with "R" for Joe and "S" for Sarah
+        const mappedSpeaker =
+          part.speaker === "Joe"
+            ? "R"
+            : part.speaker === "Sarah"
+              ? "S"
+              : part.speaker;
+
+        // Log the conversation with the updated speaker names
+        logger.log(`${mappedSpeaker}: ${part.text}`);
+
+        // Return the modified turn
+        return { text: part.text, speaker: mappedSpeaker };
       });
+
       await logger.log("--- End of Conversation ---\n");
+
+      // // Variables to track the total cost
+      // let totalCost = 0;
+      // const useWaveNet = false; // Set to true if you are using WaveNet voices
 
       // Generate audio for each conversation part
       await logger.log("Generating audio files...");
       const audioFiles: string[] = [];
-
-      for (let i = 0; i < allConversations.length; i++) {
-        const { speaker, text } = allConversations[i];
-        const audioFile = await this.synthesizeSpeech(text, speaker, i);
-        audioFiles.push(audioFile);
-
-        // Update progress for audio generation (50-100%)
-        this.emitProgress(50 + ((i + 1) / allConversations.length) * 50);
-      }
-
-      // Merge audio files
       const outputFile = path.join("audio-files", "final_output.mp3");
-      await this.mergeAudioFiles("audio-files", outputFile);
+
+      // Generate the MultiSpeak
+      const audioFile = await this.synthesizeSpeechMultiSpeaker(
+        turns,
+        outputFile,
+      );
+      // audioFiles.push(audioFile);
+
+      // for (let i = 0; i < allConversations.length; i++) {
+      //   const { speaker, text } = allConversations[i];
+
+      //   // Calculate the number of characters in the text
+      //   const numCharacters = text.length;
+
+      //   // Calculate the cost for generating this audio
+      //   const cost = this.calculateTtsCost(numCharacters, useWaveNet);
+
+      //   // Add to the total cost
+      //   totalCost += cost;
+
+      //   // Log the cost for each part (optional)
+      //   await logger.log(
+      //     `Cost for part ${i + 1} (Speaker: ${speaker}): $${cost.toFixed(4)}`,
+      //   );
+
+      //   const audioFile = await this.synthesizeSpeech(text, speaker, i);
+      //   audioFiles.push(audioFile);
+
+      //   // Update progress for audio generation (50-100%)
+      //   this.emitProgress(50 + ((i + 1) / allConversations.length) * 50);
+      // }
+
+      // Log the total cost after all conversations are processed
+      // await logger.log(`\n--- Total TTS Cost ---`);
+      // await logger.log(
+      //   `Total cost for audio generation: $${totalCost.toFixed(4)}`,
+      // );
+      // Merge audio files
+      // const outputFile = path.join("audio-files", "final_output.mp3");
+      // await this.mergeAudioFiles("audio-files", outputFile);
 
       // Read the final audio file
       const audioBuffer = await fs.readFile(outputFile);
