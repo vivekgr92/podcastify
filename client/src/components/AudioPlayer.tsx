@@ -80,10 +80,12 @@ export default function AudioPlayer() {
   console.log('AudioPlayer render state:', { audioData, isPlaying });
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 h-24 bg-black border-t border-gray-800 z-50">
-      <div 
-        className={`h-full transition-opacity duration-200 ${!audioData ? 'opacity-50' : 'opacity-100'}`}
-      >
+    <div 
+      className={`fixed bottom-0 left-0 right-0 h-24 bg-black border-t border-gray-800 z-50 transition-all duration-300 ease-in-out ${
+        audioData ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0 pointer-events-none'
+      }`}
+    >
+      <div className="h-full">
         <div className="container h-full mx-auto px-4 flex items-center justify-between gap-4">
           {/* Track Info */}
           <div className="flex items-center gap-4 min-w-[200px] max-w-[300px]">
@@ -219,5 +221,3 @@ export default function AudioPlayer() {
     </div>
   );
 }
-
-export default AudioPlayer;
