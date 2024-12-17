@@ -90,16 +90,22 @@ export function useAudio(): AudioHookReturn {
 
   const play = useCallback(async (podcast: Podcast) => {
     const audio = audioRef.current;
-    if (!audio) return;
+    if (!audio) {
+      audio = new Audio();
+      audioRef.current = audio;
+    }
 
     try {
+      // Always update audio data first to ensure UI updates
+      setAudioData(podcast);
+      
+      // Set up the audio source if it's a new podcast or source has changed
       if (!audioData || audioData.id !== podcast.id) {
         const audioUrl = podcast.audioUrl.startsWith('http')
           ? podcast.audioUrl
           : `${window.location.origin}${podcast.audioUrl}`;
         
         audio.src = audioUrl;
-        setAudioData(podcast);
         
         const savedPosition = localStorage.getItem(`podcast-${podcast.id}-position`);
         if (savedPosition) {

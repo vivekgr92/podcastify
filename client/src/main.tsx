@@ -62,7 +62,7 @@ function Router() {
           </>
         )}
         <div className="flex-1">
-          <div className="flex flex-col min-h-screen pb-24">
+          <div className="flex flex-col min-h-screen pb-24 relative">
             <div className="flex-1">
               <Switch>
                 <Route path="/auth">
