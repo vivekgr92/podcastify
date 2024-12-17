@@ -137,7 +137,7 @@ export function registerRoutes(app: Express) {
 
       // Get current month's usage
       const currentMonth = new Date().toISOString().slice(0, 7);
-      const [usage] = await db
+      const [usageData] = await db
         .select()
         .from(userUsage)
         .where(
@@ -164,8 +164,8 @@ export function registerRoutes(app: Express) {
         ]);
 
         // Check usage limits
-        const currentArticles = usage?.articlesConverted || 0;
-        const currentTokens = usage?.tokensUsed || 0;
+        const currentArticles = usageData?.articlesConverted || 0;
+        const currentTokens = usageData?.tokensUsed || 0;
         const wouldExceedArticles = currentArticles >= ARTICLE_LIMIT;
         const wouldExceedTokens = (currentTokens + totalTokens) > TOKEN_LIMIT;
         const remainingArticles = Math.max(0, ARTICLE_LIMIT - currentArticles);
@@ -227,66 +227,69 @@ export function registerRoutes(app: Express) {
       }
 
       // Generate audio and update usage
-      try {
-        const { audioBuffer, duration } = await ttsService.generateConversation(fileContent);
-        
-        // Update usage statistics
-        await db.transaction(async (tx) => {
-          const [updatedUsage] = await tx
-            .insert(userUsage)
-            .values({
-              userId: user.id,
-              articlesConverted: currentArticles + 1,
-              tokensUsed: sql`${userUsage.tokensUsed} + ${totalTokens}`,
-              monthYear: currentMonth,
-              lastConversion: new Date(),
-            })
-            .onConflictDoUpdate({
-              target: [userUsage.userId, userUsage.monthYear],
-              set: {
-                articlesConverted: sql`${userUsage.articlesConverted} + 1`,
-                tokensUsed: sql`${userUsage.tokensUsed} + ${totalTokens}`,
+        try {
+          const { audioBuffer, duration, usage } = await ttsService.generateConversation(fileContent);
+          
+          // Calculate total tokens used including both input and output
+          const totalTokens = usage.inputTokens + usage.outputTokens;
+
+          // Update usage statistics
+          await db.transaction(async (tx) => {
+            const [updatedUsage] = await tx
+              .insert(userUsage)
+              .values({
+                userId: user.id,
+                articlesConverted: sql`COALESCE(${userUsage.articlesConverted}, 0) + 1`,
+                tokensUsed: sql`COALESCE(${userUsage.tokensUsed}, 0) + ${totalTokens}`,
+                monthYear: currentMonth,
                 lastConversion: new Date(),
-              },
-            })
-            .returning();
+              })
+              .onConflictDoUpdate({
+                target: [userUsage.userId, userUsage.monthYear],
+                set: {
+                  articlesConverted: sql`${userUsage.articlesConverted} + 1`,
+                  tokensUsed: sql`${userUsage.tokensUsed} + ${totalTokens}`,
+                  lastConversion: new Date(),
+                },
+              })
+              .returning();
 
-          if (!updatedUsage) {
-            throw new Error('Failed to update usage statistics');
-          }
+            if (!updatedUsage) {
+              throw new Error('Failed to update usage statistics');
+            }
 
-          await logger.info([
-            `Updated usage for user ${user.id}:`,
-            `Articles: ${updatedUsage.articlesConverted}/${ARTICLE_LIMIT}`,
-            `Tokens: ${updatedUsage.tokensUsed}/${TOKEN_LIMIT}`
-          ]);
+            await logger.info([
+              `Updated usage for user ${user.id}:`,
+              `Articles: ${updatedUsage.articlesConverted}/${ARTICLE_LIMIT}`,
+              `Tokens: ${updatedUsage.tokensUsed}/${TOKEN_LIMIT}`
+            ]);
 
-          // Save the audio file
-          const audioFileName = `${Date.now()}-${file.originalname}.mp3`;
-          const audioPath = path.join("./uploads", audioFileName);
-          await fs.writeFile(audioPath, audioBuffer);
+            // Save the audio file
+            const audioFileName = `${Date.now()}-${file.originalname}.mp3`;
+            const audioPath = path.join("./uploads", audioFileName);
+            await fs.writeFile(audioPath, audioBuffer);
 
-          // Create podcast entry
-          const [newPodcast] = await tx
-            .insert(podcasts)
-            .values({
-              userId: user.id,
-              title: file.originalname.replace(/\.[^/.]+$/, ""),
-              description: "Generated from uploaded document using AI voices",
-              audioUrl: `/uploads/${audioFileName}`,
-              duration,
-              type: "tts",
-            })
-            .returning();
+            // Create podcast entry
+            const [newPodcast] = await tx
+              .insert(podcasts)
+              .values({
+                userId: user.id,
+                title: file.originalname.replace(/\.[^/.]+$/, ""),
+                description: "Generated from uploaded document using AI voices",
+                audioUrl: `/uploads/${audioFileName}`,
+                duration,
+                type: "tts",
+              })
+              .returning();
 
-          return newPodcast;
-        });
+            return newPodcast;
+          });
 
-        res.json({ message: "Podcast created successfully" });
-      } catch (error) {
-        await logger.error(`Error generating audio: ${error instanceof Error ? error.message : String(error)}`);
-        throw error;
-      }
+          res.json({ message: "Podcast created successfully" });
+        } catch (error) {
+          await logger.error(`Error generating audio: ${error instanceof Error ? error.message : String(error)}`);
+          throw error;
+        }
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -298,6 +301,7 @@ export function registerRoutes(app: Express) {
            error: errorMessage,
            type: isValidationError ? "validation" : "server"
          });
+    }
     } finally {
       if (file?.path) {
         try {

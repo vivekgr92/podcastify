@@ -215,49 +215,61 @@ export class TTSService {
       model: "gemini-1.5-flash-002",
     });
 
-    // Count tokens using the proper content format for the Vertex AI model
-    const tokenCount = await model.countTokens({
-      contents: [{ role: "user", parts: [{ text }] }],
-    });
+    try {
+      // Calculate initial input tokens
+      const inputTokenCount = await model.countTokens({
+        contents: [{ role: "user", parts: [{ text }] }],
+      });
 
-    // Calculate the number of input tokens
-    const inputTokens = tokenCount.totalTokens;
+      // Calculate prompt tokens (including system prompts)
+      const systemPromptsText = Object.values(SYSTEM_PROMPTS).join('\n');
+      const systemTokenCount = await model.countTokens({
+        contents: [{ role: "system", parts: [{ text: systemPromptsText }] }],
+      });
 
-    // Estimate output tokens assuming the conversation length is typically 2.5x longer than input
-    const estimatedOutputTokens = Math.ceil(inputTokens * 2.5);
+      const totalInputTokens = inputTokenCount.totalTokens + systemTokenCount.totalTokens;
 
-    // Calculate costs
-    const inputCost = (inputTokens / 1000) * PRICING.INPUT_TOKEN_RATE;
-    const outputCost = (estimatedOutputTokens / 1000) * PRICING.OUTPUT_TOKEN_RATE;
-    
-    // Estimate TTS cost (using standard voice rate)
-    const estimatedCharacters = text.length * 2.5; // Estimate conversation length
-    const ttsCost = estimatedCharacters * PRICING.TTS_RATE_STANDARD;
+      // Estimate conversation output tokens (more accurate based on prompt structure)
+      const estimatedOutputTokens = Math.ceil(totalInputTokens * 3); // Increased multiplier due to conversation format
 
-    const totalCost = inputCost + outputCost + ttsCost;
+      // Calculate TTS characters including speaker annotations
+      const estimatedTTSCharacters = Math.ceil(text.length * 2.8); // Increased multiplier for speaker annotations
 
-    // Log pricing breakdown
-    await logger.info(
-      `\n--- Pricing Details ---\n` +
-        `Input Tokens: ${inputTokens}\n` +
+      // Calculate costs
+      const inputCost = (totalInputTokens / 1000) * PRICING.INPUT_TOKEN_RATE;
+      const outputCost = (estimatedOutputTokens / 1000) * PRICING.OUTPUT_TOKEN_RATE;
+      const ttsCost = estimatedTTSCharacters * PRICING.TTS_RATE_STANDARD;
+
+      const totalCost = inputCost + outputCost + ttsCost;
+
+      // Detailed logging
+      await logger.info(
+        `\n--- Pricing Details ---\n` +
+        `Base Input Tokens: ${inputTokenCount.totalTokens}\n` +
+        `System Prompt Tokens: ${systemTokenCount.totalTokens}\n` +
+        `Total Input Tokens: ${totalInputTokens}\n` +
         `Estimated Output Tokens: ${estimatedOutputTokens}\n` +
-        `Estimated Characters for TTS: ${estimatedCharacters}\n` +
+        `Estimated TTS Characters: ${estimatedTTSCharacters}\n` +
         `Input Cost: $${inputCost.toFixed(4)}\n` +
         `Output Cost: $${outputCost.toFixed(4)}\n` +
         `TTS Cost: $${ttsCost.toFixed(4)}\n` +
         `Total Cost: $${totalCost.toFixed(4)}\n`
-    );
+      );
 
-    return {
-      inputTokens,
-      estimatedOutputTokens,
-      totalCost,
-      breakdown: {
-        inputCost,
-        outputCost,
-        ttsCost
-      }
-    };
+      return {
+        inputTokens: totalInputTokens,
+        estimatedOutputTokens,
+        totalCost,
+        breakdown: {
+          inputCost,
+          outputCost,
+          ttsCost
+        }
+      };
+    } catch (error) {
+      await logger.error(`Error calculating pricing: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
+    }
   }
 
   private async cleanGeneratedText(
@@ -478,7 +490,7 @@ export class TTSService {
 
   async generateConversation(
     text: string,
-  ): Promise<{ audioBuffer: Buffer; duration: number }> {
+  ): Promise<{ audioBuffer: Buffer; duration: number; usage: { inputTokens: number; outputTokens: number; ttsCharacters: number } }> {
     try {
       // Ensure audio-files directory exists and is empty
       const audioDir = "audio-files";
@@ -494,6 +506,9 @@ export class TTSService {
       const allConversations: ConversationPart[] = [];
       let lastResponse = "";
       let speakerIndex = 0;
+      let totalInputTokens = 0;
+      let totalOutputTokens = 0;
+      let totalTtsCharacters = 0;
 
       // Initialize progress tracking
       this.emitProgress(0);
@@ -542,11 +557,25 @@ export class TTSService {
             "\n\n ------------END-----------------\n",
           ]);
 
+          // Calculate input tokens
+          const promptTokenCount = await model.countTokens({
+            contents: [{ role: "user", parts: [{ text: prompt }] }],
+          });
+          totalInputTokens += promptTokenCount.totalTokens;
+
           // Generate content using Vertex AI
           const result = (await model.generateContent({
             contents: [{ role: "user", parts: [{ text: prompt }] }],
             generationConfig: GENERATION_CONFIG,
           })) as GenerationResult;
+
+          // Calculate output tokens if response exists
+          if (result.response?.candidates?.[0]?.content?.parts?.[0]?.text) {
+            const outputTokenCount = await model.countTokens({
+              contents: [{ role: "assistant", parts: [{ text: result.response.candidates[0].content.parts[0].text }] }],
+            });
+            totalOutputTokens += outputTokenCount.totalTokens;
+          }
 
           // Validate and extract response
           const rawText =
@@ -591,37 +620,8 @@ export class TTSService {
       });
       await logger.log("--- End of Conversation ---\n");
 
-      // await logger.log("\n--- Full Generated Conversation ---");
-      // // Prepare input for synthesizeSpeechMultiSpeak and log conversation
-      // const turns = allConversations.map((part) => {
-      //   logger.log(`${part.speaker}: ${part.text}`);
-      //   return { text: part.text, speaker: part.speaker };
-      // });
 
-      // await logger.log("--- End of Conversation ---\n");
-
-      // await logger.log("\n--- Full Generated Conversation ---");
-
-      // // Prepare input for synthesizeSpeechMultiSpeaker and log conversation
-      // const turns = allConversations.map((part) => {
-      //   // Replace speaker names with "R" for Joe and "S" for Sarah
-      //   const mappedSpeaker =
-      //     part.speaker === "Joe"
-      //       ? "R"
-      //       : part.speaker === "Sarah"
-      //         ? "S"
-      //         : part.speaker;
-
-      //   // Log the conversation with the updated speaker names
-      //   logger.log(`${mappedSpeaker}: ${part.text}`);
-
-      //   // Return the modified turn
-      //   return { text: part.text, speaker: mappedSpeaker };
-      // });
-
-      // await logger.log("--- End of Conversation ---\n");
-
-      // // Variables to track the total cost
+      // Variables to track the total cost
       let totalCost = 0;
       const useWaveNet = false; // Set to true if you are using WaveNet voices
 
@@ -634,6 +634,7 @@ export class TTSService {
 
         // Calculate the number of characters in the text
         const numCharacters = text.length;
+        totalTtsCharacters += numCharacters;
 
         // Calculate the cost for generating this audio
         const cost = this.calculateTtsCost(numCharacters, useWaveNet);
@@ -649,7 +650,6 @@ export class TTSService {
         // Generate the MultiSpeak
         const audioFile = await this.synthesizeSpeech(text, speaker, i);
 
-        // const audioFile = await this.synthesizeSpeech(text, speaker, i);
         audioFiles.push(audioFile);
 
         // Update progress for audio generation (50-100%)
@@ -676,6 +676,12 @@ export class TTSService {
       );
       const approximateDuration = Math.ceil(totalCharacters / 20); // Rough estimate: 20 characters per second
 
+      await logger.info(`\n--- Usage Statistics ---
+Input Tokens: ${totalInputTokens}
+Output Tokens: ${totalOutputTokens}
+TTS Characters: ${totalTtsCharacters}
+Total Cost: $${totalCost.toFixed(4)}\n`);
+
       // Clean up the audio-files directory after getting the final buffer
       try {
         await fs.rm(audioDir, { recursive: true, force: true });
@@ -689,7 +695,17 @@ export class TTSService {
       }
 
       this.emitProgress(100);
-      return { audioBuffer, duration: approximateDuration };
+      
+
+      return { 
+        audioBuffer, 
+        duration: approximateDuration,
+        usage: {
+          inputTokens: totalInputTokens,
+          outputTokens: totalOutputTokens,
+          ttsCharacters: totalTtsCharacters
+        }
+      };
     } catch (error) {
       await logger.log(
         `Error generating conversation: ${error instanceof Error ? error.message : String(error)}`,
