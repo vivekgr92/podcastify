@@ -1,6 +1,6 @@
 import { VertexAI, GenerativeModel } from "@google-cloud/vertexai";
 import { TextToSpeechClient, protos } from "@google-cloud/text-to-speech";
-import { promisify } from 'util';
+import { promisify } from "util";
 import { logger } from "./logging";
 import path from "path";
 import fs from "fs/promises";
@@ -295,46 +295,43 @@ export class TTSService {
 
   private async synthesizeSpeechMultiSpeaker(
     turns: Array<{ text: string; speaker: string }>,
-    outputFile: string,
-  ): Promise<void> {
+    index: number,
+  ): Promise<string> {
+    //const voiceName = SPEAKER_VOICE_MAP[speaker]; // Assuming SPEAKER_VOICE_MAP exists
+    const outputFile = path.join("audio-files", `${index}.mp3`);
+
     try {
+      const multiSpeakerMarkup = turns.map((turn) => ({
+        text: turn.text,
+        speaker: turn.speaker, // Use speaker identifiers
+      }));
+
       const request = {
-        input: {
-          text: turns.map(turn => `${turn.speaker}: ${turn.text}`).join('\n')
-        },
+        input: { multiSpeakerMarkup },
         voice: {
-          languageCode: 'en-US',
-          name: 'en-US-Studio-O',  // Using a studio voice that supports multi-speaker
-          customVoice: {
-            model: 'multispeaker',
-            reportedUsage: 'MULTI_SPEAKER_CONVERSATION'
-          }
+          languageCode: "en-US",
+          name: "en-US-Studio-Multispeaker", // Use the special multi-speaker voice
         },
         audioConfig: {
-          audioEncoding: 'MP3',
-          pitch: 0,
-          speakingRate: 1,
+          audioEncoding: "MP3",
         },
       };
 
-      // Perform the text-to-speech request using the ttsClient
+      // Perform the text-to-speech request
       const [response] = await this.ttsClient.synthesizeSpeech(request);
 
-      if (response.audioContent) {
-        // Ensure the directory exists
-        await fs.mkdir(path.dirname(outputFile), { recursive: true });
-        
-        // Write the synthesized audio to the specified file
-        await fs.writeFile(outputFile, response.audioContent as Buffer);
-        await logger.info(`Audio content written to file "${outputFile}"`);
-      } else {
-        await logger.error("No audio content received in the response.");
-        throw new Error("No audio content received");
-      }
-    } catch (err) {
-      await logger.error(`Error during Text-to-Speech request: ${err instanceof Error ? err.message : String(err)}`);
+      // Ensure the directory exists
+      await fs.mkdir("audio-files", { recursive: true });
+
+      // Write the synthesized audio to the specified file
+      await fs.writeFile(outputFile, response.audioContent as Buffer);
+      await logger.info(`Audio content written to file "${outputFile}"`);
+
+      // Return the file path of the generated speech
+      return outputFile;
+    } catch (error) {
       throw new Error(
-        `Failed to synthesize speech: ${err instanceof Error ? err.message : String(err)}`,
+        `Failed to synthesize speech: ${error instanceof Error ? error.message : String(error)}`,
       );
     }
   }
@@ -574,11 +571,11 @@ export class TTSService {
       }
 
       // Print full conversation for debugging
-      // await logger.log("\n--- Full Generated Conversation ---");
-      // allConversations.forEach((part) => {
-      //   logger.log(`${part.speaker}: ${part.text}`);
-      // });
-      // await logger.log("--- End of Conversation ---\n");
+      await logger.log("\n--- Full Generated Conversation ---");
+      allConversations.forEach((part) => {
+        logger.log(`${part.speaker}: ${part.text}`);
+      });
+      await logger.log("--- End of Conversation ---\n");
 
       // await logger.log("\n--- Full Generated Conversation ---");
       // // Prepare input for synthesizeSpeechMultiSpeak and log conversation
@@ -589,75 +586,71 @@ export class TTSService {
 
       // await logger.log("--- End of Conversation ---\n");
 
-      await logger.log("\n--- Full Generated Conversation ---");
+      // await logger.log("\n--- Full Generated Conversation ---");
 
-      // Prepare input for synthesizeSpeechMultiSpeaker and log conversation
-      const turns = allConversations.map((part) => {
-        // Replace speaker names with "R" for Joe and "S" for Sarah
-        const mappedSpeaker =
-          part.speaker === "Joe"
-            ? "R"
-            : part.speaker === "Sarah"
-              ? "S"
-              : part.speaker;
+      // // Prepare input for synthesizeSpeechMultiSpeaker and log conversation
+      // const turns = allConversations.map((part) => {
+      //   // Replace speaker names with "R" for Joe and "S" for Sarah
+      //   const mappedSpeaker =
+      //     part.speaker === "Joe"
+      //       ? "R"
+      //       : part.speaker === "Sarah"
+      //         ? "S"
+      //         : part.speaker;
 
-        // Log the conversation with the updated speaker names
-        logger.log(`${mappedSpeaker}: ${part.text}`);
+      //   // Log the conversation with the updated speaker names
+      //   logger.log(`${mappedSpeaker}: ${part.text}`);
 
-        // Return the modified turn
-        return { text: part.text, speaker: mappedSpeaker };
-      });
+      //   // Return the modified turn
+      //   return { text: part.text, speaker: mappedSpeaker };
+      // });
 
-      await logger.log("--- End of Conversation ---\n");
+      // await logger.log("--- End of Conversation ---\n");
 
       // // Variables to track the total cost
-      // let totalCost = 0;
-      // const useWaveNet = false; // Set to true if you are using WaveNet voices
+      let totalCost = 0;
+      const useWaveNet = false; // Set to true if you are using WaveNet voices
 
       // Generate audio for each conversation part
       await logger.log("Generating audio files...");
       const audioFiles: string[] = [];
-      const outputFile = path.join("audio-files", "final_output.mp3");
 
-      // Generate the MultiSpeak
-      const audioFile = await this.synthesizeSpeechMultiSpeaker(
-        turns,
-        outputFile,
+      for (let i = 0; i < allConversations.length; i++) {
+        const { speaker, text } = allConversations[i];
+
+        // Calculate the number of characters in the text
+        const numCharacters = text.length;
+
+        // Calculate the cost for generating this audio
+        const cost = this.calculateTtsCost(numCharacters, useWaveNet);
+
+        // Add to the total cost
+        totalCost += cost;
+
+        // Log the cost for each part (optional)
+        await logger.log(
+          `Cost for part ${i + 1} (Speaker: ${speaker}): $${cost.toFixed(4)}`,
+        );
+
+        // Generate the MultiSpeak
+        const audioFile = await this.synthesizeSpeech(text, speaker, i);
+
+        // const audioFile = await this.synthesizeSpeech(text, speaker, i);
+        audioFiles.push(audioFile);
+
+        // Update progress for audio generation (50-100%)
+        this.emitProgress(50 + ((i + 1) / allConversations.length) * 50);
+      }
+
+      //Log the total cost after all conversations are processed
+      await logger.log(`\n--- Total TTS Cost ---`);
+      await logger.log(
+        `Total cost for audio generation: $${totalCost.toFixed(4)}`,
       );
-      // audioFiles.push(audioFile);
 
-      // for (let i = 0; i < allConversations.length; i++) {
-      //   const { speaker, text } = allConversations[i];
-
-      //   // Calculate the number of characters in the text
-      //   const numCharacters = text.length;
-
-      //   // Calculate the cost for generating this audio
-      //   const cost = this.calculateTtsCost(numCharacters, useWaveNet);
-
-      //   // Add to the total cost
-      //   totalCost += cost;
-
-      //   // Log the cost for each part (optional)
-      //   await logger.log(
-      //     `Cost for part ${i + 1} (Speaker: ${speaker}): $${cost.toFixed(4)}`,
-      //   );
-
-      //   const audioFile = await this.synthesizeSpeech(text, speaker, i);
-      //   audioFiles.push(audioFile);
-
-      //   // Update progress for audio generation (50-100%)
-      //   this.emitProgress(50 + ((i + 1) / allConversations.length) * 50);
-      // }
-
-      // Log the total cost after all conversations are processed
-      // await logger.log(`\n--- Total TTS Cost ---`);
-      // await logger.log(
-      //   `Total cost for audio generation: $${totalCost.toFixed(4)}`,
-      // );
-      // Merge audio files
-      // const outputFile = path.join("audio-files", "final_output.mp3");
-      // await this.mergeAudioFiles("audio-files", outputFile);
+      //Merge audio files
+      const outputFile = path.join("audio-files", "final_output.mp3");
+      await this.mergeAudioFiles("audio-files", outputFile);
 
       // Read the final audio file
       const audioBuffer = await fs.readFile(outputFile);
