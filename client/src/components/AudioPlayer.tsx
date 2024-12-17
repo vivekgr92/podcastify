@@ -58,16 +58,17 @@ export default function AudioPlayer() {
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
-  // Show player only when there's audio data
-  // Always render the container to maintain layout, but hide content when no audio
+  if (!audioData) {
+    return null;
+  }
+
   return (
-    <div className={`fixed bottom-0 left-0 right-0 h-[90px] bg-[#181818] border-t border-[#282828] z-[9999] shadow-lg transition-transform duration-300 ${!audioData ? 'translate-y-full' : 'translate-y-0'}`}>
-      <div className="max-w-[1500px] h-full mx-auto px-6 flex items-center justify-between gap-4" style={{ minHeight: '90px' }}>
-        {audioData && (
+    <div className="fixed bottom-0 left-0 right-0 h-[90px] bg-[#181818] border-t border-[#282828] z-[9999] shadow-lg">
+      <div className="max-w-[1500px] h-full mx-auto px-6 flex items-center justify-between gap-4">
         {/* Track Info */}
         <div className="flex items-center gap-4 min-w-[200px] max-w-[300px]">
           <div className="w-12 h-12 bg-[#4CAF50]/20 rounded-lg flex items-center justify-center">
-            {audioData?.coverImage ? (
+            {audioData.coverImage ? (
               <img
                 src={audioData.coverImage}
                 alt={audioData.title}
@@ -199,7 +200,6 @@ export default function AudioPlayer() {
         >
           <Download className="h-5 w-5" />
         </Button>
-      )}
       </div>
     </div>
   );
