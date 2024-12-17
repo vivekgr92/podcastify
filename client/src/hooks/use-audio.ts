@@ -30,15 +30,18 @@ export function useAudio(): AudioHookReturn {
   const { toast } = useToast();
 
   useEffect(() => {
-    const audio = new Audio();
-    audioRef.current = audio;
-    
-    console.log('Audio element created');
+    if (!audioRef.current) {
+      const audio = new Audio();
+      audioRef.current = audio;
+      console.log('Audio element created');
+    }
 
     return () => {
+      const audio = audioRef.current;
       if (audio) {
         audio.pause();
         audio.src = '';
+        audioRef.current = null;
       }
     };
   }, []);
@@ -53,7 +56,7 @@ export function useAudio(): AudioHookReturn {
         audioRef.current = audio;
       }
 
-      // Save current position before switching
+      // Save current position and pause before switching
       if (audioData && audioData.id !== podcast.id) {
         localStorage.setItem(`podcast-${audioData.id}-position`, audio.currentTime.toString());
         audio.pause();
@@ -64,30 +67,34 @@ export function useAudio(): AudioHookReturn {
       
       // Construct the audio URL
       const baseUrl = window.location.origin;
-      const audioUrl = podcast.audioUrl.startsWith('http') 
-        ? podcast.audioUrl 
-        : `${baseUrl}${podcast.audioUrl.startsWith('/') ? '' : '/'}${podcast.audioUrl}`;
+      let audioUrl = podcast.audioUrl;
+      if (!audioUrl.startsWith('http')) {
+        audioUrl = `${baseUrl}${audioUrl.startsWith('/') ? '' : '/'}${audioUrl}`;
+      }
       
       console.log('Audio URL:', audioUrl);
-      
-      // Test if the audio URL is accessible
-      const response = await fetch(audioUrl, { method: 'HEAD' });
-      if (!response.ok) {
-        throw new Error(`Audio file not accessible: ${response.status}`);
-      }
-      console.log('Audio file is accessible');
-      
-      // Set up the audio source
-      if (!audio.src || audio.src !== audioUrl) {
-        console.log('Setting new audio source');
-        audio.src = audioUrl;
-        audio.load();
-      }
 
-      // Set up audio event listeners
+      // Clean up existing event listeners
+      audio.removeEventListener('canplay', () => {});
+      audio.removeEventListener('error', () => {});
+      
+      // Set up new event listeners
       const handleCanPlay = () => {
         console.log('Audio can play');
-        audio.removeEventListener('canplay', handleCanPlay);
+        audio.play()
+          .then(() => {
+            audio.playbackRate = playbackSpeed;
+            setIsPlaying(true);
+            console.log('Audio playback started successfully');
+          })
+          .catch(err => {
+            console.error('Playback failed after canplay:', err);
+            toast({
+              title: "Error",
+              description: "Failed to start playback. Please try again.",
+              variant: "destructive",
+            });
+          });
       };
 
       const handleError = (e: Event) => {
@@ -96,6 +103,7 @@ export function useAudio(): AudioHookReturn {
           currentSrc: audio.currentSrc,
           readyState: audio.readyState,
           networkState: audio.networkState,
+          errorCode: audio.error?.code,
           errorMessage: audio.error?.message
         });
         toast({
@@ -105,19 +113,18 @@ export function useAudio(): AudioHookReturn {
         });
       };
 
+      // Add event listeners
       audio.addEventListener('canplay', handleCanPlay);
       audio.addEventListener('error', handleError);
 
-      // Start playback
-      await audio.play();
-      audio.playbackRate = playbackSpeed;
-      setIsPlaying(true);
-      console.log('Audio playback started');
+      // Set source and load
+      audio.src = audioUrl;
+      audio.load();
 
       // Save last played podcast
       localStorage.setItem('last-played-podcast', JSON.stringify(podcast));
     } catch (error) {
-      console.error('Error playing audio:', error);
+      console.error('Error in play function:', error);
       toast({
         title: "Error",
         description: "Failed to play audio. Please try again.",
