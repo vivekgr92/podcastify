@@ -1,4 +1,3 @@
-import { useRef, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import {
@@ -56,7 +55,10 @@ export default function AudioPlayer() {
     document.body.removeChild(link);
   };
 
-  // Only render if user is authenticated and there's audio data
+  // Only render if user is authenticated and we have audio data
+  if (!user || !audioData) return null;
+
+  // Only render if user is authenticated and we have audio data
   if (!user || !audioData) return null;
 
   return (
@@ -85,88 +87,100 @@ export default function AudioPlayer() {
           </div>
         </div>
 
-        {/* Center section - Controls and progress */}
-        <div className="flex flex-col items-center gap-2 flex-1 max-w-[600px]">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-white hover:text-white hover:bg-[#4CAF50]/20"
-              onClick={rewind}
-              title="Rewind 10 seconds"
-            >
-              <Rewind className="h-5 w-5" />
-            </Button>
+          {/* Center section - Controls and progress */}
+          <div className="flex flex-col items-center gap-2 flex-1 max-w-[600px]">
+            <div className="flex items-center gap-4">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-white hover:text-white hover:bg-[#4CAF50]/20"
+                onClick={rewind}
+                title="Rewind 10 seconds"
+              >
+                <Rewind className="h-5 w-5" />
+              </Button>
 
-            <Button
-              onClick={togglePlay}
-              variant="outline"
-              size="icon"
-              className="h-10 w-10 rounded-full bg-[#4CAF50] hover:bg-[#45a049] border-none text-white"
-            >
-              {isPlaying ? (
-                <Pause className="h-5 w-5" />
-              ) : (
-                <Play className="h-5 w-5 ml-0.5" />
-              )}
-            </Button>
+              <Button
+                onClick={togglePlay}
+                variant="outline"
+                size="icon"
+                className="h-10 w-10 rounded-full bg-[#4CAF50] hover:bg-[#45a049] border-none text-white"
+              >
+                {isPlaying ? (
+                  <Pause className="h-5 w-5" />
+                ) : (
+                  <Play className="h-5 w-5 ml-0.5" />
+                )}
+              </Button>
 
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-white hover:text-white hover:bg-[#4CAF50]/20"
-              onClick={fastForward}
-              title="Fast forward 10 seconds"
-            >
-              <FastForward className="h-5 w-5" />
-            </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-white hover:text-white hover:bg-[#4CAF50]/20"
+                onClick={fastForward}
+                title="Fast forward 10 seconds"
+              >
+                <FastForward className="h-5 w-5" />
+              </Button>
 
-            <Select
-              value={playbackSpeed.toString()}
-              onValueChange={(value) => setPlaybackSpeed(parseFloat(value))}
-            >
-              <SelectTrigger className="w-[80px] bg-transparent text-white border-[#4CAF50]">
-                <SelectValue placeholder="1x">{playbackSpeed}x</SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="0.5">0.5x</SelectItem>
-                <SelectItem value="1">1x</SelectItem>
-                <SelectItem value="1.5">1.5x</SelectItem>
-                <SelectItem value="2">2x</SelectItem>
-              </SelectContent>
-            </Select>
+              <Select
+                value={playbackSpeed.toString()}
+                onValueChange={(value) => setPlaybackSpeed(parseFloat(value))}
+              >
+                <SelectTrigger className="w-[80px] bg-transparent text-white border-[#4CAF50]">
+                  <SelectValue placeholder="1x">{playbackSpeed}x</SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="0.5">0.5x</SelectItem>
+                  <SelectItem value="1">1x</SelectItem>
+                  <SelectItem value="1.5">1.5x</SelectItem>
+                  <SelectItem value="2">2x</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex items-center gap-2 w-full">
+              <span className="text-sm text-white w-12 text-right">
+                {formatTime(currentTime)}
+              </span>
+              <Slider
+                value={[currentTime]}
+                max={duration || 100}
+                step={1}
+                onValueChange={([value]) => setPosition(value)}
+                className="flex-1"
+              />
+              <span className="text-sm text-white w-12">
+                {formatTime(duration || 0)}
+              </span>
+            </div>
           </div>
 
-          <div className="flex items-center gap-2 w-full">
-            <span className="text-sm text-white w-12 text-right">
-              {formatTime(currentTime)}
-            </span>
+          {/* Right section - Volume and Download */}
+          <div className="flex items-center gap-4 min-w-[150px]">
             <Slider
-              value={[currentTime]}
-              max={duration || 100}
+              defaultValue={[100]}
+              max={100}
               step={1}
-              onValueChange={([value]) => setPosition(value)}
-              className="flex-1"
+              onValueChange={([value]) => setAudioVolume(value)}
+              className="w-24"
             />
-            <span className="text-sm text-white w-12">
-              {formatTime(duration || 0)}
-            </span>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleDownload}
+              className="text-white hover:text-white hover:bg-[#4CAF50]/20"
+              title="Download audio"
+            >
+              <Download className="h-5 w-5" />
+            </Button>
           </div>
         </div>
-
-        {/* Right section - Download */}
-        <div className="flex items-center gap-2 min-w-[150px]">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleDownload}
-            className="text-white hover:text-white hover:bg-[#4CAF50]/20"
-            title="Download audio"
-          >
-            <Download className="h-5 w-5" />
-          </Button>
+      ) : (
+        <div className="h-full flex items-center justify-center text-gray-400">
+          Select a podcast to play
         </div>
-      </div>
+      )}
     </div>
   );
 }
