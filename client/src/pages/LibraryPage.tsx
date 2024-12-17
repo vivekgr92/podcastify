@@ -93,7 +93,13 @@ export default function LibraryPage() {
                           await togglePlay();
                         } else {
                           console.log('Attempting to play podcast:', podcast);
-                          await play(podcast);
+                          try {
+                            await play(podcast);
+                            console.log('Play function completed');
+                          } catch (error) {
+                            console.error('Error in play function:', error);
+                            throw error;
+                          }
                         }
                       } catch (error) {
                         console.error('Failed to play audio:', error);
@@ -196,10 +202,8 @@ export default function LibraryPage() {
         </div>
       </main>
       
-      {/* Audio Player - Only rendered in LibraryPage */}
-      <div className="fixed bottom-0 left-0 right-0">
-        <AudioPlayer />
-      </div>
+      {/* Audio Player - Always render but visibility controlled by component */}
+      <AudioPlayer />
     </div>
   );
 }

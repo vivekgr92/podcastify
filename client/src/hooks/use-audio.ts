@@ -62,8 +62,14 @@ export function useAudio(): AudioHookReturn {
         audio.pause();
       }
 
-      // Update audio data first to ensure UI updates
-      setAudioData(podcast);
+      // Update audio data
+      console.log('Setting audio data:', podcast);
+      setAudioData(prevData => {
+        if (prevData?.id === podcast.id) {
+          return prevData;
+        }
+        return podcast;
+      });
       
       // Construct the audio URL
       const baseUrl = window.location.origin;
