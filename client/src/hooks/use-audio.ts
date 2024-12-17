@@ -56,19 +56,20 @@ export function useAudio(): AudioHookReturn {
         audioRef.current = audio;
       }
 
+      // Update audio data first
+      setAudioData(podcast);
+      setIsPlaying(true);
+
       // Save current position and pause before switching
       if (audioData && audioData.id !== podcast.id) {
         localStorage.setItem(`podcast-${audioData.id}-position`, audio.currentTime.toString());
         audio.pause();
       }
 
-      // Update audio data
-      console.log('Setting audio data:', podcast);
-      setAudioData(prevData => {
-        if (prevData?.id === podcast.id) {
-          return prevData;
-        }
-        return podcast;
+      console.log('Audio state updated:', {
+        podcast,
+        isAudioSet: true,
+        isPlaying: true
       });
       
       // Construct the audio URL
