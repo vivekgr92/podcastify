@@ -6,17 +6,15 @@ import { useLocation } from "wouter";
 import { useAudio } from "../hooks/use-audio";
 import AudioPlayer from "../components/AudioPlayer";
 import { useToast } from "@/hooks/use-toast";
-import { useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useUser } from "../hooks/use-user";
 
 export default function LibraryPage() {
   const [, setLocation] = useLocation();
   const { play, isPlaying, audioData, togglePlay } = useAudio();
   const { toast } = useToast();
-  const queryClient = useQueryClient();
   const { user } = useUser();
-
+  
   const [isConverting, setIsConverting] = useState(false);
   const [conversionProgress, setConversionProgress] = useState(0);
   
@@ -61,9 +59,9 @@ export default function LibraryPage() {
     );
   }
 
-  const handlePlayPause = async (podcast: Podcast) => {
+  const handlePlayPause = useCallback(async (podcast: Podcast) => {
     try {
-      if (isPlaying && audioData?.id === podcast.id) {
+      if (audioData?.id === podcast.id) {
         await togglePlay();
       } else {
         await play(podcast);
@@ -72,11 +70,17 @@ export default function LibraryPage() {
       console.error('Failed to play audio:', error);
       toast({
         title: "Error",
-        description: "Failed to play audio. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to play audio. Please try again.",
         variant: "destructive"
       });
     }
-  };
+  }, [audioData, play, togglePlay, toast]);
+
+  const createPlayButtonHandler = useCallback((podcast: Podcast) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    handlePlayPause(podcast);
+  }, [handlePlayPause]);
 
   return (
     <div className="min-h-screen bg-black text-white relative">
@@ -118,12 +122,17 @@ export default function LibraryPage() {
                     variant="default" 
                     size="icon" 
                     className="rounded-full bg-[#4CAF50] hover:bg-[#45a049] h-10 w-10 p-0 flex items-center justify-center"
-                    onClick={() => handlePlayPause(podcast)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handlePlayPause(podcast);
+                    }}
+                    title={isPlaying && audioData?.id === podcast.id ? "Pause" : "Play"}
                   >
                     {isPlaying && audioData?.id === podcast.id ? (
-                      <Pause className="h-5 w-5 text-black fill-black" />
+                      <Pause className="h-5 w-5 text-white" />
                     ) : (
-                      <Play className="h-5 w-5 text-black fill-black" />
+                      <Play className="h-5 w-5 text-white ml-0.5" />
                     )}
                   </Button>
                   <Button 
@@ -168,7 +177,7 @@ export default function LibraryPage() {
       </main>
       
       {/* AudioPlayer will only render if user is authenticated and there's audio data */}
-      {audioData && <AudioPlayer />}
+      <AudioPlayer />
     </div>
   );
 }

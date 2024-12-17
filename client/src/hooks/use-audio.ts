@@ -74,48 +74,56 @@ export function useAudio(): AudioHookReturn {
 
   const play = useCallback(async (podcast: Podcast) => {
     try {
-      const audio = audioRef.current || new Audio();
+      // Ensure we have an audio instance
       if (!audioRef.current) {
-        audioRef.current = audio;
+        audioRef.current = new Audio();
       }
+      const audio = audioRef.current;
 
       // Save current position if switching podcasts
       if (audioData && audioData.id !== podcast.id) {
         localStorage.setItem(`podcast-${audioData.id}-position`, audio.currentTime.toString());
+      }
+
+      // Pause current playback before switching
+      if (isPlaying) {
         audio.pause();
       }
 
       const audioUrl = constructAudioUrl(podcast.audioUrl);
       
-      // Verify audio file accessibility
-      try {
-        const response = await fetch(audioUrl, { method: 'HEAD' });
-        if (!response.ok) {
-          throw new Error(`Audio file not accessible: ${response.status}`);
+      // Only reload audio if it's a different podcast
+      if (audio.src !== audioUrl) {
+        try {
+          const response = await fetch(audioUrl, { method: 'HEAD' });
+          if (!response.ok) {
+            throw new Error(`Audio file not accessible: ${response.status}`);
+          }
+        } catch (error) {
+          throw new Error('Could not access audio file. Please check the URL.');
         }
-      } catch (error) {
-        throw new Error('Could not access audio file. Please check the URL.');
+        
+        audio.src = audioUrl;
+        audio.load();
+
+        // Wait for audio to be ready
+        await new Promise<void>((resolve, reject) => {
+          const handleCanPlay = () => {
+            audio.removeEventListener('canplay', handleCanPlay);
+            audio.removeEventListener('error', handleError);
+            resolve();
+          };
+
+          const handleError = (e: Event) => {
+            audio.removeEventListener('canplay', handleCanPlay);
+            audio.removeEventListener('error', handleError);
+            reject(new Error(`Failed to load audio: ${audio.error?.message || 'Unknown error'}`));
+          };
+
+          audio.addEventListener('canplay', handleCanPlay);
+          audio.addEventListener('error', handleError);
+        });
       }
-      
-      audio.src = audioUrl;
-      audio.load();
-
-      await new Promise<void>((resolve, reject) => {
-        const handleCanPlay = () => {
-          audio.removeEventListener('canplay', handleCanPlay);
-          audio.removeEventListener('error', handleError);
-          resolve();
-        };
-
-        const handleError = (e: Event) => {
-          audio.removeEventListener('canplay', handleCanPlay);
-          audio.removeEventListener('error', handleError);
-          reject(new Error(`Failed to load audio: ${audio.error?.message || 'Unknown error'}`));
-        };
-
-        audio.addEventListener('canplay', handleCanPlay);
-        audio.addEventListener('error', handleError);
-      });
 
       setAudioData(podcast);
       await audio.play();
@@ -132,7 +140,7 @@ export function useAudio(): AudioHookReturn {
         variant: "destructive",
       });
     }
-  }, [audioData, playbackSpeed, toast, constructAudioUrl]);
+  }, [audioData, isPlaying, playbackSpeed, toast, constructAudioUrl]);
 
   const togglePlay = useCallback(async () => {
     try {
