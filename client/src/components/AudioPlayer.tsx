@@ -78,7 +78,7 @@ export default function AudioPlayer() {
   const VolumeIcon = volume === 0 ? VolumeX : volume < 50 ? Volume1 : Volume2;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 h-24 bg-background border-t z-50">
+    <div className={`fixed bottom-0 left-0 right-0 h-24 bg-black border-t border-gray-800 z-50 transition-all duration-300 ease-in-out ${audioData?.audioUrl ? 'translate-y-0 opacity-100 visible' : 'translate-y-full opacity-0 invisible'}`}>
       <div className="container h-full mx-auto px-4 flex items-center justify-between gap-4">
         {audioData ? (
           <>
