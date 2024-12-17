@@ -8,10 +8,14 @@ interface AudioHookReturn {
   duration: number;
   audioData: Podcast | null;
   canvasRef: React.RefObject<HTMLCanvasElement>;
+  playbackSpeed: number;
   play: (podcast: Podcast) => void;
   togglePlay: () => void;
   setPosition: (time: number) => void;
   setVolume: (value: number) => void;
+  setPlaybackSpeed: (speed: number) => void;
+  fastForward: () => void;
+  rewind: () => void;
 }
 
 export function useAudio(): AudioHookReturn {
@@ -19,17 +23,16 @@ export function useAudio(): AudioHookReturn {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [playbackSpeed, setPlaybackSpeed] = useState(1);
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
-    // Initialize audio element
     const audio = new Audio();
     audioRef.current = audio;
 
-    // Clean up function
     return () => {
       if (audio) {
         audio.pause();
@@ -38,7 +41,6 @@ export function useAudio(): AudioHookReturn {
     };
   }, []);
 
-  // Setup audio event listeners
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -52,6 +54,8 @@ export function useAudio(): AudioHookReturn {
 
     const handleLoadedMetadata = () => {
       setDuration(audio.duration);
+      // Restore playback speed when loading new audio
+      audio.playbackRate = playbackSpeed;
     };
 
     const handleEnded = () => {
@@ -82,14 +86,13 @@ export function useAudio(): AudioHookReturn {
       audio.removeEventListener('ended', handleEnded);
       audio.removeEventListener('error', handleError);
     };
-  }, [audioData, toast]);
+  }, [audioData, toast, playbackSpeed]);
 
   const play = useCallback(async (podcast: Podcast) => {
     const audio = audioRef.current;
     if (!audio) return;
 
     try {
-      // Set up new audio source if it's a different podcast
       if (!audioData || audioData.id !== podcast.id) {
         const audioUrl = podcast.audioUrl.startsWith('http')
           ? podcast.audioUrl
@@ -98,7 +101,6 @@ export function useAudio(): AudioHookReturn {
         audio.src = audioUrl;
         setAudioData(podcast);
         
-        // Load saved position
         const savedPosition = localStorage.getItem(`podcast-${podcast.id}-position`);
         if (savedPosition) {
           const position = parseFloat(savedPosition);
@@ -109,6 +111,7 @@ export function useAudio(): AudioHookReturn {
       }
 
       await audio.play();
+      audio.playbackRate = playbackSpeed;
       setIsPlaying(true);
     } catch (error) {
       console.error('Error playing audio:', error);
@@ -118,7 +121,7 @@ export function useAudio(): AudioHookReturn {
         variant: "destructive",
       });
     }
-  }, [audioData, toast]);
+  }, [audioData, playbackSpeed, toast]);
 
   const togglePlay = useCallback(async () => {
     const audio = audioRef.current;
@@ -137,15 +140,8 @@ export function useAudio(): AudioHookReturn {
           audio.src = audioUrl;
         }
 
-        const savedPosition = localStorage.getItem(`podcast-${audioData.id}-position`);
-        if (savedPosition) {
-          const position = parseFloat(savedPosition);
-          if (!isNaN(position) && position > 0) {
-            audio.currentTime = position;
-          }
-        }
-
         await audio.play();
+        audio.playbackRate = playbackSpeed;
         setIsPlaying(true);
       }
     } catch (error) {
@@ -156,7 +152,7 @@ export function useAudio(): AudioHookReturn {
         variant: "destructive",
       });
     }
-  }, [audioData, isPlaying, toast]);
+  }, [audioData, isPlaying, playbackSpeed, toast]);
 
   const setPosition = useCallback((time: number) => {
     const audio = audioRef.current;
@@ -174,15 +170,43 @@ export function useAudio(): AudioHookReturn {
     }
   }, []);
 
+  const changePlaybackSpeed = useCallback((speed: number) => {
+    const audio = audioRef.current;
+    if (audio) {
+      audio.playbackRate = speed;
+      setPlaybackSpeed(speed);
+    }
+  }, []);
+
+  const fastForward = useCallback(() => {
+    const audio = audioRef.current;
+    if (audio) {
+      const newTime = Math.min(audio.currentTime + 10, audio.duration);
+      setPosition(newTime);
+    }
+  }, [setPosition]);
+
+  const rewind = useCallback(() => {
+    const audio = audioRef.current;
+    if (audio) {
+      const newTime = Math.max(audio.currentTime - 10, 0);
+      setPosition(newTime);
+    }
+  }, [setPosition]);
+
   return {
     isPlaying,
     currentTime,
     duration,
     audioData,
     canvasRef,
+    playbackSpeed,
     play,
     togglePlay,
     setPosition,
     setVolume,
+    setPlaybackSpeed: changePlaybackSpeed,
+    fastForward,
+    rewind,
   };
 }
