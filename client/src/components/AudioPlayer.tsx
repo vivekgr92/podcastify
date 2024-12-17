@@ -58,158 +58,148 @@ export default function AudioPlayer() {
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
+  // Show player only when there's audio data
+  // Always render the container to maintain layout, but hide content when no audio
   return (
-    <div className={`fixed bottom-0 left-0 right-0 bg-[#181818] border-t border-[#282828] shadow-xl z-[100] transition-all duration-300 ${!audioData ? 'translate-y-full' : 'translate-y-0'} h-24`}>
-      <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#4CAF50]/20 overflow-hidden">
-        <canvas
-          ref={canvasRef}
-          className="w-full h-full"
-        />
-      </div>
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between gap-4">
-          {/* Track Info */}
-          <div className="flex items-center gap-4 min-w-[200px] max-w-[300px]">
-            <div className="w-12 h-12 bg-[#4CAF50]/20 rounded-lg flex items-center justify-center">
-              {audioData?.coverImage ? (
-                <img
-                  src={audioData.coverImage}
-                  alt={audioData.title}
-                  className="w-full h-full rounded-lg object-cover"
-                />
-              ) : (
-                <Volume2 className="h-6 w-6 text-white" />
-              )}
-            </div>
-            <div className="flex-1 min-w-0">
-              <h3 className="font-medium truncate text-white">
-                {audioData ? audioData.title : "No track selected"}
-              </h3>
-              <p className="text-sm text-gray-400 truncate">
-                {audioData ? audioData.description : "Select a podcast to play"}
-              </p>
-            </div>
-          </div>
-
-          {/* Playback Controls */}
-          <div className="flex flex-col items-center gap-2 flex-1 max-w-[600px]">
-            <div className="flex items-center gap-4">
-              <Button 
-                variant="ghost" 
-                size="icon"
-                className="text-white hover:text-white hover:bg-[#4CAF50]/20"
-                disabled={!audioData}
-                onClick={rewind}
-                title="Rewind 10 seconds"
-              >
-                <Rewind className="h-5 w-5" />
-              </Button>
-              
-              <Button 
-                onClick={togglePlay}
-                variant="outline"
-                size="icon"
-                disabled={!audioData}
-                className="h-10 w-10 rounded-full bg-[#4CAF50] hover:bg-[#45a049] border-none text-white"
-              >
-                {isPlaying ? (
-                  <Pause className="h-5 w-5" />
-                ) : (
-                  <Play className="h-5 w-5 ml-0.5" />
-                )}
-              </Button>
-              
-              <Button 
-                variant="ghost" 
-                size="icon"
-                className="text-white hover:text-white hover:bg-[#4CAF50]/20"
-                disabled={!audioData}
-                onClick={fastForward}
-                title="Fast forward 10 seconds"
-              >
-                <FastForward className="h-5 w-5" />
-              </Button>
-
-              <Select
-                value={playbackSpeed.toString()}
-                onValueChange={(value) => setPlaybackSpeed(parseFloat(value))}
-              >
-                <SelectTrigger className="w-[80px] bg-transparent text-white border-[#4CAF50]">
-                  <SelectValue placeholder="1x">{playbackSpeed}x</SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="0.5">0.5x</SelectItem>
-                  <SelectItem value="1">1x</SelectItem>
-                  <SelectItem value="1.5">1.5x</SelectItem>
-                  <SelectItem value="2">2x</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="flex items-center gap-2 w-full">
-              <span className="text-sm text-white w-12 text-right">
-                {formatTime(currentTime)}
-              </span>
-              <Slider
-                value={[currentTime]}
-                max={duration || 100}
-                step={1}
-                onValueChange={([value]) => setPosition(value)}
-                className="flex-1"
-                disabled={!audioData}
+    <div className={`fixed bottom-0 left-0 right-0 h-[90px] bg-[#181818] border-t border-[#282828] z-[9999] shadow-lg transition-transform duration-300 ${!audioData ? 'translate-y-full' : 'translate-y-0'}`}>
+      <div className="max-w-[1500px] h-full mx-auto px-6 flex items-center justify-between gap-4" style={{ minHeight: '90px' }}>
+        {audioData && (
+        {/* Track Info */}
+        <div className="flex items-center gap-4 min-w-[200px] max-w-[300px]">
+          <div className="w-12 h-12 bg-[#4CAF50]/20 rounded-lg flex items-center justify-center">
+            {audioData?.coverImage ? (
+              <img
+                src={audioData.coverImage}
+                alt={audioData.title}
+                className="w-full h-full rounded-lg object-cover"
               />
-              <span className="text-sm text-white w-12">
-                {formatTime(duration || 0)}
-              </span>
-            </div>
+            ) : (
+              <Volume2 className="h-6 w-6 text-white" />
+            )}
           </div>
-
-          {/* Volume Controls */}
-          <div className="flex items-center gap-2 min-w-[150px]">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleMute}
-              className="text-white hover:text-white hover:bg-[#4CAF50]/20"
-            >
-              <VolumeIcon className="h-5 w-5" />
-            </Button>
-            <Slider
-              value={[volume]}
-              max={100}
-              step={1}
-              onValueChange={([value]) => {
-                setVolume(value);
-                setAudioVolume(value);
-              }}
-              className="w-[100px]"
-            />
+          <div className="flex-1 min-w-0">
+            <h3 className="font-medium truncate text-white">
+              {audioData.title}
+            </h3>
+            <p className="text-sm text-gray-400 truncate">
+              {audioData.description}
+            </p>
           </div>
-
-          {/* Download Button */}
-          {audioData && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => {
-                const link = document.createElement('a');
-                const baseUrl = window.location.origin;
-                const audioUrl = audioData.audioUrl.startsWith('http') 
-                  ? audioData.audioUrl 
-                  : `${baseUrl}${audioData.audioUrl}`;
-                link.href = audioUrl;
-                link.download = `${audioData.title}.mp3`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-              }}
-              className="text-white hover:text-white hover:bg-[#4CAF50]/20 ml-4"
-              title="Download audio"
-            >
-              <Download className="h-5 w-5" />
-            </Button>
-          )}
         </div>
+
+        {/* Playback Controls */}
+        <div className="flex flex-col items-center gap-2 flex-1 max-w-[600px]">
+          <div className="flex items-center gap-4">
+            <Button 
+              variant="ghost" 
+              size="icon"
+              className="text-white hover:text-white hover:bg-[#4CAF50]/20"
+              onClick={rewind}
+              title="Rewind 10 seconds"
+            >
+              <Rewind className="h-5 w-5" />
+            </Button>
+            
+            <Button 
+              onClick={togglePlay}
+              variant="outline"
+              size="icon"
+              className="h-10 w-10 rounded-full bg-[#4CAF50] hover:bg-[#45a049] border-none text-white"
+            >
+              {isPlaying ? (
+                <Pause className="h-5 w-5" />
+              ) : (
+                <Play className="h-5 w-5 ml-0.5" />
+              )}
+            </Button>
+            
+            <Button 
+              variant="ghost" 
+              size="icon"
+              className="text-white hover:text-white hover:bg-[#4CAF50]/20"
+              onClick={fastForward}
+              title="Fast forward 10 seconds"
+            >
+              <FastForward className="h-5 w-5" />
+            </Button>
+
+            <Select
+              value={playbackSpeed.toString()}
+              onValueChange={(value) => setPlaybackSpeed(parseFloat(value))}
+            >
+              <SelectTrigger className="w-[80px] bg-transparent text-white border-[#4CAF50]">
+                <SelectValue placeholder="1x">{playbackSpeed}x</SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="0.5">0.5x</SelectItem>
+                <SelectItem value="1">1x</SelectItem>
+                <SelectItem value="1.5">1.5x</SelectItem>
+                <SelectItem value="2">2x</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="flex items-center gap-2 w-full">
+            <span className="text-sm text-white w-12 text-right">
+              {formatTime(currentTime)}
+            </span>
+            <Slider
+              value={[currentTime]}
+              max={duration || 100}
+              step={1}
+              onValueChange={([value]) => setPosition(value)}
+              className="flex-1"
+            />
+            <span className="text-sm text-white w-12">
+              {formatTime(duration || 0)}
+            </span>
+          </div>
+        </div>
+
+        {/* Volume Controls */}
+        <div className="flex items-center gap-2 min-w-[150px]">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleMute}
+            className="text-white hover:text-white hover:bg-[#4CAF50]/20"
+          >
+            <VolumeIcon className="h-5 w-5" />
+          </Button>
+          <Slider
+            value={[volume]}
+            max={100}
+            step={1}
+            onValueChange={([value]) => {
+              setVolume(value);
+              setAudioVolume(value);
+            }}
+            className="w-[100px]"
+          />
+        </div>
+
+        {/* Download Button */}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => {
+            const link = document.createElement('a');
+            const baseUrl = window.location.origin;
+            const audioUrl = audioData.audioUrl.startsWith('http') 
+              ? audioData.audioUrl 
+              : `${baseUrl}${audioData.audioUrl}`;
+            link.href = audioUrl;
+            link.download = `${audioData.title}.mp3`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          }}
+          className="text-white hover:text-white hover:bg-[#4CAF50]/20 ml-4"
+          title="Download audio"
+        >
+          <Download className="h-5 w-5" />
+        </Button>
+      )}
       </div>
     </div>
   );
