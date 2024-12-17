@@ -59,12 +59,13 @@ export default function AudioPlayer() {
   };
 
   return (
-    <div className={`fixed bottom-0 left-0 right-0 bg-black/95 backdrop-blur-sm border-t border-gray-800 shadow-lg z-[100] transition-all duration-300 ${!audioData ? 'translate-y-full' : 'translate-y-0'} h-24`}>
-      <canvas
-        ref={canvasRef}
-        className="absolute top-0 left-0 right-0 h-1 bg-[#4CAF50]/20"
-        style={{ zIndex: 101 }}
-      />
+    <div className={`fixed bottom-0 left-0 right-0 bg-[#181818] border-t border-[#282828] shadow-xl z-[100] transition-all duration-300 ${!audioData ? 'translate-y-full' : 'translate-y-0'} h-24`}>
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#4CAF50]/20 overflow-hidden">
+        <canvas
+          ref={canvasRef}
+          className="w-full h-full"
+        />
+      </div>
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between gap-4">
           {/* Track Info */}
