@@ -17,6 +17,7 @@ export default function LibraryPage() {
 
   const [isConverting, setIsConverting] = useState(false);
   const [conversionProgress, setConversionProgress] = useState(0);
+  const [currentPodcastId, setCurrentPodcastId] = useState<number | null>(null);
   
   const { data: podcasts, isLoading } = useQuery<Podcast[]>({
     queryKey: ["podcasts"],

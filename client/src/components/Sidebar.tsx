@@ -50,7 +50,7 @@ export default function Sidebar({ isMobileMenuOpen = false, setIsMobileMenuOpen 
     <div 
       className={`${
         isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-      } md:translate-x-0 fixed md:static top-0 left-0 w-64 h-[calc(100vh-6rem)] bg-background border-r flex flex-col transition-all duration-300 ease-in-out shadow-lg md:shadow-none z-50`}
+      } md:translate-x-0 fixed md:static top-0 left-0 w-64 h-[calc(100vh-6rem)] bg-background border-r flex flex-col transition-all duration-300 ease-in-out shadow-lg md:shadow-none z-40 pb-24`}
     >
       <div className="flex flex-col h-full">
         <div className="p-6">
