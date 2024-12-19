@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useLocation } from "wouter";
+import { calculatePodifyTokensCost } from "@/lib/utils";
 
 interface UsageLimits {
   hasReachedLimit: boolean;
@@ -14,17 +15,12 @@ interface UsageLimits {
       remaining: number;
       wouldExceed?: boolean;
     };
-    tokens: {
+    podifyTokens: {
       used: number;
       limit: number;
       remaining: number;
       wouldExceed?: boolean;
-      estimated?: number;
-      podifyTokens: {
-        used: number;
-        limit: number;
-        remaining: number;
-      };
+      cost: number;
     };
   };
   currentPeriod: {
@@ -32,8 +28,6 @@ interface UsageLimits {
     resetsOn: string;
   };
   pricing?: {
-    inputTokens: number;
-    estimatedOutputTokens: number;
     estimatedCost: number;
     podifyTokens: number;
   };
@@ -91,10 +85,13 @@ export function UsageProgress({
     (usage.limits.articles.used / usage.limits.articles.limit) * 100,
     100
   );
-  const tokensPercentage = Math.min(
-    (usage.limits.tokens.used / usage.limits.tokens.limit) * 100,
+
+  const podifyTokensPercentage = Math.min(
+    (usage.limits.podifyTokens.used / usage.limits.podifyTokens.limit) * 100,
     100
   );
+
+  const tokenCost = calculatePodifyTokensCost(usage.limits.podifyTokens.used);
 
   return (
     <Card className="p-4 space-y-4">
@@ -112,14 +109,14 @@ export function UsageProgress({
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
           <span>
-            Podify Tokens ({usage.limits.tokens.podifyTokens.used.toLocaleString()}/
-            {usage.limits.tokens.podifyTokens.limit.toLocaleString()})
+            Podify Tokens ({usage.limits.podifyTokens.used.toLocaleString()}/
+            {usage.limits.podifyTokens.limit.toLocaleString()})
           </span>
-          <span>{Math.round(tokensPercentage)}%</span>
+          <span>${tokenCost.toFixed(2)}</span>
         </div>
         <Progress 
-          value={tokensPercentage}
-          className={tokensPercentage >= 100 ? "bg-destructive/20" : ""}
+          value={podifyTokensPercentage}
+          className={podifyTokensPercentage >= 100 ? "bg-destructive/20" : ""}
         />
         <div className="text-xs text-muted-foreground">
           1 Podify Token = $0.005 (0.5¢)
@@ -141,11 +138,11 @@ export function UsageProgress({
               {usage.limits.articles.used >= usage.limits.articles.limit && (
                 <li>Maximum {usage.limits.articles.limit} articles per month reached ({usage.limits.articles.used} used)</li>
               )}
-              {usage.limits.tokens.used >= usage.limits.tokens.limit && (
-                <li>Maximum {usage.limits.tokens.limit.toLocaleString()} tokens per month reached ({usage.limits.tokens.used.toLocaleString()} used)</li>
+              {usage.limits.podifyTokens.used >= usage.limits.podifyTokens.limit && (
+                <li>Maximum {usage.limits.podifyTokens.limit.toLocaleString()} Podify Tokens per month reached (${tokenCost.toFixed(2)} worth used)</li>
               )}
             </ul>
-            
+
             {usage.upgradePlans && (
               <>
                 <div className="mt-4 space-y-4">
@@ -157,7 +154,7 @@ export function UsageProgress({
                       ))}
                     </ul>
                   </div>
-                  
+
                   <div className="bg-card p-4 rounded-lg">
                     <h4 className="font-semibold text-primary mb-2">{usage.upgradePlans.annual.name} - ${usage.upgradePlans.annual.price}/year</h4>
                     <ul className="list-disc ml-4 space-y-1 text-muted-foreground">
@@ -169,14 +166,12 @@ export function UsageProgress({
                 </div>
               </>
             )}
-            
+
             {usage.pricing && (
               <div className="mt-4 p-4 bg-card rounded-lg">
                 <h4 className="font-semibold text-primary mb-2">Current Usage Details</h4>
                 <ul className="space-y-2 text-muted-foreground">
-                  <li>Input Tokens: {usage.pricing.inputTokens.toLocaleString()}</li>
-                  <li>Estimated Output: {usage.pricing.estimatedOutputTokens.toLocaleString()} tokens</li>
-                  <li>Estimated Cost: ${usage.pricing.estimatedCost.toFixed(2)}</li>
+                  <li>Cost: ${usage.pricing.estimatedCost.toFixed(2)}</li>
                   <li>Podify Tokens: {usage.pricing.podifyTokens.toLocaleString()}</li>
                 </ul>
               </div>
@@ -184,7 +179,8 @@ export function UsageProgress({
           </div>
           {showUpgradeButton && (
             <Button 
-              className="w-full bg-[#4CAF50] hover:bg-[#45a049]"
+              variant="success"
+              className="w-full"
               onClick={() => setLocation("/pricing")}
             >
               Upgrade Now
