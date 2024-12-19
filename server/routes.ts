@@ -11,6 +11,7 @@ import { dirname } from 'path';
 import { podcasts, playlists, playlistItems, progress, userUsage } from "@db/schema";
 import { logger } from "./services/logging";
 import { ttsService } from "./services/tts";
+import type { ConversationPart } from "./services/tts";
 import { eq, and, sql } from "drizzle-orm";
 import pdfParse from 'pdf-parse/lib/pdf-parse.js';
 
@@ -169,11 +170,12 @@ export function registerRoutes(app: Express) {
         .limit(1);
 
       try {
-        // Initialize response texts array for initial pricing calculation
+        // Initialize arrays for initial pricing calculation
         const responseTexts: string[] = []; // Empty array for initial pricing estimate
+        const conversations: ConversationPart[] = []; // Empty array for initial pricing calculation
 
         // Calculate pricing and token usage using pre-generated conversation parts if available
-        const pricingDetails = await ttsService.calculatePricing(fileContent, responseTexts);
+        const pricingDetails = await ttsService.calculatePricing(fileContent, responseTexts, conversations);
         const totalInputTokens = pricingDetails?.inputTokens || 0;
         const totalOutputTokens = pricingDetails?.estimatedOutputTokens || 0;
         const totalTokens = totalInputTokens + totalOutputTokens;
