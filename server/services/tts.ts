@@ -32,7 +32,6 @@ interface GenerationResult {
 interface PricingDetails {
   inputTokens: number;
   outputTokens: number;
-  estimatedOutputTokens: number;
   ttsCharacters: number;
   totalCost: number;
   breakdown: {
@@ -218,6 +217,7 @@ export class TTSService {
     text: string,
     responses: string[] = [],
     conversations?: ConversationPart[],
+    estimateToken: boolean = false,
   ): Promise<PricingDetails> {
     // Initialize the Gen AI Model
     const model = this.vertexAI.getGenerativeModel({
@@ -243,9 +243,9 @@ export class TTSService {
       }
 
       await logger.info([
-        "\n\n======= Starting Pricing Calculation =======",
-        `Input text length: ${text.length}`,
-        `Number of responses: ${responses.length}`,
+        "\n======= Starting Pricing Calculation ======\n",
+        `-Input text length: ${text.length}\n`,
+        `-Number of responses: ${responses.length}`,
       ]);
 
       // Calculate input tokens
@@ -281,6 +281,24 @@ export class TTSService {
 
       // Process responses for output tokens
       let totalOutputTokens = 0;
+      let totalTtsCharacters = 0;
+
+      // For inital estimation to check if this process will exceed usage
+      if (estimateToken) {
+        totalOutputTokens = Math.ceil(totalInputTokens * 1.5);
+        totalTtsCharacters = Math.ceil(totalOutputTokens * 4);
+        return {
+          inputTokens: totalInputTokens,
+          outputTokens: totalOutputTokens,
+          ttsCharacters: totalTtsCharacters,
+          totalCost: 0,
+          breakdown: {
+            inputCost: 0,
+            outputCost: 0,
+            ttsCost: 0,
+          },
+        };
+      }
 
       for (let i = 0; i < responses.length; i++) {
         const response = responses[i];
@@ -316,7 +334,7 @@ export class TTSService {
       }
 
       // Calculate total TTS characters based on conversations
-      const totalTtsCharacters = conversations
+      totalTtsCharacters = conversations
         ? conversations.reduce(
             (sum, part) => sum + part.speaker.length + 2 + part.text.length,
             0,
@@ -341,14 +359,13 @@ export class TTSService {
           `Total TTS Characters: ${totalTtsCharacters}\n` +
           `Vertex AI Input Cost: $${inputCost.toFixed(6)}\n` +
           `Vertex AI Output Cost: $${outputCost.toFixed(6)}\n` +
-          `TTS Cost: $${ttsCost.toFixed(4)}\n` +
-          `Total Cost: $${totalCost.toFixed(4)}`,
+          `TTS Cost: $${ttsCost.toFixed(6)}\n` +
+          `Total Cost: $${totalCost.toFixed(6)}`,
       );
 
       return {
         inputTokens: totalInputTokens,
         outputTokens: totalOutputTokens,
-        estimatedOutputTokens: totalOutputTokens, // For backwards compatibility
         ttsCharacters: totalTtsCharacters,
         totalCost: totalCost,
         breakdown: {
@@ -739,19 +756,19 @@ export class TTSService {
       );
 
       if (!usage) {
-        throw new Error('Failed to calculate final usage details');
+        throw new Error("Failed to calculate final usage details");
       }
 
       await logger.info(
         `Final usage calculation completed: $${usage.totalCost.toFixed(4)}`,
       );
 
-        // Log the breakdown of total costs
+      // Log the breakdown of total costs
       await logger.info(
         `Total cost breakdown:\n` +
-          `Total input cost: $${usage.breakdown.inputCost.toFixed(4)}\n` +
-          `Total output cost: $${usage.breakdown.outputCost.toFixed(4)}\n` +
-          `Total TTS cost: $${usage.breakdown.ttsCost.toFixed(4)}`,
+          `Total input cost: $${usage.breakdown.inputCost.toFixed(6)}\n` +
+          `Total output cost: $${usage.breakdown.outputCost.toFixed(6)}\n` +
+          `Total TTS cost: $${usage.breakdown.ttsCost.toFixed(6)}`,
       );
 
       // Generate audio for each conversation part
