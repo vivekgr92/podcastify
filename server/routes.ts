@@ -126,7 +126,6 @@ export function registerRoutes(app: Express) {
     }
   });
 
-  
   // MAIN =====Text-to-speech conversion endpoint
   app.post("/api/podcast", upload.single("file"), async (req, res) => {
     const file = req.file;
@@ -178,12 +177,6 @@ export function registerRoutes(app: Express) {
         );
       }
 
-      // Calculate pricing first
-      const pricingDetails = await ttsService.calculatePricing(fileContent, [], []);
-      if (!pricingDetails) {
-        throw new Error("Failed to calculate pricing details");
-      }
-
       // Get current month's usage
       const currentMonth = new Date().toISOString().slice(0, 7);
       const [usageData] = await db
@@ -201,10 +194,14 @@ export function registerRoutes(app: Express) {
         // Get current usage data
         const currentArticles = usageData?.articlesConverted || 0;
         const currentTokens = usageData?.tokensUsed || 0;
-        const estimatedTotalTokens = pricingDetails.inputTokens + pricingDetails.outputTokens;
+        const estimatedTotalTokens =
+          pricingDetails.inputTokens + pricingDetails.outputTokens;
 
         // Check usage limits before processing
-        if (currentArticles >= ARTICLE_LIMIT || currentTokens + estimatedTotalTokens > TOKEN_LIMIT) {
+        if (
+          currentArticles >= ARTICLE_LIMIT ||
+          currentTokens + estimatedTotalTokens > TOKEN_LIMIT
+        ) {
           return res.status(403).json({
             error: "Usage limit would be exceeded",
             message: "Please upgrade your plan to continue converting articles",
@@ -235,7 +232,7 @@ export function registerRoutes(app: Express) {
         // Generate audio using precalculated pricing
         const { audioBuffer, duration, usage } =
           await ttsService.generateConversation(fileContent, pricingDetails);
-        
+
         if (!audioBuffer || !duration || !usage) {
           throw new Error(
             "Invalid response from TTS service: Missing required fields",
@@ -277,8 +274,8 @@ export function registerRoutes(app: Express) {
               .where(
                 and(
                   eq(userUsage.userId, user.id),
-                  eq(userUsage.monthYear, currentMonth)
-                )
+                  eq(userUsage.monthYear, currentMonth),
+                ),
               )
               .limit(1);
 
