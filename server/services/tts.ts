@@ -32,6 +32,7 @@ interface GenerationResult {
 interface PricingDetails {
   inputTokens: number;
   outputTokens: number;
+  estimatedOutputTokens: number;
   ttsCharacters: number;
   totalCost: number;
   breakdown: {
@@ -40,6 +41,8 @@ interface PricingDetails {
     ttsCost: number;
   };
 }
+
+export type { PricingDetails };
 
 const PRICING = {
   INPUT_TOKEN_RATE: 0.0005 / 1000, // $0.0005 per 1K tokens
@@ -345,6 +348,7 @@ export class TTSService {
       return {
         inputTokens: totalInputTokens,
         outputTokens: totalOutputTokens,
+        estimatedOutputTokens: totalOutputTokens, // For backwards compatibility
         ttsCharacters: totalTtsCharacters,
         totalCost: totalCost,
         breakdown: {
@@ -615,7 +619,7 @@ export class TTSService {
   async generateConversation(text: string): Promise<{
     audioBuffer: Buffer;
     duration: number;
-    usage: { inputTokens: number; outputTokens: number; ttsCharacters: number };
+    usage: PricingDetails;
   }> {
     try {
       // Ensure audio-files directory exists and is empty
@@ -810,7 +814,10 @@ export class TTSService {
         usage: {
           inputTokens: pricingDetails.inputTokens,
           outputTokens: pricingDetails.outputTokens,
+          estimatedOutputTokens: pricingDetails.estimatedOutputTokens,
           ttsCharacters: pricingDetails.ttsCharacters,
+          totalCost: pricingDetails.totalCost,
+          breakdown: pricingDetails.breakdown,
         },
       };
     } catch (error) {
