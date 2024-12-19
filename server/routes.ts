@@ -173,7 +173,7 @@ export function registerRoutes(app: Express) {
         const responseTexts: string[] = []; // Empty array for initial pricing estimate
 
         // Calculate pricing and token usage
-        const pricingDetails = await ttsService.calculatePricing(fileContent, responseTexts);
+        const pricingDetails = await ttsService.calculatePricing(fileContent, responseTexts, []);
         const totalInputTokens = pricingDetails?.inputTokens || 0;
         const totalOutputTokens = pricingDetails?.estimatedOutputTokens || 0;
         const totalTokens = totalInputTokens + totalOutputTokens;
@@ -680,7 +680,7 @@ export function registerRoutes(app: Express) {
         });
       }
 
-      const pricingDetails = await ttsService.calculatePricing(text, []);  // Empty array for initial estimate
+      const pricingDetails = await ttsService.calculatePricing(text, [], []);  // Empty arrays for initial pricing estimate
       if (!pricingDetails) {
         throw new Error("Failed to calculate pricing details");
       }

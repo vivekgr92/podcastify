@@ -210,7 +210,11 @@ export class TTSService {
     return characters * costPerCharacter;
   }
 
-  async calculatePricing(text: string, responses: string[]): Promise<PricingDetails> {
+  async calculatePricing(
+    text: string,
+    responses: string[] = [],
+    conversations: ConversationPart[] = []
+  ): Promise<PricingDetails> {
     // Gen AI Model
     const model = this.vertexAI.getGenerativeModel({
       model: "gemini-1.5-flash-002",
@@ -249,10 +253,49 @@ export class TTSService {
       
       await logger.info(`Processing ${responses.length} responses for token counting`);
 
+      // Check and validate conversations array
+      const validConversations = Array.isArray(conversations) ? conversations : [];
+      
+      // If we have pre-processed conversations, use them for TTS character calculation
+      if (validConversations.length > 0) {
+        await logger.info(`Processing ${validConversations.length} conversation parts for TTS calculation`);
+        
+        totalTtsCharacters = validConversations.reduce((sum, part, index) => {
+          // Validate each conversation part
+          if (!part || typeof part !== 'object') {
+            logger.warn(`Invalid conversation part at index ${index}, skipping`);
+            return sum;
+          }
+
+          // Ensure we have valid speaker and text properties
+          const speaker = part.speaker || '';
+          const text = part.text || '';
+          
+          if (!speaker || !text) {
+            logger.warn(`Missing speaker or text at conversation index ${index}`);
+            return sum;
+          }
+
+          const partCharacters = speaker.length + 2 + text.length;
+          logger.debug(`Conversation part ${index}: ${partCharacters} characters (${speaker}: ${text.substring(0, 50)}...)`);
+          
+          return sum + partCharacters;
+        }, 0);
+        
+        await logger.info(`Calculated total TTS characters from conversations: ${totalTtsCharacters}`);
+      }
+
+      // Calculate output tokens from responses if available, otherwise estimate
       if (responses.length === 0) {
         // If no responses provided, estimate output tokens based on input
         totalOutputTokens = Math.ceil(totalInputTokens * 1.5); // Estimate 1.5x input tokens for output
         await logger.info(`No responses provided. Estimating output tokens: ${totalOutputTokens}`);
+
+        // Only estimate TTS characters if we don't have conversations
+        if (totalTtsCharacters === 0) {
+          totalTtsCharacters = Math.ceil(totalOutputTokens * 4); // Rough estimate: 4 characters per token
+          await logger.info(`No conversations available. Estimating TTS characters: ${totalTtsCharacters}`);
+        }
       } else {
         // Process actual responses
         for (let i = 0; i < responses.length; i++) {
@@ -275,22 +318,24 @@ export class TTSService {
             totalOutputTokens += outputTokenCount.totalTokens;
             await logger.debug(`Response ${i + 1} output tokens: ${outputTokenCount.totalTokens}`);
 
-            // Calculate TTS characters for this response
-            const conversationParts = await this.cleanGeneratedText(response);
-            const responseTtsCharacters = conversationParts.reduce((sum, part) => {
-              return sum + part.speaker.length + 2 + part.text.length;
-            }, 0);
+            // Only calculate TTS characters from responses if we don't have pre-processed conversations
+            if (!conversations || conversations.length === 0) {
+              const conversationParts = await this.cleanGeneratedText(response);
+              const responseTtsCharacters = conversationParts.reduce((sum, part) => {
+                return sum + part.speaker.length + 2 + part.text.length;
+              }, 0);
+              totalTtsCharacters += responseTtsCharacters;
+              await logger.debug(`Response ${i + 1} TTS characters: ${responseTtsCharacters}`);
+            }
 
-            totalTtsCharacters += responseTtsCharacters;
-            await logger.debug(`Response ${i + 1} TTS characters: ${responseTtsCharacters}`);
 
             // Log response-specific details for debugging
             await logger.debug(
               `Response ${i + 1} details:\n` +
               `- Length: ${response.length} characters\n` +
               `- Output tokens: ${outputTokenCount.totalTokens}\n` +
-              `- TTS characters: ${responseTtsCharacters}\n` +
-              `- Valid conversation parts: ${conversationParts.length}`
+              `- TTS characters: ${totalTtsCharacters}\n` +
+              `- Valid conversation parts: ${conversations ? conversations.length : 0}`
             );
           } catch (error) {
             const errorMessage = error instanceof Error ? error.message : String(error);
@@ -753,7 +798,27 @@ export class TTSService {
         await logger.debug("Response texts available for pricing calculation");
 
         // Calculate pricing for all responses at once
-        pricingDetails = await this.calculatePricing(text, responseTexts);
+        // Calculate pricing using both responses and conversations
+        // Create a deep copy of allConversations to prevent mutation
+        // Create a deep copy of allConversations to prevent mutation
+        const conversationsCopy = allConversations.map(conv => {
+          if (!conv || typeof conv !== 'object') {
+            logger.warn('Invalid conversation object found, skipping');
+            return null;
+          }
+          return {
+            speaker: conv.speaker || '',
+            text: conv.text || ''
+          };
+        }).filter((conv): conv is ConversationPart => Boolean(conv)); // Type assertion to satisfy TypeScript
+        
+        logger.info(`Created safe copy of ${conversationsCopy.length} conversations for pricing calculation`);
+        
+        pricingDetails = await this.calculatePricing(
+          text,
+          responseTexts.filter(Boolean), // Filter out any empty responses
+          conversationsCopy
+        );
         totalCost = pricingDetails.totalCost;
         
         await logger.info(`Total pricing calculation completed: $${totalCost.toFixed(4)}`);
