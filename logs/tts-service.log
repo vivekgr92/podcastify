@@ -984,3 +984,6 @@ Total TTS cost: $0.268880
 [ERROR] Error checking usage limits: column "podify_tokens" does not exist
 [ERROR] Error checking usage limits: column "podify_tokens" does not exist
 [ERROR] Error checking usage limits: column "podify_tokens" does not exist
+[INFO] Attempting to delete podcast 15 by user 1
+[INFO] Successfully deleted audio file for podcast 15
+[INFO] Successfully deleted podcast 15 from database

@@ -4,18 +4,18 @@ import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useLocation } from "wouter";
-import { calculatePodifyTokensCost } from "@/lib/utils";
+import { calculatePodifyTokensCost, convertToPodifyTokens } from "@/lib/utils";
 
 interface UsageLimits {
   hasReachedLimit: boolean;
-  limits: {
-    articles: {
+  limits?: {
+    articles?: {
       used: number;
       limit: number;
       remaining: number;
       wouldExceed?: boolean;
     };
-    podifyTokens: {
+    podifyTokens?: {
       used: number;
       limit: number;
       remaining: number;
@@ -23,25 +23,9 @@ interface UsageLimits {
       cost: number;
     };
   };
-  currentPeriod: {
+  currentPeriod?: {
     month: string;
     resetsOn: string;
-  };
-  pricing?: {
-    estimatedCost: number;
-    podifyTokens: number;
-  };
-  upgradePlans?: {
-    monthly: {
-      name: string;
-      price: number;
-      features: string[];
-    };
-    annual: {
-      name: string;
-      price: number;
-      features: string[];
-    };
   };
 }
 
@@ -79,34 +63,33 @@ export function UsageProgress({
     );
   }
 
-  // Return early if usage data is not available or malformed
-  if (!usage?.limits?.articles || !usage?.limits?.podifyTokens) {
+  // Early return if no usage data or required properties
+  if (!usage?.limits) {
     return null;
   }
 
   // Safely extract values with defaults
-  const articlesUsed = usage.limits.articles.used ?? 0;
-  const articlesLimit = usage.limits.articles.limit ?? 1;
-  const podifyTokensUsed = usage.limits.podifyTokens.used ?? 0;
-  const podifyTokensLimit = usage.limits.podifyTokens.limit ?? 1;
+  const articles = usage.limits.articles || { used: 0, limit: 1 };
+  const podifyTokens = usage.limits.podifyTokens || { used: 0, limit: 1 };
 
   // Calculate percentages with protection against division by zero
-  const articlesPercentage = articlesLimit > 0 
-    ? Math.min((articlesUsed / articlesLimit) * 100, 100)
+  const articlesPercentage = articles.limit > 0 
+    ? Math.min((articles.used / articles.limit) * 100, 100)
     : 0;
+
+  const podifyTokensCost = podifyTokens.used * 0.005; // Each token is worth 0.5 cents
+  const podifyTokensConverted = convertToPodifyTokens(podifyTokensCost);
+  const podifyTokensLimit = podifyTokens.limit;
 
   const podifyTokensPercentage = podifyTokensLimit > 0
-    ? Math.min((podifyTokensUsed / podifyTokensLimit) * 100, 100)
+    ? Math.min((podifyTokensConverted / podifyTokensLimit) * 100, 100)
     : 0;
-
-  // Calculate token cost using the utility function
-  const tokenCost = calculatePodifyTokensCost(podifyTokensUsed);
 
   return (
     <Card className="p-4 space-y-4">
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
-          <span>Articles Converted ({articlesUsed}/{articlesLimit})</span>
+          <span>Articles Converted ({articles.used}/{articles.limit})</span>
           <span>{Math.round(articlesPercentage)}%</span>
         </div>
         <Progress 
@@ -118,10 +101,10 @@ export function UsageProgress({
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
           <span>
-            Podify Tokens ({podifyTokensUsed.toLocaleString()}/
+            Podify Tokens ({podifyTokensConverted.toLocaleString()}/
             {podifyTokensLimit.toLocaleString()})
           </span>
-          <span>${tokenCost.toFixed(2)}</span>
+          <span>${podifyTokensCost.toFixed(2)}</span>
         </div>
         <Progress 
           value={podifyTokensPercentage}
@@ -132,63 +115,23 @@ export function UsageProgress({
         </div>
       </div>
 
-      <div className="text-xs text-muted-foreground mt-2">
-        Current period: {new Date(usage.currentPeriod?.month || Date.now()).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}
-        <br />
-        Resets on: {new Date(usage.currentPeriod?.resetsOn || Date.now()).toLocaleDateString()}
-      </div>
-
       {usage.hasReachedLimit && (
         <div className="space-y-3 mt-4" onClick={() => onLimitReached?.()}>
-          <div className="bg-destructive/10 text-destructive rounded-lg p-4 text-sm cursor-pointer hover:bg-destructive/20 transition-colors">
+          <div className="bg-destructive/10 text-destructive rounded-lg p-4 text-sm">
             <p className="font-semibold mb-2">Monthly Usage Limit Reached</p>
             <p>You've reached your free tier limits for this month:</p>
             <ul className="list-disc ml-4 mt-2 space-y-1">
-              {articlesUsed >= articlesLimit && (
-                <li>Maximum {articlesLimit} articles per month reached ({articlesUsed} used)</li>
+              {articles.used >= articles.limit && (
+                <li>Maximum {articles.limit} articles per month reached ({articles.used} used)</li>
               )}
-              {podifyTokensUsed >= podifyTokensLimit && (
-                <li>Maximum {podifyTokensLimit.toLocaleString()} Podify Tokens per month reached (${tokenCost.toFixed(2)} worth used)</li>
+              {podifyTokensConverted >= podifyTokensLimit && (
+                <li>Maximum {podifyTokensLimit.toLocaleString()} Podify Tokens per month reached (${podifyTokensCost.toFixed(2)} worth used)</li>
               )}
             </ul>
-
-            {usage.upgradePlans && (
-              <>
-                <div className="mt-4 space-y-4">
-                  <div className="bg-card p-4 rounded-lg">
-                    <h4 className="font-semibold text-primary mb-2">{usage.upgradePlans.monthly.name} Plan - ${usage.upgradePlans.monthly.price}/month</h4>
-                    <ul className="list-disc ml-4 space-y-1 text-muted-foreground">
-                      {usage.upgradePlans.monthly.features.map((feature, index) => (
-                        <li key={index}>{feature}</li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="bg-card p-4 rounded-lg">
-                    <h4 className="font-semibold text-primary mb-2">{usage.upgradePlans.annual.name} - ${usage.upgradePlans.annual.price}/year</h4>
-                    <ul className="list-disc ml-4 space-y-1 text-muted-foreground">
-                      {usage.upgradePlans.annual.features.map((feature, index) => (
-                        <li key={index}>{feature}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </>
-            )}
-
-            {usage.pricing && (
-              <div className="mt-4 p-4 bg-card rounded-lg">
-                <h4 className="font-semibold text-primary mb-2">Current Usage Details</h4>
-                <ul className="space-y-2 text-muted-foreground">
-                  <li>Cost: ${usage.pricing.estimatedCost.toFixed(2)}</li>
-                  <li>Podify Tokens: {usage.pricing.podifyTokens.toLocaleString()}</li>
-                </ul>
-              </div>
-            )}
           </div>
           {showUpgradeButton && (
             <Button 
-              variant="success"
+              variant="default"
               className="w-full"
               onClick={() => setLocation("/pricing")}
             >
