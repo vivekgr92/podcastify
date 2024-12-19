@@ -79,25 +79,34 @@ export function UsageProgress({
     );
   }
 
-  if (!usage) return null;
+  // Return early if usage data is not available or malformed
+  if (!usage?.limits?.articles || !usage?.limits?.podifyTokens) {
+    return null;
+  }
 
-  const articlesPercentage = Math.min(
-    (usage.limits.articles.used / usage.limits.articles.limit) * 100,
-    100
-  );
+  // Safely extract values with defaults
+  const articlesUsed = usage.limits.articles.used ?? 0;
+  const articlesLimit = usage.limits.articles.limit ?? 1;
+  const podifyTokensUsed = usage.limits.podifyTokens.used ?? 0;
+  const podifyTokensLimit = usage.limits.podifyTokens.limit ?? 1;
 
-  const podifyTokensPercentage = Math.min(
-    (usage.limits.podifyTokens.used / usage.limits.podifyTokens.limit) * 100,
-    100
-  );
+  // Calculate percentages with protection against division by zero
+  const articlesPercentage = articlesLimit > 0 
+    ? Math.min((articlesUsed / articlesLimit) * 100, 100)
+    : 0;
 
-  const tokenCost = calculatePodifyTokensCost(usage.limits.podifyTokens.used);
+  const podifyTokensPercentage = podifyTokensLimit > 0
+    ? Math.min((podifyTokensUsed / podifyTokensLimit) * 100, 100)
+    : 0;
+
+  // Calculate token cost using the utility function
+  const tokenCost = calculatePodifyTokensCost(podifyTokensUsed);
 
   return (
     <Card className="p-4 space-y-4">
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
-          <span>Articles Converted ({usage.limits.articles.used}/{usage.limits.articles.limit})</span>
+          <span>Articles Converted ({articlesUsed}/{articlesLimit})</span>
           <span>{Math.round(articlesPercentage)}%</span>
         </div>
         <Progress 
@@ -109,8 +118,8 @@ export function UsageProgress({
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
           <span>
-            Podify Tokens ({usage.limits.podifyTokens.used.toLocaleString()}/
-            {usage.limits.podifyTokens.limit.toLocaleString()})
+            Podify Tokens ({podifyTokensUsed.toLocaleString()}/
+            {podifyTokensLimit.toLocaleString()})
           </span>
           <span>${tokenCost.toFixed(2)}</span>
         </div>
@@ -124,9 +133,9 @@ export function UsageProgress({
       </div>
 
       <div className="text-xs text-muted-foreground mt-2">
-        Current period: {new Date(usage.currentPeriod.month).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}
+        Current period: {new Date(usage.currentPeriod?.month || Date.now()).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}
         <br />
-        Resets on: {new Date(usage.currentPeriod.resetsOn).toLocaleDateString()}
+        Resets on: {new Date(usage.currentPeriod?.resetsOn || Date.now()).toLocaleDateString()}
       </div>
 
       {usage.hasReachedLimit && (
@@ -135,11 +144,11 @@ export function UsageProgress({
             <p className="font-semibold mb-2">Monthly Usage Limit Reached</p>
             <p>You've reached your free tier limits for this month:</p>
             <ul className="list-disc ml-4 mt-2 space-y-1">
-              {usage.limits.articles.used >= usage.limits.articles.limit && (
-                <li>Maximum {usage.limits.articles.limit} articles per month reached ({usage.limits.articles.used} used)</li>
+              {articlesUsed >= articlesLimit && (
+                <li>Maximum {articlesLimit} articles per month reached ({articlesUsed} used)</li>
               )}
-              {usage.limits.podifyTokens.used >= usage.limits.podifyTokens.limit && (
-                <li>Maximum {usage.limits.podifyTokens.limit.toLocaleString()} Podify Tokens per month reached (${tokenCost.toFixed(2)} worth used)</li>
+              {podifyTokensUsed >= podifyTokensLimit && (
+                <li>Maximum {podifyTokensLimit.toLocaleString()} Podify Tokens per month reached (${tokenCost.toFixed(2)} worth used)</li>
               )}
             </ul>
 
