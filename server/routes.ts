@@ -169,8 +169,8 @@ export function registerRoutes(app: Express) {
         .limit(1);
 
       try {
-        // Initialize response texts array for pricing calculation
-        let responseTexts: string[] = [];
+        // Initialize response texts array for initial pricing calculation
+        const responseTexts: string[] = []; // Empty array for initial pricing estimate
 
         // Calculate pricing and token usage
         const pricingDetails = await ttsService.calculatePricing(fileContent, responseTexts);
