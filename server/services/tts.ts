@@ -217,7 +217,11 @@ export class TTSService {
     });
 
     try {
-      await logger.info("Starting pricing calculation with multiple responses");
+      await logger.info([
+        "\n--- Starting Pricing Calculation ---",
+        `Input text length: ${text.length}`,
+        `Number of responses: ${responses.length}`
+      ]);
 
       // Calculate initial input tokens
       const inputTokenCount = await model.countTokens({
@@ -245,35 +249,67 @@ export class TTSService {
       
       await logger.info(`Processing ${responses.length} responses for token counting`);
 
-      for (let i = 0; i < responses.length; i++) {
-        const response = responses[i];
-        if (!response || !response.trim()) {
-          await logger.warn(`Skipping empty response at index ${i}`);
-          continue;
+      if (responses.length === 0) {
+        // If no responses provided, estimate output tokens based on input
+        totalOutputTokens = Math.ceil(totalInputTokens * 1.5); // Estimate 1.5x input tokens for output
+        await logger.info(`No responses provided. Estimating output tokens: ${totalOutputTokens}`);
+      } else {
+        // Process actual responses
+        for (let i = 0; i < responses.length; i++) {
+          const response = responses[i];
+          if (!response || !response.trim()) {
+            await logger.warn(`Skipping empty response at index ${i}`);
+            continue;
+          }
+
+          try {
+            // Calculate output tokens for this response
+            const outputTokenCount = await model.countTokens({
+              contents: [{ role: "assistant", parts: [{ text: response }] }],
+            });
+
+            if (!outputTokenCount || typeof outputTokenCount.totalTokens !== 'number') {
+              throw new Error(`Invalid token count response from model for response ${i + 1}`);
+            }
+
+            totalOutputTokens += outputTokenCount.totalTokens;
+            await logger.debug(`Response ${i + 1} output tokens: ${outputTokenCount.totalTokens}`);
+
+            // Calculate TTS characters for this response
+            const conversationParts = await this.cleanGeneratedText(response);
+            const responseTtsCharacters = conversationParts.reduce((sum, part) => {
+              return sum + part.speaker.length + 2 + part.text.length;
+            }, 0);
+
+            totalTtsCharacters += responseTtsCharacters;
+            await logger.debug(`Response ${i + 1} TTS characters: ${responseTtsCharacters}`);
+
+            // Log response-specific details for debugging
+            await logger.debug(
+              `Response ${i + 1} details:\n` +
+              `- Length: ${response.length} characters\n` +
+              `- Output tokens: ${outputTokenCount.totalTokens}\n` +
+              `- TTS characters: ${responseTtsCharacters}\n` +
+              `- Valid conversation parts: ${conversationParts.length}`
+            );
+          } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            await logger.error(`Error processing response ${i + 1}: ${errorMessage}`);
+            throw new Error(`Failed to process response ${i + 1}: ${errorMessage}`);
+          }
         }
 
-        // Calculate output tokens for this response
-        const outputTokenCount = await model.countTokens({
-          contents: [{ role: "assistant", parts: [{ text: response }] }],
-        }).catch(error => {
-          throw new Error(`Failed to count output tokens for response ${i + 1}: ${error.message}`);
-        });
+        await logger.info(
+          `Successfully processed ${responses.length} responses:\n` +
+          `- Total output tokens: ${totalOutputTokens}\n` +
+          `- Total TTS characters: ${totalTtsCharacters}`
+        );
+      }
 
-        if (!outputTokenCount || typeof outputTokenCount.totalTokens !== 'number') {
-          throw new Error(`Invalid token count response from model for response ${i + 1}`);
-        }
-
-        totalOutputTokens += outputTokenCount.totalTokens;
-        await logger.debug(`Response ${i + 1} output tokens: ${outputTokenCount.totalTokens}`);
-
-        // Calculate TTS characters for this response
-        const conversationParts = await this.cleanGeneratedText(response);
-        const responseTtsCharacters = conversationParts.reduce((sum, part) => {
-          return sum + part.speaker.length + 2 + part.text.length;
-        }, 0);
-
-        totalTtsCharacters += responseTtsCharacters;
-        await logger.debug(`Response ${i + 1} TTS characters: ${responseTtsCharacters}`);
+      // If no TTS characters calculated yet, estimate based on output tokens
+      if (totalTtsCharacters === 0) {
+        totalTtsCharacters = Math.ceil(totalOutputTokens * 4); // Rough estimate: 4 characters per token
+        await logger.info(`Estimating TTS characters: ${totalTtsCharacters}`);
       }
 
       await logger.info(`Total output tokens calculated: ${totalOutputTokens}`);
@@ -575,7 +611,7 @@ export class TTSService {
       }) as GenerativeModel;
 
       const chunks = this.splitTextIntoChunks(text);
-      let responseTexts: string[] = [];
+      let responseTexts: string[] = []; // Moved initialization here
 
       // Process each chunk and generate conversation
       for (let index = 0; index < chunks.length; index++) {
@@ -656,11 +692,21 @@ export class TTSService {
           if (!rawText.trim()) {
             throw new Error(`Response ${index + 1} is empty or contains only whitespace`);
           }
-          
-          // Store raw text for later pricing calculation
+
+          // Store response for pricing calculation with detailed logging
           responseTexts[index] = rawText;
-          await logger.info(`Stored response ${index + 1} for pricing calculation`);
-          await logger.debug(`Response ${index + 1} text sample (first 100 chars): ${rawText.substring(0, 100)}`);
+          await logger.info(`Stored response ${index + 1}/${chunks.length} for pricing calculation`);
+          await logger.debug(`Response ${index + 1}/${chunks.length} text sample (first 100 chars): ${rawText.substring(0, 100)}`);
+          await logger.debug(`Total responses collected so far: ${responseTexts.filter(Boolean).length}`);
+
+          // Log response details for pricing calculation and token usage
+          await logger.debug(`Response ${index + 1} details:\n` +
+            `- Length: ${rawText.length} characters\n` +
+            `- Response index: ${index}\n` +
+            `- Total responses expected: ${chunks.length}\n` +
+            `- Valid content: ${Boolean(rawText.trim())}\n` +
+            `- Stored responses count: ${responseTexts.filter(Boolean).length}`
+          );
 
           // Process conversation parts
           const conversationParts = await this.cleanGeneratedText(rawText);
