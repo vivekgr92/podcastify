@@ -213,7 +213,7 @@ export class TTSService {
   async calculatePricing(
     text: string,
     responses: string[] = [],
-    conversations: ConversationPart[] = []
+    conversations?: ConversationPart[]
   ): Promise<PricingDetails> {
     // Gen AI Model
     const model = this.vertexAI.getGenerativeModel({
@@ -324,33 +324,30 @@ export class TTSService {
       }
       
       // If we have pre-processed conversations, use them for TTS character calculation
-      if (conversations.length > 0) {
+      if (conversations && conversations.length > 0) {
         await logger.info(`Processing ${conversations.length} conversation parts for TTS calculation`);
         
-        // Validate conversation structure before processing
-        const invalidParts = conversations.filter(part => 
-          !part || 
-          typeof part !== 'object' || 
-          !part.speaker || 
-          !part.text ||
-          typeof part.speaker !== 'string' ||
-          typeof part.text !== 'string'
-        );
-        
-        if (invalidParts.length > 0) {
-          const error = new Error('Invalid conversation structure detected');
-          await logger.error([
-            'Invalid conversation parts found:',
-            `Total invalid parts: ${invalidParts.length}`,
-            'First invalid part:',
-            JSON.stringify(invalidParts[0], null, 2)
-          ]);
-          throw error;
+        // Create a deep copy of conversations array to validate
+        let validatedConversations: ConversationPart[] = [];
+        if (conversations && Array.isArray(conversations)) {
+          validatedConversations = conversations.map((conv, index) => {
+            if (!conv || typeof conv !== 'object') {
+              throw new Error(`Invalid conversation object at index ${index}`);
+            }
+            if (!conv.speaker || typeof conv.speaker !== 'string' || !['Joe', 'Sarah'].includes(conv.speaker)) {
+              throw new Error(`Invalid speaker at index ${index}: ${conv.speaker}`);
+            }
+            if (!conv.text || typeof conv.text !== 'string' || !conv.text.trim()) {
+              throw new Error(`Invalid text at index ${index}`);
+            }
+            return { speaker: conv.speaker as Speaker, text: conv.text };
+          });
+
+          await logger.info(`Validated ${validatedConversations.length} conversation parts`);
         }
 
-        totalTtsCharacters = conversations.reduce((sum, part, index) => {
+        totalTtsCharacters = validatedConversations.reduce((sum, part) => {
           const partCharacters = part.speaker.length + 2 + part.text.length;
-          logger.debug(`Conversation part ${index}: ${partCharacters} characters (${part.speaker}: ${part.text.substring(0, 50)}...)`);
           return sum + partCharacters;
         }, 0);
         
@@ -505,42 +502,57 @@ export class TTSService {
   private async cleanGeneratedText(
     rawText: string,
   ): Promise<ConversationPart[]> {
+    if (!rawText || typeof rawText !== 'string') {
+      throw new Error('Invalid input: rawText must be a non-empty string');
+    }
+
     try {
       const conversation: ConversationPart[] = [];
-      const lines = rawText.split("\n");
+      const lines = rawText.split("\n").filter(line => line.trim().length > 0);
 
-      for (const line of lines) {
-        // Adjust regex to handle asterisks around speaker names (e.g., **Joe:**)
-        const match = line.match(/^\*?\*?(\w+)\*?\*?:\s*(.*)$/);
+      await logger.debug(`Processing ${lines.length} lines of text`);
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        // Enhanced regex to handle various markdown formats
+        const match = line.match(/^(?:\*?\*?|\*\*)?([A-Za-z]+)(?:\*?\*?|\*\*)?\s*:\s*(.+)$/);
+        
         if (match) {
           const [, speakerName, dialogue] = match;
+          const trimmedSpeaker = speakerName.trim();
+          const trimmedDialogue = dialogue.trim();
 
-          if (
-            dialogue?.trim() &&
-            (speakerName === "Joe" || speakerName === "Sarah")
-          ) {
-            const speaker = speakerName as Speaker;
-            const text = dialogue.trim();
-
-            if (text.length > 0) {
-              conversation.push({ speaker, text });
-            }
+          if (!trimmedDialogue) {
+            await logger.debug(`Empty dialogue found at line ${i + 1}`);
+            continue;
           }
+
+          if (trimmedSpeaker !== "Joe" && trimmedSpeaker !== "Sarah") {
+            await logger.debug(`Invalid speaker "${trimmedSpeaker}" at line ${i + 1}`);
+            continue;
+          }
+
+          conversation.push({
+            speaker: trimmedSpeaker as Speaker,
+            text: trimmedDialogue
+          });
+
+          await logger.debug(`Added conversation part: ${trimmedSpeaker} with ${trimmedDialogue.substring(0, 50)}...`);
+        } else {
+          await logger.debug(`No speaker pattern match found at line ${i + 1}: "${line.substring(0, 50)}..."`);
         }
       }
 
       if (conversation.length === 0) {
-        await logger.warn(
-          "No valid conversation parts found in the generated text",
-        );
+        throw new Error("No valid conversation parts found in the generated text");
       }
 
+      await logger.info(`Successfully extracted ${conversation.length} conversation parts`);
       return conversation;
     } catch (error) {
-      await logger.error(
-        `Error processing raw text: ${error instanceof Error ? error.message : String(error)}`,
-      );
-      return [];
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      await logger.error(`Failed to process conversation text: ${errorMessage}`);
+      throw new Error(`Failed to process conversation text: ${errorMessage}`);
     }
   }
 
@@ -835,6 +847,13 @@ export class TTSService {
           if (!rawText.trim()) {
             throw new Error(`Response ${index + 1} is empty or contains only whitespace`);
           }
+
+          // Process and validate the conversation parts from rawText
+          const generatedParts = await this.cleanGeneratedText(rawText);
+          if (generatedParts.length === 0) {
+            throw new Error(`No valid conversation parts found in response ${index + 1}`);
+          }
+          allConversations.push(...generatedParts);
 
           // Store response and update running totals
           responseTexts[index] = rawText;

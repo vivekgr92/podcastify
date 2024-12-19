@@ -172,8 +172,8 @@ export function registerRoutes(app: Express) {
         // Initialize response texts array for initial pricing calculation
         const responseTexts: string[] = []; // Empty array for initial pricing estimate
 
-        // Calculate pricing and token usage
-        const pricingDetails = await ttsService.calculatePricing(fileContent, responseTexts, []);
+        // Calculate pricing and token usage using pre-generated conversation parts if available
+        const pricingDetails = await ttsService.calculatePricing(fileContent, responseTexts);
         const totalInputTokens = pricingDetails?.inputTokens || 0;
         const totalOutputTokens = pricingDetails?.estimatedOutputTokens || 0;
         const totalTokens = totalInputTokens + totalOutputTokens;
@@ -251,13 +251,22 @@ export function registerRoutes(app: Express) {
 
       // Generate audio and update usage
         try {
+          await logger.info('Starting audio generation process');
           const { audioBuffer, duration, usage } = await ttsService.generateConversation(fileContent);
-          
+            
+          if (!audioBuffer || !duration || !usage) {
+            throw new Error('Invalid response from TTS service: Missing required fields');
+          }
+            
+          await logger.info(`Audio generation successful: ${usage.inputTokens} input tokens, ${usage.outputTokens} output tokens, ${duration}s duration`);
+            
           // Calculate total tokens used including both input and output
           const totalTokens = usage.inputTokens + usage.outputTokens;
 
           // Update usage statistics
-          await db.transaction(async (tx) => {
+          // Update usage statistics and create podcast in a transaction
+          const result = await db.transaction(async (tx) => {
+            // First, update usage statistics
             const [updatedUsage] = await tx
               .insert(userUsage)
               .values({
@@ -288,9 +297,22 @@ export function registerRoutes(app: Express) {
             ]);
 
             // Save the audio file
-            const audioFileName = `${Date.now()}-${file.originalname}.mp3`;
+            const timestamp = Date.now();
+            const sanitizedFileName = file.originalname
+              .replace(/\.[^/.]+$/, "") // Remove extension
+              .replace(/[^a-zA-Z0-9]/g, '_'); // Replace invalid chars
+            const audioFileName = `${timestamp}-${sanitizedFileName}.mp3`;
             const audioPath = path.join("./uploads", audioFileName);
-            await fs.writeFile(audioPath, audioBuffer);
+            
+            try {
+              await fs.mkdir("./uploads", { recursive: true });
+              await fs.writeFile(audioPath, audioBuffer);
+              await logger.info(`Successfully saved audio file: ${audioFileName}`);
+            } catch (writeError) {
+              const errorMessage = writeError instanceof Error ? writeError.message : String(writeError);
+              await logger.error(`Failed to save audio file: ${errorMessage}`);
+              throw new Error(`Failed to save audio file: ${errorMessage}`);
+            }
 
             // Create podcast entry
             const [newPodcast] = await tx
@@ -305,10 +327,23 @@ export function registerRoutes(app: Express) {
               })
               .returning();
 
-            return newPodcast;
+            if (!newPodcast) {
+              throw new Error('Failed to create podcast entry in database');
+            }
+
+            await logger.info(`Successfully created podcast entry with ID: ${newPodcast.id}`);
+            return { newPodcast, audioFileName };
           });
 
-          res.json({ message: "Podcast created successfully" });
+          if (!result?.newPodcast) {
+            throw new Error('Failed to complete podcast creation transaction');
+          }
+
+          res.json({ 
+            message: "Podcast created successfully",
+            podcast: result.newPodcast,
+            audioUrl: result.newPodcast.audioUrl
+          });
         } catch (error) {
           await logger.error(`Error generating audio: ${error instanceof Error ? error.message : String(error)}`);
           throw error;
