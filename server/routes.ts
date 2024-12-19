@@ -14,11 +14,12 @@ import {
   playlistItems,
   progress,
   userUsage,
+  users
 } from "@db/schema";
 import { logger } from "./services/logging";
 import { ttsService } from "./services/tts";
 import type { ConversationPart, PricingDetails } from "./services/tts";
-import { eq, and, sql } from "drizzle-orm";
+import { eq, and, sql, desc } from "drizzle-orm";
 import pdfParse from "pdf-parse/lib/pdf-parse.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -107,18 +108,21 @@ export function registerRoutes(app: Express) {
       // Get current month's usage before processing
       const currentMonth = new Date().toISOString().slice(0, 7);
       const [usageData] = await db
-        .select()
+        .select({
+          articlesConverted: userUsage.articlesConverted,
+          tokensUsed: userUsage.tokensUsed,
+        })
         .from(userUsage)
         .where(
           and(
             eq(userUsage.userId, user.id),
-            eq(userUsage.monthYear, currentMonth),
-          ),
+            eq(userUsage.monthYear, currentMonth)
+          )
         )
         .limit(1);
 
-      const currentArticles = usageData?.articlesConverted || 0;
-      const currentTokens = usageData?.tokensUsed || 0;
+      const currentArticles = usageData?.articlesConverted ?? 0;
+      const currentTokens = usageData?.tokensUsed ?? 0;
 
       // First calculate estimated pricing to check limits
       await logger.info(
@@ -216,8 +220,8 @@ export function registerRoutes(app: Express) {
           .insert(userUsage)
           .values({
             userId: user.id,
-            articlesConverted: sql`COALESCE(${userUsage.articlesConverted}, 0) + 1`,
-            tokensUsed: sql`COALESCE(${userUsage.tokensUsed}, 0) + ${usage.inputTokens + usage.outputTokens}`,
+            articlesConverted: 1,
+            tokensUsed: usage.inputTokens + usage.outputTokens,
             monthYear: currentMonth,
             lastConversion: new Date(),
           })
@@ -225,7 +229,7 @@ export function registerRoutes(app: Express) {
             target: [userUsage.userId, userUsage.monthYear],
             set: {
               articlesConverted: sql`${userUsage.articlesConverted} + 1`,
-              tokensUsed: sql`${userUsage.tokensUsed} + ${usage.inputTokens + usage.outputTokens}`,
+              tokensUsed: sql`${userUsage.tokensUsed} + ${sql.raw(`${usage.inputTokens + usage.outputTokens}`)}`,
               lastConversion: new Date(),
             },
           })
@@ -402,18 +406,24 @@ export function registerRoutes(app: Express) {
 
       const currentMonth = new Date().toISOString().slice(0, 7);
       let [usage] = await db
-        .select()
+        .select({
+          articlesConverted: userUsage.articlesConverted,
+          tokensUsed: userUsage.tokensUsed,
+          lastConversion: userUsage.lastConversion,
+          monthYear: userUsage.monthYear,
+        })
         .from(userUsage)
         .where(
           and(
             eq(userUsage.userId, req.user.id),
-            eq(userUsage.monthYear, currentMonth),
-          ),
+            eq(userUsage.monthYear, currentMonth)
+          )
         )
         .limit(1);
 
+      // If no usage record exists, create one with default values
       if (!usage) {
-        [usage] = await db
+        const [newUsage] = await db
           .insert(userUsage)
           .values({
             userId: req.user.id,
@@ -422,6 +432,8 @@ export function registerRoutes(app: Express) {
             monthYear: currentMonth,
           })
           .returning();
+
+        usage = newUsage;
       }
 
       const hasReachedLimit =
@@ -765,7 +777,10 @@ export function registerRoutes(app: Express) {
 
       const currentMonth = new Date().toISOString().slice(0, 7);
       const [usage] = await db
-        .select()
+        .select({
+          articlesConverted: userUsage.articlesConverted,
+          tokensUsed: userUsage.tokensUsed,
+        })
         .from(userUsage)
         .where(
           and(
@@ -775,10 +790,9 @@ export function registerRoutes(app: Express) {
         )
         .limit(1);
 
-      const currentArticles = usage?.articlesConverted || 0;
-      const currentTokens = usage?.tokensUsed || 0;
-      const totalTokens =
-        pricingDetails.inputTokens + pricingDetails.outputTokens;
+      const currentArticles = usage?.articlesConverted ?? 0;
+      const currentTokens = usage?.tokensUsed ?? 0;
+      const totalTokens = pricingDetails.inputTokens + pricingDetails.outputTokens;
 
       await logger.info([
         `Pricing calculation for user ${req.user.id}:`,
