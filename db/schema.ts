@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, integer, timestamp, jsonb, boolean, uniqueIndex } from "drizzle-orm/pg-core";
+import { pgTable, text, integer, timestamp, jsonb, boolean, uniqueIndex, decimal } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -76,6 +76,7 @@ export const userUsage = pgTable("user_usage", {
   userId: integer("user_id").references(() => users.id),
   articlesConverted: integer("articles_converted").default(0),
   tokensUsed: integer("tokens_used").default(0),
+  podifyTokens: decimal("podify_tokens").default('0'),
   lastConversion: timestamp("last_conversion").defaultNow(),
   monthYear: text("month_year").notNull().default(sql`to_char(CURRENT_DATE, 'YYYY-MM')`),
 }, (table) => ({

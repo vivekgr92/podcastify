@@ -20,6 +20,11 @@ interface UsageLimits {
       remaining: number;
       wouldExceed?: boolean;
       estimated?: number;
+      podifyTokens: {
+        used: number;
+        limit: number;
+        remaining: number;
+      };
     };
   };
   currentPeriod: {
@@ -30,6 +35,7 @@ interface UsageLimits {
     inputTokens: number;
     estimatedOutputTokens: number;
     estimatedCost: number;
+    podifyTokens: number;
   };
   upgradePlans?: {
     monthly: {
@@ -102,16 +108,22 @@ export function UsageProgress({
           className={articlesPercentage >= 100 ? "bg-destructive/20" : ""}
         />
       </div>
-      
+
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
-          <span>Tokens Used ({usage.limits.tokens.used.toLocaleString()}/{usage.limits.tokens.limit.toLocaleString()})</span>
+          <span>
+            Podify Tokens ({usage.limits.tokens.podifyTokens.used.toLocaleString()}/
+            {usage.limits.tokens.podifyTokens.limit.toLocaleString()})
+          </span>
           <span>{Math.round(tokensPercentage)}%</span>
         </div>
         <Progress 
           value={tokensPercentage}
           className={tokensPercentage >= 100 ? "bg-destructive/20" : ""}
         />
+        <div className="text-xs text-muted-foreground">
+          1 Podify Token = $0.005 (0.5¢)
+        </div>
       </div>
 
       <div className="text-xs text-muted-foreground mt-2">
@@ -165,6 +177,7 @@ export function UsageProgress({
                   <li>Input Tokens: {usage.pricing.inputTokens.toLocaleString()}</li>
                   <li>Estimated Output: {usage.pricing.estimatedOutputTokens.toLocaleString()} tokens</li>
                   <li>Estimated Cost: ${usage.pricing.estimatedCost.toFixed(2)}</li>
+                  <li>Podify Tokens: {usage.pricing.podifyTokens.toLocaleString()}</li>
                 </ul>
               </div>
             )}
