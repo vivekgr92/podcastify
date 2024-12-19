@@ -28,6 +28,16 @@ const __dirname = dirname(__filename);
 // Constants for usage limits
 const ARTICLE_LIMIT = 3;
 const TOKEN_LIMIT = 50000;
+const PODIFY_TOKEN_RATE = 0.005; // $0.005 (0.5 cents) per Podify Token
+const PODIFY_MARGIN = 0.90 // 90% margin
+
+// Helper function to convert raw tokens to Podify Tokens
+function convertToPodifyTokens(totalCost: number): number {
+  // Add margin to the cost
+  const costWithMargin = totalCost / (1 - PODIFY_MARGIN);
+  // Convert to Podify tokens (1 token = 0.5 cents)
+  return Math.ceil(costWithMargin / PODIFY_TOKEN_RATE);
+}
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
@@ -54,7 +64,7 @@ const upload = multer({ storage });
 export function registerRoutes(app: Express) {
   setupAuth(app);
 
-  // Text-to-speech conversion endpoint
+  // Main ---Text-to-speech conversion endpoint
   app.post("/api/podcast", upload.single("file"), async (req, res) => {
     const file = req.file;
     try {
@@ -211,17 +221,21 @@ export function registerRoutes(app: Express) {
         `Audio generation completed:`,
         `Duration: ${duration}s`,
         `Actual tokens used: ${usage.inputTokens + usage.outputTokens}`,
+        `Actual cost: ${usage.totalCost}`
       ]);
 
       // Create podcast and update usage in a single transaction
       const result = await db.transaction(async (tx) => {
         // Update usage statistics with actual usage from the conversion
+        const podifyTokensForUsage = convertToPodifyTokens(usage.totalCost);
+
         const [updatedUsage] = await tx
           .insert(userUsage)
           .values({
             userId: user.id,
             articlesConverted: 1,
             tokensUsed: usage.inputTokens + usage.outputTokens,
+            podifyTokens: sql`${podifyTokensForUsage}::decimal`,
             monthYear: currentMonth,
             lastConversion: new Date(),
           })
@@ -230,6 +244,7 @@ export function registerRoutes(app: Express) {
             set: {
               articlesConverted: sql`${userUsage.articlesConverted} + 1`,
               tokensUsed: sql`${userUsage.tokensUsed} + ${sql.raw(`${usage.inputTokens + usage.outputTokens}`)}`,
+              podifyTokens: sql`COALESCE(${userUsage.podifyTokens}::decimal, 0) + ${sql.raw(`${podifyTokensForUsage}`)}::decimal`,
               lastConversion: new Date(),
             },
           })
@@ -409,6 +424,7 @@ export function registerRoutes(app: Express) {
         .select({
           articlesConverted: userUsage.articlesConverted,
           tokensUsed: userUsage.tokensUsed,
+          podifyTokens: userUsage.podifyTokens,
           lastConversion: userUsage.lastConversion,
           monthYear: userUsage.monthYear,
         })
@@ -429,6 +445,7 @@ export function registerRoutes(app: Express) {
             userId: req.user.id,
             articlesConverted: 0,
             tokensUsed: 0,
+            podifyTokens: '0',
             monthYear: currentMonth,
           })
           .returning();
@@ -436,18 +453,11 @@ export function registerRoutes(app: Express) {
         usage = newUsage;
       }
 
+      const podifyTokensUsed = Number(usage.podifyTokens) || 0;
+      const podifyTokenLimit = convertToPodifyTokens(TOKEN_LIMIT * PODIFY_TOKEN_RATE); //Corrected calculation
       const hasReachedLimit =
         (usage.articlesConverted ?? 0) >= ARTICLE_LIMIT ||
-        (usage.tokensUsed ?? 0) >= TOKEN_LIMIT;
-
-      const remainingArticles = Math.max(
-        0,
-        ARTICLE_LIMIT - (usage.articlesConverted ?? 0),
-      );
-      const remainingTokens = Math.max(
-        0,
-        TOKEN_LIMIT - (usage.tokensUsed ?? 0),
-      );
+        podifyTokensUsed >= podifyTokenLimit;
 
       res.json({
         hasReachedLimit,
@@ -455,12 +465,17 @@ export function registerRoutes(app: Express) {
           articles: {
             used: usage.articlesConverted || 0,
             limit: ARTICLE_LIMIT,
-            remaining: remainingArticles,
+            remaining: Math.max(0, ARTICLE_LIMIT - (usage.articlesConverted || 0)),
           },
           tokens: {
             used: usage.tokensUsed || 0,
             limit: TOKEN_LIMIT,
-            remaining: remainingTokens,
+            remaining: Math.max(0, TOKEN_LIMIT - (usage.tokensUsed || 0)),
+            podifyTokens: {
+              used: podifyTokensUsed,
+              limit: podifyTokenLimit,
+              remaining: Math.max(0, podifyTokenLimit - podifyTokensUsed),
+            }
           },
         },
         currentPeriod: {
@@ -477,7 +492,7 @@ export function registerRoutes(app: Express) {
             price: 9.99,
             features: [
               "Unlimited articles",
-              "200,000 tokens per month",
+              "40,000 Podify Tokens per month",
               "Priority support",
             ],
           },
@@ -486,7 +501,7 @@ export function registerRoutes(app: Express) {
             price: 99.99,
             features: [
               "Unlimited articles",
-              "300,000 tokens per month",
+              "60,000 Podify Tokens per month",
               "Priority support",
               "2 months free",
             ],

@@ -353,9 +353,10 @@ export class TTSService {
       const totalCost = inputCost + outputCost + ttsCost;
 
       await logger.info(
-        `\n--- Pricing Calculation Summary ---\n` +
+        `\n---***** Pricing Calculation Summary **** ---\n` +
           `Total Input Tokens: ${totalInputTokens}\n` +
           `Total Output Tokens: ${totalOutputTokens}\n` +
+          `Total Tokens: ${totalInputTokens + totalOutputTokens}\n` +
           `Total TTS Characters: ${totalTtsCharacters}\n` +
           `Vertex AI Input Cost: $${inputCost.toFixed(6)}\n` +
           `Vertex AI Output Cost: $${outputCost.toFixed(6)}\n` +
@@ -758,18 +759,6 @@ export class TTSService {
       if (!usage) {
         throw new Error("Failed to calculate final usage details");
       }
-
-      await logger.info(
-        `Final usage calculation completed: $${usage.totalCost.toFixed(4)}`,
-      );
-
-      // Log the breakdown of total costs
-      await logger.info(
-        `Total cost breakdown:\n` +
-          `Total input cost: $${usage.breakdown.inputCost.toFixed(6)}\n` +
-          `Total output cost: $${usage.breakdown.outputCost.toFixed(6)}\n` +
-          `Total TTS cost: $${usage.breakdown.ttsCost.toFixed(6)}`,
-      );
 
       // Generate audio for each conversation part
       await logger.log("Generating audio files...");

@@ -11,12 +11,14 @@ interface AdminStats {
   totalFeedback: number;
   totalInputTokens: number;
   totalOutputTokens: number;
+  totalPodifyTokens: number;
   totalTtsCharacters: number;
   totalCost: number;
   usageByDay: {
     date: string;
     inputTokens: number;
     outputTokens: number;
+    podifyTokens: number;
     ttsCharacters: number;
     cost: number;
   }[];
@@ -62,13 +64,13 @@ export default function AdminPage() {
   return (
     <div className="container mx-auto py-8">
       <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
-      
+
       <Tabs defaultValue="overview" className="mb-8">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="usage">Usage Analytics</TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="overview">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Card className="p-6">
@@ -80,7 +82,7 @@ export default function AdminPage() {
                 <Users className="h-8 w-8 text-primary" />
               </div>
             </Card>
-            
+
             <Card className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -90,7 +92,7 @@ export default function AdminPage() {
                 <FileAudio className="h-8 w-8 text-primary" />
               </div>
             </Card>
-            
+
             <Card className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -102,26 +104,27 @@ export default function AdminPage() {
             </Card>
           </div>
         </TabsContent>
-        
+
         <TabsContent value="usage">
           <div className="grid gap-6">
             <Card className="p-6">
               <h3 className="text-lg font-semibold mb-4">Usage Metrics</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div>
-                  <p className="text-sm text-muted-foreground">Total Input Tokens</p>
+                  <p className="text-sm text-muted-foreground">Total Podify Tokens</p>
+                  <p className="text-2xl font-bold">{stats?.totalPodifyTokens?.toLocaleString() || 0}</p>
+                  <p className="text-xs text-muted-foreground">Worth: ${((stats?.totalPodifyTokens || 0) * 0.005).toFixed(2)}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Raw Input Tokens</p>
                   <p className="text-2xl font-bold">{stats?.totalInputTokens?.toLocaleString() || 0}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Total Output Tokens</p>
+                  <p className="text-sm text-muted-foreground">Raw Output Tokens</p>
                   <p className="text-2xl font-bold">{stats?.totalOutputTokens?.toLocaleString() || 0}</p>
                 </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Total TTS Characters</p>
-                  <p className="text-2xl font-bold">{stats?.totalTtsCharacters?.toLocaleString() || 0}</p>
-                </div>
               </div>
-              
+
               <div className="h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={stats?.usageByDay || []}>
@@ -153,7 +156,7 @@ export default function AdminPage() {
                 </ResponsiveContainer>
               </div>
             </Card>
-            
+
             <Card className="p-6">
               <h3 className="text-lg font-semibold mb-4">Token Usage Over Time</h3>
               <div className="h-[300px]">
@@ -170,6 +173,13 @@ export default function AdminPage() {
                     />
                     <Line 
                       type="monotone" 
+                      dataKey="podifyTokens" 
+                      stroke="#4CAF50" 
+                      name="Podify Tokens"
+                      strokeWidth={2}
+                    />
+                    <Line 
+                      type="monotone" 
                       dataKey="inputTokens" 
                       stroke="#2196F3" 
                       name="Input Tokens"
@@ -180,13 +190,6 @@ export default function AdminPage() {
                       dataKey="outputTokens" 
                       stroke="#FF9800" 
                       name="Output Tokens"
-                      strokeWidth={2}
-                    />
-                    <Line 
-                      type="monotone" 
-                      dataKey="ttsCharacters" 
-                      stroke="#E91E63" 
-                      name="TTS Characters"
                       strokeWidth={2}
                     />
                   </LineChart>
