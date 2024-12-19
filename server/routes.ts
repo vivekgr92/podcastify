@@ -91,7 +91,11 @@ export function registerRoutes(app: Express) {
           .replace(/\s+/g, " ")
           .trim();
 
-        if (!fileContent || typeof fileContent !== "string" || fileContent.length === 0) {
+        if (
+          !fileContent ||
+          typeof fileContent !== "string" ||
+          fileContent.length === 0
+        ) {
           throw new Error("Invalid file content");
         }
       } catch (error) {
@@ -116,101 +120,56 @@ export function registerRoutes(app: Express) {
       const currentArticles = usageData?.articlesConverted || 0;
       const currentTokens = usageData?.tokensUsed || 0;
 
-      // Generate conversation with integrated pricing calculation
-      await logger.info("Starting conversation generation process");
-      const { audioBuffer, duration, usage } = await ttsService.generateConversation(fileContent);
+      // First calculate estimated pricing to check limits
+      await logger.info(
+        "Calculating estimated pricing and checking usage limits",
+      );
+      const estimatedPricing = await ttsService.calculatePricing(
+        fileContent,
+        [],
+        [],
+        true,
+      );
 
-      if (!audioBuffer || !duration || !usage) {
-        throw new Error('Invalid response from TTS service: Missing required fields');
+      if (!estimatedPricing) {
+        throw new Error("Failed to calculate pricing estimation");
       }
 
-      // Calculate total tokens and check usage limits
-      const totalTokens = usage.inputTokens + usage.outputTokens;
+      // Calculate estimated total tokens and check usage limits
+      const estimatedTotalTokens =
+        estimatedPricing.inputTokens + estimatedPricing.outputTokens;
       const wouldExceedArticles = currentArticles >= ARTICLE_LIMIT;
-      const wouldExceedTokens = currentTokens + totalTokens > TOKEN_LIMIT;
+      const wouldExceedTokens =
+        currentTokens + estimatedTotalTokens > TOKEN_LIMIT;
       const remainingArticles = Math.max(0, ARTICLE_LIMIT - currentArticles);
       const remainingTokens = Math.max(0, TOKEN_LIMIT - currentTokens);
 
       await logger.info([
-        `Conversation generation completed:`,
-        `Duration: ${duration}s`,
-        `Input tokens: ${usage.inputTokens}`,
-        `Output tokens: ${usage.outputTokens}`,
-        `Total tokens: ${totalTokens}`,
-        `Total cost: $${usage.totalCost.toFixed(4)}`,
+        `Initial pricing estimation completed:`,
+        `Estimated input tokens: ${estimatedPricing.inputTokens}`,
+        `Estimated total tokens: ${estimatedTotalTokens}`,
+        `Estimated cost: $${estimatedPricing.totalCost.toFixed(4)}`,
         `\nUsage limits check for user ${user.id}:`,
         `Current articles: ${currentArticles}/${ARTICLE_LIMIT}`,
         `Current tokens: ${currentTokens}/${TOKEN_LIMIT}`,
-        `This conversion will use: ${totalTokens} tokens`
+        `Would exceed article limit: ${wouldExceedArticles}`,
+        `Would exceed token limit: ${wouldExceedTokens}`,
       ]);
 
       // Check if usage limits would be exceeded
       if (wouldExceedArticles || wouldExceedTokens) {
-        await logger.info([
-          `Usage limit exceeded for user ${user.id}:`,
-          `Articles: ${currentArticles}/${ARTICLE_LIMIT}`,
-          `Tokens: ${currentTokens}/${TOKEN_LIMIT}`,
+        await logger.warn([
+          "---------- USAGE LIMIT WARNING ----------\n",
+          `User: ${user.id}\n`,
+          `Articles: ${currentArticles}/${ARTICLE_LIMIT} (${wouldExceedArticles ? "exceeded" : "ok"})\n`,
+          `Tokens: ${currentTokens}/${TOKEN_LIMIT} (${wouldExceedTokens ? "would exceed" : "ok"})\n`,
+          "-----------------------------------------\n",
         ]);
 
         return res.status(403).json({
           error: "Usage limit would be exceeded",
           message: "Please upgrade your plan to continue converting articles",
-          limits: {
-            articles: {
-              used: currentArticles,
-              limit: ARTICLE_LIMIT,
-              remaining: remainingArticles,
-              wouldExceed: wouldExceedArticles,
-            },
-            tokens: {
-              used: currentTokens,
-              limit: TOKEN_LIMIT,
-              remaining: remainingTokens,
-              estimated: totalTokens,
-              wouldExceed: wouldExceedTokens,
-            },
-          },
-          pricing: {
-            inputTokens: pricingDetails.inputTokens,
-            outputTokens: pricingDetails.outputTokens,
-            estimatedCost: pricingDetails.totalCost
-          },
-          upgradePlans: {
-            monthly: {
-              name: "Pro",
-              price: 9.99,
-              features: [
-                "Unlimited articles",
-                "200,000 tokens per month",
-                "Priority support",
-              ],
-            },
-            annual: {
-              name: "Pro Annual",
-              price: 99.99,
-              features: [
-                "Unlimited articles",
-                "300,000 tokens per month",
-                "Priority support",
-                "2 months free",
-              ],
-            },
-          },
           type: "usage_limit",
-        });
-      }
-
-      // Check if we would exceed usage limits
-      if (wouldExceedArticles || wouldExceedTokens) {
-        await logger.info([
-          `Usage limit would be exceeded for user ${user.id}:`,
-          `Articles: ${currentArticles}/${ARTICLE_LIMIT}`,
-          `Tokens: ${currentTokens}/${TOKEN_LIMIT}`,
-        ]);
-
-        return res.status(403).json({
-          error: "Usage limit would be exceeded",
-          message: "Please upgrade your plan to continue converting articles",
           limits: {
             articles: {
               used: currentArticles,
@@ -222,21 +181,37 @@ export function registerRoutes(app: Express) {
               used: currentTokens,
               limit: TOKEN_LIMIT,
               remaining: remainingTokens,
-              estimated: totalTokens,
+              estimated: estimatedTotalTokens,
               wouldExceed: wouldExceedTokens,
             },
           },
           pricing: {
-            inputTokens: usage.inputTokens,
-            outputTokens: usage.outputTokens,
-            estimatedCost: usage.totalCost
-          }
+            inputTokens: estimatedPricing.inputTokens,
+            outputTokens: estimatedPricing.outputTokens,
+            estimatedCost: estimatedPricing.totalCost,
+          },
         });
       }
+      // Generate audio only if usage limits allow
+      await logger.info("Starting audio generation process");
+      const { audioBuffer, duration, usage } =
+        await ttsService.generateConversation(fileContent);
+
+      if (!audioBuffer || !duration || !usage) {
+        throw new Error(
+          "Invalid response from TTS service: Missing required fields",
+        );
+      }
+
+      await logger.info([
+        `Audio generation completed:`,
+        `Duration: ${duration}s`,
+        `Actual tokens used: ${usage.inputTokens + usage.outputTokens}`,
+      ]);
 
       // Create podcast and update usage in a single transaction
       const result = await db.transaction(async (tx) => {
-        // Update usage statistics
+        // Update usage statistics with actual usage from the conversion
         const [updatedUsage] = await tx
           .insert(userUsage)
           .values({
@@ -277,9 +252,7 @@ export function registerRoutes(app: Express) {
         try {
           await fs.mkdir("./uploads", { recursive: true });
           await fs.writeFile(audioPath, audioBuffer);
-          await logger.info(
-            `Successfully saved audio file: ${audioFileName}`,
-          );
+          await logger.info(`Successfully saved audio file: ${audioFileName}`);
         } catch (writeError) {
           const errorMessage =
             writeError instanceof Error
@@ -297,7 +270,7 @@ export function registerRoutes(app: Express) {
             title: file.originalname.replace(/\.[^/.]+$/, ""),
             description: "Generated from uploaded document using AI voices",
             audioUrl: `/uploads/${audioFileName}`,
-            duration,
+            duration: duration,
             type: "tts",
           })
           .returning();
@@ -805,19 +778,18 @@ export function registerRoutes(app: Express) {
       const currentArticles = usage?.articlesConverted || 0;
       const currentTokens = usage?.tokensUsed || 0;
       const totalTokens =
-        pricingDetails.inputTokens + pricingDetails.estimatedOutputTokens;
+        pricingDetails.inputTokens + pricingDetails.outputTokens;
 
       await logger.info([
         `Pricing calculation for user ${req.user.id}:`,
         `Input tokens: ${pricingDetails.inputTokens}`,
-        `Estimated output tokens: ${pricingDetails.estimatedOutputTokens}`,
+        `Estimated output tokens: ${pricingDetails.outputTokens}`,
         `Total cost: $${pricingDetails.totalCost.toFixed(4)}`,
       ]);
 
       res.json({
         inputTokens: pricingDetails.inputTokens,
         outputTokens: pricingDetails.outputTokens,
-        estimatedOutputTokens: pricingDetails.estimatedOutputTokens,
         totalCost: pricingDetails.totalCost,
         currentUsage: {
           articles: currentArticles,
