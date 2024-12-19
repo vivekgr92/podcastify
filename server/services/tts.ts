@@ -239,20 +239,16 @@ export class TTSService {
 
       await logger.info(`Input tokens calculated: ${totalInputTokens}`);
 
-      // Generate a sample response with a smaller context for pricing estimation
-      const maxSampleLength = 1000;
-      const samplePrompt = `${SYSTEM_PROMPTS.MAIN}\n\n${text.slice(0, maxSampleLength)}`;
+      // Generate the actual conversation response for accurate pricing
+      await logger.info("Generating full conversation response for pricing calculation");
       
-      await logger.info("Generating sample response for estimation");
+      await logger.info("Generating full conversation response for pricing calculation");
       
       const result = await model.generateContent({
-        contents: [{ role: "user", parts: [{ text: samplePrompt }] }],
-        generationConfig: {
-          ...GENERATION_CONFIG,
-          maxOutputTokens: 300, // Limit output for estimation
-        },
+        contents: [{ role: "user", parts: [{ text: `${SYSTEM_PROMPTS.MAIN}\n\n${text}` }] }],
+        generationConfig: GENERATION_CONFIG,
       }).catch(error => {
-        throw new Error(`Failed to generate sample response: ${error.message}`);
+        throw new Error(`Failed to generate conversation response: ${error.message}`);
       });
 
       const rawText = result.response?.candidates?.[0]?.content?.parts?.[0]?.text;
@@ -260,54 +256,53 @@ export class TTSService {
         throw new Error("No valid response content received from model");
       }
 
-      await logger.info("Sample response generated successfully");
+      await logger.info("Full conversation response generated successfully");
+      await logger.debug(`Raw response text: ${rawText.substring(0, 200)}...`);
 
-      // Calculate output tokens from the sample response
+      // Calculate actual output tokens from the full response
       const outputTokenCount = await model.countTokens({
         contents: [{ role: "assistant", parts: [{ text: rawText }] }],
       }).catch(error => {
         throw new Error(`Failed to count output tokens: ${error.message}`);
       });
 
-      // Calculate sampling ratio based on input text length
-      const samplingRatio = Math.max(1, text.length / maxSampleLength);
-      const estimatedTotalOutputTokens = Math.ceil(outputTokenCount.totalTokens * samplingRatio);
-
-      await logger.info(`Output tokens estimated: ${estimatedTotalOutputTokens}`);
-
-      // Process sample conversation parts to estimate TTS characters
-      const sampleConversationParts = await this.cleanGeneratedText(rawText);
-      if (sampleConversationParts.length === 0) {
-        throw new Error("Failed to parse conversation parts from sample response");
+      if (!outputTokenCount || typeof outputTokenCount.totalTokens !== 'number') {
+        throw new Error('Invalid token count response from model');
       }
 
-      const totalSampleChars = sampleConversationParts.reduce((sum, part) => {
+      const actualOutputTokens = outputTokenCount.totalTokens;
+      await logger.info(`Actual output tokens calculated: ${actualOutputTokens}`);
+
+      // Calculate actual TTS characters from the full conversation
+      const conversationParts = await this.cleanGeneratedText(rawText);
+      if (conversationParts.length === 0) {
+        throw new Error("Failed to parse conversation parts from response");
+      }
+
+      const ttsCharacters = conversationParts.reduce((sum, part) => {
         // Count speaker prefix (e.g., "Joe: " or "Sarah: ") plus the text
         return sum + part.speaker.length + 2 + part.text.length;
       }, 0);
 
-      const avgCharsPerTurn = totalSampleChars / sampleConversationParts.length;
-      const estimatedTurns = Math.ceil((text.length / maxSampleLength) * sampleConversationParts.length);
-      const ttsCharacters = Math.ceil(avgCharsPerTurn * estimatedTurns);
+      await logger.info(`Actual TTS characters calculated: ${ttsCharacters}`);
 
       await logger.info(`TTS characters estimated: ${ttsCharacters}`);
 
-      // Calculate costs with rate limiting protection
+      // Calculate actual costs
       const inputCost = (totalInputTokens / 1000) * PRICING.INPUT_TOKEN_RATE;
-      const outputCost = (estimatedTotalOutputTokens / 1000) * PRICING.OUTPUT_TOKEN_RATE;
+      const outputCost = (actualOutputTokens / 1000) * PRICING.OUTPUT_TOKEN_RATE;
       const ttsCost = ttsCharacters * PRICING.TTS_RATE_STANDARD;
 
       const totalCost = inputCost + outputCost + ttsCost;
 
-      // Detailed logging of pricing calculation results
+      // Detailed logging of actual pricing calculation results
       await logger.info(
         `\n--- Pricing Details ---\n` +
           `Base Input Tokens: ${inputTokenCount.totalTokens}\n` +
           `System Prompt Tokens: ${systemTokenCount.totalTokens}\n` +
           `Total Input Tokens: ${totalInputTokens}\n` +
-          `Sample Output Tokens: ${outputTokenCount.totalTokens}\n` +
-          `Estimated Total Output Tokens: ${estimatedTotalOutputTokens}\n` +
-          `Estimated TTS Characters: ${ttsCharacters}\n` +
+          `Actual Output Tokens: ${actualOutputTokens}\n` +
+          `Actual TTS Characters: ${ttsCharacters}\n` +
           `Input Cost: $${inputCost.toFixed(4)}\n` +
           `Output Cost: $${outputCost.toFixed(4)}\n` +
           `TTS Cost: $${ttsCost.toFixed(4)}\n` +
@@ -316,7 +311,7 @@ export class TTSService {
 
       const pricingDetails: PricingDetails = {
         inputTokens: totalInputTokens,
-        estimatedOutputTokens: estimatedTotalOutputTokens,
+        estimatedOutputTokens: actualOutputTokens, // Keep the field name for backward compatibility
         totalCost,
         breakdown: {
           inputCost,

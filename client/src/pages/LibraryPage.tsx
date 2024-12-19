@@ -2,6 +2,17 @@ import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import type { Podcast } from "@db/schema";
 import { Share2, Play, Pause, Trash2, AlertCircle } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { useLocation } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAudio } from "../hooks/use-audio";
@@ -124,49 +135,63 @@ const { play, isPlaying, audioData, togglePlay } = useAudio();
                       <Play className="h-5 w-5 text-white ml-0.5" />
                     )}
                   </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex items-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-500"
-                    onClick={async () => {
-                      try {
-                        const response = await fetch(`/api/podcasts/${podcast.id}`, {
-                          method: 'DELETE',
-                          credentials: 'include'
-                        });
-                        
-                        if (!response.ok) {
-                          throw new Error('Failed to delete podcast');
-                        }
-                        
-                        toast({
-                          title: "Success",
-                          description: "Podcast deleted successfully",
-                        });
-                        
-                        // Invalidate the podcasts query to refresh the list
-                        await queryClient.invalidateQueries({ queryKey: ['podcasts'] });
-                      } catch (error) {
-                        console.error('Error deleting podcast:', error);
-                        toast({
-                          title: "Error",
-                          description: error instanceof Error ? error.message : "Failed to delete podcast",
-                          variant: "destructive",
-                        });
-                      }
-                    }}
-                  >
-                    <Trash2 size={16} />
-                    Delete
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="flex items-center gap-2"
-                  >
-                    <Share2 size={16} />
-                    Share
-                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex items-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-500"
+                      >
+                        <Trash2 size={16} />
+                        Delete
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This action cannot be undone. This will permanently delete your
+                          podcast and remove the audio file from our servers.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          className="bg-red-500 hover:bg-red-600"
+                          onClick={async () => {
+                            try {
+                              const response = await fetch(`/api/podcasts/${podcast.id}`, {
+                                method: 'DELETE',
+                                credentials: 'include'
+                              });
+                              
+                              if (!response.ok) {
+                                throw new Error('Failed to delete podcast');
+                              }
+                              
+                              toast({
+                                title: "Success",
+                                description: "Podcast deleted successfully",
+                              });
+                              
+                              // Invalidate the podcasts query to refresh the list
+                              await queryClient.invalidateQueries({ queryKey: ['podcasts'] });
+                            } catch (error) {
+                              console.error('Error deleting podcast:', error);
+                              toast({
+                                title: "Error",
+                                description: error instanceof Error ? error.message : "Failed to delete podcast",
+                                variant: "destructive",
+                              });
+                            }
+                          }}
+                        >
+                          Delete
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                  {/* Share button removed as per requirements */}
                 </div>
               </div>
             </div>
