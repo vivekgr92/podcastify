@@ -227,20 +227,41 @@ export class TTSService {
         `Number of responses: ${responses.length}`
       ]);
 
+      // Validate input text
+      if (!text || typeof text !== 'string' || text.trim().length === 0) {
+        throw new Error('Invalid input text: Expected non-empty string');
+      }
+
       // Calculate initial input tokens
-      const inputTokenCount = await model.countTokens({
-        contents: [{ role: "user", parts: [{ text }] }],
-      }).catch(error => {
-        throw new Error(`Failed to count input tokens: ${error.message}`);
-      });
+      let inputTokenCount;
+      try {
+        inputTokenCount = await model.countTokens({
+          contents: [{ role: "user", parts: [{ text }] }],
+        });
+        if (!inputTokenCount || typeof inputTokenCount.totalTokens !== 'number') {
+          throw new Error('Invalid token count response from model');
+        }
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        await logger.error(`Failed to count input tokens: ${errorMessage}`);
+        throw new Error(`Failed to count input tokens: ${errorMessage}`);
+      }
 
       // Calculate prompt tokens (including system prompts)
       const systemPromptsText = Object.values(SYSTEM_PROMPTS).join("\n");
-      const systemTokenCount = await model.countTokens({
-        contents: [{ role: "system", parts: [{ text: systemPromptsText }] }],
-      }).catch(error => {
-        throw new Error(`Failed to count system tokens: ${error.message}`);
-      });
+      let systemTokenCount;
+      try {
+        systemTokenCount = await model.countTokens({
+          contents: [{ role: "system", parts: [{ text: systemPromptsText }] }],
+        });
+        if (!systemTokenCount || typeof systemTokenCount.totalTokens !== 'number') {
+          throw new Error('Invalid token count response for system prompts');
+        }
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        await logger.error(`Failed to count system tokens: ${errorMessage}`);
+        throw new Error(`Failed to count system tokens: ${errorMessage}`);
+      }
 
       const totalInputTokens =
         inputTokenCount.totalTokens + systemTokenCount.totalTokens;
@@ -251,34 +272,85 @@ export class TTSService {
       let totalOutputTokens = 0;
       let totalTtsCharacters = 0;
       
-      await logger.info(`Processing ${responses.length} responses for token counting`);
+      // Validate responses array
+      if (!Array.isArray(responses)) {
+        throw new Error('Invalid responses data: Expected an array of response strings');
+      }
 
-      // Check and validate conversations array
-      const validConversations = Array.isArray(conversations) ? conversations : [];
+      // Validate conversations array and create a deep copy if provided
+      let validatedConversations: ConversationPart[] = [];
+      if (conversations && Array.isArray(conversations)) {
+        validatedConversations = conversations.map((conv, index) => {
+          if (!conv || typeof conv !== 'object') {
+            throw new Error(`Invalid conversation object at index ${index}`);
+          }
+          if (!conv.speaker || typeof conv.speaker !== 'string' || !['Joe', 'Sarah'].includes(conv.speaker)) {
+            throw new Error(`Invalid speaker at index ${index}: ${conv.speaker}`);
+          }
+          if (!conv.text || typeof conv.text !== 'string' || !conv.text.trim()) {
+            throw new Error(`Invalid text at index ${index}`);
+          }
+          return { speaker: conv.speaker as Speaker, text: conv.text };
+        });
+
+        await logger.info(`Validated ${validatedConversations.length} conversation parts`);
+      }
+
+      const validResponses = responses.filter(response => typeof response === 'string' && response.trim().length > 0);
+      if (responses.length > 0 && validResponses.length === 0) {
+        throw new Error('All provided responses are invalid: Expected non-empty strings');
+      }
+
+      // Log response validation details
+      await logger.info([
+        `Response validation results:`,
+        `- Total responses provided: ${responses.length}`,
+        `- Valid responses found: ${validResponses.length}`,
+        `- Sample of first valid response: ${validResponses[0]?.substring(0, 100)}...`
+      ]);
+
+      await logger.debug(`Response validation details: ${JSON.stringify({
+        totalResponses: responses.length,
+        validResponses: validResponses.length,
+        invalidResponses: responses.length - validResponses.length,
+        firstValidResponseLength: validResponses[0]?.length || 0
+      }, null, 2)}`);
+
+      await logger.info(`Processing ${validResponses.length} valid responses for token counting`);
+
+      // Validate conversations array
+      if (!Array.isArray(conversations)) {
+        throw new Error('Invalid conversations data: Expected an array of conversation parts');
+      }
       
       // If we have pre-processed conversations, use them for TTS character calculation
-      if (validConversations.length > 0) {
-        await logger.info(`Processing ${validConversations.length} conversation parts for TTS calculation`);
+      if (conversations.length > 0) {
+        await logger.info(`Processing ${conversations.length} conversation parts for TTS calculation`);
         
-        totalTtsCharacters = validConversations.reduce((sum, part, index) => {
-          // Validate each conversation part
-          if (!part || typeof part !== 'object') {
-            logger.warn(`Invalid conversation part at index ${index}, skipping`);
-            return sum;
-          }
+        // Validate conversation structure before processing
+        const invalidParts = conversations.filter(part => 
+          !part || 
+          typeof part !== 'object' || 
+          !part.speaker || 
+          !part.text ||
+          typeof part.speaker !== 'string' ||
+          typeof part.text !== 'string'
+        );
+        
+        if (invalidParts.length > 0) {
+          const error = new Error('Invalid conversation structure detected');
+          await logger.error([
+            'Invalid conversation parts found:',
+            `Total invalid parts: ${invalidParts.length}`,
+            'First invalid part:',
+            JSON.stringify(invalidParts[0], null, 2)
+          ]);
+          throw error;
+        }
 
-          // Ensure we have valid speaker and text properties
-          const speaker = part.speaker || '';
-          const text = part.text || '';
-          
-          if (!speaker || !text) {
-            logger.warn(`Missing speaker or text at conversation index ${index}`);
-            return sum;
-          }
-
-          const partCharacters = speaker.length + 2 + text.length;
-          logger.debug(`Conversation part ${index}: ${partCharacters} characters (${speaker}: ${text.substring(0, 50)}...)`);
-          
+        totalTtsCharacters = conversations.reduce((sum, part, index) => {
+          const partCharacters = part.speaker.length + 2 + part.text.length;
+          logger.debug(`Conversation part ${index}: ${partCharacters} characters (${part.speaker}: ${part.text.substring(0, 50)}...)`);
           return sum + partCharacters;
         }, 0);
         
@@ -298,34 +370,60 @@ export class TTSService {
         }
       } else {
         // Process actual responses
-        for (let i = 0; i < responses.length; i++) {
-          const response = responses[i];
-          if (!response || !response.trim()) {
-            await logger.warn(`Skipping empty response at index ${i}`);
-            continue;
-          }
+        for (let i = 0; i < validResponses.length; i++) {
+          const response = validResponses[i];
+          
+          await logger.debug([
+            `Processing response ${i + 1}/${validResponses.length}:`,
+            `- Response length: ${response.length}`,
+            `- Current total output tokens: ${totalOutputTokens}`,
+            `- Current total TTS characters: ${totalTtsCharacters}`
+          ]);
 
           try {
             // Calculate output tokens for this response
-            const outputTokenCount = await model.countTokens({
-              contents: [{ role: "assistant", parts: [{ text: response }] }],
-            });
+            let outputTokenCount;
+            try {
+              outputTokenCount = await model.countTokens({
+                contents: [{ role: "assistant", parts: [{ text: response }] }],
+              });
 
-            if (!outputTokenCount || typeof outputTokenCount.totalTokens !== 'number') {
-              throw new Error(`Invalid token count response from model for response ${i + 1}`);
+              if (!outputTokenCount || typeof outputTokenCount.totalTokens !== 'number') {
+                throw new Error(`Invalid token count response from model for response ${i + 1}`);
+              }
+
+              totalOutputTokens += outputTokenCount.totalTokens;
+              await logger.debug([
+                `Response ${i + 1} token calculation:`,
+                `- Response length: ${response.length}`,
+                `- Output tokens: ${outputTokenCount.totalTokens}`,
+                `- Running total tokens: ${totalOutputTokens}`
+              ]);
+            } catch (error) {
+              const errorMessage = error instanceof Error ? error.message : String(error);
+              await logger.error([
+                `Failed to count tokens for response ${i + 1}:`,
+                `- Error: ${errorMessage}`,
+                `- Response sample: ${response.substring(0, 100)}...`
+              ]);
+              throw new Error(`Token counting failed for response ${i + 1}: ${errorMessage}`);
             }
 
-            totalOutputTokens += outputTokenCount.totalTokens;
-            await logger.debug(`Response ${i + 1} output tokens: ${outputTokenCount.totalTokens}`);
-
-            // Only calculate TTS characters from responses if we don't have pre-processed conversations
-            if (!conversations || conversations.length === 0) {
+            // Calculate TTS characters based on validated conversations if available
+            if (validatedConversations.length > 0) {
+              totalTtsCharacters = validatedConversations.reduce((sum, part) => {
+                const partCharacters = part.speaker.length + 2 + part.text.length;
+                return sum + partCharacters;
+              }, 0);
+              await logger.debug(`Using ${validatedConversations.length} pre-processed conversations for TTS calculation`);
+            } else {
+              // Fall back to calculating from response if no conversations provided
               const conversationParts = await this.cleanGeneratedText(response);
               const responseTtsCharacters = conversationParts.reduce((sum, part) => {
                 return sum + part.speaker.length + 2 + part.text.length;
               }, 0);
               totalTtsCharacters += responseTtsCharacters;
-              await logger.debug(`Response ${i + 1} TTS characters: ${responseTtsCharacters}`);
+              await logger.debug(`Calculated TTS characters from response ${i + 1}: ${responseTtsCharacters}`);
             }
 
 
@@ -738,9 +836,35 @@ export class TTSService {
             throw new Error(`Response ${index + 1} is empty or contains only whitespace`);
           }
 
-          // Store response for pricing calculation with detailed logging
+          // Store response and update running totals
           responseTexts[index] = rawText;
-          await logger.info(`Stored response ${index + 1}/${chunks.length} for pricing calculation`);
+
+          // Calculate token counts for this response
+          const responseTokenCount = await model.countTokens({
+            contents: [{ role: "assistant", parts: [{ text: rawText }] }],
+          });
+
+          if (!responseTokenCount || typeof responseTokenCount.totalTokens !== 'number') {
+            throw new Error(`Invalid token count response for response ${index + 1}`);
+          }
+
+          totalOutputTokens += responseTokenCount.totalTokens;
+
+          await logger.info([
+            `Processed response ${index + 1}/${chunks.length}:`,
+            `- Length: ${rawText.length} characters`,
+            `- Tokens: ${responseTokenCount.totalTokens}`,
+            `- Running total tokens: ${totalOutputTokens}`
+          ].join('\n'));
+
+          // Log response details for pricing calculation and token usage
+          await logger.debug(`Response ${index + 1} details:\n` +
+            `- Length: ${rawText.length} characters\n` +
+            `- Response index: ${index}\n` +
+            `- Total responses expected: ${chunks.length}\n` +
+            `- Valid content: ${Boolean(rawText.trim())}\n` +
+            `- Stored responses count: ${responseTexts.filter(Boolean).length}`
+          );
           await logger.debug(`Response ${index + 1}/${chunks.length} text sample (first 100 chars): ${rawText.substring(0, 100)}`);
           await logger.debug(`Total responses collected so far: ${responseTexts.filter(Boolean).length}`);
 
@@ -800,19 +924,48 @@ export class TTSService {
         // Calculate pricing for all responses at once
         // Calculate pricing using both responses and conversations
         // Create a deep copy of allConversations to prevent mutation
-        // Create a deep copy of allConversations to prevent mutation
-        const conversationsCopy = allConversations.map(conv => {
+        // Validate and create a safe copy of allConversations
+        if (!Array.isArray(allConversations)) {
+          throw new Error('Invalid conversations data: Expected an array of conversation parts');
+        }
+
+        // Create a deep copy with validation
+        if (!Array.isArray(allConversations)) {
+          throw new Error('Invalid conversations data: Expected an array of conversation parts');
+        }
+
+        // Create a deep copy with validation
+        const conversationsCopy = allConversations.map((conv, index) => {
           if (!conv || typeof conv !== 'object') {
-            logger.warn('Invalid conversation object found, skipping');
-            return null;
+            throw new Error(`Invalid conversation object at index ${index}: Expected object, got ${typeof conv}`);
           }
+          
+          if (!conv.speaker || typeof conv.speaker !== 'string') {
+            throw new Error(`Invalid speaker at index ${index}: Expected non-empty string, got ${typeof conv.speaker}`);
+          }
+          
+          if (!conv.text || typeof conv.text !== 'string') {
+            throw new Error(`Invalid text at index ${index}: Expected non-empty string, got ${typeof conv.text}`);
+          }
+          
           return {
-            speaker: conv.speaker || '',
-            text: conv.text || ''
+            speaker: conv.speaker,
+            text: conv.text
           };
-        }).filter((conv): conv is ConversationPart => Boolean(conv)); // Type assertion to satisfy TypeScript
+        });
+
+        if (conversationsCopy.length === 0) {
+          throw new Error('No valid conversations found after validation');
+        }
+
+        await logger.info([
+          'Conversation validation results:',
+          `- Total conversations: ${allConversations.length}`,
+          `- Valid conversations: ${conversationsCopy.length}`,
+          `- First conversation sample: ${JSON.stringify(conversationsCopy[0], null, 2)}`
+        ]);
         
-        logger.info(`Created safe copy of ${conversationsCopy.length} conversations for pricing calculation`);
+        logger.info(`Successfully created safe copy of ${conversationsCopy.length} conversations for pricing calculation`);
         
         pricingDetails = await this.calculatePricing(
           text,
