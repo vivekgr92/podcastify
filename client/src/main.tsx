@@ -80,7 +80,19 @@ function Router() {
               {!user ? <AuthPage /> : <BillingPage />}
             </Route>
             <Route path="/admin">
-              {!user ? <AuthPage /> : user.isAdmin ? <AdminPage /> : <HomePage />}
+              {!user ? (
+                <AuthPage />
+              ) : user.isAdmin ? (
+                <AdminPage />
+              ) : (
+                <div className="min-h-screen bg-black text-white p-6">
+                  <div className="max-w-md mx-auto text-center">
+                    <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
+                    <p className="mb-4">You need administrator privileges to access this page.</p>
+                    <p className="text-sm text-gray-400">Please use an account with an @admin.com email address to access this page.</p>
+                  </div>
+                </div>
+              )}
             </Route>
             <Route path="/">
               <HomePage />
