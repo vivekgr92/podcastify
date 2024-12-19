@@ -32,6 +32,7 @@ interface GenerationResult {
 interface PricingDetails {
   inputTokens: number;
   outputTokens: number;
+  estimatedOutputTokens: number;
   ttsCharacters: number;
   totalCost: number;
   breakdown: {
@@ -347,6 +348,7 @@ export class TTSService {
       return {
         inputTokens: totalInputTokens,
         outputTokens: totalOutputTokens,
+        estimatedOutputTokens: totalOutputTokens, // For backwards compatibility
         ttsCharacters: totalTtsCharacters,
         totalCost: totalCost,
         breakdown: {
@@ -614,10 +616,7 @@ export class TTSService {
     }
   }
 
-  async generateConversation(
-    text: string,
-    precalculatedPricing?: PricingDetails
-  ): Promise<{
+  async generateConversation(text: string): Promise<{
     audioBuffer: Buffer;
     duration: number;
     usage: PricingDetails;
@@ -733,43 +732,36 @@ export class TTSService {
       await logger.log("--- End of Conversation ---\n");
 
       // Initialize variables for cost tracking and audio generation
+      let pricingDetails: PricingDetails;
+      let totalCost = 0;
       const useWaveNet = true; // Set to true if you are using WaveNet voices
 
-      // Use precalculated pricing if provided, otherwise calculate it
-      let pricingDetails = precalculatedPricing;
-      if (!pricingDetails) {
-        try {
-          pricingDetails = await this.calculatePricing(
-            text,
-            responseTexts,
-            allConversations
-          );
+      // Calculate pricing using all generated responses
+      try {
+        pricingDetails = await this.calculatePricing(
+          text, //text extracted from the article
+          responseTexts, // response text array for each chunk
+          allConversations, // cleaned out conversation array for each chunk
+        );
 
-          if (!pricingDetails) {
-            throw new Error("Failed to calculate pricing details");
-          }
+        totalCost = pricingDetails.totalCost;
 
-          await logger.info([
-            "\n--- Pricing Calculation Summary ---",
-            `Input tokens: ${pricingDetails.inputTokens}`,
-            `Output tokens: ${pricingDetails.outputTokens}`,
-            `TTS characters: ${pricingDetails.ttsCharacters}`,
-            `Total cost: $${pricingDetails.totalCost.toFixed(4)}`
-          ]);
+        await logger.info(
+          `Total pricing calculation completed: $${totalCost.toFixed(4)}`,
+        );
 
-          // Log the breakdown of total costs
-          await logger.info(
-            `Total cost breakdown:\n` +
-              `Total input cost: $${pricingDetails.breakdown.inputCost.toFixed(4)}\n` +
-              `Total output cost: $${pricingDetails.breakdown.outputCost.toFixed(4)}\n` +
-              `Total TTS cost: $${pricingDetails.breakdown.ttsCost.toFixed(4)}`,
-          );
-        } catch (error) {
-          await logger.error(
-            `Failed to calculate pricing: ${error instanceof Error ? error.message : String(error)}`
-          );
-          throw error;
-        }
+        // Log the breakdown of total costs
+        await logger.info(
+          `Total cost breakdown:\n` +
+            `Total input cost: $${pricingDetails.breakdown.inputCost.toFixed(4)}\n` +
+            `Total output cost: $${pricingDetails.breakdown.outputCost.toFixed(4)}\n` +
+            `Total TTS cost: $${pricingDetails.breakdown.ttsCost.toFixed(4)}`,
+        );
+      } catch (error) {
+        await logger.error(
+          `Failed to calculate total pricing: ${error instanceof Error ? error.message : String(error)}`,
+        );
+        throw new Error("Failed to calculate total pricing. Please try again.");
       }
 
       // Generate audio for each conversation part
@@ -819,7 +811,14 @@ export class TTSService {
       return {
         audioBuffer,
         duration: approximateDuration,
-        usage: pricingDetails,
+        usage: {
+          inputTokens: pricingDetails.inputTokens,
+          outputTokens: pricingDetails.outputTokens,
+          estimatedOutputTokens: pricingDetails.estimatedOutputTokens,
+          ttsCharacters: pricingDetails.ttsCharacters,
+          totalCost: pricingDetails.totalCost,
+          breakdown: pricingDetails.breakdown,
+        },
       };
     } catch (error) {
       await logger.log(
