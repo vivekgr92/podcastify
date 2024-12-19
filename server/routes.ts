@@ -11,7 +11,7 @@ import { dirname } from 'path';
 import { podcasts, playlists, playlistItems, progress, userUsage } from "@db/schema";
 import { logger } from "./services/logging";
 import { ttsService } from "./services/tts";
-import type { ConversationPart } from "./services/tts";
+import type { ConversationPart, PricingDetails } from "./services/tts";
 import { eq, and, sql } from "drizzle-orm";
 import pdfParse from 'pdf-parse/lib/pdf-parse.js';
 
@@ -170,31 +170,31 @@ export function registerRoutes(app: Express) {
         .limit(1);
 
       try {
-        // Initialize arrays for initial pricing calculation
-        const responseTexts: string[] = []; // Empty array for initial pricing estimate
-        const conversations: ConversationPart[] = []; // Empty array for initial pricing calculation
-
-        // Calculate pricing and token usage using pre-generated conversation parts if available
-        const pricingDetails = await ttsService.calculatePricing(fileContent, responseTexts, conversations);
-        const totalInputTokens = pricingDetails?.inputTokens || 0;
-        const totalOutputTokens = pricingDetails?.estimatedOutputTokens || 0;
-        const totalTokens = totalInputTokens + totalOutputTokens;
-
-        // Log token calculation details
-        await logger.info([
-          `Token calculation for user ${user.id}:`,
-          `Input tokens: ${totalInputTokens}`,
-          `Estimated output tokens: ${totalOutputTokens}`,
-          `Total tokens: ${totalTokens}`
-        ]);
-
-        // Check usage limits
+        // Get current usage data
         const currentArticles = usageData?.articlesConverted || 0;
         const currentTokens = usageData?.tokensUsed || 0;
+
+        // Generate audio with pricing calculation included
+        const { audioBuffer, duration, usage } = await ttsService.generateConversation(fileContent);
+        if (!audioBuffer || !duration || !usage) {
+          throw new Error('Invalid response from TTS service: Missing required fields');
+        }
+
+        // Calculate total tokens based on actual usage
+        const totalTokens = usage.inputTokens + usage.estimatedOutputTokens;
+
+        // Check usage limits after getting actual usage
         const wouldExceedArticles = currentArticles >= ARTICLE_LIMIT;
         const wouldExceedTokens = (currentTokens + totalTokens) > TOKEN_LIMIT;
         const remainingArticles = Math.max(0, ARTICLE_LIMIT - currentArticles);
         const remainingTokens = Math.max(0, TOKEN_LIMIT - currentTokens);
+
+        await logger.info([
+          `Usage calculation for user ${user.id}:`,
+          `Current articles: ${currentArticles}/${ARTICLE_LIMIT}`,
+          `Current tokens: ${currentTokens}/${TOKEN_LIMIT}`,
+          `This conversion will use: ${totalTokens} tokens`
+        ]);
 
       if (wouldExceedArticles || wouldExceedTokens) {
         await logger.info([
@@ -221,10 +221,14 @@ export function registerRoutes(app: Express) {
               wouldExceed: wouldExceedTokens
             }
           },
-          pricing: {
-            inputTokens: totalInputTokens,
-            estimatedOutputTokens: totalOutputTokens,
-            estimatedCost: pricingDetails.totalCost || 0
+          pricing: usage ? {
+            inputTokens: usage.inputTokens,
+            outputTokens: usage.outputTokens,
+            estimatedCost: usage.totalCost || 0
+          } : {
+            inputTokens: 0,
+            outputTokens: 0,
+            estimatedCost: 0
           },
           upgradePlans: {
             monthly: {
@@ -717,7 +721,8 @@ export function registerRoutes(app: Express) {
         });
       }
 
-      const pricingDetails = await ttsService.calculatePricing(text, [], []);  // Empty arrays for initial pricing estimate
+      // Calculate initial pricing estimate
+      const pricingDetails = await ttsService.calculatePricing(text, [], []);
       if (!pricingDetails) {
         throw new Error("Failed to calculate pricing details");
       }
@@ -736,10 +741,20 @@ export function registerRoutes(app: Express) {
 
       const currentArticles = usage?.articlesConverted || 0;
       const currentTokens = usage?.tokensUsed || 0;
-      const totalTokens = (pricingDetails.inputTokens || 0) + (pricingDetails.estimatedOutputTokens || 0);
+      const totalTokens = pricingDetails.inputTokens + pricingDetails.estimatedOutputTokens;
+
+      await logger.info([
+        `Pricing calculation for user ${req.user.id}:`,
+        `Input tokens: ${pricingDetails.inputTokens}`,
+        `Estimated output tokens: ${pricingDetails.estimatedOutputTokens}`,
+        `Total cost: $${pricingDetails.totalCost.toFixed(4)}`
+      ]);
 
       res.json({
-        ...pricingDetails,
+        inputTokens: pricingDetails.inputTokens,
+        outputTokens: pricingDetails.outputTokens,
+        estimatedOutputTokens: pricingDetails.estimatedOutputTokens,
+        totalCost: pricingDetails.totalCost,
         currentUsage: {
           articles: currentArticles,
           tokens: currentTokens,
