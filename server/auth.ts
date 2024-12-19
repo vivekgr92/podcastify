@@ -135,9 +135,11 @@ export function setupAuth(app: Express) {
 
       // Hash password and create user
       const hashedPassword = await crypto.hash(password);
-      const isAdmin = email.toLowerCase().endsWith('@admin.com'); // Set admin flag for @admin.com emails
-      console.log('Creating user with admin status:', isAdmin);
+      // Set admin flag for @admin.com emails - ensure domain match is exact
+      const isAdmin = email.toLowerCase().endsWith('@admin.com');
+      console.log('Creating user with admin status:', isAdmin, 'for email:', email);
       
+      // Create new user with admin status
       const [newUser] = await db
         .insert(users)
         .values({
@@ -145,11 +147,16 @@ export function setupAuth(app: Express) {
           email,
           displayName,
           password: hashedPassword,
-          isAdmin: isAdmin // Explicitly set the boolean value
+          isAdmin: !!isAdmin // Ensure it's a proper boolean
         })
         .returning();
 
-      console.log('Created user:', { ...newUser, isAdmin: newUser.isAdmin });
+      console.log('Created user:', { 
+        id: newUser.id,
+        username: newUser.username,
+        email: newUser.email,
+        isAdmin: newUser.isAdmin 
+      });
 
       // Log in the new user
       req.login(newUser, (err) => {
@@ -173,11 +180,13 @@ export function setupAuth(app: Express) {
 
       req.login(user, (err) => {
         if (err) return next(err);
+        // Ensure we return consistent user data including admin status
         return res.json({ 
           id: user.id, 
           username: user.username,
           email: user.email,
-          isAdmin: user.isAdmin 
+          isAdmin: user.isAdmin, // This will be a boolean from the database
+          displayName: user.displayName
         });
       });
     })(req, res, next);
@@ -193,9 +202,12 @@ export function setupAuth(app: Express) {
   app.get("/api/user", (req, res) => {
     if (req.isAuthenticated()) {
       const { password, ...userWithoutPassword } = req.user;
-      // Ensure isAdmin is included in the response
-      console.log('User data:', { ...userWithoutPassword, isAdmin: req.user.isAdmin });
-      return res.json({ ...userWithoutPassword, isAdmin: req.user.isAdmin });
+      const userData = {
+        ...userWithoutPassword,
+        isAdmin: !!req.user.isAdmin // Ensure it's a boolean
+      };
+      console.log('User data:', userData);
+      return res.json(userData);
     }
     res.status(401).send("Not authenticated");
   });

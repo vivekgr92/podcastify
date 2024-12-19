@@ -124,7 +124,7 @@ export default function Sidebar({ isMobileMenuOpen = false, setIsMobileMenuOpen 
             {user?.isAdmin && (
               <Button
                 variant={location === "/admin" ? "secondary" : "ghost"}
-                className="w-full justify-start gap-2"
+                className="w-full justify-start gap-2 bg-blue-600 hover:bg-blue-700 text-white"
                 asChild
               >
                 <Link href="/admin">
