@@ -3174,3 +3174,9 @@ Until next time, keep exploring the wonders of science—your next discovery awa
 [INFO] 8.mp3
 [INFO] Successfully merged audio saved as audio-files/final_output.mp3
 [INFO] Cleaned up audio-files directory after successful generation
+[INFO] Attempting to delete podcast 13 by user 1
+[INFO] Successfully deleted audio file for podcast 13
+[INFO] Successfully deleted podcast 13 from database
+[INFO] Attempting to delete podcast 14 by user 1
+[INFO] Successfully deleted audio file for podcast 14
+[INFO] Successfully deleted podcast 14 from database

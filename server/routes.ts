@@ -53,6 +53,19 @@ export function registerRoutes(app: Express) {
     const filePath = path.join(__dirname, '..', 'uploads', filename);
 
     try {
+      // Check if file exists first
+      const fileExists = await fs.access(filePath)
+        .then(() => true)
+        .catch(() => false);
+
+      if (!fileExists) {
+        logger.warn(`File not found: ${filePath}`);
+        return res.status(404).json({
+          error: "Audio file not found",
+          type: "not_found"
+        });
+      }
+
       const stat = await fs.stat(filePath);
       const fileSize = stat.size;
       const range = req.headers.range;
@@ -63,9 +76,12 @@ export function registerRoutes(app: Express) {
         let end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
         
         if (isNaN(start) || isNaN(end) || start >= fileSize || start > end || end >= fileSize) {
-          res.status(416).send('Requested range not satisfiable');
-          return;
+          return res.status(416).json({
+            error: "Requested range not satisfiable",
+            type: "validation"
+          });
         }
+
         const chunksize = (end - start) + 1;
         const file = fsSync.createReadStream(filePath, { start, end });
         const head = {
@@ -85,8 +101,12 @@ export function registerRoutes(app: Express) {
         fsSync.createReadStream(filePath).pipe(res);
       }
     } catch (error) {
-      console.error('Error streaming audio:', error);
-      res.status(500).send('Error streaming audio file');
+      await logger.error(`Error streaming audio: ${error instanceof Error ? error.message : String(error)}`);
+      res.status(500).json({
+        error: "Failed to stream audio file",
+        type: "server",
+        message: error instanceof Error ? error.message : "Unknown error"
+      });
     }
   });
 
@@ -460,42 +480,64 @@ export function registerRoutes(app: Express) {
       if (podcast.audioUrl) {
         const filePath = path.join(__dirname, "..", podcast.audioUrl);
         try {
-          await fs.unlink(filePath);
-          await logger.info(`Successfully deleted audio file for podcast ${podcastId}`);
+          const fileExists = await fs.access(filePath)
+            .then(() => true)
+            .catch(() => false);
+          
+          if (fileExists) {
+            await fs.unlink(filePath);
+            await logger.info(`Successfully deleted audio file for podcast ${podcastId}`);
+          } else {
+            await logger.warn(`Audio file not found for podcast ${podcastId}: ${filePath}`);
+          }
         } catch (error) {
           await logger.error(`Error deleting audio file for podcast ${podcastId}: ${error instanceof Error ? error.message : String(error)}`);
-          // Log error but continue with database deletion
+          // Continue with database deletion even if file deletion fails
         }
       }
 
-      // Delete the database record
-      const [deletedPodcast] = await db
-        .delete(podcasts)
-        .where(
-          and(
-            eq(podcasts.id, podcastId),
-            eq(podcasts.userId, req.user.id)
+      try {
+        // Delete the database record
+        const [deletedPodcast] = await db
+          .delete(podcasts)
+          .where(
+            and(
+              eq(podcasts.id, podcastId),
+              eq(podcasts.userId, req.user.id)
+            )
           )
-        )
-        .returning();
+          .returning();
 
-      if (!deletedPodcast) {
-        throw new Error("Failed to delete podcast from database");
+        if (!deletedPodcast) {
+          await logger.warn(`No podcast found to delete with id ${podcastId} for user ${req.user.id}`);
+          return res.status(404).json({
+            error: "Podcast not found or already deleted",
+            type: "not_found"
+          });
+        }
+
+        await logger.info(`Successfully deleted podcast ${podcastId} from database`);
+
+        res.json({ 
+          message: "Podcast deleted successfully",
+          id: podcastId
+        });
+      } catch (dbError) {
+        const errorMessage = dbError instanceof Error ? dbError.message : String(dbError);
+        await logger.error(`Database error while deleting podcast: ${errorMessage}`);
+        res.status(500).json({ 
+          error: "Failed to delete podcast",
+          type: "server",
+          message: "Database error occurred while deleting the podcast"
+        });
       }
-
-      await logger.info(`Successfully deleted podcast ${podcastId} from database`);
-
-      res.json({ 
-        message: "Podcast deleted successfully",
-        id: podcastId
-      });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      await logger.error(`Error deleting podcast: ${errorMessage}`);
+      await logger.error(`Error in delete podcast route: ${errorMessage}`);
       res.status(500).json({ 
         error: "Failed to delete podcast",
         type: "server",
-        message: errorMessage
+        message: "An unexpected error occurred"
       });
     }
   });
