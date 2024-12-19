@@ -731,38 +731,28 @@ export class TTSService {
       });
       await logger.log("--- End of Conversation ---\n");
 
-      // Initialize variables for cost tracking and audio generation
-      let pricingDetails: PricingDetails;
-      let totalCost = 0;
-      const useWaveNet = true; // Set to true if you are using WaveNet voices
-
       // Calculate pricing using all generated responses
-      try {
-        pricingDetails = await this.calculatePricing(
-          text, //text extracted from the article
-          responseTexts, // response text array for each chunk
-          allConversations, // cleaned out conversation array for each chunk
-        );
+      const usage = await this.calculatePricing(
+        text, //text extracted from the article
+        responseTexts, // response text array for each chunk
+        allConversations, // cleaned out conversation array for each chunk
+      );
 
-        totalCost = pricingDetails.totalCost;
+      if (!usage) {
+        throw new Error('Failed to calculate final usage details');
+      }
 
-        await logger.info(
-          `Total pricing calculation completed: $${totalCost.toFixed(4)}`,
-        );
+      await logger.info(
+        `Final usage calculation completed: $${usage.totalCost.toFixed(4)}`,
+      );
 
         // Log the breakdown of total costs
-        await logger.info(
-          `Total cost breakdown:\n` +
-            `Total input cost: $${pricingDetails.breakdown.inputCost.toFixed(4)}\n` +
-            `Total output cost: $${pricingDetails.breakdown.outputCost.toFixed(4)}\n` +
-            `Total TTS cost: $${pricingDetails.breakdown.ttsCost.toFixed(4)}`,
-        );
-      } catch (error) {
-        await logger.error(
-          `Failed to calculate total pricing: ${error instanceof Error ? error.message : String(error)}`,
-        );
-        throw new Error("Failed to calculate total pricing. Please try again.");
-      }
+      await logger.info(
+        `Total cost breakdown:\n` +
+          `Total input cost: $${usage.breakdown.inputCost.toFixed(4)}\n` +
+          `Total output cost: $${usage.breakdown.outputCost.toFixed(4)}\n` +
+          `Total TTS cost: $${usage.breakdown.ttsCost.toFixed(4)}`,
+      );
 
       // Generate audio for each conversation part
       await logger.log("Generating audio files...");
@@ -811,14 +801,7 @@ export class TTSService {
       return {
         audioBuffer,
         duration: approximateDuration,
-        usage: {
-          inputTokens: pricingDetails.inputTokens,
-          outputTokens: pricingDetails.outputTokens,
-          estimatedOutputTokens: pricingDetails.estimatedOutputTokens,
-          ttsCharacters: pricingDetails.ttsCharacters,
-          totalCost: pricingDetails.totalCost,
-          breakdown: pricingDetails.breakdown,
-        },
+        usage,
       };
     } catch (error) {
       await logger.log(
