@@ -210,14 +210,14 @@ export class TTSService {
     return characters * costPerCharacter;
   }
 
-  async calculatePricing(text: string, existingResponse?: string): Promise<PricingDetails> {
+  async calculatePricing(text: string, responses: string[]): Promise<PricingDetails> {
     // Gen AI Model
     const model = this.vertexAI.getGenerativeModel({
       model: "gemini-1.5-flash-002",
     });
 
     try {
-      await logger.info("Starting pricing calculation");
+      await logger.info("Starting pricing calculation with multiple responses");
 
       // Calculate initial input tokens
       const inputTokenCount = await model.countTokens({
@@ -237,79 +237,63 @@ export class TTSService {
       const totalInputTokens =
         inputTokenCount.totalTokens + systemTokenCount.totalTokens;
 
-      await logger.info(`Input tokens calculated: ${totalInputTokens}`);
+      await logger.info(`Base input tokens calculated: ${totalInputTokens}`);
 
-      let rawText: string;
+      // Process all responses to calculate total output tokens and TTS characters
+      let totalOutputTokens = 0;
+      let totalTtsCharacters = 0;
+      
+      await logger.info(`Processing ${responses.length} responses for token counting`);
 
-      if (existingResponse) {
-        // Use the existing response if provided
-        rawText = existingResponse;
-        await logger.info("Using existing model response for pricing calculation");
-        await logger.debug("Using cached response to optimize API calls and improve performance");
-      } else {
-        // Generate new response if none provided
-        await logger.info("No existing response provided, generating new conversation response");
+      for (let i = 0; i < responses.length; i++) {
+        const response = responses[i];
+        if (!response || !response.trim()) {
+          await logger.warn(`Skipping empty response at index ${i}`);
+          continue;
+        }
 
-        const result = await model.generateContent({
-          contents: [{ role: "user", parts: [{ text: `${SYSTEM_PROMPTS.MAIN}\n\n${text}` }] }],
-          generationConfig: GENERATION_CONFIG,
+        // Calculate output tokens for this response
+        const outputTokenCount = await model.countTokens({
+          contents: [{ role: "assistant", parts: [{ text: response }] }],
         }).catch(error => {
-          throw new Error(`Failed to generate conversation response: ${error.message}`);
+          throw new Error(`Failed to count output tokens for response ${i + 1}: ${error.message}`);
         });
 
-        rawText = result.response?.candidates?.[0]?.content?.parts?.[0]?.text || "";
-        if (!rawText) {
-          throw new Error("No valid response content received from model");
+        if (!outputTokenCount || typeof outputTokenCount.totalTokens !== 'number') {
+          throw new Error(`Invalid token count response from model for response ${i + 1}`);
         }
-        await logger.info("Successfully generated new response for pricing calculation");
+
+        totalOutputTokens += outputTokenCount.totalTokens;
+        await logger.debug(`Response ${i + 1} output tokens: ${outputTokenCount.totalTokens}`);
+
+        // Calculate TTS characters for this response
+        const conversationParts = await this.cleanGeneratedText(response);
+        const responseTtsCharacters = conversationParts.reduce((sum, part) => {
+          return sum + part.speaker.length + 2 + part.text.length;
+        }, 0);
+
+        totalTtsCharacters += responseTtsCharacters;
+        await logger.debug(`Response ${i + 1} TTS characters: ${responseTtsCharacters}`);
       }
 
-      await logger.debug(`Raw response text: ${rawText.substring(0, 200)}...`);
+      await logger.info(`Total output tokens calculated: ${totalOutputTokens}`);
+      await logger.info(`Total TTS characters calculated: ${totalTtsCharacters}`);
 
-      // Calculate actual output tokens from the response
-      const outputTokenCount = await model.countTokens({
-        contents: [{ role: "assistant", parts: [{ text: rawText }] }],
-      }).catch(error => {
-        throw new Error(`Failed to count output tokens: ${error.message}`);
-      });
-
-      if (!outputTokenCount || typeof outputTokenCount.totalTokens !== 'number') {
-        throw new Error('Invalid token count response from model');
-      }
-
-      const actualOutputTokens = outputTokenCount.totalTokens;
-      await logger.info(`Actual output tokens calculated: ${actualOutputTokens}`);
-
-      // Calculate actual TTS characters from the full conversation
-      const conversationParts = await this.cleanGeneratedText(rawText);
-      if (conversationParts.length === 0) {
-        throw new Error("Failed to parse conversation parts from response");
-      }
-
-      const ttsCharacters = conversationParts.reduce((sum, part) => {
-        // Count speaker prefix (e.g., "Joe: " or "Sarah: ") plus the text
-        return sum + part.speaker.length + 2 + part.text.length;
-      }, 0);
-
-      await logger.info(`Actual TTS characters calculated: ${ttsCharacters}`);
-
-      await logger.info(`TTS characters estimated: ${ttsCharacters}`);
-
-      // Calculate actual costs
+      // Calculate costs based on total tokens and characters
       const inputCost = (totalInputTokens / 1000) * PRICING.INPUT_TOKEN_RATE;
-      const outputCost = (actualOutputTokens / 1000) * PRICING.OUTPUT_TOKEN_RATE;
-      const ttsCost = ttsCharacters * PRICING.TTS_RATE_STANDARD;
+      const outputCost = (totalOutputTokens / 1000) * PRICING.OUTPUT_TOKEN_RATE;
+      const ttsCost = totalTtsCharacters * PRICING.TTS_RATE_STANDARD;
 
       const totalCost = inputCost + outputCost + ttsCost;
 
-      // Detailed logging of actual pricing calculation results
+      // Detailed logging of final pricing calculation
       await logger.info(
-        `\n--- Pricing Details ---\n` +
+        `\n--- Total Pricing Details ---\n` +
           `Base Input Tokens: ${inputTokenCount.totalTokens}\n` +
           `System Prompt Tokens: ${systemTokenCount.totalTokens}\n` +
           `Total Input Tokens: ${totalInputTokens}\n` +
-          `Actual Output Tokens: ${actualOutputTokens}\n` +
-          `Actual TTS Characters: ${ttsCharacters}\n` +
+          `Total Output Tokens: ${totalOutputTokens}\n` +
+          `Total TTS Characters: ${totalTtsCharacters}\n` +
           `Input Cost: $${inputCost.toFixed(4)}\n` +
           `Output Cost: $${outputCost.toFixed(4)}\n` +
           `TTS Cost: $${ttsCost.toFixed(4)}\n` +
@@ -318,7 +302,7 @@ export class TTSService {
 
       const pricingDetails: PricingDetails = {
         inputTokens: totalInputTokens,
-        estimatedOutputTokens: actualOutputTokens, // Keep the field name for backward compatibility
+        estimatedOutputTokens: totalOutputTokens,
         totalCost,
         breakdown: {
           inputCost,
@@ -591,7 +575,7 @@ export class TTSService {
       }) as GenerativeModel;
 
       const chunks = this.splitTextIntoChunks(text);
-      let firstResponseText: string = "";
+      let responseTexts: string[] = [];
 
       // Process each chunk and generate conversation
       for (let index = 0; index < chunks.length; index++) {
@@ -668,19 +652,15 @@ export class TTSService {
             "\n\n ------------END-----------------\n",
           ]);
 
-          // Store the first response for later pricing calculation
-          if (index === 0) {
-            firstResponseText = rawText;
-            await logger.info("Stored first response for pricing calculation");
-            await logger.debug(`First response length: ${rawText.length} characters`);
-            
-            // Validate the stored response
-            if (!rawText.trim()) {
-              throw new Error("First response is empty or contains only whitespace");
-            }
-            await logger.info("Successfully validated and stored first response for pricing calculation");
-            await logger.debug(`First response text sample (first 100 chars): ${firstResponseText.substring(0, 100)}`);
+          // Store and validate response for pricing calculation
+          if (!rawText.trim()) {
+            throw new Error(`Response ${index + 1} is empty or contains only whitespace`);
           }
+          
+          // Store raw text for later pricing calculation
+          responseTexts[index] = rawText;
+          await logger.info(`Stored response ${index + 1} for pricing calculation`);
+          await logger.debug(`Response ${index + 1} text sample (first 100 chars): ${rawText.substring(0, 100)}`);
 
           // Process conversation parts
           const conversationParts = await this.cleanGeneratedText(rawText);
@@ -717,27 +697,31 @@ export class TTSService {
       let totalCost = 0;
       const useWaveNet = false; // Set to true if you are using WaveNet voices
 
-      // Calculate initial pricing using the first generated response
+      // Calculate pricing using all generated responses
       try {
-        if (!firstResponseText) {
-          throw new Error("No valid response was generated for pricing calculation");
+        if (responseTexts.length === 0) {
+          throw new Error("No valid responses were generated for pricing calculation");
         }
 
-        await logger.info("Calculating pricing using the first generated response");
-        pricingDetails = await this.calculatePricing(text, firstResponseText);
-        totalCost = pricingDetails.totalCost;
-        await logger.info(`Initial pricing calculation completed: $${totalCost.toFixed(4)}`);
+        await logger.info(`Calculating pricing using ${responseTexts.length} responses`);
+        await logger.debug("Response texts available for pricing calculation");
 
-        // Log the breakdown of costs
+        // Calculate pricing for all responses at once
+        pricingDetails = await this.calculatePricing(text, responseTexts);
+        totalCost = pricingDetails.totalCost;
+        
+        await logger.info(`Total pricing calculation completed: $${totalCost.toFixed(4)}`);
+
+        // Log the breakdown of total costs
         await logger.info(
-          `Cost breakdown:\n` +
-          `Input cost: $${pricingDetails.breakdown.inputCost.toFixed(4)}\n` +
-          `Output cost: $${pricingDetails.breakdown.outputCost.toFixed(4)}\n` +
-          `TTS cost: $${pricingDetails.breakdown.ttsCost.toFixed(4)}`
+          `Total cost breakdown:\n` +
+          `Total input cost: $${pricingDetails.breakdown.inputCost.toFixed(4)}\n` +
+          `Total output cost: $${pricingDetails.breakdown.outputCost.toFixed(4)}\n` +
+          `Total TTS cost: $${pricingDetails.breakdown.ttsCost.toFixed(4)}`
         );
       } catch (error) {
-        await logger.error(`Failed to calculate initial pricing: ${error instanceof Error ? error.message : String(error)}`);
-        throw new Error("Failed to calculate initial pricing. Please try again.");
+        await logger.error(`Failed to calculate total pricing: ${error instanceof Error ? error.message : String(error)}`);
+        throw new Error("Failed to calculate total pricing. Please try again.");
       }
 
       // Generate audio for each conversation part

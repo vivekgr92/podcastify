@@ -169,8 +169,11 @@ export function registerRoutes(app: Express) {
         .limit(1);
 
       try {
+        // Initialize response texts array for pricing calculation
+        let responseTexts: string[] = [];
+
         // Calculate pricing and token usage
-        const pricingDetails = await ttsService.calculatePricing(fileContent);
+        const pricingDetails = await ttsService.calculatePricing(fileContent, responseTexts);
         const totalInputTokens = pricingDetails?.inputTokens || 0;
         const totalOutputTokens = pricingDetails?.estimatedOutputTokens || 0;
         const totalTokens = totalInputTokens + totalOutputTokens;
@@ -677,7 +680,7 @@ export function registerRoutes(app: Express) {
         });
       }
 
-      const pricingDetails = await ttsService.calculatePricing(text);
+      const pricingDetails = await ttsService.calculatePricing(text, []);  // Empty array for initial estimate
       if (!pricingDetails) {
         throw new Error("Failed to calculate pricing details");
       }
