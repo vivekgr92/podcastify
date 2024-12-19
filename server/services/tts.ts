@@ -211,64 +211,129 @@ export class TTSService {
   }
 
   async calculatePricing(text: string): Promise<PricingDetails> {
+    // Gen AI Model
     const model = this.vertexAI.getGenerativeModel({
       model: "gemini-1.5-flash-002",
     });
 
     try {
+      await logger.info("Starting pricing calculation");
+
       // Calculate initial input tokens
       const inputTokenCount = await model.countTokens({
         contents: [{ role: "user", parts: [{ text }] }],
+      }).catch(error => {
+        throw new Error(`Failed to count input tokens: ${error.message}`);
       });
 
       // Calculate prompt tokens (including system prompts)
-      const systemPromptsText = Object.values(SYSTEM_PROMPTS).join('\n');
+      const systemPromptsText = Object.values(SYSTEM_PROMPTS).join("\n");
       const systemTokenCount = await model.countTokens({
         contents: [{ role: "system", parts: [{ text: systemPromptsText }] }],
+      }).catch(error => {
+        throw new Error(`Failed to count system tokens: ${error.message}`);
       });
 
-      const totalInputTokens = inputTokenCount.totalTokens + systemTokenCount.totalTokens;
+      const totalInputTokens =
+        inputTokenCount.totalTokens + systemTokenCount.totalTokens;
 
-      // Estimate conversation output tokens (more accurate based on prompt structure)
-      const estimatedOutputTokens = Math.ceil(totalInputTokens * 3); // Increased multiplier due to conversation format
+      await logger.info(`Input tokens calculated: ${totalInputTokens}`);
 
-      // Calculate TTS characters including speaker annotations
-      const estimatedTTSCharacters = Math.ceil(text.length * 2.8); // Increased multiplier for speaker annotations
+      // Generate a sample response with a smaller context for pricing estimation
+      const maxSampleLength = 1000;
+      const samplePrompt = `${SYSTEM_PROMPTS.MAIN}\n\n${text.slice(0, maxSampleLength)}`;
+      
+      await logger.info("Generating sample response for estimation");
+      
+      const result = await model.generateContent({
+        contents: [{ role: "user", parts: [{ text: samplePrompt }] }],
+        generationConfig: {
+          ...GENERATION_CONFIG,
+          maxOutputTokens: 300, // Limit output for estimation
+        },
+      }).catch(error => {
+        throw new Error(`Failed to generate sample response: ${error.message}`);
+      });
 
-      // Calculate costs
+      const rawText = result.response?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!rawText) {
+        throw new Error("No valid response content received from model");
+      }
+
+      await logger.info("Sample response generated successfully");
+
+      // Calculate output tokens from the sample response
+      const outputTokenCount = await model.countTokens({
+        contents: [{ role: "assistant", parts: [{ text: rawText }] }],
+      }).catch(error => {
+        throw new Error(`Failed to count output tokens: ${error.message}`);
+      });
+
+      // Calculate sampling ratio based on input text length
+      const samplingRatio = Math.max(1, text.length / maxSampleLength);
+      const estimatedTotalOutputTokens = Math.ceil(outputTokenCount.totalTokens * samplingRatio);
+
+      await logger.info(`Output tokens estimated: ${estimatedTotalOutputTokens}`);
+
+      // Process sample conversation parts to estimate TTS characters
+      const sampleConversationParts = await this.cleanGeneratedText(rawText);
+      if (sampleConversationParts.length === 0) {
+        throw new Error("Failed to parse conversation parts from sample response");
+      }
+
+      const totalSampleChars = sampleConversationParts.reduce((sum, part) => {
+        // Count speaker prefix (e.g., "Joe: " or "Sarah: ") plus the text
+        return sum + part.speaker.length + 2 + part.text.length;
+      }, 0);
+
+      const avgCharsPerTurn = totalSampleChars / sampleConversationParts.length;
+      const estimatedTurns = Math.ceil((text.length / maxSampleLength) * sampleConversationParts.length);
+      const ttsCharacters = Math.ceil(avgCharsPerTurn * estimatedTurns);
+
+      await logger.info(`TTS characters estimated: ${ttsCharacters}`);
+
+      // Calculate costs with rate limiting protection
       const inputCost = (totalInputTokens / 1000) * PRICING.INPUT_TOKEN_RATE;
-      const outputCost = (estimatedOutputTokens / 1000) * PRICING.OUTPUT_TOKEN_RATE;
-      const ttsCost = estimatedTTSCharacters * PRICING.TTS_RATE_STANDARD;
+      const outputCost = (estimatedTotalOutputTokens / 1000) * PRICING.OUTPUT_TOKEN_RATE;
+      const ttsCost = ttsCharacters * PRICING.TTS_RATE_STANDARD;
 
       const totalCost = inputCost + outputCost + ttsCost;
 
-      // Detailed logging
+      // Detailed logging of pricing calculation results
       await logger.info(
         `\n--- Pricing Details ---\n` +
-        `Base Input Tokens: ${inputTokenCount.totalTokens}\n` +
-        `System Prompt Tokens: ${systemTokenCount.totalTokens}\n` +
-        `Total Input Tokens: ${totalInputTokens}\n` +
-        `Estimated Output Tokens: ${estimatedOutputTokens}\n` +
-        `Estimated TTS Characters: ${estimatedTTSCharacters}\n` +
-        `Input Cost: $${inputCost.toFixed(4)}\n` +
-        `Output Cost: $${outputCost.toFixed(4)}\n` +
-        `TTS Cost: $${ttsCost.toFixed(4)}\n` +
-        `Total Cost: $${totalCost.toFixed(4)}\n`
+          `Base Input Tokens: ${inputTokenCount.totalTokens}\n` +
+          `System Prompt Tokens: ${systemTokenCount.totalTokens}\n` +
+          `Total Input Tokens: ${totalInputTokens}\n` +
+          `Sample Output Tokens: ${outputTokenCount.totalTokens}\n` +
+          `Estimated Total Output Tokens: ${estimatedTotalOutputTokens}\n` +
+          `Estimated TTS Characters: ${ttsCharacters}\n` +
+          `Input Cost: $${inputCost.toFixed(4)}\n` +
+          `Output Cost: $${outputCost.toFixed(4)}\n` +
+          `TTS Cost: $${ttsCost.toFixed(4)}\n` +
+          `Total Cost: $${totalCost.toFixed(4)}\n`,
       );
 
-      return {
+      const pricingDetails: PricingDetails = {
         inputTokens: totalInputTokens,
-        estimatedOutputTokens,
+        estimatedOutputTokens: estimatedTotalOutputTokens,
         totalCost,
         breakdown: {
           inputCost,
           outputCost,
-          ttsCost
-        }
+          ttsCost,
+        },
       };
+
+      await logger.info("Pricing calculation completed successfully");
+      return pricingDetails;
+
     } catch (error) {
-      await logger.error(`Error calculating pricing: ${error instanceof Error ? error.message : String(error)}`);
-      throw error;
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      await logger.error(`Error calculating pricing: ${errorMessage}`);
+      
+      // Add additional context to the error
+      throw new Error(`Failed to calculate pricing: ${errorMessage}`);
     }
   }
 
@@ -323,11 +388,14 @@ export class TTSService {
     try {
       const request = {
         input: {
-          ssml: `<speak>${turns.map(turn => 
-            `<voice name="${turn.speaker === 'Joe' ? SPEAKER_VOICE_MAP.Joe : SPEAKER_VOICE_MAP.Sarah}">
+          ssml: `<speak>${turns
+            .map(
+              (turn) =>
+                `<voice name="${turn.speaker === "Joe" ? SPEAKER_VOICE_MAP.Joe : SPEAKER_VOICE_MAP.Sarah}">
               ${turn.text}
-            </voice>`
-          ).join('\n')}</speak>`
+            </voice>`,
+            )
+            .join("\n")}</speak>`,
         },
         voice: {
           languageCode: "en-US",
@@ -488,9 +556,11 @@ export class TTSService {
     }
   }
 
-  async generateConversation(
-    text: string,
-  ): Promise<{ audioBuffer: Buffer; duration: number; usage: { inputTokens: number; outputTokens: number; ttsCharacters: number } }> {
+  async generateConversation(text: string): Promise<{
+    audioBuffer: Buffer;
+    duration: number;
+    usage: { inputTokens: number; outputTokens: number; ttsCharacters: number };
+  }> {
     try {
       // Ensure audio-files directory exists and is empty
       const audioDir = "audio-files";
@@ -572,7 +642,16 @@ export class TTSService {
           // Calculate output tokens if response exists
           if (result.response?.candidates?.[0]?.content?.parts?.[0]?.text) {
             const outputTokenCount = await model.countTokens({
-              contents: [{ role: "assistant", parts: [{ text: result.response.candidates[0].content.parts[0].text }] }],
+              contents: [
+                {
+                  role: "assistant",
+                  parts: [
+                    {
+                      text: result.response.candidates[0].content.parts[0].text,
+                    },
+                  ],
+                },
+              ],
             });
             totalOutputTokens += outputTokenCount.totalTokens;
           }
@@ -619,7 +698,6 @@ export class TTSService {
         logger.log(`${part.speaker}: ${part.text}`);
       });
       await logger.log("--- End of Conversation ---\n");
-
 
       // Variables to track the total cost
       let totalCost = 0;
@@ -677,10 +755,10 @@ export class TTSService {
       const approximateDuration = Math.ceil(totalCharacters / 20); // Rough estimate: 20 characters per second
 
       await logger.info(`\n--- Usage Statistics ---
-Input Tokens: ${totalInputTokens}
-Output Tokens: ${totalOutputTokens}
-TTS Characters: ${totalTtsCharacters}
-Total Cost: $${totalCost.toFixed(4)}\n`);
+        Input Tokens: ${totalInputTokens}
+        Output Tokens: ${totalOutputTokens}
+        TTS Characters: ${totalTtsCharacters}
+        Total Cost: $${totalCost.toFixed(4)}\n`);
 
       // Clean up the audio-files directory after getting the final buffer
       try {
@@ -695,16 +773,15 @@ Total Cost: $${totalCost.toFixed(4)}\n`);
       }
 
       this.emitProgress(100);
-      
 
-      return { 
-        audioBuffer, 
+      return {
+        audioBuffer,
         duration: approximateDuration,
         usage: {
           inputTokens: totalInputTokens,
           outputTokens: totalOutputTokens,
-          ttsCharacters: totalTtsCharacters
-        }
+          ttsCharacters: totalTtsCharacters,
+        },
       };
     } catch (error) {
       await logger.log(
