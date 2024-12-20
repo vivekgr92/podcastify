@@ -30,17 +30,15 @@ import { useAudio } from "../hooks/use-audio";
 import { useUser } from "../hooks/use-user";
 import { cn } from "@/lib/utils";
 
-interface AudioPlayerProps {}
-
 export default function AudioPlayer() {
   const {
+    audioData,
     isPlaying,
+    togglePlay,
     currentTime,
     duration,
-    togglePlay,
     setPosition,
     setVolume: setAudioVolume,
-    audioData,
     playlist,
     currentIndex,
     setCurrentIndex,
@@ -62,12 +60,6 @@ export default function AudioPlayer() {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = Math.floor(seconds % 60);
     return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
-  };
-
-  // Handle play/pause toggle with proper state management
-  const handlePlayPause = async () => {
-    if (!audioData) return;
-    await togglePlay();
   };
 
   // Only render if we have a user
@@ -144,7 +136,7 @@ export default function AudioPlayer() {
             </Button>
 
             <Button
-              onClick={handlePlayPause}
+              onClick={togglePlay}
               variant="outline"
               size="icon"
               disabled={!audioData}
