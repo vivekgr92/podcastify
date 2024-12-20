@@ -9,7 +9,6 @@ import { useDropzone } from "react-dropzone";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUser } from "../hooks/use-user";
 import { UsageProgress } from "../components/UsageProgress";
-import classNames from "classnames";
 
 export default function HomePage() {
   const [, setLocation] = useLocation();
@@ -37,11 +36,9 @@ export default function HomePage() {
       if (hasReachedLimit) {
         toast({
           title: "Usage Limit Reached",
-          description:
-            "Please upgrade your plan to continue converting articles.",
+          description: "Please upgrade your plan to continue converting articles.",
           variant: "destructive",
         });
-        setLocation("/billing");
         return;
       }
 
@@ -98,14 +95,7 @@ export default function HomePage() {
         }
       }
     },
-    [
-      toast,
-      setLocation,
-      setIsConverting,
-      setProgress,
-      queryClient,
-      hasReachedLimit,
-    ],
+    [toast, setLocation, setIsConverting, setProgress, queryClient, hasReachedLimit],
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -114,17 +104,18 @@ export default function HomePage() {
       "application/pdf": [".pdf"],
       "text/plain": [".txt"],
       "application/msword": [".doc"],
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-        [".docx"],
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [
+        ".docx",
+      ],
     },
     multiple: false,
     disabled: hasReachedLimit,
   });
 
-  const handleLimitReached = useCallback(() => {
+  const handleLimitReached = () => {
     setHasReachedLimit(true);
     setLocation("/billing");
-  }, [setLocation]);
+  };
 
   if (user) {
     return (
@@ -151,18 +142,15 @@ export default function HomePage() {
 
           <div
             {...getRootProps()}
-            className={classNames(
-              "border-2 border-dashed rounded-lg p-16 mb-12 transition-colors",
-              {
-                "border-gray-700 bg-gray-900/30 cursor-not-allowed opacity-50":
-                  hasReachedLimit,
-                "border-[#4CAF50] bg-[#4CAF50]/10":
-                  isDragActive && !hasReachedLimit,
-                "border-gray-700 hover:border-[#4CAF50]":
-                  !isDragActive && !hasReachedLimit,
-              },
-              "bg-gray-900/50",
-            )}
+            className={`border-2 border-dashed rounded-lg p-16 mb-12 transition-colors 
+              ${
+                hasReachedLimit
+                  ? "opacity-50 cursor-not-allowed border-gray-700 hover:border-gray-700"
+                  : isDragActive
+                  ? "border-[#4CAF50] bg-[#4CAF50]/10"
+                  : "border-gray-700 hover:border-[#4CAF50]"
+              } 
+              bg-gray-900/50`}
             onClick={(e) => {
               if (hasReachedLimit) {
                 e.preventDefault();
@@ -175,9 +163,11 @@ export default function HomePage() {
             <div className="text-center">
               <Button
                 size="lg"
-                variant={hasReachedLimit ? "ghost" : "success"}
+                variant="default"
                 disabled={hasReachedLimit}
-                className="mb-4 px-8"
+                className={`mb-4 px-8 ${
+                  !hasReachedLimit ? "bg-[#4CAF50] hover:bg-[#45a049]" : "opacity-50 cursor-not-allowed"
+                }`}
                 onClick={(e) => {
                   if (hasReachedLimit) {
                     e.preventDefault();
@@ -186,10 +176,9 @@ export default function HomePage() {
                   }
                 }}
               >
-                <Upload className="mr-2" />
                 Choose File to Upload
               </Button>
-              <p className="text-gray-400 mt-2">
+              <p className="text-gray-400">
                 {hasReachedLimit
                   ? "Please upgrade your plan to continue converting articles"
                   : "or drag and drop your file here"}
