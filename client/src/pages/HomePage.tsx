@@ -9,7 +9,7 @@ import { useDropzone } from "react-dropzone";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUser } from "../hooks/use-user";
 import { UsageProgress } from "../components/UsageProgress";
-import cn from 'classnames';
+import classNames from "classnames";
 
 export default function HomePage() {
   const [, setLocation] = useLocation();
@@ -37,7 +37,8 @@ export default function HomePage() {
       if (hasReachedLimit) {
         toast({
           title: "Usage Limit Reached",
-          description: "Please upgrade your plan to continue converting articles.",
+          description:
+            "Please upgrade your plan to continue converting articles.",
           variant: "destructive",
         });
         setLocation("/billing");
@@ -97,7 +98,14 @@ export default function HomePage() {
         }
       }
     },
-    [toast, setLocation, setIsConverting, setProgress, queryClient, hasReachedLimit],
+    [
+      toast,
+      setLocation,
+      setIsConverting,
+      setProgress,
+      queryClient,
+      hasReachedLimit,
+    ],
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -106,7 +114,8 @@ export default function HomePage() {
       "application/pdf": [".pdf"],
       "text/plain": [".txt"],
       "application/msword": [".doc"],
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+        [".docx"],
     },
     multiple: false,
     disabled: hasReachedLimit,
@@ -142,13 +151,18 @@ export default function HomePage() {
 
           <div
             {...getRootProps()}
-            className={`border-2 border-dashed rounded-lg p-16 mb-12 transition-colors ${
-              hasReachedLimit
-                ? "border-gray-700 bg-gray-900/30 cursor-not-allowed opacity-50"
-                : isDragActive
-                  ? "border-[#4CAF50] bg-[#4CAF50]/10"
-                  : "border-gray-700 hover:border-[#4CAF50]"
-            } bg-gray-900/50`}
+            className={classNames(
+              "border-2 border-dashed rounded-lg p-16 mb-12 transition-colors",
+              {
+                "border-gray-700 bg-gray-900/30 cursor-not-allowed opacity-50":
+                  hasReachedLimit,
+                "border-[#4CAF50] bg-[#4CAF50]/10":
+                  isDragActive && !hasReachedLimit,
+                "border-gray-700 hover:border-[#4CAF50]":
+                  !isDragActive && !hasReachedLimit,
+              },
+              "bg-gray-900/50",
+            )}
             onClick={(e) => {
               if (hasReachedLimit) {
                 e.preventDefault();
@@ -163,10 +177,7 @@ export default function HomePage() {
                 size="lg"
                 variant={hasReachedLimit ? "ghost" : "success"}
                 disabled={hasReachedLimit}
-                className={cn(
-                  "mb-4 px-8",
-                  hasReachedLimit && "bg-gray-500/50 text-gray-300 hover:bg-gray-500/50 cursor-not-allowed"
-                )}
+                className="mb-4 px-8"
                 onClick={(e) => {
                   if (hasReachedLimit) {
                     e.preventDefault();
