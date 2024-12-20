@@ -237,10 +237,49 @@ export default function HomePage() {
             </div>
           )}
 
+          {/* FAQ Section */}
           <div className="bg-gray-900/50 rounded-lg p-6">
-            <h2 className="text-xl font-bold mb-4">Recent Conversions</h2>
-            <div className="text-gray-400 text-sm">
-              Your converted podcasts will appear here
+            <h2 className="text-xl font-bold mb-6">Frequently Asked Questions</h2>
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-lg font-semibold mb-2">How does the article to podcast conversion work?</h3>
+                <p className="text-gray-400">
+                  Our AI-powered system analyzes your article's content and converts it into natural-sounding speech. 
+                  The process is fully automated and takes just a few seconds to complete.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold mb-2">What file formats are supported?</h3>
+                <p className="text-gray-400">
+                  We currently support PDF, DOC, DOCX, and TXT files. Make sure your files are in one of these formats 
+                  before uploading.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold mb-2">How many articles can I convert?</h3>
+                <p className="text-gray-400">
+                  The number of articles you can convert depends on your subscription plan. Free users can convert up 
+                  to 10 articles per month, while paid plans offer higher limits.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold mb-2">Can I customize the voice?</h3>
+                <p className="text-gray-400">
+                  Yes! We offer multiple voice options to choose from. Premium users get access to additional high-quality 
+                  voices and customization options.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold mb-2">Where can I find my converted podcasts?</h3>
+                <p className="text-gray-400">
+                  All your converted podcasts are automatically saved in your library. You can access them anytime 
+                  by clicking on the Library tab in the navigation menu.
+                </p>
+              </div>
             </div>
           </div>
         </div>
