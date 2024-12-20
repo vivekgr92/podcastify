@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "../components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import type { Podcast } from "../types/podcast";
-import { Share2, Play, Pause, Trash2, AlertCircle } from "lucide-react";
+import { Play, Pause, Trash2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,15 +19,14 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAudio } from "../hooks/use-audio";
 import AudioPlayer from "../components/AudioPlayer";
 import { useToast } from "../hooks/use-toast";
-import { useCallback } from "react";
-import { useUser } from "../hooks/use-user";
 import { cn } from "../lib/utils";
+import { useUser } from "../hooks/use-user";
 
 export default function LibraryPage() {
   const [, setLocation] = useLocation();
   const { user } = useUser();
   const queryClient = useQueryClient();
-  const { play, isPlaying, audioData, addToPlaylist } = useAudio();
+  const { play, isPlaying, audioData, togglePlay, addToPlaylist } = useAudio();
   const { toast } = useToast();
 
   const { data: podcasts, isLoading } = useQuery<Podcast[]>({
@@ -41,27 +40,27 @@ export default function LibraryPage() {
     retry: 1,
   });
 
-  // Improved handlePlay function with proper synchronization
-  const handlePlay = useCallback(async (podcast: Podcast) => {
+  const handlePlayPause = React.useCallback(async (podcast: Podcast) => {
     try {
       if (!podcast) return;
 
-      // First add to playlist if not already playing
-      if (audioData?.id !== podcast.id) {
-        await addToPlaylist(podcast);
+      // If the clicked podcast is already playing/paused
+      if (audioData?.id === podcast.id) {
+        await togglePlay(); // Just toggle play/pause
+      } else {
+        // Add to playlist and play
+        addToPlaylist(podcast);
+        await play(podcast);
       }
-
-      // Then play the podcast
-      await play(podcast);
     } catch (error) {
-      console.error('Error playing podcast:', error);
+      console.error('Error handling play/pause:', error);
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to play podcast",
         variant: "destructive",
       });
     }
-  }, [play, audioData, addToPlaylist, toast]);
+  }, [play, audioData, togglePlay, addToPlaylist, toast]);
 
   if (!user) {
     return (
@@ -123,7 +122,7 @@ export default function LibraryPage() {
                         ? "bg-[#45a049] hover:bg-[#3d8b3f]"
                         : "bg-[#4CAF50] hover:bg-[#45a049]"
                     )}
-                    onClick={() => handlePlay(podcast)}
+                    onClick={() => handlePlayPause(podcast)}
                     title={audioData?.id === podcast.id && isPlaying ? "Pause" : "Play"}
                   >
                     {audioData?.id === podcast.id && isPlaying ? (
@@ -132,6 +131,7 @@ export default function LibraryPage() {
                       <Play className="h-5 w-5 text-white ml-0.5" />
                     )}
                   </Button>
+
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button
@@ -171,7 +171,6 @@ export default function LibraryPage() {
                                 description: "Podcast deleted successfully",
                               });
 
-                              // Invalidate the podcasts query to refresh the list
                               await queryClient.invalidateQueries({ queryKey: ["podcasts"] });
                             } catch (error) {
                               console.error("Error deleting podcast:", error);
@@ -208,7 +207,6 @@ export default function LibraryPage() {
         </div>
       </main>
 
-      {/* Render AudioPlayer only when we have audio data */}
       {user && <AudioPlayer />}
     </div>
   );
