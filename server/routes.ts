@@ -29,13 +29,19 @@ const __dirname = dirname(__filename);
 const ARTICLE_LIMIT = 3;
 const PODIFY_TOKEN_LIMIT = 10000;
 const PODIFY_TOKEN_RATE = 0.005; // $0.005 (0.5 cents) per Podify Token
-const PODIFY_MARGIN = 0.4; // 90% margin
+const PODIFY_MARGIN = 0.6; // 60% margin
 
 // Helper function to convert raw tokens to Podify Tokens
 function convertToPodifyTokens(totalCost: number): number {
+  if (totalCost <= 0) return 0; // No tokens for zero or negative costs
+  if (PODIFY_MARGIN <= 0 || PODIFY_MARGIN >= 1) {
+    throw new Error("PODIFY_MARGIN must be between 0 and 1");
+  }
+
   // Add margin to the cost
   const costWithMargin = totalCost / (1 - PODIFY_MARGIN);
-  // Convert to Podify tokens (1 token = 0.5 cents)
+
+  // Convert to Podify tokens (round up to avoid undercharging)
   return Math.ceil(costWithMargin / PODIFY_TOKEN_RATE);
 }
 
@@ -120,7 +126,7 @@ export function registerRoutes(app: Express) {
       const [usageData] = await db
         .select({
           articlesConverted: userUsage.articlesConverted,
-          tokensUsed: userUsage.tokensUsed,
+          tokensUsed: userUsage.podifyTokens,
         })
         .from(userUsage)
         .where(
@@ -132,7 +138,7 @@ export function registerRoutes(app: Express) {
         .limit(1);
 
       const currentArticles = usageData?.articlesConverted ?? 0;
-      const currentTokens = usageData?.tokensUsed ?? 0;
+      const currentPodifyTokens = Number(usageData?.tokensUsed ?? 0);
 
       // First calculate estimated pricing to check limits
       await logger.info(
@@ -150,33 +156,35 @@ export function registerRoutes(app: Express) {
       }
 
       // Calculate estimated total tokens and check usage limits
-      const estimatedTotalTokens =
-        estimatedPricing.inputTokens + estimatedPricing.outputTokens;
       const wouldExceedArticles = currentArticles >= ARTICLE_LIMIT;
-      const wouldExceedTokens =
-        currentTokens + estimatedTotalTokens > PODIFY_TOKEN_LIMIT;
+      const estimatedTotalCost = estimatedPricing.totalCost;
+      const estimatedPodifyTokens = convertToPodifyTokens(estimatedTotalCost);
+
+      const wouldExceedPodifyTokens =
+        currentPodifyTokens + estimatedPodifyTokens > PODIFY_TOKEN_LIMIT;
+
       const remainingArticles = Math.max(0, ARTICLE_LIMIT - currentArticles);
-      const remainingTokens = Math.max(0, PODIFY_TOKEN_LIMIT - currentTokens);
+      const remainingPodifyTokens = Math.max(
+        0,
+        PODIFY_TOKEN_LIMIT - currentPodifyTokens,
+      );
 
       await logger.info([
-        `Initial pricing estimation completed:`,
-        `Estimated input tokens: ${estimatedPricing.inputTokens}`,
-        `Estimated total tokens: ${estimatedTotalTokens}`,
-        `Estimated cost: $${estimatedPricing.totalCost.toFixed(4)}`,
-        `\nUsage limits check for user ${user.id}:`,
-        `Current articles: ${currentArticles}/${ARTICLE_LIMIT}`,
-        `Current tokens: ${currentTokens}/${PODIFY_TOKEN_LIMIT}`,
-        `Would exceed article limit: ${wouldExceedArticles}`,
-        `Would exceed token limit: ${wouldExceedTokens}`,
+        `Estimated Podify Tokens: ${estimatedPodifyTokens}`,
+        `\n\nUsage limits check for user ${user.id}:\n`,
+        `Current articles: ${currentArticles}/${ARTICLE_LIMIT}\n`,
+        `Current Podify tokens: ${currentPodifyTokens}/${PODIFY_TOKEN_LIMIT}\n`,
+        `Would exceed article limit: ${wouldExceedArticles}\n`,
+        `Would exceed token limit: ${wouldExceedPodifyTokens}`,
       ]);
 
       // Check if usage limits would be exceeded
-      if (wouldExceedArticles || wouldExceedTokens) {
+      if (wouldExceedArticles || wouldExceedPodifyTokens) {
         await logger.warn([
           "---------- USAGE LIMIT WARNING ----------\n",
           `User: ${user.id}\n`,
           `Articles: ${currentArticles}/${ARTICLE_LIMIT} (${wouldExceedArticles ? "exceeded" : "ok"})\n`,
-          `Tokens: ${currentTokens}/${PODIFY_TOKEN_LIMIT} (${wouldExceedTokens ? "would exceed" : "ok"})\n`,
+          `Tokens: ${currentPodifyTokens}/${PODIFY_TOKEN_LIMIT} (${wouldExceedPodifyTokens ? "would exceed" : "ok"})\n`,
           "-----------------------------------------\n",
         ]);
 
@@ -192,11 +200,11 @@ export function registerRoutes(app: Express) {
               wouldExceed: wouldExceedArticles,
             },
             tokens: {
-              used: currentTokens,
+              used: currentPodifyTokens,
               limit: PODIFY_TOKEN_LIMIT,
-              remaining: remainingTokens,
-              estimated: estimatedTotalTokens,
-              wouldExceed: wouldExceedTokens,
+              remaining: remainingPodifyTokens,
+              estimated: estimatedPodifyTokens,
+              wouldExceed: wouldExceedPodifyTokens,
             },
           },
           pricing: {
@@ -256,9 +264,10 @@ export function registerRoutes(app: Express) {
         }
 
         await logger.info([
-          `Updated usage for user ${user.id}:`,
-          `Articles: ${updatedUsage.articlesConverted}/${ARTICLE_LIMIT}`,
-          `Tokens: ${updatedUsage.tokensUsed}/${PODIFY_TOKEN_LIMIT}`,
+          "\n\n---------- Updated Usage ----------\n",
+          `Updated usage for user ${user.id}:\n`,
+          `Articles: ${updatedUsage.articlesConverted}/${ARTICLE_LIMIT}\n`,
+          `Podify Tokens: ${updatedUsage.podifyTokens}/${PODIFY_TOKEN_LIMIT}`,
         ]);
 
         // Save the audio file
@@ -455,9 +464,8 @@ export function registerRoutes(app: Express) {
       }
 
       const podifyTokensUsed = Number(usage.podifyTokens) || 0;
-      const podifyTokenLimit = convertToPodifyTokens(
-        PODIFY_TOKEN_LIMIT * PODIFY_TOKEN_RATE,
-      ); //Corrected calculation
+      const podifyTokenLimit = PODIFY_TOKEN_LIMIT;
+
       const hasReachedLimit =
         (usage.articlesConverted ?? 0) >= ARTICLE_LIMIT ||
         podifyTokensUsed >= podifyTokenLimit;

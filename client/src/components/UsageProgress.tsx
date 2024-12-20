@@ -38,7 +38,11 @@ export function UsageProgress({
   onLimitReached?: () => void;
 }) {
   const [, setLocation] = useLocation();
-  const { data: usage, isLoading, error } = useQuery<UsageLimits>({
+  const {
+    data: usage,
+    isLoading,
+    error,
+  } = useQuery<UsageLimits>({
     queryKey: ["usage-limits"],
     queryFn: async () => {
       const res = await fetch("/api/user/usage/check");
@@ -51,7 +55,7 @@ export function UsageProgress({
       return res.json();
     },
     retry: false,
-    refetchInterval: 2000, // Poll every 2 seconds for real-time updates
+    refetchInterval: 5000, // Poll every 2 seconds for real-time updates
     staleTime: 1000, // Consider data stale after 1 second
   });
 
@@ -77,10 +81,13 @@ export function UsageProgress({
   const podifyTokens = usage.limits.tokens.podifyTokens;
 
   // Calculate percentages
-  const articlesPercentage = Math.min((articles.used / articles.limit) * 100, 100);
+  const articlesPercentage = Math.min(
+    (articles.used / articles.limit) * 100,
+    100,
+  );
   const podifyTokensPercentage = Math.min(
     (podifyTokens.used / podifyTokens.limit) * 100,
-    100
+    100,
   );
 
   // Calculate cost (1 Podify Token = $0.005)
@@ -147,8 +154,8 @@ export function UsageProgress({
               )}
               {podifyTokens.used >= podifyTokens.limit && (
                 <li>
-                  Maximum {podifyTokens.limit.toLocaleString()} Podify Tokens per
-                  month reached (${podifyTokensCost} worth used)
+                  Maximum {podifyTokens.limit.toLocaleString()} Podify Tokens
+                  per month reached (${podifyTokensCost} worth used)
                 </li>
               )}
             </ul>
