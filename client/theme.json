@@ -41,14 +41,6 @@
     "accent": {
       "DEFAULT": "hsl(120, 39%, 49%)",
       "foreground": "hsl(0, 0%, 100%)"
-    },
-    "input": {
-      "DEFAULT": "hsl(0, 0%, 20%)",
-      "foreground": "hsl(0, 0%, 100%)"
-    },
-    "ring": {
-      "DEFAULT": "hsl(120, 39%, 49%)",
-      "foreground": "hsl(0, 0%, 100%)"
     }
   },
   "radius": "0.5rem"
