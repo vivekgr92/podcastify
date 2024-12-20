@@ -10,55 +10,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useUser } from "../hooks/use-user";
 import { UsageProgress } from "../components/UsageProgress";
 
-function FAQ() {
-  return (
-    <div className="bg-gray-900/50 rounded-lg p-6">
-      <h2 className="text-xl font-bold mb-6">Frequently Asked Questions</h2>
-      <div className="space-y-6">
-        <div>
-          <h3 className="text-lg font-semibold mb-2">How does the article to podcast conversion work?</h3>
-          <p className="text-gray-400">
-            Our AI-powered system analyzes your article's content and converts it into natural-sounding speech. 
-            The process is fully automated and takes just a few seconds to complete.
-          </p>
-        </div>
-
-        <div>
-          <h3 className="text-lg font-semibold mb-2">What file formats are supported?</h3>
-          <p className="text-gray-400">
-            We currently support PDF, DOC, DOCX, and TXT files. Make sure your files are in one of these formats 
-            before uploading.
-          </p>
-        </div>
-
-        <div>
-          <h3 className="text-lg font-semibold mb-2">How many articles can I convert?</h3>
-          <p className="text-gray-400">
-            The number of articles you can convert depends on your subscription plan. Free users can convert up 
-            to 10 articles per month, while paid plans offer higher limits.
-          </p>
-        </div>
-
-        <div>
-          <h3 className="text-lg font-semibold mb-2">Can I customize the voice?</h3>
-          <p className="text-gray-400">
-            Yes! We offer multiple voice options to choose from. Premium users get access to additional high-quality 
-            voices and customization options.
-          </p>
-        </div>
-
-        <div>
-          <h3 className="text-lg font-semibold mb-2">Where can I find my converted podcasts?</h3>
-          <p className="text-gray-400">
-            All your converted podcasts are automatically saved in your library. You can access them anytime 
-            by clicking on the Library tab in the navigation menu.
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function HomePage() {
   const [, setLocation] = useLocation();
   const [file, setFile] = useState<File | null>(null);
@@ -144,7 +95,7 @@ export default function HomePage() {
         }
       }
     },
-    [toast, setLocation, setIsConverting, setProgress, queryClient, hasReachedLimit]
+    [toast, setLocation, setIsConverting, setProgress, queryClient, hasReachedLimit],
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -200,6 +151,13 @@ export default function HomePage() {
                   : "border-gray-700 hover:border-[#4CAF50]"
               } 
               bg-gray-900/50`}
+            onClick={(e) => {
+              if (hasReachedLimit) {
+                e.preventDefault();
+                e.stopPropagation();
+                setLocation("/billing");
+              }
+            }}
           >
             <input {...getInputProps()} disabled={hasReachedLimit} />
             <div className="text-center">
@@ -208,8 +166,15 @@ export default function HomePage() {
                 variant="default"
                 disabled={hasReachedLimit}
                 className={`mb-4 px-8 ${
-                  !hasReachedLimit ? "bg-[#4CAF50] hover:bg-[#45a049]" : ""
+                  !hasReachedLimit ? "bg-[#4CAF50] hover:bg-[#45a049]" : "opacity-50 cursor-not-allowed"
                 }`}
+                onClick={(e) => {
+                  if (hasReachedLimit) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setLocation("/billing");
+                  }
+                }}
               >
                 Choose File to Upload
               </Button>
@@ -223,7 +188,6 @@ export default function HomePage() {
               </p>
             </div>
           </div>
-
           <div className="grid grid-cols-3 gap-8 mb-12">
             <div className="text-center p-6 rounded-lg bg-gray-900/50">
               <div className="w-12 h-12 rounded-full bg-[#4CAF50]/20 flex items-center justify-center mx-auto mb-4">
@@ -274,7 +238,50 @@ export default function HomePage() {
           )}
 
           {/* FAQ Section */}
-          <FAQ />
+          <div className="bg-gray-900/50 rounded-lg p-6">
+            <h2 className="text-xl font-bold mb-6">Frequently Asked Questions</h2>
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-lg font-semibold mb-2">How does the article to podcast conversion work?</h3>
+                <p className="text-gray-400">
+                  Our AI-powered system analyzes your article's content and converts it into natural-sounding speech. 
+                  The process is fully automated and takes just a few seconds to complete.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold mb-2">What file formats are supported?</h3>
+                <p className="text-gray-400">
+                  We currently support PDF, DOC, DOCX, and TXT files. Make sure your files are in one of these formats 
+                  before uploading.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold mb-2">How many articles can I convert?</h3>
+                <p className="text-gray-400">
+                  The number of articles you can convert depends on your subscription plan. Free users can convert up 
+                  to 10 articles per month, while paid plans offer higher limits.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold mb-2">Can I customize the voice?</h3>
+                <p className="text-gray-400">
+                  Yes! We offer multiple voice options to choose from. Premium users get access to additional high-quality 
+                  voices and customization options.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold mb-2">Where can I find my converted podcasts?</h3>
+                <p className="text-gray-400">
+                  All your converted podcasts are automatically saved in your library. You can access them anytime 
+                  by clicking on the Library tab in the navigation menu.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -476,10 +483,6 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-
-        {/* FAQ Section */}
-        <FAQ />
-
         <div className="text-center mb-24 bg-gradient-to-r from-[#4CAF50]/20 to-emerald-500/20 rounded-xl p-12">
           <h2 className="text-4xl font-bold mb-6">
             Ready to Transform Your Content?
