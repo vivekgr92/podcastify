@@ -238,9 +238,32 @@ export default function HomePage() {
           )}
 
           <div className="bg-gray-900/50 rounded-lg p-6">
-            <h2 className="text-xl font-bold mb-4">Recent Conversions</h2>
-            <div className="text-gray-400 text-sm">
-              Your converted podcasts will appear here
+            <h2 className="text-xl font-bold mb-6">Frequently Asked Questions</h2>
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold text-white">What file formats are supported?</h3>
+                <p className="text-gray-400">We currently support PDF, DOC, DOCX, and TXT files for conversion. All files are processed securely and confidentially.</p>
+              </div>
+
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold text-white">How long does the conversion take?</h3>
+                <p className="text-gray-400">Most articles are converted within 1-2 minutes, depending on length. Longer articles may take additional time to process.</p>
+              </div>
+
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold text-white">Can I customize the voice?</h3>
+                <p className="text-gray-400">Yes! Premium users can choose from multiple natural-sounding voices and adjust speech parameters like speed and tone.</p>
+              </div>
+
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold text-white">Where can I find my converted podcasts?</h3>
+                <p className="text-gray-400">All your converted podcasts are available in your Library. You can stream them online or download for offline listening.</p>
+              </div>
+
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold text-white">What happens if I reach my usage limit?</h3>
+                <p className="text-gray-400">When you reach your plan's limit, you can upgrade to a higher tier to continue converting articles or wait until your usage resets next month.</p>
+              </div>
             </div>
           </div>
         </div>
