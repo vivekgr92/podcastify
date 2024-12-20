@@ -204,15 +204,6 @@ export class TTSService {
     }
   }
 
-  private calculateTtsCost(characters: number, useWaveNet: boolean): number {
-    const charactersPerMillion = 1000000;
-    const standardRate = 4.0 / charactersPerMillion; // $4 per 1 million characters for Standard voices
-    const wavenetRate = 16.0 / charactersPerMillion; // $16 per 1 million characters for WaveNet voices
-
-    const costPerCharacter = useWaveNet ? wavenetRate : standardRate;
-    return characters * costPerCharacter;
-  }
-
   async calculatePricing(
     text: string,
     responses: string[] = [],
@@ -245,7 +236,7 @@ export class TTSService {
       await logger.info([
         "\n======= Starting Pricing Calculation ======\n",
         `-Input text length: ${text.length}\n`,
-        `-Number of responses: ${responses.length}`,
+        `-Number of Vertex AI responses: ${responses.length}\n`,
       ]);
 
       // Calculate input tokens
@@ -282,20 +273,41 @@ export class TTSService {
       // Process responses for output tokens
       let totalOutputTokens = 0;
       let totalTtsCharacters = 0;
+      let inputCost = 0;
+      let outputCost = 0;
+      let ttsCost = 0;
+      let totalCost = 0;
 
       // For inital estimation to check if this process will exceed usage
       if (estimateToken) {
         totalOutputTokens = Math.ceil(totalInputTokens * 1.5);
         totalTtsCharacters = Math.ceil(totalOutputTokens * 4);
+        inputCost = (totalInputTokens / 1000) * PRICING.INPUT_TOKEN_RATE;
+        outputCost = (totalOutputTokens / 1000) * PRICING.OUTPUT_TOKEN_RATE;
+        ttsCost = totalTtsCharacters * PRICING.TTS_RATE_WAVENET;
+        totalCost = inputCost + outputCost + ttsCost;
+
+        await logger.info(
+          `\n---***** Estimated Calculation Summary **** ---\n` +
+            `Total Input Tokens: ${totalInputTokens}\n` +
+            `Total Output Tokens: ${totalOutputTokens}\n` +
+            `Total Tokens: ${totalInputTokens + totalOutputTokens}\n` +
+            `Total TTS Characters: ${totalTtsCharacters}\n` +
+            `Vertex AI Input Cost: $${inputCost.toFixed(6)}\n` +
+            `Vertex AI Output Cost: $${outputCost.toFixed(6)}\n` +
+            `TTS Cost: $${ttsCost.toFixed(6)}\n` +
+            `Total Cost: $${totalCost.toFixed(6)}`,
+        );
+
         return {
           inputTokens: totalInputTokens,
           outputTokens: totalOutputTokens,
           ttsCharacters: totalTtsCharacters,
-          totalCost: 0,
+          totalCost: totalCost,
           breakdown: {
-            inputCost: 0,
-            outputCost: 0,
-            ttsCost: 0,
+            inputCost,
+            outputCost,
+            ttsCost,
           },
         };
       }
@@ -346,14 +358,14 @@ export class TTSService {
       );
 
       // Calculate costs
-      const inputCost = (totalInputTokens / 1000) * PRICING.INPUT_TOKEN_RATE;
-      const outputCost = (totalOutputTokens / 1000) * PRICING.OUTPUT_TOKEN_RATE;
-      const ttsCost = totalTtsCharacters * PRICING.TTS_RATE_WAVENET;
+      inputCost = (totalInputTokens / 1000) * PRICING.INPUT_TOKEN_RATE;
+      outputCost = (totalOutputTokens / 1000) * PRICING.OUTPUT_TOKEN_RATE;
+      ttsCost = totalTtsCharacters * PRICING.TTS_RATE_WAVENET;
 
-      const totalCost = inputCost + outputCost + ttsCost;
+      totalCost = inputCost + outputCost + ttsCost;
 
       await logger.info(
-        `\n---***** Pricing Calculation Summary **** ---\n` +
+        `\n---***** Final Pricing Calculation Summary **** ---\n` +
           `Total Input Tokens: ${totalInputTokens}\n` +
           `Total Output Tokens: ${totalOutputTokens}\n` +
           `Total Tokens: ${totalInputTokens + totalOutputTokens}\n` +
