@@ -1,61 +1,71 @@
 import { useCallback, useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
+import { Button } from "../components/ui/button";
+import { useToast } from "../hooks/use-toast";
 import { useTTS } from "../hooks/use-tts";
 import { FileText, Upload, Headphones, Play, Plus, Menu } from "lucide-react";
 import { Logo } from "../components/Logo";
 import { useDropzone } from "react-dropzone";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUser } from "../hooks/use-user";
-import { UsageProgress } from "@/components/UsageProgress";
+import { UsageProgress } from "../components/UsageProgress";
 
 export default function HomePage() {
   const [, setLocation] = useLocation();
   const [file, setFile] = useState<File | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [hasReachedLimit, setHasReachedLimit] = useState(false);
   const { toast } = useToast();
 
-  // Close mobile menu when route changes
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location]);
+
   const { convertToSpeech, isConverting, setIsConverting, progress, setProgress } = useTTS();
   const queryClient = useQueryClient();
   const { user } = useUser();
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
+    if (hasReachedLimit) {
+      toast({
+        title: "Usage Limit Reached",
+        description: "Please upgrade your plan to continue converting articles.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const file = acceptedFiles[0];
     if (file) {
       if (file.type === "text/plain" || file.type === "application/pdf") {
         setFile(file);
-        
+
         const formData = new FormData();
         formData.append('file', file);
-        
+
         try {
           setProgress(0);
           setIsConverting(true);
-          
+
           console.log('Starting file conversion...');
           const response = await fetch('/api/podcast', {
             method: 'POST',
             body: formData,
             credentials: 'include'
           });
-          
+
           if (!response.ok) {
             throw new Error('Failed to convert file');
           }
-          
+
           const podcast = await response.json();
           console.log('Conversion successful:', podcast);
-          
+
           toast({
             title: "Success",
             description: "Your file has been converted successfully!",
           });
-          
+
           await queryClient.invalidateQueries({ queryKey: ['podcasts'] });
           setLocation('/library');
         } catch (error) {
@@ -77,7 +87,7 @@ export default function HomePage() {
         });
       }
     }
-  }, [toast, setLocation, setIsConverting, setProgress, queryClient]);
+  }, [toast, setLocation, setIsConverting, setProgress, queryClient, hasReachedLimit]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -87,40 +97,58 @@ export default function HomePage() {
       'application/msword': ['.doc'],
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx']
     },
-    multiple: false
+    multiple: false,
+    disabled: hasReachedLimit
   });
 
   if (user) {
     return (
       <div className="min-h-screen bg-black text-white">
-        <div className="max-w-4xl mx-auto px-6 pt-20 md:pt-12"> {/* Added padding top for mobile menu */}
+        <div className="max-w-4xl mx-auto px-6 pt-20 md:pt-12">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold mb-4">Transform Your Articles Into Podcasts</h1>
             <p className="text-gray-400">Upload any article and convert it into a natural-sounding podcast in seconds</p>
           </div>
-          
+
           {user && (
             <div className="mb-8">
               <UsageProgress 
                 showUpgradeButton={true}
-                onLimitReached={() => setLocation('/pricing')}
+                onLimitReached={() => {
+                  setHasReachedLimit(true);
+                  setLocation('/billing');
+                }}
               />
             </div>
           )}
 
           <div 
             {...getRootProps()} 
-            className={`border-2 border-dashed rounded-lg p-16 mb-12 transition-colors bg-gray-900/50
-              ${isDragActive ? 'border-[#4CAF50] bg-[#4CAF50]/10' : 'border-gray-700 hover:border-[#4CAF50]'}`}
+            className={`border-2 border-dashed rounded-lg p-16 mb-12 transition-colors 
+              ${hasReachedLimit ? 'opacity-50 cursor-not-allowed border-gray-700' : 
+                isDragActive ? 'border-[#4CAF50] bg-[#4CAF50]/10' : 'border-gray-700 hover:border-[#4CAF50]'} 
+              bg-gray-900/50`}
           >
             <input {...getInputProps()} />
             <div className="text-center">
-              <Button className="bg-[#4CAF50] hover:bg-[#45a049] mb-4 text-lg px-8 py-6">Choose File to Upload</Button>
-              <p className="text-gray-400">or drag and drop your file here</p>
+              <Button 
+                className={`mb-4 text-lg px-8 py-6 ${
+                  hasReachedLimit 
+                    ? 'bg-gray-600 hover:bg-gray-600 cursor-not-allowed opacity-50' 
+                    : 'bg-[#4CAF50] hover:bg-[#45a049]'
+                }`}
+                disabled={hasReachedLimit}
+              >
+                Choose File to Upload
+              </Button>
+              <p className="text-gray-400">
+                {hasReachedLimit ? 
+                  "Please upgrade your plan to continue converting articles" : 
+                  "or drag and drop your file here"}
+              </p>
               <p className="text-xs text-gray-500 mt-2">Supported formats: PDF, DOC, DOCX, TXT</p>
             </div>
           </div>
-
           <div className="grid grid-cols-3 gap-8 mb-12">
             <div className="text-center p-6 rounded-lg bg-gray-900/50">
               <div className="w-12 h-12 rounded-full bg-[#4CAF50]/20 flex items-center justify-center mx-auto mb-4">
@@ -175,8 +203,6 @@ export default function HomePage() {
     <div className="min-h-screen bg-black text-white">
       <nav className="relative flex justify-between items-center p-4 md:p-6">
         <Logo />
-        
-        {/* Mobile Menu Button */}
         <Button
           variant="ghost"
           size="icon"
@@ -185,8 +211,6 @@ export default function HomePage() {
         >
           <Menu className="h-6 w-6" />
         </Button>
-
-        {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-4">
           <Button variant="ghost">Home</Button>
           <Button variant="ghost" onClick={() => setLocation('/library')}>Library</Button>
@@ -194,8 +218,6 @@ export default function HomePage() {
           <Button variant="outline" onClick={() => setLocation('/auth/signup')}>Sign Up</Button>
           <Button onClick={() => setLocation('/auth')}>Login</Button>
         </div>
-
-        {/* Mobile Navigation */}
         {isMobileMenuOpen && (
           <>
             <div 
@@ -252,7 +274,6 @@ export default function HomePage() {
       </nav>
 
       <main className="max-w-6xl mx-auto px-6 py-16">
-        {/* Hero Section */}
         <div className="text-center mb-12 md:mb-24 px-4">
           <h1 className="text-4xl md:text-6xl font-bold mb-4 md:mb-6 bg-gradient-to-r from-[#4CAF50] to-emerald-400 bg-clip-text text-transparent">
             Transform Your Articles Into Engaging Podcasts
@@ -278,8 +299,6 @@ export default function HomePage() {
             </Button>
           </div>
         </div>
-
-        {/* Social Proof */}
         <div className="text-center mb-12 md:mb-24 px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 mb-8 md:mb-12">
             <div className="p-4 md:p-6">
@@ -302,8 +321,6 @@ export default function HomePage() {
             <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg" alt="Microsoft" className="h-6 md:h-8 opacity-50 hover:opacity-75 transition-opacity" />
           </div>
         </div>
-
-        {/* Features */}
         <div className="mb-12 md:mb-24 px-4">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12">How It Works</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
@@ -314,7 +331,6 @@ export default function HomePage() {
               <h3 className="text-lg md:text-xl font-semibold mb-3 md:mb-4">1. Upload Your Article</h3>
               <p className="text-sm md:text-base text-gray-400">Simply upload your article in any format (PDF, DOC, TXT) and let our AI do the magic</p>
             </div>
-
             <div className="p-8 rounded-lg bg-gray-900 transform hover:scale-105 transition-transform">
               <div className="w-16 h-16 rounded-full bg-[#4CAF50]/20 flex items-center justify-center mb-6 mx-auto">
                 <Upload className="w-8 h-8 text-[#4CAF50]" />
@@ -322,7 +338,6 @@ export default function HomePage() {
               <h3 className="text-xl font-semibold mb-4">2. Choose Voice</h3>
               <p className="text-gray-400">Select from our library of natural-sounding voices to match your content's tone</p>
             </div>
-
             <div className="p-8 rounded-lg bg-gray-900 transform hover:scale-105 transition-transform">
               <div className="w-16 h-16 rounded-full bg-[#4CAF50]/20 flex items-center justify-center mb-6 mx-auto">
                 <Headphones className="w-8 h-8 text-[#4CAF50]" />
@@ -332,8 +347,6 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-
-        {/* Call to Action */}
         <div className="text-center mb-24 bg-gradient-to-r from-[#4CAF50]/20 to-emerald-500/20 rounded-xl p-12">
           <h2 className="text-4xl font-bold mb-6">Ready to Transform Your Content?</h2>
           <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
@@ -347,8 +360,6 @@ export default function HomePage() {
             Start Creating Now
           </Button>
         </div>
-
-        {/* Footer */}
         <footer className="text-center text-sm text-gray-500">
           <p>© 2024 Podcastify. All rights reserved.</p>
         </footer>
