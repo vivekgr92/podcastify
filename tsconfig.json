@@ -21,7 +21,6 @@
       "@/lib/*": ["./client/src/lib/*"],
       "@/hooks/*": ["./client/src/hooks/*"],
       "@/pages/*": ["./client/src/pages/*"],
-      "@/types/*": ["./client/src/types/*"],
       "@db/*": ["./db/*"]
     }
   }
