@@ -3,12 +3,13 @@ import { useLocation } from "wouter";
 import { Button } from "../components/ui/button";
 import { useToast } from "../hooks/use-toast";
 import { useTTS } from "../hooks/use-tts";
-import { FileText, Upload, Headphones, Play, Plus, Menu } from "lucide-react";
+import { FileText, Upload, Headphones, Plus, Menu } from "lucide-react";
 import { Logo } from "../components/Logo";
 import { useDropzone } from "react-dropzone";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUser } from "../hooks/use-user";
 import { UsageProgress } from "../components/UsageProgress";
+import * as Accordion from '@radix-ui/react-accordion';
 
 export default function HomePage() {
   const [, setLocation] = useLocation();
@@ -151,13 +152,6 @@ export default function HomePage() {
                   : "border-gray-700 hover:border-[#4CAF50]"
               } 
               bg-gray-900/50`}
-            onClick={(e) => {
-              if (hasReachedLimit) {
-                e.preventDefault();
-                e.stopPropagation();
-                setLocation("/billing");
-              }
-            }}
           >
             <input {...getInputProps()} disabled={hasReachedLimit} />
             <div className="text-center">
@@ -188,6 +182,79 @@ export default function HomePage() {
               </p>
             </div>
           </div>
+          {isConverting && (
+            <div className="w-full bg-gray-900 rounded-lg p-4 mb-12">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm text-gray-400">
+                  Converting to podcast...
+                </span>
+                <span className="text-sm text-gray-400">
+                  {Math.round(progress)}%
+                </span>
+              </div>
+              <div className="w-full bg-gray-800 rounded-full h-2">
+                <div
+                  className="bg-[#4CAF50] h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+            </div>
+          )}
+
+          <div className="bg-gray-900/50 rounded-lg p-6 mb-12">
+            <h2 className="text-xl font-bold mb-6">Frequently Asked Questions</h2>
+            <Accordion.Root type="single" collapsible className="space-y-4">
+              <Accordion.Item value="item-1" className="border-b border-gray-800 pb-4">
+                <Accordion.Trigger className="flex w-full justify-between items-center text-lg font-semibold hover:text-[#4CAF50] transition-colors">
+                  <span>What file formats are supported?</span>
+                  <Plus className="h-5 w-5 transform transition-transform data-[state=open]:rotate-45" />
+                </Accordion.Trigger>
+                <Accordion.Content className="pt-2 text-gray-400">
+                  We currently support PDF, DOC, DOCX, and TXT files for conversion. All files are processed securely and confidentially.
+                </Accordion.Content>
+              </Accordion.Item>
+
+              <Accordion.Item value="item-2" className="border-b border-gray-800 pb-4">
+                <Accordion.Trigger className="flex w-full justify-between items-center text-lg font-semibold hover:text-[#4CAF50] transition-colors">
+                  <span>How long does the conversion take?</span>
+                  <Plus className="h-5 w-5 transform transition-transform data-[state=open]:rotate-45" />
+                </Accordion.Trigger>
+                <Accordion.Content className="pt-2 text-gray-400">
+                  Most articles are converted within 1-2 minutes, depending on length. Longer articles may take additional time to process.
+                </Accordion.Content>
+              </Accordion.Item>
+
+              <Accordion.Item value="item-3" className="border-b border-gray-800 pb-4">
+                <Accordion.Trigger className="flex w-full justify-between items-center text-lg font-semibold hover:text-[#4CAF50] transition-colors">
+                  <span>Can I customize the voice?</span>
+                  <Plus className="h-5 w-5 transform transition-transform data-[state=open]:rotate-45" />
+                </Accordion.Trigger>
+                <Accordion.Content className="pt-2 text-gray-400">
+                  Yes! Premium users can choose from multiple natural-sounding voices and adjust speech parameters like speed and tone.
+                </Accordion.Content>
+              </Accordion.Item>
+
+              <Accordion.Item value="item-4" className="border-b border-gray-800 pb-4">
+                <Accordion.Trigger className="flex w-full justify-between items-center text-lg font-semibold hover:text-[#4CAF50] transition-colors">
+                  <span>Where can I find my converted podcasts?</span>
+                  <Plus className="h-5 w-5 transform transition-transform data-[state=open]:rotate-45" />
+                </Accordion.Trigger>
+                <Accordion.Content className="pt-2 text-gray-400">
+                  All your converted podcasts are available in your Library. You can stream them online or download for offline listening.
+                </Accordion.Content>
+              </Accordion.Item>
+
+              <Accordion.Item value="item-5" className="border-b border-gray-800 pb-4">
+                <Accordion.Trigger className="flex w-full justify-between items-center text-lg font-semibold hover:text-[#4CAF50] transition-colors">
+                  <span>What happens if I reach my usage limit?</span>
+                  <Plus className="h-5 w-5 transform transition-transform data-[state=open]:rotate-45" />
+                </Accordion.Trigger>
+                <Accordion.Content className="pt-2 text-gray-400">
+                  When you reach your plan's limit, you can upgrade to a higher tier to continue converting articles or wait until your usage resets next month.
+                </Accordion.Content>
+              </Accordion.Item>
+            </Accordion.Root>
+          </div>
           <div className="grid grid-cols-3 gap-8 mb-12">
             <div className="text-center p-6 rounded-lg bg-gray-900/50">
               <div className="w-12 h-12 rounded-full bg-[#4CAF50]/20 flex items-center justify-center mx-auto mb-4">
@@ -217,54 +284,47 @@ export default function HomePage() {
               </p>
             </div>
           </div>
-
-          {isConverting && (
-            <div className="w-full bg-gray-900 rounded-lg p-4 mb-12">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-gray-400">
-                  Converting to podcast...
-                </span>
-                <span className="text-sm text-gray-400">
-                  {Math.round(progress)}%
-                </span>
-              </div>
-              <div className="w-full bg-gray-800 rounded-full h-2">
-                <div
-                  className="bg-[#4CAF50] h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 mb-8 md:mb-12">
+            <div className="p-4 md:p-6">
+              <h3 className="text-3xl md:text-4xl font-bold text-[#4CAF50] mb-2">
+                100K+
+              </h3>
+              <p className="text-gray-400">Articles Converted</p>
             </div>
-          )}
-
-          <div className="bg-gray-900/50 rounded-lg p-6">
-            <h2 className="text-xl font-bold mb-6">Frequently Asked Questions</h2>
-            <div className="space-y-6">
-              <div className="space-y-2">
-                <h3 className="text-lg font-semibold text-white">What file formats are supported?</h3>
-                <p className="text-gray-400">We currently support PDF, DOC, DOCX, and TXT files for conversion. All files are processed securely and confidentially.</p>
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="text-lg font-semibold text-white">How long does the conversion take?</h3>
-                <p className="text-gray-400">Most articles are converted within 1-2 minutes, depending on length. Longer articles may take additional time to process.</p>
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="text-lg font-semibold text-white">Can I customize the voice?</h3>
-                <p className="text-gray-400">Yes! Premium users can choose from multiple natural-sounding voices and adjust speech parameters like speed and tone.</p>
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="text-lg font-semibold text-white">Where can I find my converted podcasts?</h3>
-                <p className="text-gray-400">All your converted podcasts are available in your Library. You can stream them online or download for offline listening.</p>
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="text-lg font-semibold text-white">What happens if I reach my usage limit?</h3>
-                <p className="text-gray-400">When you reach your plan's limit, you can upgrade to a higher tier to continue converting articles or wait until your usage resets next month.</p>
-              </div>
+            <div className="p-4 md:p-6">
+              <h3 className="text-3xl md:text-4xl font-bold text-[#4CAF50] mb-2">
+                50K+
+              </h3>
+              <p className="text-gray-400">Active Users</p>
             </div>
+            <div className="p-4 md:p-6">
+              <h3 className="text-3xl md:text-4xl font-bold text-[#4CAF50] mb-2">
+                4.9/5
+              </h3>
+              <p className="text-gray-400">User Rating</p>
+            </div>
+          </div>
+          <div className="flex flex-wrap justify-center gap-4 md:gap-8">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg"
+              alt="Amazon"
+              className="h-6 md:h-8 opacity-50 hover:opacity-75 transition-opacity"
+            />
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg"
+              alt="Google"
+              className="h-6 md:h-8 opacity-50 hover:opacity-75 transition-opacity"
+            />
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
+              alt="Netflix"
+              className="h-6 md:h-8 opacity-50 hover:opacity-75 transition-opacity"
+            />
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg"
+              alt="Microsoft"
+              className="h-6 md:h-8 opacity-50 hover:opacity-75 transition-opacity"
+            />
           </div>
         </div>
       </div>
