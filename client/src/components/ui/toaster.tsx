@@ -1,3 +1,4 @@
+import { FC } from "react"
 import { useToast } from "../../hooks/use-toast"
 import {
   Toast,
@@ -8,7 +9,7 @@ import {
   ToastViewport,
 } from "../../components/ui/toast"
 
-export function Toaster() {
+export const Toaster: FC = () => {
   const { toasts } = useToast()
 
   return (

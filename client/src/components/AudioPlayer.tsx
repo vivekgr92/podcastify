@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import { Button } from "../components/ui/button";
-import { Slider } from "../components/ui/slider";
+import { Button } from "./ui/button";
+import { Slider } from "./ui/slider";
 import {
   Play,
   Pause,
@@ -18,15 +18,15 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "../components/ui/popover";
+} from "./ui/popover";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../components/ui/select";
-import { ScrollArea } from "../components/ui/scroll-area";
+} from "./ui/select";
+import { ScrollArea } from "./ui/scroll-area";
 import { useAudio } from "../hooks/use-audio";
 import { cn } from "../lib/utils";
 
