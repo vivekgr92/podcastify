@@ -865,3 +865,39 @@ Total Cost: $0.270148
  Podify Tokens: 393/10000
 [INFO] Successfully saved audio file: 1734708859270-article.mp3
 [INFO] Successfully created podcast entry with ID: 21
+[INFO] Calculating estimated pricing and checking usage limits
+[INFO] 
+======= Starting Pricing Calculation ======
+ -Input text length: 16704
+ -Number of Vertex AI responses: 0
+
+[INFO] 
+        Input text length: 16704
+        Input token count: 3419
+        System prompt length: 2718
+        System token count: 525
+        Total input tokens: 3944
+      
+[INFO] 
+---***** Estimated Calculation Summary **** ---
+Total Input Tokens: 3944
+Total Output Tokens: 5916
+Total Tokens: 9860
+Total TTS Characters: 23664
+Vertex AI Input Cost: $0.000002
+Vertex AI Output Cost: $0.000003
+TTS Cost: $0.378624
+Total Cost: $0.378629
+[INFO] Estimated Podify Tokens: 190 
+
+Usage limits check for user 1:
+ Current articles: 3/3
+ Current Podify tokens: 393/10000
+ Would exceed article limit: true
+ Would exceed token limit: false
+[WARN] ---------- USAGE LIMIT WARNING ----------
+ User: 1
+ Articles: 3/3 (exceeded)
+ Tokens: 393/10000 (ok)
+ -----------------------------------------
+

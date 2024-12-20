@@ -1,10 +1,10 @@
 import { useUser } from "../hooks/use-user";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 import { Check } from "lucide-react";
 import { useLocation } from "wouter";
 import { useState } from "react";
-import { PaymentModal } from "@/components/PaymentModal";
-import { useToast } from "@/hooks/use-toast";
+import { PaymentModal } from "../components/PaymentModal";
+import { useToast } from "../hooks/use-toast";
 
 const plans = [
   {
@@ -74,12 +74,28 @@ export default function BillingPage() {
 
   const handlePaymentSubmit = async (cardDetails: any) => {
     try {
-      // Here you would typically make an API call to process the payment
-      // For now, we'll just show a success message
+      const response = await fetch('/api/subscriptions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          planName: selectedPlan?.name,
+          cardDetails,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to process payment');
+      }
+
       toast({
         title: "Subscription Updated",
         description: `Successfully subscribed to ${selectedPlan?.name}`,
       });
+
+      // Redirect to home page after successful subscription
+      setLocation('/');
     } catch (error) {
       toast({
         title: "Error",
