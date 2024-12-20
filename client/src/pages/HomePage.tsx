@@ -145,7 +145,7 @@ export default function HomePage() {
             className={`border-2 border-dashed rounded-lg p-16 mb-12 transition-colors 
               ${
                 hasReachedLimit
-                  ? "opacity-50 cursor-not-allowed border-gray-700 hover:border-gray-700"
+                  ? "border-gray-700 bg-gray-900/30 cursor-not-allowed opacity-50"
                   : isDragActive
                   ? "border-[#4CAF50] bg-[#4CAF50]/10"
                   : "border-gray-700 hover:border-[#4CAF50]"
@@ -166,7 +166,9 @@ export default function HomePage() {
                 variant="default"
                 disabled={hasReachedLimit}
                 className={`mb-4 px-8 ${
-                  !hasReachedLimit ? "bg-[#4CAF50] hover:bg-[#45a049]" : "opacity-50 cursor-not-allowed"
+                  hasReachedLimit
+                    ? "bg-gray-200 text-gray-600 cursor-not-allowed hover:bg-gray-200 pointer-events-none"
+                    : "bg-[#4CAF50] hover:bg-[#45a049]"
                 }`}
                 onClick={(e) => {
                   if (hasReachedLimit) {
