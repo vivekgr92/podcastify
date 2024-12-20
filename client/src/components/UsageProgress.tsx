@@ -4,23 +4,24 @@ import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useLocation } from "wouter";
-import { calculatePodifyTokensCost } from "@/lib/utils";
 
 interface UsageLimits {
   hasReachedLimit: boolean;
-  limits?: {
-    articles?: {
+  limits: {
+    articles: {
       used: number;
       limit: number;
       remaining: number;
-      wouldExceed?: boolean;
     };
-    podifyTokens?: {
+    tokens: {
       used: number;
       limit: number;
       remaining: number;
-      wouldExceed?: boolean;
-      cost: number;
+      podifyTokens: {
+        used: number;
+        limit: number;
+        remaining: number;
+      };
     };
   };
   currentPeriod?: {
@@ -28,8 +29,6 @@ interface UsageLimits {
     resetsOn: string;
   };
 }
-
-const PODIFY_TOKENS_LIMIT = 10000; // Define constant for token limit
 
 export function UsageProgress({
   showUpgradeButton = true,
@@ -39,12 +38,10 @@ export function UsageProgress({
   onLimitReached?: () => void;
 }) {
   const [, setLocation] = useLocation();
-  const { data: usage, isLoading } = useQuery<UsageLimits>({
+  const { data: usage, isLoading, error } = useQuery<UsageLimits>({
     queryKey: ["usage-limits"],
     queryFn: async () => {
-      const res = await fetch("/api/user/usage/check", {
-        credentials: "include",
-      });
+      const res = await fetch("/api/user/usage/check");
       if (!res.ok) {
         if (res.status === 401) {
           throw new Error("Not authenticated");
@@ -54,7 +51,8 @@ export function UsageProgress({
       return res.json();
     },
     retry: false,
-    refetchInterval: 30000, // Refetch every 30 seconds
+    refetchInterval: 2000, // Poll every 2 seconds for real-time updates
+    staleTime: 1000, // Consider data stale after 1 second
   });
 
   if (isLoading) {
@@ -65,31 +63,30 @@ export function UsageProgress({
     );
   }
 
-  // Early return if no usage data
-  if (!usage?.limits) {
-    return null;
+  if (error || !usage?.limits) {
+    return (
+      <Card className="p-4">
+        <div className="text-sm text-destructive">
+          Failed to load usage data. Please try again later.
+        </div>
+      </Card>
+    );
   }
 
-  // Safely extract values with defaults
-  const articles = usage.limits.articles || { used: 0, limit: 1 };
-  const podifyTokens = usage.limits.podifyTokens || {
-    used: 0,
-    limit: PODIFY_TOKENS_LIMIT,
-  };
+  const articles = usage.limits.articles;
+  const podifyTokens = usage.limits.tokens.podifyTokens;
 
-  // Calculate percentages with protection against division by zero
-  const articlesPercentage =
-    articles.limit > 0
-      ? Math.min((articles.used / articles.limit) * 100, 100)
-      : 0;
-
+  // Calculate percentages
+  const articlesPercentage = Math.min((articles.used / articles.limit) * 100, 100);
   const podifyTokensPercentage = Math.min(
-    (podifyTokens.used / PODIFY_TOKENS_LIMIT) * 100,
-    100,
+    (podifyTokens.used / podifyTokens.limit) * 100,
+    100
   );
-  const podifyTokensCost = calculatePodifyTokensCost(podifyTokens.used);
 
-  // Format the reset date if available
+  // Calculate cost (1 Podify Token = $0.005)
+  const podifyTokensCost = (podifyTokens.used * 0.005).toFixed(2);
+
+  // Format the reset date
   const resetDate = usage.currentPeriod?.resetsOn
     ? new Date(usage.currentPeriod.resetsOn).toLocaleDateString("en-US", {
         year: "numeric",
@@ -117,16 +114,16 @@ export function UsageProgress({
         <div className="flex justify-between text-sm">
           <span>
             Podify Tokens ({podifyTokens.used.toLocaleString()}/
-            {PODIFY_TOKENS_LIMIT.toLocaleString()})
+            {podifyTokens.limit.toLocaleString()})
           </span>
-          <span>{podifyTokensPercentage}%</span>
+          <span>{Math.round(podifyTokensPercentage)}%</span>
         </div>
         <Progress
           value={podifyTokensPercentage}
           className={podifyTokensPercentage >= 100 ? "bg-destructive/20" : ""}
         />
         <div className="text-xs text-muted-foreground">
-          1 Podify Token = $0.005 (0.5¢)
+          Cost: ${podifyTokensCost} (1 Podify Token = $0.005)
         </div>
       </div>
 
@@ -137,7 +134,7 @@ export function UsageProgress({
       )}
 
       {usage.hasReachedLimit && (
-        <div className="space-y-3 mt-4" onClick={() => onLimitReached?.()}>
+        <div className="space-y-3 mt-4">
           <div className="bg-destructive/10 text-destructive rounded-lg p-4 text-sm">
             <p className="font-semibold mb-2">Monthly Usage Limit Reached</p>
             <p>You've reached your free tier limits for this month:</p>
@@ -148,17 +145,17 @@ export function UsageProgress({
                   reached ({articles.used.toLocaleString()} used)
                 </li>
               )}
-              {podifyTokens.used >= PODIFY_TOKENS_LIMIT && (
+              {podifyTokens.used >= podifyTokens.limit && (
                 <li>
-                  Maximum {PODIFY_TOKENS_LIMIT.toLocaleString()} Podify Tokens
-                  per month reached (${podifyTokensCost.toFixed(2)} worth used)
+                  Maximum {podifyTokens.limit.toLocaleString()} Podify Tokens per
+                  month reached (${podifyTokensCost} worth used)
                 </li>
               )}
             </ul>
           </div>
           {showUpgradeButton && (
             <Button
-              variant="success"
+              variant="default"
               className="w-full"
               onClick={() => setLocation("/pricing")}
             >

@@ -226,9 +226,10 @@ export function registerRoutes(app: Express) {
 
       // Create podcast and update usage in a single transaction
       const result = await db.transaction(async (tx) => {
-        // Update usage statistics with actual usage from the conversion
+        // Calculate Podify tokens based on actual usage
         const podifyTokensForUsage = convertToPodifyTokens(usage.totalCost);
 
+        // Update usage statistics with actual usage from the conversion
         const [updatedUsage] = await tx
           .insert(userUsage)
           .values({
@@ -244,7 +245,7 @@ export function registerRoutes(app: Express) {
             set: {
               articlesConverted: sql`${userUsage.articlesConverted} + 1`,
               tokensUsed: sql`${userUsage.tokensUsed} + ${sql.raw(`${usage.inputTokens + usage.outputTokens}`)}`,
-              podifyTokens: sql`COALESCE(${userUsage.podifyTokens}::decimal, 0) + ${sql.raw(`${podifyTokensForUsage}`)}::decimal`,
+              podifyTokens: sql`COALESCE(${userUsage.podifyTokens}, 0) + ${sql.raw(`${podifyTokensForUsage}`)}::decimal`,
               lastConversion: new Date(),
             },
           })
