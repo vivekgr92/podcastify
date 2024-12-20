@@ -29,13 +29,19 @@ const __dirname = dirname(__filename);
 const ARTICLE_LIMIT = 3;
 const PODIFY_TOKEN_LIMIT = 10000;
 const PODIFY_TOKEN_RATE = 0.005; // $0.005 (0.5 cents) per Podify Token
-const PODIFY_MARGIN = 0.4; // 90% margin
+const PODIFY_MARGIN = 0.6; // 60% margin
 
 // Helper function to convert raw tokens to Podify Tokens
 function convertToPodifyTokens(totalCost: number): number {
+  if (totalCost <= 0) return 0; // No tokens for zero or negative costs
+  if (PODIFY_MARGIN <= 0 || PODIFY_MARGIN >= 1) {
+    throw new Error("PODIFY_MARGIN must be between 0 and 1");
+  }
+
   // Add margin to the cost
   const costWithMargin = totalCost / (1 - PODIFY_MARGIN);
-  // Convert to Podify tokens (1 token = 0.5 cents)
+
+  // Convert to Podify tokens (round up to avoid undercharging)
   return Math.ceil(costWithMargin / PODIFY_TOKEN_RATE);
 }
 
@@ -258,9 +264,10 @@ export function registerRoutes(app: Express) {
         }
 
         await logger.info([
-          `Updated usage for user ${user.id}:`,
-          `Articles: ${updatedUsage.articlesConverted}/${ARTICLE_LIMIT}`,
-          `Tokens: ${updatedUsage.tokensUsed}/${PODIFY_TOKEN_LIMIT}`,
+          "\n\n---------- Updated Usage ----------\n",
+          `Updated usage for user ${user.id}:\n`,
+          `Articles: ${updatedUsage.articlesConverted}/${ARTICLE_LIMIT}\n`,
+          `Podify Tokens: ${updatedUsage.podifyTokens}/${PODIFY_TOKEN_LIMIT}`,
         ]);
 
         // Save the audio file
@@ -457,9 +464,8 @@ export function registerRoutes(app: Express) {
       }
 
       const podifyTokensUsed = Number(usage.podifyTokens) || 0;
-      const podifyTokenLimit = convertToPodifyTokens(
-        PODIFY_TOKEN_LIMIT * PODIFY_TOKEN_RATE,
-      ); //Corrected calculation
+      const podifyTokenLimit = PODIFY_TOKEN_LIMIT;
+
       const hasReachedLimit =
         (usage.articlesConverted ?? 0) >= ARTICLE_LIMIT ||
         podifyTokensUsed >= podifyTokenLimit;
