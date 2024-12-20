@@ -578,11 +578,9 @@ export class TTSService {
             file !== "podcast.mp3",
         )
         .sort((a, b) => {
-          // Extract numeric order for sorting
-          const aMatch = a.match(/_(\d+)\.mp3$/);
-          const bMatch = b.match(/_(\d+)\.mp3$/);
-          const aNum = aMatch ? parseInt(aMatch[1], 10) : 0;
-          const bNum = bMatch ? parseInt(bMatch[1], 10) : 0;
+          // Extract numeric values from filenames
+          const aNum = parseInt(a.match(/(\d+)\.mp3$/)?.[1] || "0", 10);
+          const bNum = parseInt(b.match(/(\d+)\.mp3$/)?.[1] || "0", 10);
           return aNum - bNum;
         });
 
