@@ -31,10 +31,10 @@ interface UsageLimits {
 
 const PODIFY_TOKENS_LIMIT = 10000; // Define constant for token limit
 
-export function UsageProgress({ 
-  showUpgradeButton = true, 
-  onLimitReached 
-}: { 
+export function UsageProgress({
+  showUpgradeButton = true,
+  onLimitReached,
+}: {
   showUpgradeButton?: boolean;
   onLimitReached?: () => void;
 }) {
@@ -43,7 +43,7 @@ export function UsageProgress({
     queryKey: ["usage-limits"],
     queryFn: async () => {
       const res = await fetch("/api/user/usage/check", {
-        credentials: "include"
+        credentials: "include",
       });
       if (!res.ok) {
         if (res.status === 401) {
@@ -54,7 +54,7 @@ export function UsageProgress({
       return res.json();
     },
     retry: false,
-    refetchInterval: 30000 // Refetch every 30 seconds
+    refetchInterval: 30000, // Refetch every 30 seconds
   });
 
   if (isLoading) {
@@ -72,22 +72,29 @@ export function UsageProgress({
 
   // Safely extract values with defaults
   const articles = usage.limits.articles || { used: 0, limit: 1 };
-  const podifyTokens = usage.limits.podifyTokens || { used: 0, limit: PODIFY_TOKENS_LIMIT };
+  const podifyTokens = usage.limits.podifyTokens || {
+    used: 0,
+    limit: PODIFY_TOKENS_LIMIT,
+  };
 
   // Calculate percentages with protection against division by zero
-  const articlesPercentage = articles.limit > 0 
-    ? Math.min((articles.used / articles.limit) * 100, 100)
-    : 0;
+  const articlesPercentage =
+    articles.limit > 0
+      ? Math.min((articles.used / articles.limit) * 100, 100)
+      : 0;
 
-  const podifyTokensPercentage = Math.min((podifyTokens.used / PODIFY_TOKENS_LIMIT) * 100, 100);
+  const podifyTokensPercentage = Math.min(
+    (podifyTokens.used / PODIFY_TOKENS_LIMIT) * 100,
+    100,
+  );
   const podifyTokensCost = calculatePodifyTokensCost(podifyTokens.used);
 
   // Format the reset date if available
-  const resetDate = usage.currentPeriod?.resetsOn 
-    ? new Date(usage.currentPeriod.resetsOn).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
+  const resetDate = usage.currentPeriod?.resetsOn
+    ? new Date(usage.currentPeriod.resetsOn).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
       })
     : null;
 
@@ -95,11 +102,13 @@ export function UsageProgress({
     <Card className="p-4 space-y-4">
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
-          <span>Articles Converted ({articles.used}/{articles.limit})</span>
+          <span>
+            Articles Converted ({articles.used}/{articles.limit})
+          </span>
           <span>{Math.round(articlesPercentage)}%</span>
         </div>
-        <Progress 
-          value={articlesPercentage} 
+        <Progress
+          value={articlesPercentage}
           className={articlesPercentage >= 100 ? "bg-destructive/20" : ""}
         />
       </div>
@@ -107,11 +116,12 @@ export function UsageProgress({
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
           <span>
-            Podify Tokens ({podifyTokens.used.toLocaleString()}/{PODIFY_TOKENS_LIMIT.toLocaleString()})
+            Podify Tokens ({podifyTokens.used.toLocaleString()}/
+            {PODIFY_TOKENS_LIMIT.toLocaleString()})
           </span>
-          <span>${podifyTokensCost.toFixed(2)}</span>
+          <span>{podifyTokensPercentage}%</span>
         </div>
-        <Progress 
+        <Progress
           value={podifyTokensPercentage}
           className={podifyTokensPercentage >= 100 ? "bg-destructive/20" : ""}
         />
@@ -122,8 +132,6 @@ export function UsageProgress({
 
       {resetDate && (
         <div className="text-xs text-muted-foreground mt-4">
-          Current billing period: {usage.currentPeriod?.month}
-          <br />
           Limits reset on: {resetDate}
         </div>
       )}
@@ -135,15 +143,21 @@ export function UsageProgress({
             <p>You've reached your free tier limits for this month:</p>
             <ul className="list-disc ml-4 mt-2 space-y-1">
               {articles.used >= articles.limit && (
-                <li>Maximum {articles.limit.toLocaleString()} articles per month reached ({articles.used.toLocaleString()} used)</li>
+                <li>
+                  Maximum {articles.limit.toLocaleString()} articles per month
+                  reached ({articles.used.toLocaleString()} used)
+                </li>
               )}
               {podifyTokens.used >= PODIFY_TOKENS_LIMIT && (
-                <li>Maximum {PODIFY_TOKENS_LIMIT.toLocaleString()} Podify Tokens per month reached (${podifyTokensCost.toFixed(2)} worth used)</li>
+                <li>
+                  Maximum {PODIFY_TOKENS_LIMIT.toLocaleString()} Podify Tokens
+                  per month reached (${podifyTokensCost.toFixed(2)} worth used)
+                </li>
               )}
             </ul>
           </div>
           {showUpgradeButton && (
-            <Button 
+            <Button
               variant="success"
               className="w-full"
               onClick={() => setLocation("/pricing")}
