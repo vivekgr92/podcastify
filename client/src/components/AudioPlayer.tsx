@@ -66,7 +66,12 @@ export default function AudioPlayer() {
   // Handle play/pause toggle with proper state management
   const handlePlayPause = async () => {
     if (!audioData) return;
-    await togglePlay();
+
+    try {
+      await togglePlay();
+    } catch (error) {
+      console.error('Error toggling playback:', error);
+    }
   };
 
   // Only render if we have a user
@@ -81,7 +86,7 @@ export default function AudioPlayer() {
         <div className="flex items-center gap-4 min-w-[200px] max-w-[300px]">
           {audioData ? (
             <>
-              <div 
+              <div
                 className={`w-12 h-12 rounded-lg flex items-center justify-center ${
                   audioData.coverImage ? '' : 'bg-[#4CAF50]/20'
                 }`}
@@ -148,7 +153,7 @@ export default function AudioPlayer() {
               size="icon"
               disabled={!audioData}
               className={`h-10 w-10 rounded-full border-none text-white ${
-                audioData 
+                audioData
                   ? 'bg-[#4CAF50] hover:bg-[#45a049] cursor-pointer'
                   : 'bg-gray-600 cursor-not-allowed'
               }`}
@@ -215,7 +220,11 @@ export default function AudioPlayer() {
               max={duration || 100}
               step={1}
               disabled={!audioData}
-              onValueChange={([value]) => setPosition(value)}
+              onValueChange={([value]) => {
+                if (audioData) {
+                  setPosition(value);
+                }
+              }}
               className={`flex-1 ${!audioData ? 'opacity-50' : ''}`}
             />
             <span className="text-sm text-white w-12">
@@ -316,8 +325,8 @@ export default function AudioPlayer() {
                                   className="h-8 w-8 text-gray-400 hover:text-white hover:bg-[#4CAF50]/20"
                                   onClick={() => {
                                     const newPlaylist = [...playlist];
-                                    [newPlaylist[index], newPlaylist[index - 1]] = 
-                                    [newPlaylist[index - 1], newPlaylist[index]];
+                                    [newPlaylist[index], newPlaylist[index - 1]] =
+                                      [newPlaylist[index - 1], newPlaylist[index]];
                                     if (index === currentIndex) {
                                       setCurrentIndex(index - 1);
                                     } else if (index - 1 === currentIndex) {
@@ -337,8 +346,8 @@ export default function AudioPlayer() {
                                   className="h-8 w-8 text-gray-400 hover:text-white hover:bg-[#4CAF50]/20"
                                   onClick={() => {
                                     const newPlaylist = [...playlist];
-                                    [newPlaylist[index], newPlaylist[index + 1]] = 
-                                    [newPlaylist[index + 1], newPlaylist[index]];
+                                    [newPlaylist[index], newPlaylist[index + 1]] =
+                                      [newPlaylist[index + 1], newPlaylist[index]];
                                     if (index === currentIndex) {
                                       setCurrentIndex(index + 1);
                                     } else if (index + 1 === currentIndex) {

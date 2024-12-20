@@ -44,19 +44,14 @@ export default function LibraryPage() {
   // Handle play/pause for any podcast in the library
   const handlePlay = useCallback(async (podcast: Podcast) => {
     try {
-      // Add to playlist if not already playing
-      if (audioData?.id !== podcast.id) {
-        addToPlaylist(podcast);
-      }
+      if (!podcast) return;
 
-      if (audioData?.id === podcast.id && isPlaying) {
-        // If this podcast is currently playing, pause it
-        await togglePlay();
-      } else if (audioData?.id === podcast.id && !isPlaying) {
-        // If this podcast is loaded but paused, resume it
+      if (audioData?.id === podcast.id) {
+        // If this is the currently loaded podcast, just toggle play/pause
         await togglePlay();
       } else {
-        // Load and play a new podcast
+        // If this is a different podcast, add to playlist and play
+        await addToPlaylist(podcast);
         await play(podcast);
       }
     } catch (error) {
@@ -67,7 +62,7 @@ export default function LibraryPage() {
         variant: "destructive",
       });
     }
-  }, [play, togglePlay, audioData, isPlaying, toast, addToPlaylist]);
+  }, [play, togglePlay, audioData, addToPlaylist, toast]);
 
   // Ensure AudioPlayer is rendered only when we have audio data
   const shouldShowPlayer = Boolean(user && (audioData || isPlaying));
@@ -78,8 +73,8 @@ export default function LibraryPage() {
         <div className="max-w-md mx-auto text-center">
           <h1 className="text-2xl font-bold mb-4">Please Login</h1>
           <p className="mb-4">You need to be logged in to access your library.</p>
-          <Button 
-            onClick={() => setLocation("/auth")} 
+          <Button
+            onClick={() => setLocation("/auth")}
             className="bg-[#4CAF50] hover:bg-[#45a049]"
           >
             Login
@@ -105,8 +100,8 @@ export default function LibraryPage() {
         <div className="flex flex-col gap-4 mb-8">
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold">Your Library</h1>
-            <Button 
-              onClick={() => setLocation("/")} 
+            <Button
+              onClick={() => setLocation("/")}
               className="bg-[#4CAF50] hover:bg-[#45a049]"
             >
               Convert New Podcast
@@ -167,12 +162,12 @@ export default function LibraryPage() {
                           onClick={async () => {
                             try {
                               const response = await fetch(`/api/podcasts/${podcast.id}`, {
-                                method: 'DELETE',
-                                credentials: 'include'
+                                method: "DELETE",
+                                credentials: "include",
                               });
 
                               if (!response.ok) {
-                                throw new Error('Failed to delete podcast');
+                                throw new Error("Failed to delete podcast");
                               }
 
                               toast({
@@ -181,12 +176,13 @@ export default function LibraryPage() {
                               });
 
                               // Invalidate the podcasts query to refresh the list
-                              await queryClient.invalidateQueries({ queryKey: ['podcasts'] });
+                              await queryClient.invalidateQueries({ queryKey: ["podcasts"] });
                             } catch (error) {
-                              console.error('Error deleting podcast:', error);
+                              console.error("Error deleting podcast:", error);
                               toast({
                                 title: "Error",
-                                description: error instanceof Error ? error.message : "Failed to delete podcast",
+                                description:
+                                  error instanceof Error ? error.message : "Failed to delete podcast",
                                 variant: "destructive",
                               });
                             }
@@ -206,7 +202,9 @@ export default function LibraryPage() {
               <div className="flex flex-col">
                 <div className="mb-4">
                   <h3 className="text-lg font-medium mb-2">Welcome to Your Podcast Library</h3>
-                  <p className="text-sm text-gray-400">Your library is empty. Convert your first podcast to get started!</p>
+                  <p className="text-sm text-gray-400">
+                    Your library is empty. Convert your first podcast to get started!
+                  </p>
                 </div>
               </div>
             </div>
