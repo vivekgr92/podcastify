@@ -1,6 +1,6 @@
-import { Progress } from "@/components/ui/progress";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Progress } from "./ui/progress";
+import { Card } from "./ui/card";
+import { Button } from "./ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useLocation } from "wouter";
@@ -38,6 +38,7 @@ export function UsageProgress({
   onLimitReached?: () => void;
 }) {
   const [, setLocation] = useLocation();
+
   const {
     data: usage,
     isLoading,
@@ -55,8 +56,8 @@ export function UsageProgress({
       return res.json();
     },
     retry: false,
-    refetchInterval: 5000, // Poll every 2 seconds for real-time updates
-    staleTime: 1000, // Consider data stale after 1 second
+    refetchInterval: 5000,
+    staleTime: 1000,
   });
 
   if (isLoading) {
@@ -80,20 +81,17 @@ export function UsageProgress({
   const articles = usage.limits.articles;
   const podifyTokens = usage.limits.tokens.podifyTokens;
 
-  // Calculate percentages
   const articlesPercentage = Math.min(
     (articles.used / articles.limit) * 100,
-    100,
+    100
   );
   const podifyTokensPercentage = Math.min(
     (podifyTokens.used / podifyTokens.limit) * 100,
-    100,
+    100
   );
 
-  // Calculate cost (1 Podify Token = $0.005)
   const podifyTokensCost = (podifyTokens.used * 0.005).toFixed(2);
 
-  // Format the reset date
   const resetDate = usage.currentPeriod?.resetsOn
     ? new Date(usage.currentPeriod.resetsOn).toLocaleDateString("en-US", {
         year: "numeric",
@@ -164,7 +162,13 @@ export function UsageProgress({
             <Button
               variant="default"
               className="w-full"
-              onClick={() => setLocation("/pricing")}
+              onClick={() => {
+                if (onLimitReached) {
+                  onLimitReached();
+                } else {
+                  setLocation("/billing");
+                }
+              }}
             >
               Upgrade Now
             </Button>

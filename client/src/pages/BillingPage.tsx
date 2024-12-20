@@ -64,12 +64,13 @@ export default function BillingPage() {
   if (!user) return null;
 
   const handlePlanSelect = (plan: typeof plans[0]) => {
-    if (plan.buttonText === "Contact Sales") {
+    if (plan.name === "Enterprise Plan") {
       window.location.href = "mailto:sales@podify.com";
-    } else {
-      setSelectedPlan(plan);
-      setIsPaymentModalOpen(true);
+      return;
     }
+
+    setSelectedPlan(plan);
+    setIsPaymentModalOpen(true);
   };
 
   const handlePaymentSubmit = async (cardDetails: any) => {
@@ -94,7 +95,6 @@ export default function BillingPage() {
         description: `Successfully subscribed to ${selectedPlan?.name}`,
       });
 
-      // Redirect to home page after successful subscription
       setLocation('/');
     } catch (error) {
       toast({
@@ -102,7 +102,6 @@ export default function BillingPage() {
         description: "Failed to process payment. Please try again.",
         variant: "destructive",
       });
-      throw error;
     }
   };
 
