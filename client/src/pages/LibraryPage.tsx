@@ -26,7 +26,7 @@ export default function LibraryPage() {
   const [, setLocation] = useLocation();
   const { user } = useUser();
   const queryClient = useQueryClient();
-const { play, isPlaying, audioData, togglePlay } = useAudio();
+  const { play, isPlaying, audioData, togglePlay } = useAudio();
   const { toast } = useToast();
 
   const { data: podcasts, isLoading } = useQuery<Podcast[]>({
@@ -72,8 +72,8 @@ const { play, isPlaying, audioData, togglePlay } = useAudio();
         <div className="max-w-md mx-auto text-center">
           <h1 className="text-2xl font-bold mb-4">Please Login</h1>
           <p className="mb-4">You need to be logged in to access your library.</p>
-          <Button 
-            onClick={() => setLocation("/auth")} 
+          <Button
+            onClick={() => setLocation("/auth")}
             className="bg-[#4CAF50] hover:bg-[#45a049]"
           >
             Login
@@ -99,8 +99,8 @@ const { play, isPlaying, audioData, togglePlay } = useAudio();
         <div className="flex flex-col gap-4 mb-8">
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold">Your Library</h1>
-            <Button 
-              onClick={() => setLocation("/")} 
+            <Button
+              onClick={() => setLocation("/")}
               className="bg-[#4CAF50] hover:bg-[#45a049]"
             >
               Convert New Podcast
@@ -122,7 +122,7 @@ const { play, isPlaying, audioData, togglePlay } = useAudio();
                     size="icon"
                     className={cn(
                       "rounded-full h-10 w-10 p-0 flex items-center justify-center",
-                      audioData?.id === podcast.id
+                      audioData?.id === podcast.id && isPlaying
                         ? "bg-[#45a049] hover:bg-[#3d8b3f]"
                         : "bg-[#4CAF50] hover:bg-[#45a049]"
                     )}
@@ -161,26 +161,29 @@ const { play, isPlaying, audioData, togglePlay } = useAudio();
                           onClick={async () => {
                             try {
                               const response = await fetch(`/api/podcasts/${podcast.id}`, {
-                                method: 'DELETE',
-                                credentials: 'include'
+                                method: "DELETE",
+                                credentials: "include",
                               });
-                              
+
                               if (!response.ok) {
-                                throw new Error('Failed to delete podcast');
+                                throw new Error("Failed to delete podcast");
                               }
-                              
+
                               toast({
                                 title: "Success",
                                 description: "Podcast deleted successfully",
                               });
-                              
+
                               // Invalidate the podcasts query to refresh the list
-                              await queryClient.invalidateQueries({ queryKey: ['podcasts'] });
+                              await queryClient.invalidateQueries({ queryKey: ["podcasts"] });
                             } catch (error) {
-                              console.error('Error deleting podcast:', error);
+                              console.error("Error deleting podcast:", error);
                               toast({
                                 title: "Error",
-                                description: error instanceof Error ? error.message : "Failed to delete podcast",
+                                description:
+                                  error instanceof Error
+                                    ? error.message
+                                    : "Failed to delete podcast",
                                 variant: "destructive",
                               });
                             }
@@ -191,7 +194,6 @@ const { play, isPlaying, audioData, togglePlay } = useAudio();
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
-                  {/* Share button removed as per requirements */}
                 </div>
               </div>
             </div>
@@ -208,9 +210,9 @@ const { play, isPlaying, audioData, togglePlay } = useAudio();
           )}
         </div>
       </main>
-      
+
       {/* Render AudioPlayer when user is authenticated */}
-      {user && <AudioPlayer />}
+      {shouldShowPlayer && <AudioPlayer />}
     </div>
   );
 }
