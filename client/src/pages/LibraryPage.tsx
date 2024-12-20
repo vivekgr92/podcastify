@@ -1,7 +1,7 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 import { useQuery } from "@tanstack/react-query";
-import type { Podcast } from "@db/schema";
+import type { Podcast } from "../types/podcast";
 import { Share2, Play, Pause, Trash2, AlertCircle } from "lucide-react";
 import {
   AlertDialog,
@@ -13,21 +13,21 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from "../components/ui/alert-dialog";
 import { useLocation } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAudio } from "../hooks/use-audio";
 import AudioPlayer from "../components/AudioPlayer";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "../hooks/use-toast";
 import { useCallback } from "react";
 import { useUser } from "../hooks/use-user";
-import { cn } from "@/lib/utils";
+import { cn } from "../lib/utils";
 
 export default function LibraryPage() {
   const [, setLocation] = useLocation();
   const { user } = useUser();
   const queryClient = useQueryClient();
-  const { play, isPlaying, audioData, togglePlay, addToPlaylist } = useAudio();
+  const { play, isPlaying, audioData, addToPlaylist } = useAudio();
   const { toast } = useToast();
 
   const { data: podcasts, isLoading } = useQuery<Podcast[]>({
@@ -41,19 +41,18 @@ export default function LibraryPage() {
     retry: 1,
   });
 
-  // Handle play/pause for any podcast in the library
+  // Improved handlePlay function with proper synchronization
   const handlePlay = useCallback(async (podcast: Podcast) => {
     try {
       if (!podcast) return;
 
-      if (audioData?.id === podcast.id) {
-        // If this is the currently loaded podcast, just toggle play/pause
-        await togglePlay();
-      } else {
-        // If this is a different podcast, add to playlist and play
+      // First add to playlist if not already playing
+      if (audioData?.id !== podcast.id) {
         await addToPlaylist(podcast);
-        await play(podcast);
       }
+
+      // Then play the podcast
+      await play(podcast);
     } catch (error) {
       console.error('Error playing podcast:', error);
       toast({
@@ -62,10 +61,7 @@ export default function LibraryPage() {
         variant: "destructive",
       });
     }
-  }, [play, togglePlay, audioData, addToPlaylist, toast]);
-
-  // Ensure AudioPlayer is rendered only when we have audio data
-  const shouldShowPlayer = Boolean(user && (audioData || isPlaying));
+  }, [play, audioData, addToPlaylist, toast]);
 
   if (!user) {
     return (
@@ -123,7 +119,7 @@ export default function LibraryPage() {
                     size="icon"
                     className={cn(
                       "rounded-full h-10 w-10 p-0 flex items-center justify-center",
-                      audioData?.id === podcast.id
+                      audioData?.id === podcast.id && isPlaying
                         ? "bg-[#45a049] hover:bg-[#3d8b3f]"
                         : "bg-[#4CAF50] hover:bg-[#45a049]"
                     )}
@@ -212,7 +208,7 @@ export default function LibraryPage() {
         </div>
       </main>
 
-      {/* Render AudioPlayer when user is authenticated */}
+      {/* Render AudioPlayer only when we have audio data */}
       {user && <AudioPlayer />}
     </div>
   );
