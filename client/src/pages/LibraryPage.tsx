@@ -47,11 +47,14 @@ export default function LibraryPage() {
       // If the clicked podcast is already playing/paused
       if (audioData?.id === podcast.id) {
         await togglePlay(); // Just toggle play/pause
-      } else {
-        // Add to playlist and play
-        addToPlaylist(podcast);
-        await play(podcast);
+        return;
       }
+
+      // Add to playlist first
+      addToPlaylist(podcast);
+
+      // Then play the podcast
+      await play(podcast);
     } catch (error) {
       console.error('Error handling play/pause:', error);
       toast({
