@@ -1,3 +1,4 @@
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import type { Podcast } from "@db/schema";
@@ -26,7 +27,7 @@ export default function LibraryPage() {
   const [, setLocation] = useLocation();
   const { user } = useUser();
   const queryClient = useQueryClient();
-const { play, isPlaying, audioData, togglePlay } = useAudio();
+  const { play, isPlaying, audioData, togglePlay, addToPlaylist } = useAudio();
   const { toast } = useToast();
 
   const { data: podcasts, isLoading } = useQuery<Podcast[]>({
@@ -43,6 +44,11 @@ const { play, isPlaying, audioData, togglePlay } = useAudio();
   // Handle play/pause for any podcast in the library
   const handlePlay = useCallback(async (podcast: Podcast) => {
     try {
+      // Add to playlist if not already playing
+      if (audioData?.id !== podcast.id) {
+        addToPlaylist(podcast);
+      }
+
       if (audioData?.id === podcast.id && isPlaying) {
         // If this podcast is currently playing, pause it
         await togglePlay();
@@ -61,7 +67,7 @@ const { play, isPlaying, audioData, togglePlay } = useAudio();
         variant: "destructive",
       });
     }
-  }, [play, togglePlay, audioData, isPlaying, toast]);
+  }, [play, togglePlay, audioData, isPlaying, toast, addToPlaylist]);
 
   // Ensure AudioPlayer is rendered only when we have audio data
   const shouldShowPlayer = Boolean(user && (audioData || isPlaying));
@@ -164,16 +170,16 @@ const { play, isPlaying, audioData, togglePlay } = useAudio();
                                 method: 'DELETE',
                                 credentials: 'include'
                               });
-                              
+
                               if (!response.ok) {
                                 throw new Error('Failed to delete podcast');
                               }
-                              
+
                               toast({
                                 title: "Success",
                                 description: "Podcast deleted successfully",
                               });
-                              
+
                               // Invalidate the podcasts query to refresh the list
                               await queryClient.invalidateQueries({ queryKey: ['podcasts'] });
                             } catch (error) {
@@ -191,7 +197,6 @@ const { play, isPlaying, audioData, togglePlay } = useAudio();
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
-                  {/* Share button removed as per requirements */}
                 </div>
               </div>
             </div>
@@ -208,7 +213,7 @@ const { play, isPlaying, audioData, togglePlay } = useAudio();
           )}
         </div>
       </main>
-      
+
       {/* Render AudioPlayer when user is authenticated */}
       {user && <AudioPlayer />}
     </div>

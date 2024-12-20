@@ -1,3 +1,4 @@
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import {
@@ -68,15 +69,13 @@ export default function AudioPlayer() {
     await togglePlay();
   };
 
-  
-
   // Only render if we have a user
   if (!user) {
     return null;
   }
 
   return (
-    <div className="w-full h-24 bg-black border-t border-gray-800 fixed bottom-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out">
+    <div className={`w-full h-24 bg-black border-t border-gray-800 fixed bottom-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out ${!audioData ? 'translate-y-full' : ''}`}>
       <div className="h-full mx-auto px-4 flex items-center justify-between gap-4 max-w-screen-2xl">
         {/* Left section - Podcast Info */}
         <div className="flex items-center gap-4 min-w-[200px] max-w-[300px]">
@@ -370,7 +369,6 @@ export default function AudioPlayer() {
                 </div>
               </PopoverContent>
             </Popover>
-            
           </div>
         </div>
       </div>
