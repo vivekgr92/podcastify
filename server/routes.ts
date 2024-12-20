@@ -14,7 +14,7 @@ import {
   playlistItems,
   progress,
   userUsage,
-  users
+  users,
 } from "@db/schema";
 import { logger } from "./services/logging";
 import { ttsService } from "./services/tts";
@@ -27,9 +27,9 @@ const __dirname = dirname(__filename);
 
 // Constants for usage limits
 const ARTICLE_LIMIT = 3;
-const TOKEN_LIMIT = 50000;
+const PODIFY_TOKEN_LIMIT = 10000;
 const PODIFY_TOKEN_RATE = 0.005; // $0.005 (0.5 cents) per Podify Token
-const PODIFY_MARGIN = 0.90 // 90% margin
+const PODIFY_MARGIN = 0.4; // 90% margin
 
 // Helper function to convert raw tokens to Podify Tokens
 function convertToPodifyTokens(totalCost: number): number {
@@ -126,8 +126,8 @@ export function registerRoutes(app: Express) {
         .where(
           and(
             eq(userUsage.userId, user.id),
-            eq(userUsage.monthYear, currentMonth)
-          )
+            eq(userUsage.monthYear, currentMonth),
+          ),
         )
         .limit(1);
 
@@ -154,9 +154,9 @@ export function registerRoutes(app: Express) {
         estimatedPricing.inputTokens + estimatedPricing.outputTokens;
       const wouldExceedArticles = currentArticles >= ARTICLE_LIMIT;
       const wouldExceedTokens =
-        currentTokens + estimatedTotalTokens > TOKEN_LIMIT;
+        currentTokens + estimatedTotalTokens > PODIFY_TOKEN_LIMIT;
       const remainingArticles = Math.max(0, ARTICLE_LIMIT - currentArticles);
-      const remainingTokens = Math.max(0, TOKEN_LIMIT - currentTokens);
+      const remainingTokens = Math.max(0, PODIFY_TOKEN_LIMIT - currentTokens);
 
       await logger.info([
         `Initial pricing estimation completed:`,
@@ -165,7 +165,7 @@ export function registerRoutes(app: Express) {
         `Estimated cost: $${estimatedPricing.totalCost.toFixed(4)}`,
         `\nUsage limits check for user ${user.id}:`,
         `Current articles: ${currentArticles}/${ARTICLE_LIMIT}`,
-        `Current tokens: ${currentTokens}/${TOKEN_LIMIT}`,
+        `Current tokens: ${currentTokens}/${PODIFY_TOKEN_LIMIT}`,
         `Would exceed article limit: ${wouldExceedArticles}`,
         `Would exceed token limit: ${wouldExceedTokens}`,
       ]);
@@ -176,7 +176,7 @@ export function registerRoutes(app: Express) {
           "---------- USAGE LIMIT WARNING ----------\n",
           `User: ${user.id}\n`,
           `Articles: ${currentArticles}/${ARTICLE_LIMIT} (${wouldExceedArticles ? "exceeded" : "ok"})\n`,
-          `Tokens: ${currentTokens}/${TOKEN_LIMIT} (${wouldExceedTokens ? "would exceed" : "ok"})\n`,
+          `Tokens: ${currentTokens}/${PODIFY_TOKEN_LIMIT} (${wouldExceedTokens ? "would exceed" : "ok"})\n`,
           "-----------------------------------------\n",
         ]);
 
@@ -193,7 +193,7 @@ export function registerRoutes(app: Express) {
             },
             tokens: {
               used: currentTokens,
-              limit: TOKEN_LIMIT,
+              limit: PODIFY_TOKEN_LIMIT,
               remaining: remainingTokens,
               estimated: estimatedTotalTokens,
               wouldExceed: wouldExceedTokens,
@@ -221,7 +221,7 @@ export function registerRoutes(app: Express) {
         `Audio generation completed:`,
         `Duration: ${duration}s`,
         `Actual tokens used: ${usage.inputTokens + usage.outputTokens}`,
-        `Actual cost: ${usage.totalCost}`
+        `Actual cost: ${usage.totalCost}`,
       ]);
 
       // Create podcast and update usage in a single transaction
@@ -257,7 +257,7 @@ export function registerRoutes(app: Express) {
         await logger.info([
           `Updated usage for user ${user.id}:`,
           `Articles: ${updatedUsage.articlesConverted}/${ARTICLE_LIMIT}`,
-          `Tokens: ${updatedUsage.tokensUsed}/${TOKEN_LIMIT}`,
+          `Tokens: ${updatedUsage.tokensUsed}/${PODIFY_TOKEN_LIMIT}`,
         ]);
 
         // Save the audio file
@@ -432,8 +432,8 @@ export function registerRoutes(app: Express) {
         .where(
           and(
             eq(userUsage.userId, req.user.id),
-            eq(userUsage.monthYear, currentMonth)
-          )
+            eq(userUsage.monthYear, currentMonth),
+          ),
         )
         .limit(1);
 
@@ -445,7 +445,7 @@ export function registerRoutes(app: Express) {
             userId: req.user.id,
             articlesConverted: 0,
             tokensUsed: 0,
-            podifyTokens: '0',
+            podifyTokens: "0",
             monthYear: currentMonth,
           })
           .returning();
@@ -454,7 +454,9 @@ export function registerRoutes(app: Express) {
       }
 
       const podifyTokensUsed = Number(usage.podifyTokens) || 0;
-      const podifyTokenLimit = convertToPodifyTokens(TOKEN_LIMIT * PODIFY_TOKEN_RATE); //Corrected calculation
+      const podifyTokenLimit = convertToPodifyTokens(
+        PODIFY_TOKEN_LIMIT * PODIFY_TOKEN_RATE,
+      ); //Corrected calculation
       const hasReachedLimit =
         (usage.articlesConverted ?? 0) >= ARTICLE_LIMIT ||
         podifyTokensUsed >= podifyTokenLimit;
@@ -465,17 +467,23 @@ export function registerRoutes(app: Express) {
           articles: {
             used: usage.articlesConverted || 0,
             limit: ARTICLE_LIMIT,
-            remaining: Math.max(0, ARTICLE_LIMIT - (usage.articlesConverted || 0)),
+            remaining: Math.max(
+              0,
+              ARTICLE_LIMIT - (usage.articlesConverted || 0),
+            ),
           },
           tokens: {
             used: usage.tokensUsed || 0,
-            limit: TOKEN_LIMIT,
-            remaining: Math.max(0, TOKEN_LIMIT - (usage.tokensUsed || 0)),
+            limit: PODIFY_TOKEN_LIMIT,
+            remaining: Math.max(
+              0,
+              PODIFY_TOKEN_LIMIT - (usage.tokensUsed || 0),
+            ),
             podifyTokens: {
               used: podifyTokensUsed,
               limit: podifyTokenLimit,
               remaining: Math.max(0, podifyTokenLimit - podifyTokensUsed),
-            }
+            },
           },
         },
         currentPeriod: {
@@ -807,7 +815,8 @@ export function registerRoutes(app: Express) {
 
       const currentArticles = usage?.articlesConverted ?? 0;
       const currentTokens = usage?.tokensUsed ?? 0;
-      const totalTokens = pricingDetails.inputTokens + pricingDetails.outputTokens;
+      const totalTokens =
+        pricingDetails.inputTokens + pricingDetails.outputTokens;
 
       await logger.info([
         `Pricing calculation for user ${req.user.id}:`,
@@ -833,9 +842,9 @@ export function registerRoutes(app: Express) {
           },
           tokens: {
             used: currentTokens,
-            limit: TOKEN_LIMIT,
-            remaining: Math.max(0, TOKEN_LIMIT - currentTokens),
-            wouldExceed: currentTokens + totalTokens > TOKEN_LIMIT,
+            limit: PODIFY_TOKEN_LIMIT,
+            remaining: Math.max(0, PODIFY_TOKEN_LIMIT - currentTokens),
+            wouldExceed: currentTokens + totalTokens > PODIFY_TOKEN_LIMIT,
             estimated: totalTokens,
           },
         },
