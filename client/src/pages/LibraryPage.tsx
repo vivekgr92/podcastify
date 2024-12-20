@@ -18,7 +18,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAudio } from "../hooks/use-audio";
 import AudioPlayer from "../components/AudioPlayer";
 import { useToast } from "@/hooks/use-toast";
-import { useCallback, useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { useUser } from "../hooks/use-user";
 import { cn } from "@/lib/utils";
 
@@ -26,7 +26,16 @@ export default function LibraryPage() {
   const [, setLocation] = useLocation();
   const { user } = useUser();
   const queryClient = useQueryClient();
-  const { play, isPlaying, audioData, togglePlay, addToPlaylist, playlist } = useAudio();
+  const { 
+    play, 
+    isPlaying, 
+    audioData, 
+    togglePlay, 
+    addToPlaylist, 
+    playlist,
+    currentTime, 
+    duration 
+  } = useAudio();
   const { toast } = useToast();
 
   const { data: podcasts, isLoading } = useQuery<Podcast[]>({
@@ -203,6 +212,30 @@ export default function LibraryPage() {
                         </AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog>
+
+                    {isLoaded && (
+                      <div className="flex-1 ml-4">
+                        <div className="text-sm text-gray-400">
+                          {currentTime > 0 && (
+                            <span>
+                              {Math.floor(currentTime / 60)}:
+                              {String(Math.floor(currentTime % 60)).padStart(2, '0')} / 
+                              {Math.floor(duration / 60)}:
+                              {String(Math.floor(duration % 60)).padStart(2, '0')}
+                            </span>
+                          )}
+                        </div>
+                        <div className="w-full h-1 bg-gray-800 rounded-full mt-1">
+                          <div 
+                            className="h-full bg-[#4CAF50] rounded-full"
+                            style={{ 
+                              width: `${(currentTime / duration) * 100}%`,
+                              transition: 'width 0.1s linear'
+                            }}
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
