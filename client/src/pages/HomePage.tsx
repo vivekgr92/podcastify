@@ -163,13 +163,9 @@ export default function HomePage() {
             <div className="text-center">
               <Button
                 size="lg"
-                variant="default"
+                variant="success"
                 disabled={hasReachedLimit}
-                className={`mb-4 px-8 ${
-                  hasReachedLimit
-                    ? "bg-gray-200 text-gray-600 cursor-not-allowed hover:bg-gray-200 pointer-events-none"
-                    : "bg-[#4CAF50] hover:bg-[#45a049]"
-                }`}
+                className="mb-4 px-8"
                 onClick={(e) => {
                   if (hasReachedLimit) {
                     e.preventDefault();
@@ -178,6 +174,7 @@ export default function HomePage() {
                   }
                 }}
               >
+                <Upload className="mr-2" />
                 Choose File to Upload
               </Button>
               <p className="text-gray-400">
