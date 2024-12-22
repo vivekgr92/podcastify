@@ -26,6 +26,14 @@ externalPort = 80
 localPort = 5173
 externalPort = 5173
 
+[[ports]]
+localPort = 5174
+externalPort = 3002
+
+[[ports]]
+localPort = 5175
+externalPort = 3003
+
 [workflows]
 runButton = "Project"
 
@@ -70,4 +78,4 @@ task = "packager.installForAll"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd client && npm install && npm run dev"
-waitForPort = 5173
+waitForPort = 5175
