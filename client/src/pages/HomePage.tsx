@@ -3,12 +3,13 @@ import { useLocation } from "wouter";
 import { Button } from "../components/ui/button";
 import { useToast } from "../hooks/use-toast";
 import { useTTS } from "../hooks/use-tts";
-import { FileText, Upload, Headphones, Play, Plus, Menu } from "lucide-react";
+import { FileText, Upload, Headphones, Plus, Menu, ChevronDown, ChevronUp } from "lucide-react";
 import { Logo } from "../components/Logo";
 import { useDropzone } from "react-dropzone";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUser } from "../hooks/use-user";
 import { UsageProgress } from "../components/UsageProgress";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 export default function HomePage() {
   const [, setLocation] = useLocation();
@@ -16,6 +17,7 @@ export default function HomePage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [hasReachedLimit, setHasReachedLimit] = useState(false);
   const { toast } = useToast();
+  const location = useLocation()[0];
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
@@ -117,6 +119,43 @@ export default function HomePage() {
     setLocation("/billing");
   };
 
+  const [openFaqs, setOpenFaqs] = useState<{ [key: string]: boolean }>({});
+
+  const toggleFaq = (id: string) => {
+    setOpenFaqs((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
+
+  const faqItems = [
+    {
+      id: "formats",
+      question: "What file formats are supported?",
+      answer: "We currently support PDF, DOC, DOCX, and TXT files for conversion. All files are processed securely and confidentially.",
+    },
+    {
+      id: "conversion-time",
+      question: "How long does the conversion take?",
+      answer: "Most articles are converted within 1-2 minutes, depending on length. Longer articles may take additional time to process.",
+    },
+    {
+      id: "voice-customization",
+      question: "Can I customize the voice?",
+      answer: "Yes! Premium users can choose from multiple natural-sounding voices and adjust speech parameters like speed and tone.",
+    },
+    {
+      id: "podcast-location",
+      question: "Where can I find my converted podcasts?",
+      answer: "All your converted podcasts are available in your Library. You can stream them online or download for offline listening.",
+    },
+    {
+      id: "usage-limit",
+      question: "What happens if I reach my usage limit?",
+      answer: "When you reach your plan's limit, you can upgrade to a higher tier to continue converting articles or wait until your usage resets next month.",
+    },
+  ];
+
   if (user) {
     return (
       <div className="min-h-screen bg-black text-white">
@@ -151,13 +190,6 @@ export default function HomePage() {
                   : "border-gray-700 hover:border-[#4CAF50]"
               } 
               bg-gray-900/50`}
-            onClick={(e) => {
-              if (hasReachedLimit) {
-                e.preventDefault();
-                e.stopPropagation();
-                setLocation("/billing");
-              }
-            }}
           >
             <input {...getInputProps()} disabled={hasReachedLimit} />
             <div className="text-center">
@@ -188,33 +220,30 @@ export default function HomePage() {
               </p>
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-8 mb-12">
-            <div className="text-center p-6 rounded-lg bg-gray-900/50">
-              <div className="w-12 h-12 rounded-full bg-[#4CAF50]/20 flex items-center justify-center mx-auto mb-4">
-                <span className="text-[#4CAF50] font-bold">1</span>
-              </div>
-              <h3 className="font-semibold mb-2">Upload Your Article</h3>
-              <p className="text-sm text-gray-400">
-                Select any article you'd like to convert into audio format
-              </p>
-            </div>
-            <div className="text-center p-6 rounded-lg bg-gray-900/50">
-              <div className="w-12 h-12 rounded-full bg-[#4CAF50]/20 flex items-center justify-center mx-auto mb-4">
-                <span className="text-[#4CAF50] font-bold">2</span>
-              </div>
-              <h3 className="font-semibold mb-2">Choose Voice</h3>
-              <p className="text-sm text-gray-400">
-                Select from multiple natural-sounding voices
-              </p>
-            </div>
-            <div className="text-center p-6 rounded-lg bg-gray-900/50">
-              <div className="w-12 h-12 rounded-full bg-[#4CAF50]/20 flex items-center justify-center mx-auto mb-4">
-                <span className="text-[#4CAF50] font-bold">3</span>
-              </div>
-              <h3 className="font-semibold mb-2">Get Your Podcast</h3>
-              <p className="text-sm text-gray-400">
-                Download or stream your converted podcast
-              </p>
+
+          <div className="bg-gray-900/50 rounded-lg p-6">
+            <h2 className="text-xl font-bold mb-6">Frequently Asked Questions</h2>
+            <div className="space-y-4">
+              {faqItems.map((faq) => (
+                <Collapsible
+                  key={faq.id}
+                  open={openFaqs[faq.id]}
+                  onOpenChange={() => toggleFaq(faq.id)}
+                  className="border border-gray-800 rounded-lg"
+                >
+                  <CollapsibleTrigger className="flex justify-between items-center w-full p-4 text-left">
+                    <h3 className="text-lg font-semibold text-white">{faq.question}</h3>
+                    {openFaqs[faq.id] ? (
+                      <ChevronUp className="h-5 w-5" />
+                    ) : (
+                      <ChevronDown className="h-5 w-5" />
+                    )}
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="p-4 pt-0">
+                    <p className="text-gray-400">{faq.answer}</p>
+                  </CollapsibleContent>
+                </Collapsible>
+              ))}
             </div>
           </div>
 
@@ -236,36 +265,6 @@ export default function HomePage() {
               </div>
             </div>
           )}
-
-          <div className="bg-gray-900/50 rounded-lg p-6">
-            <h2 className="text-xl font-bold mb-6">Frequently Asked Questions</h2>
-            <div className="space-y-6">
-              <div className="space-y-2">
-                <h3 className="text-lg font-semibold text-white">What file formats are supported?</h3>
-                <p className="text-gray-400">We currently support PDF, DOC, DOCX, and TXT files for conversion. All files are processed securely and confidentially.</p>
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="text-lg font-semibold text-white">How long does the conversion take?</h3>
-                <p className="text-gray-400">Most articles are converted within 1-2 minutes, depending on length. Longer articles may take additional time to process.</p>
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="text-lg font-semibold text-white">Can I customize the voice?</h3>
-                <p className="text-gray-400">Yes! Premium users can choose from multiple natural-sounding voices and adjust speech parameters like speed and tone.</p>
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="text-lg font-semibold text-white">Where can I find my converted podcasts?</h3>
-                <p className="text-gray-400">All your converted podcasts are available in your Library. You can stream them online or download for offline listening.</p>
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="text-lg font-semibold text-white">What happens if I reach my usage limit?</h3>
-                <p className="text-gray-400">When you reach your plan's limit, you can upgrade to a higher tier to continue converting articles or wait until your usage resets next month.</p>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     );
