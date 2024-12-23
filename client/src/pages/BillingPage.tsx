@@ -20,7 +20,7 @@ const plans = [
     ],
     buttonText: "Select Plan",
     popular: false,
-    priceId: "price_individual"
+    priceId: "price_1OaUYKFZtbGQk9LCIWAy5BxV" // Test mode price ID for Individual Plan
   },
   {
     name: "Creator Plan",
@@ -36,7 +36,7 @@ const plans = [
     ],
     buttonText: "Select Plan",
     popular: true,
-    priceId: "price_creator"
+    priceId: "price_1OaUYvFZtbGQk9LCYQViVr3M" // Test mode price ID for Creator Plan
   },
   {
     name: "Enterprise Plan",
@@ -53,7 +53,7 @@ const plans = [
     ],
     buttonText: "Contact Sales",
     popular: false,
-    priceId: "price_enterprise"
+    priceId: "price_1OaUZVFZtbGQk9LCq9z6jk2M" // Test mode price ID for Enterprise Plan
   }
 ];
 
@@ -74,45 +74,6 @@ export default function BillingPage() {
 
     setSelectedPlan(plan);
     setIsPaymentModalOpen(true);
-  };
-
-  const handlePaymentSubmit = async (paymentMethodId: string) => {
-    try {
-      if (!selectedPlan) {
-        throw new Error('No plan selected');
-      }
-
-      const response = await fetch('/api/subscriptions/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          priceId: selectedPlan.priceId,
-          paymentMethodId,
-        }),
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to process subscription');
-      }
-
-      toast({
-        title: "Subscription Created",
-        description: `Successfully subscribed to ${selectedPlan.name}`,
-      });
-
-      setLocation('/dashboard');
-    } catch (error) {
-      console.error('Subscription error:', error);
-      toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to process subscription. Please try again.",
-        variant: "destructive",
-      });
-    }
   };
 
   return (
@@ -179,7 +140,7 @@ export default function BillingPage() {
           onClose={() => setIsPaymentModalOpen(false)}
           planName={selectedPlan.name}
           planPrice={selectedPlan.price}
-          onSubmit={handlePaymentSubmit}
+          priceId={selectedPlan.priceId}
         />
       )}
     </div>

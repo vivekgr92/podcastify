@@ -18,10 +18,10 @@ interface PaymentModalProps {
   onClose: () => void;
   planName: string;
   planPrice: string;
-  onSubmit: (paymentMethod: string) => Promise<void>;
+  priceId: string;
 }
 
-function CheckoutForm({ planName, planPrice, onSubmit, onClose }: Omit<PaymentModalProps, 'isOpen'>) {
+function CheckoutForm({ planName, planPrice, priceId, onClose }: Omit<PaymentModalProps, 'isOpen'>) {
   const stripe = useStripe();
   const elements = useElements();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -39,31 +39,38 @@ function CheckoutForm({ planName, planPrice, onSubmit, onClose }: Omit<PaymentMo
     setError(null);
 
     try {
-      const { error: submitError } = await elements.submit();
-      if (submitError) {
-        throw new Error(submitError.message);
-      }
-
-      // Create payment method for subscription
-      const result = await stripe.createPaymentMethod({
-        elements,
-        params: {
-          billing_details: {
-            name: planName,
-          },
-        }
+      // Create subscription
+      const response = await fetch('/api/subscriptions/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          priceId,
+        }),
+        credentials: 'include',
       });
 
-      if (result.error) {
-        throw new Error(result.error.message);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to create subscription');
       }
 
-      if (!result.paymentMethod) {
-        throw new Error('Failed to create payment method');
+      // Confirm the subscription payment
+      const { error: confirmError } = await stripe.confirmPayment({
+        elements,
+        clientSecret: data.clientSecret,
+        confirmParams: {
+          return_url: `${window.location.origin}/billing/success`,
+        },
+      });
+
+      if (confirmError) {
+        throw new Error(confirmError.message);
       }
 
-      // Pass the payment method ID to the parent component
-      await onSubmit(result.paymentMethod.id);
+      // Close modal on success
       onClose();
     } catch (err) {
       console.error('Payment processing error:', err);
@@ -106,23 +113,26 @@ function CheckoutForm({ planName, planPrice, onSubmit, onClose }: Omit<PaymentMo
   );
 }
 
-export function PaymentModal({ isOpen, onClose, planName, planPrice, onSubmit }: PaymentModalProps) {
+export function PaymentModal({ isOpen, onClose, planName, planPrice, priceId }: PaymentModalProps) {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isOpen) return;
 
-    const fetchSetupIntent = async () => {
+    const initializePayment = async () => {
       try {
         setError(null);
         setClientSecret(null);
 
-        const response = await fetch('/api/create-setup-intent', {
+        const response = await fetch('/api/create-payment-intent', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
+          body: JSON.stringify({
+            priceId,
+          }),
           credentials: 'include',
         });
 
@@ -138,8 +148,8 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, onSubmit }:
       }
     };
 
-    fetchSetupIntent();
-  }, [isOpen]);
+    initializePayment();
+  }, [isOpen, priceId]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -176,14 +186,13 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, onSubmit }:
                   colorBackground: '#1a1a1a',
                   colorText: '#ffffff'
                 }
-              },
-              paymentMethodCreation: 'manual'
+              }
             }}
           >
             <CheckoutForm
               planName={planName}
               planPrice={planPrice}
-              onSubmit={onSubmit}
+              priceId={priceId}
               onClose={onClose}
             />
           </Elements>
