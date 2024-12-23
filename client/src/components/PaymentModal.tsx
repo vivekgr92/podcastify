@@ -39,8 +39,8 @@ function CheckoutForm({ planName, planPrice, priceId, onClose }: Omit<PaymentMod
     setError(null);
 
     try {
-      // Create subscription
-      const response = await fetch('/api/subscriptions/create', {
+      // First create the payment intent with subscription data
+      const response = await fetch('/api/create-payment-intent', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -52,26 +52,32 @@ function CheckoutForm({ planName, planPrice, priceId, onClose }: Omit<PaymentMod
       });
 
       const data = await response.json();
-
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to create subscription');
+        throw new Error(data.error || 'Failed to initialize payment');
       }
 
-      // Confirm the subscription payment
+      // Create payment method and confirm the payment
+      const { error: submitError } = await elements.submit();
+      if (submitError) {
+        throw new Error(submitError.message);
+      }
+
       const { error: confirmError } = await stripe.confirmPayment({
         elements,
         clientSecret: data.clientSecret,
         confirmParams: {
           return_url: `${window.location.origin}/billing/success`,
+          payment_method_data: {
+            billing_details: {
+              name: 'Subscription to ' + planName,
+            },
+          },
         },
       });
 
       if (confirmError) {
         throw new Error(confirmError.message);
       }
-
-      // Close modal on success
-      onClose();
     } catch (err) {
       console.error('Payment processing error:', err);
       setError(err instanceof Error ? err.message : 'An error occurred while processing your payment.');
@@ -105,7 +111,7 @@ function CheckoutForm({ planName, planPrice, priceId, onClose }: Omit<PaymentMod
               Processing...
             </>
           ) : (
-            `Subscribe for ${planPrice}/month`
+            `Subscribe for $${planPrice}/month`
           )}
         </Button>
       </div>
@@ -157,7 +163,7 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, priceId }: 
         <DialogHeader>
           <DialogTitle>Subscribe to {planName}</DialogTitle>
           <DialogDescription>
-            Enter your payment details to subscribe to the {planName} for {planPrice}/month
+            Enter your payment details to subscribe to the {planName} for ${planPrice}/month
           </DialogDescription>
         </DialogHeader>
 
@@ -186,7 +192,8 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, priceId }: 
                   colorBackground: '#1a1a1a',
                   colorText: '#ffffff'
                 }
-              }
+              },
+              paymentMethodCreation: 'manual'
             }}
           >
             <CheckoutForm

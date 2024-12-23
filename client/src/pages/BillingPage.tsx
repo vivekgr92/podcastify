@@ -8,39 +8,39 @@ import { useToast } from "../hooks/use-toast";
 
 const plans = [
   {
-    name: "Individual Plan",
-    price: "$9.99",
+    name: "Basic Plan",
+    price: "9.99",
     period: "per month",
     features: [
-      "Convert up to 10 articles/month",
+      "Convert up to 50 articles/month",
       "Basic voice selection",
       "Standard quality audio",
       "Email support",
       "Basic analytics"
     ],
-    buttonText: "Select Plan",
+    buttonText: "Start Basic Plan",
     popular: false,
-    priceId: "price_1OaUYKFZtbGQk9LCIWAy5BxV" // Test mode price ID for Individual Plan
+    priceId: "price_1OaUYKFZtbGQk9LCIWAy5BxV" // Test mode price ID for Basic Plan
   },
   {
-    name: "Creator Plan",
-    price: "$24.99",
+    name: "Pro Plan",
+    price: "24.99",
     period: "per month",
     features: [
-      "Convert up to 50 articles/month",
+      "Convert up to 200 articles/month",
       "Premium voice selection",
       "High quality audio",
       "Priority support",
       "Advanced analytics",
       "Custom intro/outro"
     ],
-    buttonText: "Select Plan",
+    buttonText: "Start Pro Plan",
     popular: true,
-    priceId: "price_1OaUYvFZtbGQk9LCYQViVr3M" // Test mode price ID for Creator Plan
+    priceId: "price_1OaUYvFZtbGQk9LCYQViVr3M" // Test mode price ID for Pro Plan
   },
   {
     name: "Enterprise Plan",
-    price: "Custom",
+    price: "99.99",
     period: "per month",
     features: [
       "Unlimited conversions",
@@ -51,7 +51,7 @@ const plans = [
       "API access",
       "Custom branding"
     ],
-    buttonText: "Contact Sales",
+    buttonText: "Start Enterprise Plan",
     popular: false,
     priceId: "price_1OaUZVFZtbGQk9LCq9z6jk2M" // Test mode price ID for Enterprise Plan
   }
@@ -67,11 +67,6 @@ export default function BillingPage() {
   if (!user) return null;
 
   const handlePlanSelect = (plan: typeof plans[0]) => {
-    if (plan.name === "Enterprise Plan") {
-      window.location.href = "mailto:sales@podify.com";
-      return;
-    }
-
     setSelectedPlan(plan);
     setIsPaymentModalOpen(true);
   };
@@ -81,7 +76,7 @@ export default function BillingPage() {
       <div className="text-center mb-16">
         <h1 className="text-4xl font-bold mb-4">Choose Your Plan</h1>
         <p className="text-gray-400 max-w-2xl mx-auto">
-          Select a plan that best fits your needs. All plans include our premium features.
+          Select a monthly plan that best fits your needs. All plans include our core features with different usage limits.
         </p>
       </div>
 
@@ -106,7 +101,7 @@ export default function BillingPage() {
 
             <div className="text-center mb-8">
               <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
-              <div className="text-3xl font-bold mb-1">{plan.price}</div>
+              <div className="text-3xl font-bold mb-1">${plan.price}</div>
               <div className="text-gray-400 text-sm">{plan.period}</div>
             </div>
 
