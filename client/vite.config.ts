@@ -15,10 +15,21 @@ export default defineConfig({
     port: 5175,
     strictPort: true,
     proxy: {
-      '/api': 'http://localhost:4000'
+      '/api': {
+        target: 'http://localhost:4000',
+        secure: false,
+        changeOrigin: true
+      }
     }
   },
+  optimizeDeps: {
+    exclude: ['@stripe/stripe-js']
+  },
+  build: {
+    outDir: path.resolve(__dirname, '../dist/public'),
+    emptyOutDir: true
+  },
   define: {
-    'import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY': `"${process.env.STRIPE_PUBLISHABLE_KEY}"`,
+    'import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY': JSON.stringify(process.env.STRIPE_PUBLISHABLE_KEY)
   }
 });
