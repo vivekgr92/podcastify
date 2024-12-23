@@ -11,8 +11,7 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 
-// Initialize Stripe with the publishable key
-const stripePromise = loadStripe(process.env.VITE_STRIPE_PUBLISHABLE_KEY || '');
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -32,7 +31,7 @@ function CheckoutForm({ planName, planPrice, onSubmit, onClose }: Omit<PaymentMo
     e.preventDefault();
 
     if (!stripe || !elements) {
-      console.error('Stripe or elements not initialized');
+      setError('Payment processing is not ready. Please try again.');
       return;
     }
 
@@ -40,29 +39,23 @@ function CheckoutForm({ planName, planPrice, onSubmit, onClose }: Omit<PaymentMo
     setError(null);
 
     try {
-      console.log('Starting payment submission process...');
-
-      // Step 1: Submit the form elements
-      console.log('Submitting form elements...');
+      // First, submit the form with card details
       const { error: submitError } = await elements.submit();
       if (submitError) {
-        console.error('Form submission error:', submitError);
         throw new Error(submitError.message);
       }
 
-      // Step 2: Create Payment Method
-      console.log('Creating payment method...');
+      // Then create the payment method
       const { error: paymentMethodError, paymentMethod } = await stripe.createPaymentMethod({
         elements,
         params: {
           billing_details: {
-            email: localStorage.getItem('userEmail') || '',
+            name: planName,
           },
         },
       });
 
       if (paymentMethodError) {
-        console.error('Payment method creation error:', paymentMethodError);
         throw new Error(paymentMethodError.message);
       }
 
@@ -70,10 +63,10 @@ function CheckoutForm({ planName, planPrice, onSubmit, onClose }: Omit<PaymentMo
         throw new Error('Failed to create payment method');
       }
 
-      // Step 3: Submit to server
-      console.log('Submitting to server...');
+      // Submit payment method ID to server
       await onSubmit(paymentMethod.id);
-      console.log('Payment process completed successfully');
+
+      // Close modal after successful payment
       onClose();
     } catch (err) {
       console.error('Payment processing error:', err);
@@ -121,15 +114,15 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, onSubmit }:
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!process.env.VITE_STRIPE_PUBLISHABLE_KEY) {
+    if (!import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY) {
       console.error('Stripe publishable key is missing');
-      setError('Stripe is not properly configured');
+      setError('Payment processing is not configured properly');
       return;
     }
 
     if (isOpen) {
       setError(null);
-      console.log('Initializing payment intent...');
+      setClientSecret(null);
 
       // Create a PaymentIntent on the server
       fetch('/api/create-payment-intent', {
@@ -141,19 +134,21 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, onSubmit }:
           planName,
           planPrice: parseFloat(planPrice.replace('$', '')),
         }),
-        credentials: 'include', // Include cookies for authentication
+        credentials: 'include',
       })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.error) {
-            throw new Error(data.error);
+        .then(async (res) => {
+          const data = await res.json();
+          if (!res.ok) {
+            throw new Error(data.error || 'Failed to initialize payment');
           }
-          console.log('Payment intent created successfully');
+          return data;
+        })
+        .then((data) => {
           setClientSecret(data.clientSecret);
         })
         .catch((err) => {
           console.error('Payment initialization error:', err);
-          setError(err?.message || 'Failed to initialize payment');
+          setError(err.message || 'Failed to initialize payment');
         });
     }
   }, [isOpen, planName, planPrice]);
