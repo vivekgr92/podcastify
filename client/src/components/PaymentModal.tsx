@@ -11,7 +11,8 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY!);
+// Initialize Stripe with the publishable key
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -92,6 +93,11 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, onSubmit }:
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY) {
+      setError('Stripe is not properly configured');
+      return;
+    }
+
     if (isOpen) {
       setError(null);
       // Create a PaymentIntent on the server
