@@ -52,9 +52,7 @@ app.use((req, res, next) => {
   const start = Date.now();
   res.on("finish", () => {
     const duration = Date.now() - start;
-    if (req.path.startsWith("/api")) {
-      log(`${req.method} ${req.path} ${res.statusCode} in ${duration}ms`);
-    }
+    log(`${req.method} ${req.path} ${res.statusCode} in ${duration}ms`);
   });
   next();
 });
@@ -77,7 +75,7 @@ async function startServer() {
   try {
     log('Starting server initialization...');
 
-    // Check environment variables
+    // Check required environment variables
     const requiredEnvVars = ['STRIPE_SECRET_KEY', 'STRIPE_WEBHOOK_SECRET'];
     const missingEnvVars = requiredEnvVars.filter(varName => !process.env[varName]);
 
@@ -85,17 +83,15 @@ async function startServer() {
       throw new Error(`Missing required environment variables: ${missingEnvVars.join(', ')}`);
     }
 
-    log('Environment variables validated');
-
-    // Register routes first
-    log('Registering routes...');
-    registerRoutes(app);
-
     // Add error handler after routes
     app.use(errorHandler);
 
-    const PORT = process.env.PORT || 4000;
+    const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4000;
     const server = createServer(app);
+
+    // Register routes first
+    log('Registering routes...');
+    await registerRoutes(app);
 
     // Setup Vite or static serving
     if (process.env.NODE_ENV === "development") {
@@ -107,7 +103,7 @@ async function startServer() {
     }
 
     // Start server
-    server.listen(PORT, "0.0.0.0", () => {
+    server.listen(PORT, '0.0.0.0', () => {
       log(`Server started successfully on port ${PORT}`);
     });
 

@@ -34,7 +34,7 @@ try {
   }
 
   stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-    apiVersion: '2023-10-16',
+    apiVersion: "2024-12-18.acacia",
     typescript: true,
   });
 
@@ -147,7 +147,7 @@ export function registerRoutes(app: Express) {
         clientSecret: paymentIntent.client_secret,
       });
     } catch (error) {
-      logger.error('Subscription creation error:', error);
+      logger.error(`Subscription creation error: ${error instanceof Error ? error.message : String(error)}`);
       const errorMessage = error instanceof Error ? error.message : 'Failed to create subscription';
       res.status(500).json({ error: errorMessage });
     }
@@ -219,7 +219,7 @@ export function registerRoutes(app: Express) {
 
       res.json({ received: true });
     } catch (error) {
-      logger.error('Webhook error:', error);
+      logger.error(`Webhook error: ${error instanceof Error ? error.message : String(error)}`);
       const errorMessage = error instanceof Error ? error.message : "Webhook failed";
       res.status(400).json({ error: errorMessage });
     }
