@@ -1,6 +1,6 @@
 import express, { type Request, Response, NextFunction } from "express";
-import { registerRoutes } from "./routes";
-import { setupVite, serveStatic } from "./vite";
+import { registerRoutes } from "./routes.js";
+import { setupVite, serveStatic } from "./vite.js";
 import { createServer } from "http";
 
 function log(message: string) {
@@ -17,6 +17,21 @@ function log(message: string) {
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// Add raw body parsing for Stripe webhooks
+app.use((req, res, next) => {
+  if (req.path === '/api/webhooks/stripe' && req.method === 'POST') {
+    let data = '';
+    req.setEncoding('utf8');
+    req.on('data', chunk => { data += chunk; });
+    req.on('end', () => {
+      req.rawBody = data;
+      next();
+    });
+  } else {
+    next();
+  }
+});
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -49,52 +64,66 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  registerRoutes(app);
-  const server = createServer(app);
+  try {
+    // Verify required environment variables
+    const requiredEnvVars = ['STRIPE_SECRET_KEY', 'STRIPE_WEBHOOK_SECRET'];
+    const missingEnvVars = requiredEnvVars.filter(varName => !process.env[varName]);
 
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
+    if (missingEnvVars.length > 0) {
+      throw new Error(`Missing required environment variables: ${missingEnvVars.join(', ')}`);
+    }
 
-    res.status(status).json({ message });
-    throw err;
-  });
+    registerRoutes(app);
+    const server = createServer(app);
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
-  if (app.get("env") === "development") {
-    await setupVite(app, server);
-  } else {
-    serveStatic(app);
+    // Enhanced error handling middleware
+    app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+      console.error('Server error:', err);
+      const status = err.status || err.statusCode || 500;
+      const message = err.message || "Internal Server Error";
+
+      res.status(status).json({ 
+        message,
+        type: err.type || 'server_error'
+      });
+    });
+
+    if (app.get("env") === "development") {
+      await setupVite(app, server);
+    } else {
+      serveStatic(app);
+    }
+
+    const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4000;
+
+    const tryPort = (port: number): Promise<number> => {
+      return new Promise((resolve, reject) => {
+        server.listen(port, "0.0.0.0")
+          .once('listening', () => {
+            resolve(port);
+          })
+          .once('error', (err: NodeJS.ErrnoException) => {
+            if (err.code === 'EADDRINUSE') {
+              resolve(tryPort(port + 1));
+            } else {
+              reject(err);
+            }
+          });
+      });
+    };
+
+    tryPort(PORT)
+      .then(finalPort => {
+        log(`Server started successfully on port ${finalPort}`);
+      })
+      .catch(error => {
+        log(`Failed to start server: ${error.message}`);
+        process.exit(1);
+      });
+  } catch (error) {
+    log(`Uncaught error: ${error instanceof Error ? error.message : String(error)}`);
+    process.exit(1);
   }
-
-  const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4000;
-  
-  const tryPort = (port: number): Promise<number> => {
-    return new Promise((resolve, reject) => {
-      server.listen(port, "0.0.0.0")
-        .once('listening', () => {
-          resolve(port);
-        })
-        .once('error', (err: NodeJS.ErrnoException) => {
-          if (err.code === 'EADDRINUSE') {
-            resolve(tryPort(port + 1));
-          } else {
-            reject(err);
-          }
-        });
-    });
-  };
-
-  tryPort(PORT)
-    .then(finalPort => {
-      log(`Server started successfully on port ${finalPort}`);
-    })
-    .catch(error => {
-      log(`Failed to start server: ${error.message}`);
-      process.exit(1);
-    });
 })().catch((error) => {
   log(`Uncaught error: ${error instanceof Error ? error.message : String(error)}`);
   process.exit(1);

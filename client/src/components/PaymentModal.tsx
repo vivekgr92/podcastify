@@ -41,30 +41,37 @@ function CheckoutForm({ planName, planPrice, priceId, onClose }: Omit<PaymentMod
     setPaymentStatus('processing');
 
     try {
-      // Confirm the payment for subscription
-      const { error: submitError } = await stripe.confirmPayment({
+      // Confirm the PaymentIntent
+      const result = await stripe.confirmPayment({
         elements,
         confirmParams: {
           return_url: `${window.location.origin}/billing?payment_status=success`,
         },
+        redirect: 'if_required'
       });
 
-      if (submitError) {
-        if (submitError.type === 'card_error' || submitError.type === 'validation_error') {
-          setError(submitError.message || 'Payment failed. Please try again.');
-          setPaymentStatus('failed');
-        } else {
-          setError('An unexpected error occurred.');
-          setPaymentStatus('failed');
+      if (result.error) {
+        // Handle payment confirmation error
+        setError(result.error.message || 'Payment failed. Please try again.');
+        setPaymentStatus('failed');
+      } else if (result.paymentIntent) {
+        // Handle successful payment
+        switch (result.paymentIntent.status) {
+          case 'succeeded':
+            setPaymentStatus('succeeded');
+            window.location.href = `${window.location.origin}/billing?payment_status=success`;
+            break;
+          case 'requires_action':
+            setPaymentStatus('requires_action');
+            break;
+          default:
+            setError('Unexpected payment status. Please contact support.');
+            setPaymentStatus('failed');
         }
-      } else {
-        setPaymentStatus('succeeded');
-        // Subscription will be activated via webhook
-        window.location.href = `${window.location.origin}/billing?payment_status=success`;
       }
     } catch (err) {
-      console.error('Subscription processing error:', err);
-      setError(err instanceof Error ? err.message : 'An error occurred while processing your subscription.');
+      console.error('Payment processing error:', err);
+      setError(err instanceof Error ? err.message : 'An error occurred while processing your payment.');
       setPaymentStatus('failed');
     } finally {
       setIsSubmitting(false);
@@ -154,11 +161,12 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, priceId }: 
           credentials: 'include',
         });
 
-        const data = await response.json();
         if (!response.ok) {
+          const data = await response.json();
           throw new Error(data.error || 'Failed to initialize subscription');
         }
 
+        const data = await response.json();
         setClientSecret(data.clientSecret);
       } catch (err) {
         console.error('Subscription initialization error:', err);
