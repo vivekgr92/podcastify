@@ -1,6 +1,5 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "./ui/dialog";
 import { Button } from "./ui/button";
-import { Input } from "./ui/input";
 import { useState, useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import { loadStripe } from "@stripe/stripe-js";
@@ -40,31 +39,31 @@ function CheckoutForm({ planName, planPrice, onSubmit, onClose }: Omit<PaymentMo
     setError(null);
 
     try {
-      // Submit the form first
       const { error: submitError } = await elements.submit();
       if (submitError) {
         throw new Error(submitError.message);
       }
 
-      // Then create the payment method
-      const { error: paymentMethodError, paymentMethod } = await stripe.createPaymentMethod({
+      // Create payment method for subscription
+      const result = await stripe.createPaymentMethod({
         elements,
         params: {
           billing_details: {
             name: planName,
           },
-        },
+        }
       });
 
-      if (paymentMethodError) {
-        throw new Error(paymentMethodError.message);
+      if (result.error) {
+        throw new Error(result.error.message);
       }
 
-      if (!paymentMethod?.id) {
+      if (!result.paymentMethod) {
         throw new Error('Failed to create payment method');
       }
 
-      await onSubmit(paymentMethod.id);
+      // Pass the payment method ID to the parent component
+      await onSubmit(result.paymentMethod.id);
       onClose();
     } catch (err) {
       console.error('Payment processing error:', err);
@@ -99,7 +98,7 @@ function CheckoutForm({ planName, planPrice, onSubmit, onClose }: Omit<PaymentMo
               Processing...
             </>
           ) : (
-            `Pay ${planPrice}`
+            `Subscribe for ${planPrice}/month`
           )}
         </Button>
       </div>
@@ -114,24 +113,16 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, onSubmit }:
   useEffect(() => {
     if (!isOpen) return;
 
-    const fetchClientSecret = async () => {
+    const fetchSetupIntent = async () => {
       try {
-        if (!import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY) {
-          throw new Error('Stripe publishable key is missing');
-        }
-
         setError(null);
         setClientSecret(null);
 
-        const response = await fetch('/api/create-payment-intent', {
+        const response = await fetch('/api/create-setup-intent', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            planName,
-            planPrice: parseFloat(planPrice.replace('$', '')),
-          }),
           credentials: 'include',
         });
 
@@ -147,8 +138,8 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, onSubmit }:
       }
     };
 
-    fetchClientSecret();
-  }, [isOpen, planName, planPrice]);
+    fetchSetupIntent();
+  }, [isOpen]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -179,11 +170,14 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, onSubmit }:
             options={{
               clientSecret,
               appearance: {
-                theme: 'stripe',
+                theme: 'night',
                 variables: {
                   colorPrimary: '#4CAF50',
-                },
+                  colorBackground: '#1a1a1a',
+                  colorText: '#ffffff'
+                }
               },
+              paymentMethodCreation: 'manual'
             }}
           >
             <CheckoutForm

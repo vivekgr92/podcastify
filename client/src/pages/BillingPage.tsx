@@ -19,7 +19,8 @@ const plans = [
       "Basic analytics"
     ],
     buttonText: "Select Plan",
-    popular: false
+    popular: false,
+    priceId: "price_individual"
   },
   {
     name: "Creator Plan",
@@ -34,7 +35,8 @@ const plans = [
       "Custom intro/outro"
     ],
     buttonText: "Select Plan",
-    popular: true
+    popular: true,
+    priceId: "price_creator"
   },
   {
     name: "Enterprise Plan",
@@ -50,7 +52,8 @@ const plans = [
       "Custom branding"
     ],
     buttonText: "Contact Sales",
-    popular: false
+    popular: false,
+    priceId: "price_enterprise"
   }
 ];
 
@@ -73,33 +76,40 @@ export default function BillingPage() {
     setIsPaymentModalOpen(true);
   };
 
-  const handlePaymentSubmit = async (cardDetails: any) => {
+  const handlePaymentSubmit = async (paymentMethodId: string) => {
     try {
-      const response = await fetch('/api/subscriptions', {
+      if (!selectedPlan) {
+        throw new Error('No plan selected');
+      }
+
+      const response = await fetch('/api/subscriptions/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          planName: selectedPlan?.name,
-          cardDetails,
+          priceId: selectedPlan.priceId,
+          paymentMethodId,
         }),
+        credentials: 'include',
       });
 
       if (!response.ok) {
-        throw new Error('Failed to process payment');
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to process subscription');
       }
 
       toast({
-        title: "Subscription Updated",
-        description: `Successfully subscribed to ${selectedPlan?.name}`,
+        title: "Subscription Created",
+        description: `Successfully subscribed to ${selectedPlan.name}`,
       });
 
-      setLocation('/');
+      setLocation('/dashboard');
     } catch (error) {
+      console.error('Subscription error:', error);
       toast({
         title: "Error",
-        description: "Failed to process payment. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to process subscription. Please try again.",
         variant: "destructive",
       });
     }
