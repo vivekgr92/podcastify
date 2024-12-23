@@ -901,3 +901,13 @@ Usage limits check for user 1:
  Tokens: 393/10000 (ok)
  -----------------------------------------
 
+[INFO] 02:18:13 PM [express] Server started successfully on port 4000
+[INFO] 02:18:13 PM [express] GET /api/user 401 in 6ms
+[INFO] 02:18:17 PM [express] Server started successfully on port 4000
+[INFO] 02:18:17 PM [express] GET /api/user 401 in 8ms
+[INFO] 02:18:26 PM [express] GET /api/user 401 in 1ms
+[INFO] 02:19:34 PM [express] GET /api/user 401 in 1ms
+[INFO] 02:19:51 PM [express] Server started successfully on port 4000
+[INFO] 02:19:51 PM [express] GET /api/user 401 in 7ms
+[INFO] 02:20:04 PM [express] GET /api/user 401 in 2ms
+[INFO] 02:20:04 PM [express] GET /api/user 401 in 1ms
