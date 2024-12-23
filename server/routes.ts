@@ -71,12 +71,26 @@ const upload = multer({ storage });
 export function registerRoutes(app: Express) {
   setupAuth(app);
 
-  // Initialize Stripe with proper API version
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: "2024-12-18.acacia",
-  });
+  // Initialize Stripe with proper API version and error handling
+  let stripe: Stripe;
+  try {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error('STRIPE_SECRET_KEY is required');
+    }
 
-  // Create subscription endpoint
+    stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: '2023-10-16',
+      typescript: true,
+    });
+
+    logger.info('Stripe initialized successfully');
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    logger.error(`Failed to initialize Stripe: ${errorMessage}`);
+    throw error;
+  }
+
+  // Create subscription endpoint with enhanced error handling
   app.post("/api/create-subscription", async (req, res) => {
     try {
       if (!req.user?.id) {
@@ -84,6 +98,11 @@ export function registerRoutes(app: Express) {
       }
 
       const { priceId } = req.body;
+      if (!priceId) {
+        return res.status(400).json({ error: 'Price ID is required' });
+      }
+
+      logger.info(`Creating subscription for user ${req.user.id} with price ${priceId}`);
 
       // Get or create customer
       let customer;
@@ -94,13 +113,15 @@ export function registerRoutes(app: Express) {
 
       if (existingCustomers.data.length > 0) {
         customer = existingCustomers.data[0];
+        logger.info(`Using existing customer: ${customer.id}`);
       } else {
         customer = await stripe.customers.create({
           email: req.user.email,
         });
+        logger.info(`Created new customer: ${customer.id}`);
       }
 
-      // Create the subscription with expanded payment intent
+      // Create the subscription
       const subscription = await stripe.subscriptions.create({
         customer: customer.id,
         items: [{ price: priceId }],
@@ -112,20 +133,27 @@ export function registerRoutes(app: Express) {
         }
       });
 
-      const invoice = subscription.latest_invoice as any;
+      logger.info(`Created subscription: ${subscription.id}`);
+
+      const invoice = subscription.latest_invoice as Stripe.Invoice;
+      const paymentIntent = invoice.payment_intent as Stripe.PaymentIntent;
+
+      if (!paymentIntent?.client_secret) {
+        throw new Error('Failed to get client secret from payment intent');
+      }
 
       res.json({
         subscriptionId: subscription.id,
-        clientSecret: invoice.payment_intent.client_secret,
+        clientSecret: paymentIntent.client_secret,
       });
     } catch (error) {
-      console.error('Subscription creation error:', error);
+      logger.error('Subscription creation error:', error);
       const errorMessage = error instanceof Error ? error.message : 'Failed to create subscription';
       res.status(500).json({ error: errorMessage });
     }
   });
 
-  // Updated webhook handler for subscription events
+  // Webhook handler for subscription events
   app.post("/api/webhooks/stripe", express.raw({ type: 'application/json' }), async (req, res) => {
     try {
       const sig = req.headers['stripe-signature'];
@@ -139,11 +167,13 @@ export function registerRoutes(app: Express) {
         process.env.STRIPE_WEBHOOK_SECRET || ''
       );
 
+      logger.info(`Processing webhook event: ${event.type}`);
+
       switch (event.type) {
         case 'invoice.payment_succeeded':
-          const invoice = event.data.object as any;
-          const subscription = await stripe.subscriptions.retrieve(invoice.subscription);
-          // Update user's subscription status in database
+          const invoice = event.data.object as Stripe.Invoice;
+          const subscription = await stripe.subscriptions.retrieve(invoice.subscription as string);
+
           if (subscription.metadata.userId) {
             await db.update(users)
               .set({
@@ -152,11 +182,13 @@ export function registerRoutes(app: Express) {
                 currentPeriodEnd: new Date(subscription.current_period_end * 1000)
               })
               .where(eq(users.id, parseInt(subscription.metadata.userId)));
+
+            logger.info(`Updated subscription status for user ${subscription.metadata.userId}`);
           }
           break;
 
         case 'customer.subscription.updated':
-          const updatedSubscription = event.data.object as any;
+          const updatedSubscription = event.data.object as Stripe.Subscription;
           if (updatedSubscription.metadata.userId) {
             await db.update(users)
               .set({
@@ -164,11 +196,13 @@ export function registerRoutes(app: Express) {
                 currentPeriodEnd: new Date(updatedSubscription.current_period_end * 1000)
               })
               .where(eq(users.id, parseInt(updatedSubscription.metadata.userId)));
+
+            logger.info(`Updated subscription status for user ${updatedSubscription.metadata.userId}`);
           }
           break;
 
         case 'customer.subscription.deleted':
-          const deletedSubscription = event.data.object as any;
+          const deletedSubscription = event.data.object as Stripe.Subscription;
           if (deletedSubscription.metadata.userId) {
             await db.update(users)
               .set({
@@ -177,18 +211,19 @@ export function registerRoutes(app: Express) {
                 currentPeriodEnd: null
               })
               .where(eq(users.id, parseInt(deletedSubscription.metadata.userId)));
+
+            logger.info(`Canceled subscription for user ${deletedSubscription.metadata.userId}`);
           }
           break;
       }
 
       res.json({ received: true });
     } catch (error) {
-      console.error('Webhook error:', error);
+      logger.error('Webhook error:', error);
       const errorMessage = error instanceof Error ? error.message : "Webhook failed";
       res.status(400).json({ error: errorMessage });
     }
   });
-
   // Create Setup Intent endpoint
   app.post("/api/create-setup-intent", async (req, res) => {
     try {
@@ -937,7 +972,7 @@ export function registerRoutes(app: Express) {
 
     const sendProgress = (progress: number) => {
       console.log('Sending progress update:', progress);
-      res.write(`data: ${JSON.stringify({ progress })}\n\n`);
+            res.write(`data: ${JSON.stringify({ progress })}\n\n`);
     };
 
     // Add this client to TTSService progress listeners
@@ -970,7 +1005,8 @@ export function registerRoutes(app: Express) {
       }
 
       // Calculate initial pricing estimate
-      const pricingDetails = await ttsService.calculatePricing(text, [], []);      if (!pricingDetails) {
+      const pricingDetails = await ttsService.calculatePricing(text, [], []);
+      if (!pricingDetails) {
         throw new Error("Failed to calculate pricing details");
       }
 

@@ -26,7 +26,7 @@ function CheckoutForm({ planName, planPrice, priceId, onClose }: Omit<PaymentMod
   const elements = useElements();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [paymentStatus, setPaymentStatus] = useState<'initial' | 'processing' | 'requires_action' | 'succeeded' | 'failed'>('initial');
+  const [paymentStatus, setPaymentStatus] = useState<'initial' | 'processing' | 'succeeded' | 'failed'>('initial');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,55 +41,30 @@ function CheckoutForm({ planName, planPrice, priceId, onClose }: Omit<PaymentMod
     setPaymentStatus('processing');
 
     try {
-      // Confirm the PaymentIntent
+      const { error: submitError } = await elements.submit();
+      if (submitError) {
+        throw submitError;
+      }
+
       const result = await stripe.confirmPayment({
         elements,
         confirmParams: {
           return_url: `${window.location.origin}/billing?payment_status=success`,
-        },
-        redirect: 'if_required'
+        }
       });
 
       if (result.error) {
-        // Handle payment confirmation error
-        setError(result.error.message || 'Payment failed. Please try again.');
-        setPaymentStatus('failed');
-      } else if (result.paymentIntent) {
-        // Handle successful payment
-        switch (result.paymentIntent.status) {
-          case 'succeeded':
-            setPaymentStatus('succeeded');
-            window.location.href = `${window.location.origin}/billing?payment_status=success`;
-            break;
-          case 'requires_action':
-            setPaymentStatus('requires_action');
-            break;
-          default:
-            setError('Unexpected payment status. Please contact support.');
-            setPaymentStatus('failed');
-        }
+        throw result.error;
       }
+
+      setPaymentStatus('succeeded');
+      window.location.href = `${window.location.origin}/billing?payment_status=success`;
     } catch (err) {
-      console.error('Payment processing error:', err);
-      setError(err instanceof Error ? err.message : 'An error occurred while processing your payment.');
+      console.error('Payment error:', err);
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
       setPaymentStatus('failed');
     } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  const getStatusMessage = () => {
-    switch (paymentStatus) {
-      case 'processing':
-        return 'Processing your payment...';
-      case 'requires_action':
-        return 'Additional verification required...';
-      case 'succeeded':
-        return 'Payment successful! Redirecting...';
-      case 'failed':
-        return 'Payment failed. Please try again.';
-      default:
-        return '';
     }
   };
 
@@ -103,9 +78,9 @@ function CheckoutForm({ planName, planPrice, priceId, onClose }: Omit<PaymentMod
         </div>
       )}
 
-      {paymentStatus !== 'initial' && paymentStatus !== 'failed' && (
+      {paymentStatus === 'processing' && (
         <div className="text-sm mt-2 p-2 bg-gray-800 rounded-md">
-          {getStatusMessage()}
+          Processing your payment...
         </div>
       )}
 
