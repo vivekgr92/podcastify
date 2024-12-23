@@ -52,7 +52,7 @@ export default function LibraryPage() {
           // If this podcast is currently playing, pause it
           await togglePlay();
         } else {
-          // Load and play a new podcast
+          // Load and play a new podcast, and add to playlist
           await play(podcast);
           // Add to playlist if not already playing
           if (audioData?.id !== podcast.id) {
@@ -63,8 +63,7 @@ export default function LibraryPage() {
         console.error("Error playing podcast:", error);
         toast({
           title: "Error",
-          description:
-            error instanceof Error ? error.message : "Failed to play podcast",
+          description: error instanceof Error ? error.message : "Failed to play podcast",
           variant: "destructive",
         });
       }
@@ -87,9 +86,7 @@ export default function LibraryPage() {
       <div className="min-h-screen bg-black text-white p-6">
         <div className="max-w-md mx-auto text-center">
           <h1 className="text-2xl font-bold mb-4">Please Login</h1>
-          <p className="mb-4">
-            You need to be logged in to access your library.
-          </p>
+          <p className="mb-4">You need to be logged in to access your library.</p>
           <Button
             onClick={() => setLocation("/auth")}
             className="bg-[#4CAF50] hover:bg-[#45a049]"
@@ -188,13 +185,10 @@ export default function LibraryPage() {
                       </AlertDialogTrigger>
                       <AlertDialogContent>
                         <AlertDialogHeader>
-                          <AlertDialogTitle>
-                            Are you absolutely sure?
-                          </AlertDialogTitle>
+                          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                           <AlertDialogDescription>
-                            This action cannot be undone. This will permanently
-                            delete your podcast and remove the audio file from our
-                            servers.
+                            This action cannot be undone. This will permanently delete your
+                            podcast and remove the audio file from our servers.
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
@@ -254,8 +248,7 @@ export default function LibraryPage() {
                     Welcome to Your Podcast Library
                   </h3>
                   <p className="text-sm text-gray-400">
-                    Your library is empty. Convert your first podcast to get
-                    started!
+                    Your library is empty. Convert your first podcast to get started!
                   </p>
                 </div>
               </div>
