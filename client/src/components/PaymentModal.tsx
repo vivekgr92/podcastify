@@ -41,16 +41,11 @@ function CheckoutForm({ planName, planPrice, priceId, onClose }: Omit<PaymentMod
     setPaymentStatus('processing');
 
     try {
-      // Confirm the subscription setup
-      const { error: submitError } = await stripe.confirmSetup({
+      // Confirm the payment for subscription
+      const { error: submitError } = await stripe.confirmPayment({
         elements,
         confirmParams: {
-          return_url: `${window.location.origin}/billing?subscription_status=success`,
-          payment_method_data: {
-            billing_details: {
-              name: `${planName} Subscription`,
-            },
-          },
+          return_url: `${window.location.origin}/billing?payment_status=success`,
         },
       });
 
@@ -65,7 +60,7 @@ function CheckoutForm({ planName, planPrice, priceId, onClose }: Omit<PaymentMod
       } else {
         setPaymentStatus('succeeded');
         // Subscription will be activated via webhook
-        window.location.href = `${window.location.origin}/billing?subscription_status=success`;
+        window.location.href = `${window.location.origin}/billing?payment_status=success`;
       }
     } catch (err) {
       console.error('Subscription processing error:', err);
@@ -79,13 +74,13 @@ function CheckoutForm({ planName, planPrice, priceId, onClose }: Omit<PaymentMod
   const getStatusMessage = () => {
     switch (paymentStatus) {
       case 'processing':
-        return 'Setting up your subscription...';
+        return 'Processing your payment...';
       case 'requires_action':
         return 'Additional verification required...';
       case 'succeeded':
-        return 'Subscription successful! Redirecting...';
+        return 'Payment successful! Redirecting...';
       case 'failed':
-        return 'Subscription setup failed. Please try again.';
+        return 'Payment failed. Please try again.';
       default:
         return '';
     }
@@ -136,16 +131,16 @@ function CheckoutForm({ planName, planPrice, priceId, onClose }: Omit<PaymentMod
 }
 
 export function PaymentModal({ isOpen, onClose, planName, planPrice, priceId }: PaymentModalProps) {
-  const [setupIntent, setSetupIntent] = useState<string | null>(null);
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isOpen) return;
 
-    const initializeSubscription = async () => {
+    const initializePayment = async () => {
       try {
         setError(null);
-        setSetupIntent(null);
+        setClientSecret(null);
 
         const response = await fetch('/api/create-subscription', {
           method: 'POST',
@@ -164,14 +159,14 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, priceId }: 
           throw new Error(data.error || 'Failed to initialize subscription');
         }
 
-        setSetupIntent(data.clientSecret);
+        setClientSecret(data.clientSecret);
       } catch (err) {
         console.error('Subscription initialization error:', err);
         setError(err instanceof Error ? err.message : 'Failed to initialize subscription');
       }
     };
 
-    initializeSubscription();
+    initializePayment();
   }, [isOpen, priceId, planName]);
 
   return (
@@ -197,7 +192,7 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, priceId }: 
               Close
             </Button>
           </div>
-        ) : !setupIntent ? (
+        ) : !clientSecret ? (
           <div className="flex items-center justify-center py-4">
             <Loader2 className="h-6 w-6 animate-spin" />
           </div>
@@ -205,7 +200,7 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, priceId }: 
           <Elements 
             stripe={stripePromise} 
             options={{
-              clientSecret: setupIntent,
+              clientSecret,
               appearance: {
                 theme: 'night',
                 variables: {

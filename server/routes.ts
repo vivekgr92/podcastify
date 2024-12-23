@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import express from "express";
-import { setupAuth } from "./auth";
-import { db } from "../db";
+import { setupAuth } from "./auth.js";
+import { db } from "../db/index.js";
 import multer from "multer";
 import path from "path";
 import { promises as fs } from "fs";
@@ -15,10 +15,10 @@ import {
   progress,
   userUsage,
   users,
-} from "@db/schema";
-import { logger } from "./services/logging";
-import { ttsService } from "./services/tts";
-import type { ConversationPart, PricingDetails } from "./services/tts";
+} from "../db/schema.js";
+import { logger } from "./services/logging.js";
+import { ttsService } from "./services/tts.js";
+import type { ConversationPart, PricingDetails } from "./services/tts.js";
 import { eq, and, sql, desc } from "drizzle-orm";
 import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import Stripe from "stripe";
@@ -76,11 +76,11 @@ export function registerRoutes(app: Express) {
     apiVersion: "2024-12-18.acacia",
   });
 
-  // Create Payment Intent endpoint for subscriptions
-  app.post("/api/create-payment-intent", async (req, res) => {
+  // Create subscription endpoint
+  app.post("/api/create-subscription", async (req, res) => {
     try {
       if (!req.user?.id) {
-        return res.status(401).json({ error: "Not authenticated" });
+        return res.status(401).json({ error: 'Not authenticated' });
       }
 
       const { priceId } = req.body;
@@ -100,7 +100,7 @@ export function registerRoutes(app: Express) {
         });
       }
 
-      // Create the subscription
+      // Create the subscription with expanded payment intent
       const subscription = await stripe.subscriptions.create({
         customer: customer.id,
         items: [{ price: priceId }],
@@ -119,8 +119,8 @@ export function registerRoutes(app: Express) {
         clientSecret: invoice.payment_intent.client_secret,
       });
     } catch (error) {
-      console.error('Payment intent error:', error);
-      const errorMessage = error instanceof Error ? error.message : "Failed to create payment intent";
+      console.error('Subscription creation error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to create subscription';
       res.status(500).json({ error: errorMessage });
     }
   });
@@ -223,111 +223,6 @@ export function registerRoutes(app: Express) {
     } catch (error) {
       console.error('Setup intent error:', error);
       const errorMessage = error instanceof Error ? error.message : "Failed to create setup intent";
-      res.status(500).json({ error: errorMessage });
-    }
-  });
-
-  // Subscription endpoint
-  app.post("/api/subscriptions/create", async (req, res) => {
-    try {
-      if (!req.user?.id) {
-        return res.status(401).json({ error: "Not authenticated" });
-      }
-
-      const { priceId, paymentMethodId } = req.body;
-
-      // Get or create customer
-      let customer;
-      const existingCustomers = await stripe.customers.list({
-        email: req.user.email,
-        limit: 1,
-      });
-
-      if (existingCustomers.data.length > 0) {
-        customer = existingCustomers.data[0];
-        // Update the customer's payment method
-        await stripe.paymentMethods.attach(paymentMethodId, {
-          customer: customer.id,
-        });
-      } else {
-        // Create a new customer
-        customer = await stripe.customers.create({
-          email: req.user.email,
-          payment_method: paymentMethodId,
-          invoice_settings: {
-            default_payment_method: paymentMethodId,
-          },
-        });
-      }
-
-      // Create the subscription
-      const subscription = await stripe.subscriptions.create({
-        customer: customer.id,
-        items: [{ price: priceId }],
-        payment_behavior: 'default_incomplete',
-        payment_settings: { save_default_payment_method: 'on_subscription' },
-        expand: ['latest_invoice.payment_intent'],
-        metadata: {
-          userId: req.user.id.toString()
-        }
-      });
-
-      res.json({
-        subscriptionId: subscription.id,
-        clientSecret: (subscription.latest_invoice as any).payment_intent.client_secret,
-      });
-    } catch (error) {
-      console.error('Subscription error:', error);
-      const errorMessage = error instanceof Error ? error.message : "Failed to create subscription";
-      res.status(500).json({ error: errorMessage });
-    }
-  });
-
-  // Create subscription endpoint
-  app.post("/api/create-subscription", async (req, res) => {
-    try {
-      if (!req.user?.id) {
-        return res.status(401).json({ error: 'Not authenticated' });
-      }
-
-      const { priceId } = req.body;
-
-      // Get or create customer
-      let customer;
-      const existingCustomers = await stripe.customers.list({
-        email: req.user.email,
-        limit: 1,
-      });
-
-      if (existingCustomers.data.length > 0) {
-        customer = existingCustomers.data[0];
-      } else {
-        customer = await stripe.customers.create({
-          email: req.user.email,
-        });
-      }
-
-      // Create the subscription
-      const subscription = await stripe.subscriptions.create({
-        customer: customer.id,
-        items: [{ price: priceId }],
-        payment_behavior: 'default_incomplete',
-        payment_settings: { save_default_payment_method: 'on_subscription' },
-        expand: ['latest_invoice.payment_intent'],
-        metadata: {
-          userId: req.user.id.toString()
-        }
-      });
-
-      const invoice = subscription.latest_invoice as any;
-
-      res.json({
-        subscriptionId: subscription.id,
-        clientSecret: invoice.payment_intent.client_secret,
-      });
-    } catch (error) {
-      console.error('Subscription creation error:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Failed to create subscription';
       res.status(500).json({ error: errorMessage });
     }
   });
@@ -1075,8 +970,7 @@ export function registerRoutes(app: Express) {
       }
 
       // Calculate initial pricing estimate
-      const pricingDetails = await ttsService.calculatePricing(text, [], []);
-      if (!pricingDetails) {
+      const pricingDetails = await ttsService.calculatePricing(text, [], []);      if (!pricingDetails) {
         throw new Error("Failed to calculate pricing details");
       }
 
