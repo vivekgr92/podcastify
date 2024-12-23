@@ -15,10 +15,20 @@ function log(message: string) {
 }
 
 const app = express();
+
+// Basic middleware setup
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Add raw body parsing for Stripe webhooks
+declare global {
+  namespace Express {
+    interface Request {
+      rawBody?: string;
+    }
+  }
+}
+
 app.use((req, res, next) => {
   if (req.path === '/api/webhooks/stripe' && req.method === 'POST') {
     let data = '';
@@ -33,6 +43,7 @@ app.use((req, res, next) => {
   }
 });
 
+// Logging middleware
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
@@ -51,11 +62,9 @@ app.use((req, res, next) => {
       if (capturedJsonResponse) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
-
       if (logLine.length > 80) {
         logLine = logLine.slice(0, 79) + "…";
       }
-
       log(logLine);
     }
   });
@@ -63,68 +72,89 @@ app.use((req, res, next) => {
   next();
 });
 
-(async () => {
-  try {
-    // Verify required environment variables
-    const requiredEnvVars = ['STRIPE_SECRET_KEY', 'STRIPE_WEBHOOK_SECRET'];
-    const missingEnvVars = requiredEnvVars.filter(varName => !process.env[varName]);
+// Global error handler
+const errorHandler = (err: any, _req: Request, res: Response, _next: NextFunction) => {
+  const errorMessage = err instanceof Error ? err.message : String(err);
+  log(`Error caught in middleware: ${errorMessage}`);
+  if (err.stack) {
+    log(`Stack trace: ${err.stack}`);
+  }
 
+  const status = err.status || err.statusCode || 500;
+  const message = err.message || "Internal Server Error";
+
+  res.status(status).json({ 
+    message,
+    type: err.type || 'server_error'
+  });
+};
+
+async function startServer() {
+  try {
+    log('Starting server initialization...');
+
+    // Check environment variables
+    const requiredEnvVars = ['STRIPE_SECRET_KEY'];
+    if (process.env.NODE_ENV === 'production') {
+      requiredEnvVars.push('STRIPE_WEBHOOK_SECRET');
+    }
+
+    const missingEnvVars = requiredEnvVars.filter(varName => !process.env[varName]);
     if (missingEnvVars.length > 0) {
       throw new Error(`Missing required environment variables: ${missingEnvVars.join(', ')}`);
     }
 
+    log('Environment variables validated');
+
+    // Register routes
+    log('Registering routes...');
     registerRoutes(app);
+
+    // Create HTTP server
     const server = createServer(app);
 
-    // Enhanced error handling middleware
-    app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-      console.error('Server error:', err);
-      const status = err.status || err.statusCode || 500;
-      const message = err.message || "Internal Server Error";
+    // Add error handler after routes
+    app.use(errorHandler);
 
-      res.status(status).json({ 
-        message,
-        type: err.type || 'server_error'
-      });
-    });
-
-    if (app.get("env") === "development") {
+    // Setup Vite or static serving
+    if (process.env.NODE_ENV === "development") {
+      log('Setting up Vite for development...');
       await setupVite(app, server);
     } else {
+      log('Setting up static file serving for production...');
       serveStatic(app);
     }
 
     const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4000;
 
-    const tryPort = (port: number): Promise<number> => {
-      return new Promise((resolve, reject) => {
-        server.listen(port, "0.0.0.0")
-          .once('listening', () => {
-            resolve(port);
-          })
-          .once('error', (err: NodeJS.ErrnoException) => {
-            if (err.code === 'EADDRINUSE') {
-              resolve(tryPort(port + 1));
-            } else {
-              reject(err);
-            }
-          });
-      });
-    };
+    // Start server with proper error handling
+    return new Promise<void>((resolve, reject) => {
+      server.listen(PORT, "0.0.0.0")
+        .once('listening', () => {
+          log(`Server started successfully on port ${PORT}`);
+          resolve();
+        })
+        .once('error', (error: NodeJS.ErrnoException) => {
+          log(`Failed to start server: ${error.message}`);
+          if (error.code === 'EADDRINUSE') {
+            log(`Port ${PORT} is already in use. Please try a different port.`);
+          }
+          reject(error);
+        });
+    });
 
-    tryPort(PORT)
-      .then(finalPort => {
-        log(`Server started successfully on port ${finalPort}`);
-      })
-      .catch(error => {
-        log(`Failed to start server: ${error.message}`);
-        process.exit(1);
-      });
   } catch (error) {
-    log(`Uncaught error: ${error instanceof Error ? error.message : String(error)}`);
-    process.exit(1);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    log(`Fatal error during server initialization: ${errorMessage}`);
+    if (error instanceof Error && error.stack) {
+      log(`Stack trace: ${error.stack}`);
+    }
+    throw error;
   }
-})().catch((error) => {
+}
+
+// Start the server
+startServer().catch((error) => {
   log(`Uncaught error: ${error instanceof Error ? error.message : String(error)}`);
   process.exit(1);
 });
