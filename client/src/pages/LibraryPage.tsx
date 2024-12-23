@@ -26,7 +26,7 @@ export default function LibraryPage() {
   const [, setLocation] = useLocation();
   const { user } = useUser();
   const queryClient = useQueryClient();
-  const { play, isPlaying, audioData, togglePlay, addToPlaylist } = useAudio();
+  const { play, isPlaying, audioData, togglePlay } = useAudio();
   const { toast } = useToast();
 
   const {
@@ -44,30 +44,18 @@ export default function LibraryPage() {
     retry: 1,
   });
 
+  // Log the fetched podcasts
+  console.log("Fetched podcasts:", podcasts);
+
   // Handle play/pause for any podcast in the library
   const handlePlay = useCallback(
     async (podcast: Podcast) => {
       try {
-        // Validate podcast data
-        if (!podcast?.audioUrl) {
-          throw new Error("Invalid podcast or missing audio URL");
-        }
-
-        console.log("Attempting to play podcast:", {
-          id: podcast.id,
-          title: podcast.title,
-          audioUrl: podcast.audioUrl
-        });
-
-        if (audioData?.id === podcast.id) {
-          // If this podcast is currently loaded, just toggle play/pause
-          console.log("Toggling play/pause for current podcast");
+        if (audioData?.id === podcast.id && isPlaying) {
+          // If this podcast is currently playing, pause it
           await togglePlay();
         } else {
-          // Add to playlist if not already playing
-          console.log("Adding podcast to playlist and starting playback");
-          addToPlaylist(podcast);
-          // Load and play the new podcast
+          // Load and play a new podcast
           await play(podcast);
         }
       } catch (error) {
@@ -80,11 +68,11 @@ export default function LibraryPage() {
         });
       }
     },
-    [play, togglePlay, audioData, toast, addToPlaylist]
+    [play, togglePlay, audioData, isPlaying, toast],
   );
 
-  // Show audio player when we have audio data, regardless of playing state
-  const shouldShowPlayer = Boolean(user && audioData);
+  // Ensure AudioPlayer is rendered only when we have audio data
+  const shouldShowPlayer = Boolean(user && (audioData || isPlaying));
 
   if (!user) {
     return (
@@ -238,6 +226,7 @@ export default function LibraryPage() {
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
+                  {/* Share button removed as per requirements */}
                 </div>
               </div>
             </div>
@@ -260,8 +249,8 @@ export default function LibraryPage() {
         </div>
       </main>
 
-      {/* Only render AudioPlayer when we have audio data */}
-      {shouldShowPlayer && <AudioPlayer />}
+      {/* Render AudioPlayer when user is authenticated */}
+      {user && <AudioPlayer />}
     </div>
   );
 }
