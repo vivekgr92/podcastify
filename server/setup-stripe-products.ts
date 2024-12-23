@@ -1,12 +1,12 @@
 import Stripe from 'stripe';
-import { config } from 'dotenv';
+import * as dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-config();
+dotenv.config();
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-12-18.acacia'
@@ -72,6 +72,7 @@ async function createProducts() {
 
   } catch (error) {
     console.error('Error creating products:', error);
+    process.exit(1);
   }
 }
 

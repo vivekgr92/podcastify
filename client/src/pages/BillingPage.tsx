@@ -20,11 +20,11 @@ const plans = [
     ],
     buttonText: "Subscribe Now",
     popular: false,
-    priceId: "price_1QZHjDBwEMzOkTIKNklmBsTE", // Updated Basic Plan price ID
+    priceId: "price_1QZHpBBwEMzOkTIKY7E8Ogd3", 
   },
   {
     name: "Pro Plan",
-    price: "15.99",
+    price: "24.99",
     period: "per month",
     features: [
       "Convert up to 50 articles/month",
@@ -36,7 +36,7 @@ const plans = [
     ],
     buttonText: "Subscribe Now",
     popular: true,
-    priceId: "price_1QZHjEBwEMzOkTIKhhgpiS4P", // Updated Pro Plan price ID
+    priceId: "price_1QZHpBBwEMzOkTIK2lQGFNGr", 
   },
   {
     name: "Enterprise Plan",
@@ -53,7 +53,7 @@ const plans = [
     ],
     buttonText: "Subscribe Now",
     popular: false,
-    priceId: "price_1QZHjEBwEMzOkTIKutnCSl0H", // Updated Enterprise Plan price ID
+    priceId: "price_1QZHpBBwEMzOkTIKOFubVtQj", 
   },
 ];
 
