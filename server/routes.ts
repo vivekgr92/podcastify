@@ -21,6 +21,7 @@ import { ttsService } from "./services/tts";
 import type { ConversationPart, PricingDetails } from "./services/tts";
 import { eq, and, sql, desc } from "drizzle-orm";
 import pdfParse from "pdf-parse/lib/pdf-parse.js";
+import Stripe from "stripe";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -69,6 +70,99 @@ const upload = multer({ storage });
 
 export function registerRoutes(app: Express) {
   setupAuth(app);
+
+  // Initialize Stripe
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: "2023-10-16", // Update to current stable version
+  });
+
+  // Create Payment Intent endpoint
+  app.post("/api/create-payment-intent", async (req, res) => {
+    try {
+      if (!req.user?.id) {
+        return res.status(401).json({ error: "Not authenticated" });
+      }
+
+      const { planName, planPrice } = req.body;
+
+      // Create a PaymentIntent with the order amount and currency
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: Math.round(planPrice * 100), // Convert to cents
+        currency: "usd",
+        metadata: {
+          userId: req.user.id,
+          planName,
+        },
+      });
+
+      res.json({
+        clientSecret: paymentIntent.client_secret,
+      });
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to create payment";
+      logger.error(errorMessage);
+      res.status(500).json({ error: errorMessage });
+    }
+  });
+
+  // Subscription endpoint
+  app.post("/api/subscriptions", async (req, res) => {
+    try {
+      if (!req.user?.id) {
+        return res.status(401).json({ error: "Not authenticated" });
+      }
+
+      const { planName, paymentMethodId } = req.body;
+
+      // Attach the payment method to the customer
+      const customer = await stripe.customers.create({
+        payment_method: paymentMethodId,
+        email: req.user.email,
+        invoice_settings: {
+          default_payment_method: paymentMethodId,
+        },
+      });
+
+      // Create a subscription
+      const subscription = await stripe.subscriptions.create({
+        customer: customer.id,
+        items: [{ price: getPriceIdForPlan(planName) }],
+        payment_behavior: 'default_incomplete',
+        payment_settings: { save_default_payment_method: 'on_subscription' },
+        expand: ['latest_invoice.payment_intent'],
+      });
+
+      res.json({
+        message: "Subscription created successfully",
+        subscription,
+      });
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to process subscription";
+      logger.error(errorMessage);
+      res.status(500).json({ error: errorMessage });
+    }
+  });
+
+  // Helper function to get price ID for a plan
+  function getPriceIdForPlan(planName: string): string {
+    // Replace these with your actual Stripe price IDs
+    const priceIds: Record<string, string> = {
+      "Individual Plan": "price_individual",
+      "Creator Plan": "price_creator",
+      "Enterprise Plan": "price_enterprise",
+    };
+    return priceIds[planName] || priceIds["Individual Plan"];
+  }
+
+  // Helper function to get plan price
+  function getPlanPrice(planName: string): string {
+    const prices: Record<string, string> = {
+      "Individual Plan": "$9.99",
+      "Creator Plan": "$24.99",
+      "Enterprise Plan": "Custom",
+    };
+    return prices[planName] || "$9.99";
+  }
 
   // Main ---Text-to-speech conversion endpoint
   app.post("/api/podcast", upload.single("file"), async (req, res) => {
