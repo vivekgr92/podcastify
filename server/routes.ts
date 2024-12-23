@@ -73,7 +73,7 @@ export function registerRoutes(app: Express) {
 
   // Initialize Stripe
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: "2024-12-18.acacia",
+    apiVersion: "2023-10-16",
   });
 
   // Create Payment Intent endpoint
