@@ -12,31 +12,31 @@ const plans = [
     price: "9.99",
     period: "per month",
     features: [
-      "Convert up to 50 articles/month",
+      "Convert up to 20 articles/month",
       "Basic voice selection",
       "Standard quality audio",
       "Email support",
-      "Basic analytics"
+      "Basic analytics",
     ],
     buttonText: "Subscribe Now",
     popular: false,
-    priceId: "price_1OaUYKFZtbGQk9LCIWAy5BxV" // Test mode price ID for Basic Plan
+    priceId: "price_1QZHjDBwEMzOkTIKNklmBsTE", // Updated Basic Plan price ID
   },
   {
     name: "Pro Plan",
-    price: "24.99",
+    price: "15.99",
     period: "per month",
     features: [
-      "Convert up to 200 articles/month",
+      "Convert up to 50 articles/month",
       "Premium voice selection",
       "High quality audio",
       "Priority support",
       "Advanced analytics",
-      "Custom intro/outro"
+      "Custom intro/outro",
     ],
     buttonText: "Subscribe Now",
     popular: true,
-    priceId: "price_1OaUYvFZtbGQk9LCYQViVr3M" // Test mode price ID for Pro Plan
+    priceId: "price_1QZHjEBwEMzOkTIKhhgpiS4P", // Updated Pro Plan price ID
   },
   {
     name: "Enterprise Plan",
@@ -49,49 +49,52 @@ const plans = [
       "24/7 dedicated support",
       "Custom analytics dashboard",
       "API access",
-      "Custom branding"
+      "Custom branding",
     ],
     buttonText: "Subscribe Now",
     popular: false,
-    priceId: "price_1OaUZVFZtbGQk9LCq9z6jk2M" // Test mode price ID for Enterprise Plan
-  }
+    priceId: "price_1QZHjEBwEMzOkTIKutnCSl0H", // Updated Enterprise Plan price ID
+  },
 ];
 
 export default function BillingPage() {
   const { user } = useUser();
   const [location] = useLocation();
-  const [selectedPlan, setSelectedPlan] = useState<(typeof plans)[0] | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<(typeof plans)[0] | null>(
+    null,
+  );
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     // Check for payment status in URL
     const params = new URLSearchParams(window.location.search);
-    const paymentStatus = params.get('payment_status');
-    const message = params.get('message');
+    const paymentStatus = params.get("payment_status");
+    const message = params.get("message");
 
-    if (paymentStatus === 'success') {
+    if (paymentStatus === "success") {
       toast({
         title: "Subscription Successful!",
         description: "Your subscription has been activated. Welcome aboard!",
         duration: 5000,
       });
       // Clean up URL
-      window.history.replaceState({}, '', '/billing');
-    } else if (paymentStatus === 'failed') {
+      window.history.replaceState({}, "", "/billing");
+    } else if (paymentStatus === "failed") {
       toast({
         title: "Payment Failed",
-        description: message || "There was an issue with your payment. Please try again.",
+        description:
+          message || "There was an issue with your payment. Please try again.",
         variant: "destructive",
         duration: 5000,
       });
-      window.history.replaceState({}, '', '/billing');
+      window.history.replaceState({}, "", "/billing");
     }
   }, [location, toast]);
 
   if (!user) return null;
 
-  const handlePlanSelect = (plan: typeof plans[0]) => {
+  const handlePlanSelect = (plan: (typeof plans)[0]) => {
     setSelectedPlan(plan);
     setIsPaymentModalOpen(true);
   };
@@ -101,7 +104,8 @@ export default function BillingPage() {
       <div className="text-center mb-16">
         <h1 className="text-4xl font-bold mb-4">Choose Your Plan</h1>
         <p className="text-gray-400 max-w-2xl mx-auto">
-          Select a monthly plan that best fits your needs. All plans include our core features with different usage limits.
+          Select a monthly plan that best fits your needs. All plans include our
+          core features with different usage limits.
         </p>
       </div>
 
@@ -114,7 +118,7 @@ export default function BillingPage() {
                 ? "border-2 border-[#4CAF50] bg-[#4CAF50]/10"
                 : "border border-gray-800 bg-gray-900"
             }`}
-            style={{ minHeight: '600px' }}
+            style={{ minHeight: "600px" }}
           >
             {plan.popular && (
               <div className="absolute -top-4 left-1/2 -translate-x-1/2">
