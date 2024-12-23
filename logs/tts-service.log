@@ -901,3 +901,44 @@ Usage limits check for user 1:
  Tokens: 393/10000 (ok)
  -----------------------------------------
 
+[INFO] Stripe initialized successfully
+[INFO] Creating subscription for user 1 with price price_1QZIHiBwEMzOkTIKmdHTjmv2
+[INFO] Creating subscription for user 1 with price price_1QZIHiBwEMzOkTIKmdHTjmv2
+[INFO] Using existing customer: cus_RSBYCISf6kFlia
+[INFO] Using existing customer: cus_RSBYCISf6kFlia
+[INFO] Created subscription: sub_1QZJJvBwEMzOkTIKCpOVTz2y
+[INFO] Created subscription: sub_1QZJJwBwEMzOkTIKbfAWoL0r
+[INFO] Creating subscription for user 1 with price price_1QZIHiBwEMzOkTIKmdHTjmv2
+[INFO] Creating subscription for user 1 with price price_1QZIHiBwEMzOkTIKmdHTjmv2
+[INFO] Using existing customer: cus_RSBYCISf6kFlia
+[INFO] Using existing customer: cus_RSBYCISf6kFlia
+[INFO] Created subscription: sub_1QZJKnBwEMzOkTIKOEUe8TjG
+[INFO] Created subscription: sub_1QZJKoBwEMzOkTIKXfQOi5sY
+[INFO] Stripe initialized successfully
+[INFO] Stripe initialized successfully
+[INFO] Stripe initialized successfully
+[INFO] Stripe initialized successfully
+[WARN] File not found: /home/runner/PodCasterella/uploads/1734449668326-article.pdf.mp3
+[WARN] File not found: /home/runner/PodCasterella/uploads/1734449668326-article.pdf.mp3
+[INFO] Creating subscription for user 1 with price price_1QZIHiBwEMzOkTIKmdHTjmv2
+[INFO] Creating subscription for user 1 with price price_1QZIHiBwEMzOkTIKmdHTjmv2
+[INFO] Created new customer: cus_RSEGifg78WDxhP
+[INFO] Created new customer: cus_RSEGYEWlaSJVUH
+[INFO] Created subscription: sub_1QZJoNBwEMzOkTIKn5FC5K6i
+[INFO] Created subscription: sub_1QZJoNBwEMzOkTIKBik0miz3
+[INFO] Creating subscription for user 1 with price price_1QZIHiBwEMzOkTIKmdHTjmv2
+[INFO] Creating subscription for user 1 with price price_1QZIHiBwEMzOkTIKmdHTjmv2
+[INFO] Using existing customer: cus_RSEGYEWlaSJVUH
+[INFO] Using existing customer: cus_RSEGYEWlaSJVUH
+[INFO] Created subscription: sub_1QZJt1BwEMzOkTIK3EblW3Pv
+[INFO] Created subscription: sub_1QZJt3BwEMzOkTIKGrxEqCkL
+[INFO] Creating subscription for user 1 with price price_1QZIHiBwEMzOkTIKmdHTjmv2
+[INFO] Creating subscription for user 1 with price price_1QZIHiBwEMzOkTIKmdHTjmv2
+[INFO] Using existing customer: cus_RSEGYEWlaSJVUH
+[INFO] Using existing customer: cus_RSEGYEWlaSJVUH
+[INFO] Created subscription: sub_1QZJtzBwEMzOkTIKmDwCm52w
+[INFO] Created subscription: sub_1QZJu1BwEMzOkTIKbVGL5SL9
+[INFO] Stripe initialized successfully
+[INFO] Stripe initialized successfully
+[INFO] Stripe initialized successfully
+[INFO] Stripe initialized successfully
