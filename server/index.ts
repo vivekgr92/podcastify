@@ -2,6 +2,10 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes.js";
 import { setupVite, serveStatic } from "./vite.js";
 import { createServer } from "http";
+import * as dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config();
 
 function log(message: string) {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
@@ -46,29 +50,12 @@ app.use((req, res, next) => {
 // Logging middleware
 app.use((req, res, next) => {
   const start = Date.now();
-  const path = req.path;
-  let capturedJsonResponse: Record<string, any> | undefined = undefined;
-
-  const originalResJson = res.json;
-  res.json = function (bodyJson, ...args) {
-    capturedJsonResponse = bodyJson;
-    return originalResJson.apply(res, [bodyJson, ...args]);
-  };
-
   res.on("finish", () => {
     const duration = Date.now() - start;
-    if (path.startsWith("/api")) {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
-      }
-      if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "…";
-      }
-      log(logLine);
+    if (req.path.startsWith("/api")) {
+      log(`${req.method} ${req.path} ${res.statusCode} in ${duration}ms`);
     }
   });
-
   next();
 });
 
@@ -80,11 +67,8 @@ const errorHandler = (err: any, _req: Request, res: Response, _next: NextFunctio
     log(`Stack trace: ${err.stack}`);
   }
 
-  const status = err.status || err.statusCode || 500;
-  const message = err.message || "Internal Server Error";
-
-  res.status(status).json({ 
-    message,
+  res.status(err.status || 500).json({ 
+    message: err.message || "Internal Server Error",
     type: err.type || 'server_error'
   });
 };
@@ -94,27 +78,24 @@ async function startServer() {
     log('Starting server initialization...');
 
     // Check environment variables
-    const requiredEnvVars = ['STRIPE_SECRET_KEY'];
-    if (process.env.NODE_ENV === 'production') {
-      requiredEnvVars.push('STRIPE_WEBHOOK_SECRET');
-    }
-
+    const requiredEnvVars = ['STRIPE_SECRET_KEY', 'STRIPE_WEBHOOK_SECRET'];
     const missingEnvVars = requiredEnvVars.filter(varName => !process.env[varName]);
+
     if (missingEnvVars.length > 0) {
       throw new Error(`Missing required environment variables: ${missingEnvVars.join(', ')}`);
     }
 
     log('Environment variables validated');
 
-    // Register routes
+    // Register routes first
     log('Registering routes...');
     registerRoutes(app);
 
-    // Create HTTP server
-    const server = createServer(app);
-
     // Add error handler after routes
     app.use(errorHandler);
+
+    const PORT = process.env.PORT || 4000;
+    const server = createServer(app);
 
     // Setup Vite or static serving
     if (process.env.NODE_ENV === "development") {
@@ -125,22 +106,9 @@ async function startServer() {
       serveStatic(app);
     }
 
-    const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4000;
-
-    // Start server with proper error handling
-    return new Promise<void>((resolve, reject) => {
-      server.listen(PORT, "0.0.0.0")
-        .once('listening', () => {
-          log(`Server started successfully on port ${PORT}`);
-          resolve();
-        })
-        .once('error', (error: NodeJS.ErrnoException) => {
-          log(`Failed to start server: ${error.message}`);
-          if (error.code === 'EADDRINUSE') {
-            log(`Port ${PORT} is already in use. Please try a different port.`);
-          }
-          reject(error);
-        });
+    // Start server
+    server.listen(PORT, "0.0.0.0", () => {
+      log(`Server started successfully on port ${PORT}`);
     });
 
   } catch (error) {
@@ -149,7 +117,7 @@ async function startServer() {
     if (error instanceof Error && error.stack) {
       log(`Stack trace: ${error.stack}`);
     }
-    throw error;
+    process.exit(1);
   }
 }
 

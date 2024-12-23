@@ -20,7 +20,7 @@ const plans = [
     ],
     buttonText: "Subscribe Now",
     popular: false,
-    priceId: "price_1QZI0fBwEMzOkTIKQ9kVXMI2",
+    priceId: "price_1QZIHiBwEMzOkTIKmdHTjmv2",
   },
   {
     name: "Pro Plan",
@@ -36,7 +36,7 @@ const plans = [
     ],
     buttonText: "Subscribe Now",
     popular: true,
-    priceId: "price_1QZI0fBwEMzOkTIKsgaF8MrZ",
+    priceId: "price_1QZIHiBwEMzOkTIKpvCR2jKS",
   },
   {
     name: "Enterprise Plan",
@@ -53,7 +53,7 @@ const plans = [
     ],
     buttonText: "Subscribe Now",
     popular: false,
-    priceId: "price_1QZI0gBwEMzOkTIKXhjUz2k9",
+    priceId: "price_1QZIHjBwEMzOkTIK8AXFZaXa",
   },
 ];
 

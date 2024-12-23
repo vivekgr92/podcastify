@@ -26,6 +26,25 @@ import Stripe from "stripe";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+// Initialize Stripe with proper API version and error handling
+let stripe: Stripe;
+try {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error('STRIPE_SECRET_KEY is required');
+  }
+
+  stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: '2023-10-16',
+    typescript: true,
+  });
+
+  logger.info('Stripe initialized successfully');
+} catch (error) {
+  const errorMessage = error instanceof Error ? error.message : String(error);
+  logger.error(`Failed to initialize Stripe: ${errorMessage}`);
+  throw error;
+}
+
 // Constants for usage limits
 const ARTICLE_LIMIT = 3;
 const PODIFY_TOKEN_LIMIT = 10000;
@@ -70,25 +89,6 @@ const upload = multer({ storage });
 
 export function registerRoutes(app: Express) {
   setupAuth(app);
-
-  // Initialize Stripe with proper API version and error handling
-  let stripe: Stripe;
-  try {
-    if (!process.env.STRIPE_SECRET_KEY) {
-      throw new Error('STRIPE_SECRET_KEY is required');
-    }
-
-    stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-      apiVersion: '2023-10-16',
-      typescript: true,
-    });
-
-    logger.info('Stripe initialized successfully');
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    logger.error(`Failed to initialize Stripe: ${errorMessage}`);
-    throw error;
-  }
 
   // Create subscription endpoint with enhanced error handling
   app.post("/api/create-subscription", async (req, res) => {
@@ -972,7 +972,7 @@ export function registerRoutes(app: Express) {
 
     const sendProgress = (progress: number) => {
       console.log('Sending progress update:', progress);
-            res.write(`data: ${JSON.stringify({ progress })}\n\n`);
+      res.write(`data: ${JSON.stringify({ progress })}\n\n`);
     };
 
     // Add this client to TTSService progress listeners

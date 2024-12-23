@@ -8,7 +8,7 @@ channel = "stable-24_05"
 [deployment]
 deploymentTarget = "cloudrun"
 build = ["npm", "run", "build"]
-run = ["sh", "-c", "NODE_ENV=development node --loader ts-node/esm server/index.ts"]
+run = ["sh", "-c", "tsx watch server/index.ts"]
 
 [[ports]]
 localPort = 4000
@@ -50,6 +50,10 @@ args = "Server"
 task = "workflow.run"
 args = "Client"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "StripeSetup"
+
 [[workflows.workflow]]
 name = "Server"
 author = "agent"
@@ -62,7 +66,7 @@ task = "packager.installForAll"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "NODE_ENV=development node --loader ts-node/esm server/index.ts"
+args = "tsx watch server/index.ts"
 waitForPort = 4000
 
 [[workflows.workflow]]
@@ -79,3 +83,17 @@ task = "packager.installForAll"
 task = "shell.exec"
 args = "cd client && npm run dev"
 waitForPort = 5175
+
+[[workflows.workflow]]
+name = "StripeSetup"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "NODE_ENV=development node --loader ts-node/esm server/setup-stripe-products.ts"

@@ -46,6 +46,7 @@ function CheckoutForm({ planName, planPrice, priceId, onClose }: Omit<PaymentMod
         throw submitError;
       }
 
+      // Changed from confirmSetup to confirmPayment
       const result = await stripe.confirmPayment({
         elements,
         confirmParams: {
