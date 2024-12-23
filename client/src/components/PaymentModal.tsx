@@ -11,7 +11,7 @@ import {
 } from "@stripe/react-stripe-js";
 
 // Initialize Stripe with the publishable key
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '');
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -41,11 +41,11 @@ function CheckoutForm({ planName, planPrice, priceId, onClose }: Omit<PaymentMod
     setPaymentStatus('processing');
 
     try {
-      // Confirm the subscription
-      const { error: confirmError } = await stripe.confirmPayment({
+      // Confirm the subscription setup
+      const { error: submitError } = await stripe.confirmSetup({
         elements,
         confirmParams: {
-          return_url: `${window.location.origin}/billing?payment_status=success`,
+          return_url: `${window.location.origin}/billing?subscription_status=success`,
           payment_method_data: {
             billing_details: {
               name: `${planName} Subscription`,
@@ -54,9 +54,9 @@ function CheckoutForm({ planName, planPrice, priceId, onClose }: Omit<PaymentMod
         },
       });
 
-      if (confirmError) {
-        if (confirmError.type === 'card_error' || confirmError.type === 'validation_error') {
-          setError(confirmError.message || 'Payment failed. Please try again.');
+      if (submitError) {
+        if (submitError.type === 'card_error' || submitError.type === 'validation_error') {
+          setError(submitError.message || 'Payment failed. Please try again.');
           setPaymentStatus('failed');
         } else {
           setError('An unexpected error occurred.');
@@ -64,10 +64,12 @@ function CheckoutForm({ planName, planPrice, priceId, onClose }: Omit<PaymentMod
         }
       } else {
         setPaymentStatus('succeeded');
+        // Subscription will be activated via webhook
+        window.location.href = `${window.location.origin}/billing?subscription_status=success`;
       }
     } catch (err) {
-      console.error('Payment processing error:', err);
-      setError(err instanceof Error ? err.message : 'An error occurred while processing your payment.');
+      console.error('Subscription processing error:', err);
+      setError(err instanceof Error ? err.message : 'An error occurred while processing your subscription.');
       setPaymentStatus('failed');
     } finally {
       setIsSubmitting(false);
@@ -77,13 +79,13 @@ function CheckoutForm({ planName, planPrice, priceId, onClose }: Omit<PaymentMod
   const getStatusMessage = () => {
     switch (paymentStatus) {
       case 'processing':
-        return 'Processing your subscription...';
+        return 'Setting up your subscription...';
       case 'requires_action':
         return 'Additional verification required...';
       case 'succeeded':
-        return 'Payment successful! Redirecting...';
+        return 'Subscription successful! Redirecting...';
       case 'failed':
-        return 'Payment failed. Please try again.';
+        return 'Subscription setup failed. Please try again.';
       default:
         return '';
     }
@@ -134,42 +136,43 @@ function CheckoutForm({ planName, planPrice, priceId, onClose }: Omit<PaymentMod
 }
 
 export function PaymentModal({ isOpen, onClose, planName, planPrice, priceId }: PaymentModalProps) {
-  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [setupIntent, setSetupIntent] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isOpen) return;
 
-    const initializePayment = async () => {
+    const initializeSubscription = async () => {
       try {
         setError(null);
-        setClientSecret(null);
+        setSetupIntent(null);
 
-        const response = await fetch('/api/create-payment-intent', {
+        const response = await fetch('/api/create-subscription', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
             priceId,
+            planName,
           }),
           credentials: 'include',
         });
 
         const data = await response.json();
         if (!response.ok) {
-          throw new Error(data.error || 'Failed to initialize payment');
+          throw new Error(data.error || 'Failed to initialize subscription');
         }
 
-        setClientSecret(data.clientSecret);
+        setSetupIntent(data.clientSecret);
       } catch (err) {
-        console.error('Payment initialization error:', err);
-        setError(err instanceof Error ? err.message : 'Failed to initialize payment');
+        console.error('Subscription initialization error:', err);
+        setError(err instanceof Error ? err.message : 'Failed to initialize subscription');
       }
     };
 
-    initializePayment();
-  }, [isOpen, priceId]);
+    initializeSubscription();
+  }, [isOpen, priceId, planName]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -194,7 +197,7 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, priceId }: 
               Close
             </Button>
           </div>
-        ) : !clientSecret ? (
+        ) : !setupIntent ? (
           <div className="flex items-center justify-center py-4">
             <Loader2 className="h-6 w-6 animate-spin" />
           </div>
@@ -202,7 +205,7 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, priceId }: 
           <Elements 
             stripe={stripePromise} 
             options={{
-              clientSecret,
+              clientSecret: setupIntent,
               appearance: {
                 theme: 'night',
                 variables: {

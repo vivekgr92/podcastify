@@ -108,7 +108,7 @@ export function registerRoutes(app: Express) {
         payment_settings: { save_default_payment_method: 'on_subscription' },
         expand: ['latest_invoice.payment_intent'],
         metadata: {
-          userId: req.user.id
+          userId: req.user.id.toString()
         }
       });
 
@@ -125,7 +125,7 @@ export function registerRoutes(app: Express) {
     }
   });
 
-  // Subscription webhook endpoint to handle subscription status updates
+  // Updated webhook handler for subscription events
   app.post("/api/webhooks/stripe", express.raw({ type: 'application/json' }), async (req, res) => {
     try {
       const sig = req.headers['stripe-signature'];
@@ -143,15 +143,41 @@ export function registerRoutes(app: Express) {
         case 'invoice.payment_succeeded':
           const invoice = event.data.object as any;
           const subscription = await stripe.subscriptions.retrieve(invoice.subscription);
-          // Handle successful payment
-          console.log('Payment succeeded for subscription:', subscription.id);
+          // Update user's subscription status in database
+          if (subscription.metadata.userId) {
+            await db.update(users)
+              .set({
+                subscriptionStatus: 'active',
+                subscriptionId: subscription.id,
+                currentPeriodEnd: new Date(subscription.current_period_end * 1000)
+              })
+              .where(eq(users.id, parseInt(subscription.metadata.userId)));
+          }
           break;
 
         case 'customer.subscription.updated':
-        case 'customer.subscription.deleted':
           const updatedSubscription = event.data.object as any;
-          // Handle subscription updates
-          console.log('Subscription updated:', updatedSubscription.id);
+          if (updatedSubscription.metadata.userId) {
+            await db.update(users)
+              .set({
+                subscriptionStatus: updatedSubscription.status,
+                currentPeriodEnd: new Date(updatedSubscription.current_period_end * 1000)
+              })
+              .where(eq(users.id, parseInt(updatedSubscription.metadata.userId)));
+          }
+          break;
+
+        case 'customer.subscription.deleted':
+          const deletedSubscription = event.data.object as any;
+          if (deletedSubscription.metadata.userId) {
+            await db.update(users)
+              .set({
+                subscriptionStatus: 'canceled',
+                subscriptionId: null,
+                currentPeriodEnd: null
+              })
+              .where(eq(users.id, parseInt(deletedSubscription.metadata.userId)));
+          }
           break;
       }
 
@@ -162,7 +188,6 @@ export function registerRoutes(app: Express) {
       res.status(400).json({ error: errorMessage });
     }
   });
-
 
   // Create Setup Intent endpoint
   app.post("/api/create-setup-intent", async (req, res) => {
@@ -243,7 +268,7 @@ export function registerRoutes(app: Express) {
         payment_settings: { save_default_payment_method: 'on_subscription' },
         expand: ['latest_invoice.payment_intent'],
         metadata: {
-          userId: req.user.id
+          userId: req.user.id.toString()
         }
       });
 
@@ -258,27 +283,61 @@ export function registerRoutes(app: Express) {
     }
   });
 
-  // Helper function to get price ID for a plan
-  function getPriceIdForPlan(planName: string): string {
-    // Use test mode price IDs
-    const priceIds: Record<string, string> = {
-      "Individual Plan": "price_1234", // Replace with your test price ID
-      "Creator Plan": "price_5678",    // Replace with your test price ID
-      "Enterprise Plan": "price_9012"  // Replace with your test price ID
-    };
+  // Create subscription endpoint
+  app.post("/api/create-subscription", async (req, res) => {
+    try {
+      if (!req.user?.id) {
+        return res.status(401).json({ error: 'Not authenticated' });
+      }
 
-    const priceId = priceIds[planName];
-    if (!priceId) {
-      throw new Error(`Invalid plan name: ${planName}`);
+      const { priceId } = req.body;
+
+      // Get or create customer
+      let customer;
+      const existingCustomers = await stripe.customers.list({
+        email: req.user.email,
+        limit: 1,
+      });
+
+      if (existingCustomers.data.length > 0) {
+        customer = existingCustomers.data[0];
+      } else {
+        customer = await stripe.customers.create({
+          email: req.user.email,
+        });
+      }
+
+      // Create the subscription
+      const subscription = await stripe.subscriptions.create({
+        customer: customer.id,
+        items: [{ price: priceId }],
+        payment_behavior: 'default_incomplete',
+        payment_settings: { save_default_payment_method: 'on_subscription' },
+        expand: ['latest_invoice.payment_intent'],
+        metadata: {
+          userId: req.user.id.toString()
+        }
+      });
+
+      const invoice = subscription.latest_invoice as any;
+
+      res.json({
+        subscriptionId: subscription.id,
+        clientSecret: invoice.payment_intent.client_secret,
+      });
+    } catch (error) {
+      console.error('Subscription creation error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to create subscription';
+      res.status(500).json({ error: errorMessage });
     }
-    return priceId;
-  }
+  });
+
 
   // Helper function to get plan price
   function getPlanPrice(planName: string): string {
     const prices: Record<string, string> = {
-      "Individual Plan": "$9.99",
-      "Creator Plan": "$24.99",
+      "Basic Plan": "$9.99",
+      "Pro Plan": "$24.99",
       "Enterprise Plan": "Custom",
     };
     return prices[planName] || "$9.99";
@@ -969,20 +1028,20 @@ export function registerRoutes(app: Express) {
 
   // SSE endpoint for TTS progress updates
   app.get("/api/tts/progress", (req, res) => {
-    console.log("Client connected to SSE endpoint");
+    console.log('Client connected to SSE endpoint');
 
     res.writeHead(200, {
-      "Content-Type": "text/event-stream",
-      "Cache-Control": "no-cache",
-      Connection: "keep-alive",
-      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      'Connection': 'keep-alive',
+      'Access-Control-Allow-Origin': '*'
     });
 
     // Send initial progress
     res.write(`data: ${JSON.stringify({ progress: 0 })}\n\n`);
 
     const sendProgress = (progress: number) => {
-      console.log("Sending progress update:", progress);
+      console.log('Sending progress update:', progress);
       res.write(`data: ${JSON.stringify({ progress })}\n\n`);
     };
 
@@ -990,9 +1049,9 @@ export function registerRoutes(app: Express) {
     ttsService.addProgressListener(sendProgress);
 
     // Remove listener when client disconnects
-    req.on("close", () => {
-      console.log("Client disconnected from SSE endpoint");
+    req.on('close', () => {
       ttsService.removeProgressListener(sendProgress);
+      console.log('Client disconnected from SSE endpoint');
     });
   });
 
