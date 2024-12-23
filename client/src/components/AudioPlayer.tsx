@@ -281,7 +281,7 @@ export default function AudioPlayer() {
                               "group flex items-center gap-3 p-3 rounded-lg transition-all duration-200",
                               index === currentIndex
                                 ? "bg-[#4CAF50]/20"
-                                : "hover:bg-gray-800/50",
+                                : "hover:bg-gray-800/50"
                             )}
                           >
                             <div className="flex-shrink-0 text-sm text-gray-400 w-6 text-center">
@@ -289,7 +289,10 @@ export default function AudioPlayer() {
                             </div>
                             <button
                               className="flex-1 flex items-center gap-3 min-w-0 text-left"
-                              onClick={() => play(item)}
+                              onClick={() => {
+                                play(item);
+                                setCurrentIndex(index);
+                              }}
                             >
                               <div
                                 className={`w-10 h-10 rounded-lg flex items-center justify-center ${
