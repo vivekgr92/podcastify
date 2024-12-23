@@ -41,15 +41,30 @@ export function useAudio(): AudioHookReturn {
   // Refs
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const playFunctionRef = useRef<((podcast: Podcast) => Promise<void>) | null>(null);
   const { toast } = useToast();
 
   const constructAudioUrl = useCallback((url: string): string => {
-    const baseUrl = window.location.origin;
-    return url.startsWith("http") ? url : `${baseUrl}${url}`;
+    if (!url) {
+      console.error("Empty URL provided to constructAudioUrl");
+      return "";
+    }
+
+    try {
+      // Check if it's already a valid URL
+      new URL(url);
+      return url;
+    } catch {
+      // If not a valid URL, assume it's a relative path
+      const baseUrl = window.location.origin;
+      console.log("Constructing audio URL:", `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`);
+      return `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
+    }
   }, []);
 
   const initAudio = useCallback(() => {
     if (!audioRef.current) {
+      console.log("Creating new Audio element");
       const audio = new Audio();
       audio.preload = "auto";
       audioRef.current = audio;
@@ -59,6 +74,10 @@ export function useAudio(): AudioHookReturn {
 
   const play = useCallback(async (podcast: Podcast) => {
     try {
+      if (!podcast?.audioUrl) {
+        throw new Error("Invalid podcast or missing audio URL");
+      }
+
       console.log("Starting to play podcast:", podcast.title);
       const audio = initAudio();
 
@@ -89,6 +108,10 @@ export function useAudio(): AudioHookReturn {
       const audioUrl = constructAudioUrl(podcast.audioUrl);
       console.log("Loading audio URL:", audioUrl);
 
+      if (!audioUrl) {
+        throw new Error("Failed to construct audio URL");
+      }
+
       // Set new audio source
       audio.src = audioUrl;
       audio.load();
@@ -97,47 +120,43 @@ export function useAudio(): AudioHookReturn {
       setAudioData(podcast);
       localStorage.setItem("last-played-podcast", JSON.stringify(podcast));
 
-      // Wait for metadata to load
-      await new Promise<void>((resolve, reject) => {
-        const handleLoadedMetadata = () => {
-          console.log("Metadata loaded, duration:", audio.duration);
-          setDuration(audio.duration);
-          setIsAudioReady(true);
-          audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
-          audio.removeEventListener("error", handleError);
-          resolve();
-        };
+      try {
+        // Wait for metadata to load
+        await new Promise<void>((resolve, reject) => {
+          const handleLoadedMetadata = () => {
+            console.log("Metadata loaded, duration:", audio.duration);
+            setDuration(audio.duration);
+            setIsAudioReady(true);
+            audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
+            audio.removeEventListener("error", handleError);
+            resolve();
+          };
 
-        const handleError = () => {
-          audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
-          audio.removeEventListener("error", handleError);
-          reject(new Error(`Failed to load audio: ${audio.error?.message || "Unknown error"}`));
-        };
+          const handleError = () => {
+            const errorMsg = audio.error?.message || "Unknown error";
+            console.error("Audio loading error:", errorMsg);
+            audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
+            audio.removeEventListener("error", handleError);
+            reject(new Error(`Failed to load audio: ${errorMsg}`));
+          };
 
-        audio.addEventListener("loadedmetadata", handleLoadedMetadata);
-        audio.addEventListener("error", handleError);
-      });
+          audio.addEventListener("loadedmetadata", handleLoadedMetadata);
+          audio.addEventListener("error", handleError);
+        });
 
-      // Restore last position if available
-      const lastPosition = localStorage.getItem(`podcast-${podcast.id}-position`);
-      if (lastPosition) {
-        const position = parseFloat(lastPosition);
-        if (!isNaN(position) && position > 0) {
-          audio.currentTime = position;
-          setCurrentTime(position);
-        }
+        // Start playback
+        await audio.play();
+        audio.playbackRate = playbackSpeed;
+        setIsPlaying(true);
+        console.log("Playback started successfully");
+      } catch (error) {
+        throw new Error(`Failed to load or play audio: ${error instanceof Error ? error.message : String(error)}`);
       }
-
-      // Start playback
-      await audio.play();
-      audio.playbackRate = playbackSpeed;
-      setIsPlaying(true);
-      console.log("Playback started successfully");
-
     } catch (error) {
       console.error("Error playing audio:", error);
       setIsPlaying(false);
       setIsAudioReady(false);
+      setAudioData(null);
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to play audio",
@@ -146,37 +165,10 @@ export function useAudio(): AudioHookReturn {
     }
   }, [audioData, playbackSpeed, isPlaying, isAudioReady, toast, constructAudioUrl, initAudio]);
 
-  // Initialize audio element and restore last played podcast
+  // Store play function in ref to avoid circular dependencies
   useEffect(() => {
-    const audio = initAudio();
-
-    // Try to restore last played podcast
-    const lastPlayedPodcast = localStorage.getItem("last-played-podcast");
-    if (lastPlayedPodcast) {
-      try {
-        const podcast = JSON.parse(lastPlayedPodcast);
-        setAudioData(podcast);
-        const lastPosition = localStorage.getItem(`podcast-${podcast.id}-position`);
-        if (lastPosition) {
-          const position = parseFloat(lastPosition);
-          if (!isNaN(position)) {
-            audio.currentTime = position;
-          }
-        }
-      } catch (error) {
-        console.error("Error restoring last played podcast:", error);
-        localStorage.removeItem("last-played-podcast");
-      }
-    }
-
-    // Cleanup
-    return () => {
-      if (audio) {
-        audio.pause();
-        audio.src = "";
-      }
-    };
-  }, [initAudio]);
+    playFunctionRef.current = play;
+  }, [play]);
 
   // Setup audio event listeners
   useEffect(() => {
@@ -208,17 +200,17 @@ export function useAudio(): AudioHookReturn {
       setIsAudioReady(true);
     };
 
-    const handleEnded = async () => {
+    const handleEnded = () => {
       console.log("Audio playback ended");
       setIsPlaying(false);
       if (audioData) {
         localStorage.removeItem(`podcast-${audioData.id}-position`);
       }
       // Auto-play next track if available
-      if (currentIndex < playlist.length - 1) {
+      if (currentIndex < playlist.length - 1 && playFunctionRef.current) {
         const nextPodcast = playlist[currentIndex + 1];
         setCurrentIndex(currentIndex + 1);
-        await play(nextPodcast).catch(console.error);
+        playFunctionRef.current(nextPodcast).catch(console.error);
       }
     };
 
@@ -249,7 +241,42 @@ export function useAudio(): AudioHookReturn {
       audio.removeEventListener("ended", handleEnded);
       audio.removeEventListener("error", handleError);
     };
-  }, [audioData, currentIndex, playlist, playbackSpeed, toast, play]);
+  }, [audioData, currentIndex, playlist, playbackSpeed, toast]);
+
+  // Initialize audio element and restore last played podcast
+  useEffect(() => {
+    const audio = initAudio();
+
+    // Try to restore last played podcast
+    const lastPlayedPodcast = localStorage.getItem("last-played-podcast");
+    if (lastPlayedPodcast) {
+      try {
+        const podcast = JSON.parse(lastPlayedPodcast);
+        if (podcast?.audioUrl) {
+          setAudioData(podcast);
+          const lastPosition = localStorage.getItem(`podcast-${podcast.id}-position`);
+          if (lastPosition) {
+            const position = parseFloat(lastPosition);
+            if (!isNaN(position)) {
+              audio.currentTime = position;
+              setCurrentTime(position);
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error restoring last played podcast:", error);
+        localStorage.removeItem("last-played-podcast");
+      }
+    }
+
+    // Cleanup
+    return () => {
+      if (audio) {
+        audio.pause();
+        audio.src = "";
+      }
+    };
+  }, [initAudio]);
 
   const togglePlay = useCallback(async () => {
     try {
@@ -261,10 +288,14 @@ export function useAudio(): AudioHookReturn {
         setIsPlaying(false);
       } else {
         if (!isAudioReady) {
-          // If audio is not ready, reload it
-          audio.load();
+          // If audio is not ready, wait for it to be loadeddata
           await new Promise<void>((resolve) => {
-            audio.addEventListener("canplay", () => resolve(), { once: true });
+            const handleCanPlay = () => {
+              audio.removeEventListener("canplay", handleCanPlay);
+              resolve();
+            };
+            audio.addEventListener("canplay", handleCanPlay);
+            audio.load();
           });
         }
         await audio.play();
