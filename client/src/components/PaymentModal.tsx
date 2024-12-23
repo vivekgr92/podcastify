@@ -11,7 +11,8 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+// Initialize Stripe with the publishable key
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '');
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -39,7 +40,7 @@ function CheckoutForm({ planName, planPrice, onSubmit, onClose }: Omit<PaymentMo
     setError(null);
 
     try {
-      // First, submit the form with card details
+      // Submit the form first
       const { error: submitError } = await elements.submit();
       if (submitError) {
         throw new Error(submitError.message);
@@ -63,10 +64,7 @@ function CheckoutForm({ planName, planPrice, onSubmit, onClose }: Omit<PaymentMo
         throw new Error('Failed to create payment method');
       }
 
-      // Submit payment method ID to server
       await onSubmit(paymentMethod.id);
-
-      // Close modal after successful payment
       onClose();
     } catch (err) {
       console.error('Payment processing error:', err);
@@ -114,43 +112,42 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, onSubmit }:
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY) {
-      console.error('Stripe publishable key is missing');
-      setError('Payment processing is not configured properly');
-      return;
-    }
+    if (!isOpen) return;
 
-    if (isOpen) {
-      setError(null);
-      setClientSecret(null);
+    const fetchClientSecret = async () => {
+      try {
+        if (!import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY) {
+          throw new Error('Stripe publishable key is missing');
+        }
 
-      // Create a PaymentIntent on the server
-      fetch('/api/create-payment-intent', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          planName,
-          planPrice: parseFloat(planPrice.replace('$', '')),
-        }),
-        credentials: 'include',
-      })
-        .then(async (res) => {
-          const data = await res.json();
-          if (!res.ok) {
-            throw new Error(data.error || 'Failed to initialize payment');
-          }
-          return data;
-        })
-        .then((data) => {
-          setClientSecret(data.clientSecret);
-        })
-        .catch((err) => {
-          console.error('Payment initialization error:', err);
-          setError(err.message || 'Failed to initialize payment');
+        setError(null);
+        setClientSecret(null);
+
+        const response = await fetch('/api/create-payment-intent', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            planName,
+            planPrice: parseFloat(planPrice.replace('$', '')),
+          }),
+          credentials: 'include',
         });
-    }
+
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to initialize payment');
+        }
+
+        setClientSecret(data.clientSecret);
+      } catch (err) {
+        console.error('Payment initialization error:', err);
+        setError(err instanceof Error ? err.message : 'Failed to initialize payment');
+      }
+    };
+
+    fetchClientSecret();
   }, [isOpen, planName, planPrice]);
 
   return (
@@ -177,15 +174,18 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, onSubmit }:
             </Button>
           </div>
         ) : clientSecret ? (
-          <Elements stripe={stripePromise} options={{ 
-            clientSecret,
-            appearance: {
-              theme: 'stripe',
-              variables: {
-                colorPrimary: '#4CAF50',
+          <Elements 
+            stripe={stripePromise} 
+            options={{
+              clientSecret,
+              appearance: {
+                theme: 'stripe',
+                variables: {
+                  colorPrimary: '#4CAF50',
+                },
               },
-            },
-          }}>
+            }}
+          >
             <CheckoutForm
               planName={planName}
               planPrice={planPrice}
