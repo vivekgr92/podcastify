@@ -12,7 +12,7 @@ import {
 } from "@stripe/react-stripe-js";
 
 // Initialize Stripe with the publishable key
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+const stripePromise = loadStripe(process.env.VITE_STRIPE_PUBLISHABLE_KEY || '');
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -30,13 +30,29 @@ function CheckoutForm({ planName, planPrice, onSubmit, onClose }: Omit<PaymentMo
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!stripe || !elements) return;
+
+    if (!stripe || !elements) {
+      console.error('Stripe or elements not initialized');
+      return;
+    }
 
     setIsSubmitting(true);
     setError(null);
 
     try {
-      const { error: submitError, paymentMethod } = await stripe.createPaymentMethod({
+      console.log('Starting payment submission process...');
+
+      // Step 1: Submit the form elements
+      console.log('Submitting form elements...');
+      const { error: submitError } = await elements.submit();
+      if (submitError) {
+        console.error('Form submission error:', submitError);
+        throw new Error(submitError.message);
+      }
+
+      // Step 2: Create Payment Method
+      console.log('Creating payment method...');
+      const { error: paymentMethodError, paymentMethod } = await stripe.createPaymentMethod({
         elements,
         params: {
           billing_details: {
@@ -45,15 +61,23 @@ function CheckoutForm({ planName, planPrice, onSubmit, onClose }: Omit<PaymentMo
         },
       });
 
-      if (submitError) {
-        setError(submitError.message || 'Payment failed');
-        return;
+      if (paymentMethodError) {
+        console.error('Payment method creation error:', paymentMethodError);
+        throw new Error(paymentMethodError.message);
       }
 
+      if (!paymentMethod?.id) {
+        throw new Error('Failed to create payment method');
+      }
+
+      // Step 3: Submit to server
+      console.log('Submitting to server...');
       await onSubmit(paymentMethod.id);
+      console.log('Payment process completed successfully');
       onClose();
-    } catch (err: any) {
-      setError(err?.message || 'An error occurred while processing your payment.');
+    } catch (err) {
+      console.error('Payment processing error:', err);
+      setError(err instanceof Error ? err.message : 'An error occurred while processing your payment.');
     } finally {
       setIsSubmitting(false);
     }
@@ -73,7 +97,11 @@ function CheckoutForm({ planName, planPrice, onSubmit, onClose }: Omit<PaymentMo
         <Button type="button" variant="outline" onClick={onClose}>
           Cancel
         </Button>
-        <Button type="submit" disabled={isSubmitting || !stripe}>
+        <Button 
+          type="submit" 
+          disabled={isSubmitting || !stripe || !elements}
+          className="bg-[#4CAF50] hover:bg-[#45a049]"
+        >
           {isSubmitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -93,13 +121,16 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, onSubmit }:
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY) {
+    if (!process.env.VITE_STRIPE_PUBLISHABLE_KEY) {
+      console.error('Stripe publishable key is missing');
       setError('Stripe is not properly configured');
       return;
     }
 
     if (isOpen) {
       setError(null);
+      console.log('Initializing payment intent...');
+
       // Create a PaymentIntent on the server
       fetch('/api/create-payment-intent', {
         method: 'POST',
@@ -117,11 +148,12 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, onSubmit }:
           if (data.error) {
             throw new Error(data.error);
           }
+          console.log('Payment intent created successfully');
           setClientSecret(data.clientSecret);
         })
         .catch((err) => {
-          setError(err?.message || 'Failed to initialize payment');
           console.error('Payment initialization error:', err);
+          setError(err?.message || 'Failed to initialize payment');
         });
     }
   }, [isOpen, planName, planPrice]);
@@ -150,7 +182,15 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, onSubmit }:
             </Button>
           </div>
         ) : clientSecret ? (
-          <Elements stripe={stripePromise} options={{ clientSecret }}>
+          <Elements stripe={stripePromise} options={{ 
+            clientSecret,
+            appearance: {
+              theme: 'stripe',
+              variables: {
+                colorPrimary: '#4CAF50',
+              },
+            },
+          }}>
             <CheckoutForm
               planName={planName}
               planPrice={planPrice}
