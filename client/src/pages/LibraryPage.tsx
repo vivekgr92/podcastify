@@ -26,7 +26,7 @@ export default function LibraryPage() {
   const [, setLocation] = useLocation();
   const { user } = useUser();
   const queryClient = useQueryClient();
-  const { play, isPlaying, audioData, togglePlay } = useAudio();
+  const { play, isPlaying, audioData, togglePlay, addToPlaylist } = useAudio();
   const { toast } = useToast();
 
   const {
@@ -44,18 +44,17 @@ export default function LibraryPage() {
     retry: 1,
   });
 
-  // Log the fetched podcasts
-  console.log("Fetched podcasts:", podcasts);
-
   // Handle play/pause for any podcast in the library
   const handlePlay = useCallback(
     async (podcast: Podcast) => {
       try {
-        if (audioData?.id === podcast.id && isPlaying) {
-          // If this podcast is currently playing, pause it
+        if (audioData?.id === podcast.id) {
+          // If this podcast is currently loaded, just toggle play/pause
           await togglePlay();
         } else {
-          // Load and play a new podcast
+          // Add to playlist if not already playing
+          addToPlaylist(podcast);
+          // Load and play the new podcast
           await play(podcast);
         }
       } catch (error) {
@@ -68,11 +67,11 @@ export default function LibraryPage() {
         });
       }
     },
-    [play, togglePlay, audioData, isPlaying, toast],
+    [play, togglePlay, audioData, toast, addToPlaylist]
   );
 
-  // Ensure AudioPlayer is rendered only when we have audio data
-  const shouldShowPlayer = Boolean(user && (audioData || isPlaying));
+  // Show audio player when we have audio data, regardless of playing state
+  const shouldShowPlayer = Boolean(user && audioData);
 
   if (!user) {
     return (
@@ -226,7 +225,6 @@ export default function LibraryPage() {
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
-                  {/* Share button removed as per requirements */}
                 </div>
               </div>
             </div>
@@ -249,8 +247,8 @@ export default function LibraryPage() {
         </div>
       </main>
 
-      {/* Render AudioPlayer when user is authenticated */}
-      {user && <AudioPlayer />}
+      {/* Render AudioPlayer when we have audio data */}
+      {shouldShowPlayer && <AudioPlayer />}
     </div>
   );
 }

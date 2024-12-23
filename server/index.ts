@@ -2,6 +2,8 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic } from "./vite";
 import { createServer } from "http";
+import session from "express-session";
+import MemoryStore from "memorystore";
 
 function log(message: string) {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
@@ -15,9 +17,41 @@ function log(message: string) {
 }
 
 const app = express();
+
+// CORS configuration
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:5175');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
+// Session configuration
+const SessionStore = MemoryStore(session);
+app.use(
+  session({
+    cookie: {
+      maxAge: 86400000, // 24 hours
+      secure: false,
+      sameSite: 'lax'
+    },
+    store: new SessionStore({
+      checkPeriod: 86400000 // prune expired entries every 24h
+    }),
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.SESSION_SECRET || 'development_secret'
+  })
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Logging middleware
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
@@ -52,17 +86,15 @@ app.use((req, res, next) => {
   registerRoutes(app);
   const server = createServer(app);
 
+  // Error handling middleware
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+    console.error('Error:', err);
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
 
     res.status(status).json({ message });
-    throw err;
   });
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
   if (app.get("env") === "development") {
     await setupVite(app, server);
   } else {
@@ -70,7 +102,7 @@ app.use((req, res, next) => {
   }
 
   const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4000;
-  
+
   const tryPort = (port: number): Promise<number> => {
     return new Promise((resolve, reject) => {
       server.listen(port, "0.0.0.0")

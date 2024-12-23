@@ -62,8 +62,8 @@ export default function AudioPlayer() {
     return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
-  // Only render if we have a user
-  if (!user) {
+  // Only render if we have a user and audio data
+  if (!user || !audioData) {
     return null;
   }
 
@@ -118,7 +118,7 @@ export default function AudioPlayer() {
                   : "opacity-50 cursor-not-allowed"
               }`}
               onClick={previous}
-              disabled={!audioData || currentIndex <= 0}
+              disabled={currentIndex <= 0}
               title={`Previous track ${currentIndex > 0 ? `(${playlist[currentIndex - 1]?.title})` : ""}`}
             >
               <SkipBack className="h-5 w-5" />
@@ -139,7 +139,6 @@ export default function AudioPlayer() {
               onClick={togglePlay}
               variant="outline"
               size="icon"
-              disabled={!audioData}
               className={`h-10 w-10 rounded-full border-none text-white ${
                 audioData
                   ? "bg-[#4CAF50] hover:bg-[#45a049] cursor-pointer"
@@ -174,7 +173,7 @@ export default function AudioPlayer() {
                   : "opacity-50 cursor-not-allowed"
               }`}
               onClick={next}
-              disabled={!audioData || currentIndex >= playlist.length - 1}
+              disabled={currentIndex >= playlist.length - 1}
               title={`Next track ${currentIndex < playlist.length - 1 ? `(${playlist[currentIndex + 1]?.title})` : ""}`}
             >
               <SkipForward className="h-5 w-5" />
@@ -203,18 +202,17 @@ export default function AudioPlayer() {
 
           <div className="flex items-center gap-2 w-full">
             <span className="text-sm text-white w-12 text-right">
-              {audioData ? formatTime(currentTime) : "--:--"}
+              {formatTime(currentTime)}
             </span>
             <Slider
               value={[currentTime]}
               max={duration || 100}
               step={1}
-              disabled={!audioData}
               onValueChange={([value]) => setPosition(value)}
-              className={`flex-1 ${!audioData ? "opacity-50" : ""}`}
+              className="flex-1"
             />
             <span className="text-sm text-white w-12">
-              {audioData ? formatTime(duration) : "--:--"}
+              {formatTime(duration)}
             </span>
           </div>
         </div>
