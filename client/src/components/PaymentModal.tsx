@@ -22,6 +22,77 @@ interface PaymentModalProps {
   onSubmit: (paymentMethod: string) => Promise<void>;
 }
 
+// Stripe Elements appearance configuration
+const appearance: import('@stripe/stripe-js').Appearance = {
+  theme: 'flat',
+  variables: {
+    colorPrimary: '#10b981',
+    colorBackground: '#1f2937',
+    colorText: '#ffffff',
+    colorDanger: '#ef4444',
+    fontFamily: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif',
+    spacingUnit: '4px',
+    borderRadius: '8px',
+    fontWeightNormal: '400',
+    fontLineHeight: '1.5',
+    colorTextPlaceholder: '#9ca3af',
+    colorTextSecondary: '#d1d5db',
+  },
+  rules: {
+    '.Label': {
+      color: '#d1d5db',
+      marginBottom: '8px',
+      fontSize: '0.875rem',
+      fontWeight: '500'
+    },
+    '.Input': {
+      padding: '12px',
+      border: '1px solid #374151',
+      backgroundColor: '#111827',
+      color: '#ffffff',
+      '::placeholder': {
+        color: '#9ca3af'
+      }
+    },
+    '.Input:focus': {
+      border: '2px solid #10b981',
+      boxShadow: '0 0 0 1px #10b981'
+    },
+    '.Tab': {
+      border: '1px solid #374151',
+      backgroundColor: '#1f2937',
+      color: '#d1d5db'
+    },
+    '.Tab:hover': {
+      backgroundColor: '#374151',
+      color: '#ffffff'
+    },
+    '.Tab--selected': {
+      backgroundColor: '#10b981',
+      borderColor: '#10b981',
+      color: '#ffffff'
+    },
+    '.Error': {
+      color: '#ef4444',
+      marginTop: '8px',
+      fontSize: '0.875rem'
+    },
+    '.Input--invalid': {
+      borderColor: '#ef4444'
+    },
+    // Add explicit styling for helper text
+    '.HelperText': {
+      color: '#9ca3af',
+      fontSize: '0.75rem',
+      marginTop: '4px'
+    },
+    // Add styling for focused helper text
+    '.Input:focus + .HelperText': {
+      color: '#d1d5db'
+    }
+  }
+};
+
 function CheckoutForm({ planName, planPrice, onSubmit, onClose }: Omit<PaymentModalProps, 'isOpen'>) {
   const stripe = useStripe();
   const elements = useElements();
@@ -60,8 +131,38 @@ function CheckoutForm({ planName, planPrice, onSubmit, onClose }: Omit<PaymentMo
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <PaymentElement />
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="space-y-4">
+        <PaymentElement
+          options={{
+            layout: 'tabs',
+            defaultValues: {
+              billingDetails: {
+                email: localStorage.getItem('userEmail') || '',
+              }
+            },
+            fields: {
+              billingDetails: {
+                email: 'never'
+              }
+            },
+            // Add styles for the helper text container
+            style: {
+              base: {
+                '::placeholder': {
+                  color: '#9ca3af'
+                },
+                '.Message': {
+                  color: '#d1d5db'
+                },
+                '.Message--error': {
+                  color: '#ef4444'
+                }
+              }
+            }
+          }}
+        />
+      </div>
 
       {error && (
         <div className="text-red-500 text-sm mt-2">
@@ -150,7 +251,13 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, onSubmit }:
             </Button>
           </div>
         ) : clientSecret ? (
-          <Elements stripe={stripePromise} options={{ clientSecret }}>
+          <Elements
+            stripe={stripePromise}
+            options={{
+              clientSecret,
+              appearance,
+            }}
+          >
             <CheckoutForm
               planName={planName}
               planPrice={planPrice}
