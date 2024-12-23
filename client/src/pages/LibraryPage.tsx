@@ -48,11 +48,24 @@ export default function LibraryPage() {
   const handlePlay = useCallback(
     async (podcast: Podcast) => {
       try {
+        // Validate podcast data
+        if (!podcast?.audioUrl) {
+          throw new Error("Invalid podcast or missing audio URL");
+        }
+
+        console.log("Attempting to play podcast:", {
+          id: podcast.id,
+          title: podcast.title,
+          audioUrl: podcast.audioUrl
+        });
+
         if (audioData?.id === podcast.id) {
           // If this podcast is currently loaded, just toggle play/pause
+          console.log("Toggling play/pause for current podcast");
           await togglePlay();
         } else {
           // Add to playlist if not already playing
+          console.log("Adding podcast to playlist and starting playback");
           addToPlaylist(podcast);
           // Load and play the new podcast
           await play(podcast);
@@ -247,7 +260,7 @@ export default function LibraryPage() {
         </div>
       </main>
 
-      {/* Render AudioPlayer when we have audio data */}
+      {/* Only render AudioPlayer when we have audio data */}
       {shouldShowPlayer && <AudioPlayer />}
     </div>
   );
