@@ -1,5 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "./ui/dialog";
 import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 import { useState, useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import { loadStripe } from "@stripe/stripe-js";
@@ -11,12 +12,15 @@ import {
 } from "@stripe/react-stripe-js";
 
 // Initialize Stripe with the publishable key
-const stripeKey = process.env.VITE_STRIPE_PUBLISHABLE_KEY;
-if (!stripeKey || typeof stripeKey !== 'string') {
-  console.error('Invalid or missing Stripe publishable key');
-}
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
-const stripePromise = stripeKey ? loadStripe(stripeKey) : null;
+interface PaymentModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  planName: string;
+  planPrice: string;
+  onSubmit: (paymentMethod: string) => Promise<void>;
+}
 
 function CheckoutForm({ planName, planPrice, onSubmit, onClose }: Omit<PaymentModalProps, 'isOpen'>) {
   const stripe = useStripe();
@@ -26,10 +30,7 @@ function CheckoutForm({ planName, planPrice, onSubmit, onClose }: Omit<PaymentMo
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!stripe || !elements) {
-      setError('Stripe is not properly initialized');
-      return;
-    }
+    if (!stripe || !elements) return;
 
     setIsSubmitting(true);
     setError(null);
@@ -87,20 +88,12 @@ function CheckoutForm({ planName, planPrice, onSubmit, onClose }: Omit<PaymentMo
   );
 }
 
-interface PaymentModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  planName: string;
-  planPrice: string;
-  onSubmit: (paymentMethod: string) => Promise<void>;
-}
-
 export function PaymentModal({ isOpen, onClose, planName, planPrice, onSubmit }: PaymentModalProps) {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!stripePromise) {
+    if (!import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY) {
       setError('Stripe is not properly configured');
       return;
     }
@@ -156,7 +149,7 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, onSubmit }:
               Close
             </Button>
           </div>
-        ) : clientSecret && stripePromise ? (
+        ) : clientSecret ? (
           <Elements stripe={stripePromise} options={{ clientSecret }}>
             <CheckoutForm
               planName={planName}
