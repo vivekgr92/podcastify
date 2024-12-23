@@ -113,10 +113,20 @@ export function registerRoutes(app: Express) {
 
       if (existingCustomers.data.length > 0) {
         customer = existingCustomers.data[0];
+        // Update customer metadata if needed
+        await stripe.customers.update(customer.id, {
+          metadata: {
+            userId: req.user.id.toString()
+          },
+          email: req.user.email // Ensure email is up to date
+        });
         logger.info(`Using existing customer: ${customer.id}`);
       } else {
         customer = await stripe.customers.create({
           email: req.user.email,
+          metadata: {
+            userId: req.user.id.toString()
+          }
         });
         logger.info(`Created new customer: ${customer.id}`);
       }
@@ -126,7 +136,14 @@ export function registerRoutes(app: Express) {
         customer: customer.id,
         items: [{ price: priceId }],
         payment_behavior: 'default_incomplete',
-        payment_settings: { save_default_payment_method: 'on_subscription' },
+        payment_settings: { 
+          save_default_payment_method: 'on_subscription',
+          payment_method_options: {
+            card: {
+              request_three_d_secure: 'automatic'
+            }
+          }
+        },
         expand: ['latest_invoice.payment_intent'],
         metadata: {
           userId: req.user.id.toString()
@@ -141,6 +158,14 @@ export function registerRoutes(app: Express) {
       if (!paymentIntent?.client_secret) {
         throw new Error('Failed to get client secret from payment intent');
       }
+
+      // Update user's subscription status to 'pending'
+      await db.update(users)
+        .set({
+          subscriptionStatus: 'pending',
+          subscriptionId: subscription.id
+        })
+        .where(eq(users.id, req.user.id));
 
       res.json({
         subscriptionId: subscription.id,
@@ -162,7 +187,7 @@ export function registerRoutes(app: Express) {
       }
 
       const event = stripe.webhooks.constructEvent(
-        req.body,
+        req.rawBody || '',
         sig,
         process.env.STRIPE_WEBHOOK_SECRET || ''
       );
@@ -175,15 +200,63 @@ export function registerRoutes(app: Express) {
           const subscription = await stripe.subscriptions.retrieve(invoice.subscription as string);
 
           if (subscription.metadata.userId) {
+            try {
+              // Update user's subscription status in database
+              const [updatedUser] = await db.update(users)
+                .set({
+                  subscriptionStatus: 'active',
+                  subscriptionId: subscription.id,
+                  currentPeriodEnd: new Date(subscription.current_period_end * 1000)
+                })
+                .where(eq(users.id, parseInt(subscription.metadata.userId)))
+                .returning();
+
+              if (!updatedUser) {
+                throw new Error(`Failed to update subscription status for user ${subscription.metadata.userId}`);
+              }
+
+              logger.info(`Subscription status updated successfully`, {
+                userId: subscription.metadata.userId,
+                subscriptionId: subscription.id,
+                status: 'active',
+                currentPeriodEnd: new Date(subscription.current_period_end * 1000)
+              });
+
+              // Log successful payment details
+              logger.info(`Payment succeeded for subscription`, {
+                subscriptionId: subscription.id,
+                customerId: subscription.customer,
+                invoiceId: invoice.id,
+                amount: invoice.amount_paid,
+                currency: invoice.currency
+              });
+            } catch (error) {
+              logger.error(`Failed to update subscription status: ${error instanceof Error ? error.message : String(error)}`, {
+                userId: subscription.metadata.userId,
+                subscriptionId: subscription.id
+              });
+              throw error; // Re-throw to trigger webhook retry
+            }
+          } else {
+            logger.warn(`Received payment success webhook without userId in metadata`, {
+              subscriptionId: subscription.id,
+              customerId: subscription.customer
+            });
+          }
+          break;
+
+        case 'invoice.payment_failed':
+          const failedInvoice = event.data.object as Stripe.Invoice;
+          const failedSubscription = await stripe.subscriptions.retrieve(failedInvoice.subscription as string);
+
+          if (failedSubscription.metadata.userId) {
             await db.update(users)
               .set({
-                subscriptionStatus: 'active',
-                subscriptionId: subscription.id,
-                currentPeriodEnd: new Date(subscription.current_period_end * 1000)
+                subscriptionStatus: 'payment_failed'
               })
-              .where(eq(users.id, parseInt(subscription.metadata.userId)));
+              .where(eq(users.id, parseInt(failedSubscription.metadata.userId)));
 
-            logger.info(`Updated subscription status for user ${subscription.metadata.userId}`);
+            logger.info(`Updated subscription status to payment_failed for user ${failedSubscription.metadata.userId}`);
           }
           break;
 
@@ -224,6 +297,7 @@ export function registerRoutes(app: Express) {
       res.status(400).json({ error: errorMessage });
     }
   });
+
   // Create Setup Intent endpoint
   app.post("/api/create-setup-intent", async (req, res) => {
     try {

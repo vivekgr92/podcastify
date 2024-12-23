@@ -75,23 +75,15 @@ async function startServer() {
   try {
     log('Starting server initialization...');
 
-    // Check required environment variables
-    const requiredEnvVars = ['STRIPE_SECRET_KEY', 'STRIPE_WEBHOOK_SECRET'];
-    const missingEnvVars = requiredEnvVars.filter(varName => !process.env[varName]);
-
-    if (missingEnvVars.length > 0) {
-      throw new Error(`Missing required environment variables: ${missingEnvVars.join(', ')}`);
-    }
+    // Register routes first
+    log('Registering routes...');
+    await registerRoutes(app);
 
     // Add error handler after routes
     app.use(errorHandler);
 
     const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4000;
     const server = createServer(app);
-
-    // Register routes first
-    log('Registering routes...');
-    await registerRoutes(app);
 
     // Setup Vite or static serving
     if (process.env.NODE_ENV === "development") {
