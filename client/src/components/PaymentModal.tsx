@@ -26,6 +26,7 @@ function CheckoutForm({ planName, planPrice, priceId, onClose }: Omit<PaymentMod
   const elements = useElements();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [paymentStatus, setPaymentStatus] = useState<'initial' | 'processing' | 'requires_action' | 'succeeded' | 'failed'>('initial');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,52 +38,54 @@ function CheckoutForm({ planName, planPrice, priceId, onClose }: Omit<PaymentMod
 
     setIsSubmitting(true);
     setError(null);
+    setPaymentStatus('processing');
 
     try {
-      // First create the payment intent with subscription data
-      const response = await fetch('/api/create-payment-intent', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          priceId,
-        }),
-        credentials: 'include',
-      });
-
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to initialize payment');
-      }
-
-      // Create payment method and confirm the payment
-      const { error: submitError } = await elements.submit();
-      if (submitError) {
-        throw new Error(submitError.message);
-      }
-
+      // Confirm the subscription
       const { error: confirmError } = await stripe.confirmPayment({
         elements,
-        clientSecret: data.clientSecret,
         confirmParams: {
-          return_url: `${window.location.origin}/billing/success`,
+          return_url: `${window.location.origin}/billing?payment_status=success`,
           payment_method_data: {
             billing_details: {
-              name: 'Subscription to ' + planName,
+              name: `${planName} Subscription`,
             },
           },
         },
       });
 
       if (confirmError) {
-        throw new Error(confirmError.message);
+        if (confirmError.type === 'card_error' || confirmError.type === 'validation_error') {
+          setError(confirmError.message || 'Payment failed. Please try again.');
+          setPaymentStatus('failed');
+        } else {
+          setError('An unexpected error occurred.');
+          setPaymentStatus('failed');
+        }
+      } else {
+        setPaymentStatus('succeeded');
       }
     } catch (err) {
       console.error('Payment processing error:', err);
       setError(err instanceof Error ? err.message : 'An error occurred while processing your payment.');
+      setPaymentStatus('failed');
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const getStatusMessage = () => {
+    switch (paymentStatus) {
+      case 'processing':
+        return 'Processing your subscription...';
+      case 'requires_action':
+        return 'Additional verification required...';
+      case 'succeeded':
+        return 'Payment successful! Redirecting...';
+      case 'failed':
+        return 'Payment failed. Please try again.';
+      default:
+        return '';
     }
   };
 
@@ -91,19 +94,30 @@ function CheckoutForm({ planName, planPrice, priceId, onClose }: Omit<PaymentMod
       <PaymentElement />
 
       {error && (
-        <div className="text-red-500 text-sm mt-2">
+        <div className="text-red-500 text-sm mt-2 p-2 bg-red-50 rounded-md">
           {error}
         </div>
       )}
 
+      {paymentStatus !== 'initial' && paymentStatus !== 'failed' && (
+        <div className="text-sm mt-2 p-2 bg-gray-800 rounded-md">
+          {getStatusMessage()}
+        </div>
+      )}
+
       <div className="flex justify-end gap-4 pt-4">
-        <Button type="button" variant="outline" onClick={onClose}>
+        <Button 
+          type="button" 
+          variant="outline" 
+          onClick={onClose}
+          disabled={isSubmitting}
+        >
           Cancel
         </Button>
         <Button 
           type="submit" 
-          disabled={isSubmitting || !stripe || !elements}
-          className="bg-[#4CAF50] hover:bg-[#45a049]"
+          disabled={isSubmitting || !stripe || !elements || paymentStatus === 'succeeded'}
+          className="bg-[#4CAF50] hover:bg-[#45a049] min-w-[200px]"
         >
           {isSubmitting ? (
             <>
@@ -180,7 +194,11 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, priceId }: 
               Close
             </Button>
           </div>
-        ) : clientSecret ? (
+        ) : !clientSecret ? (
+          <div className="flex items-center justify-center py-4">
+            <Loader2 className="h-6 w-6 animate-spin" />
+          </div>
+        ) : (
           <Elements 
             stripe={stripePromise} 
             options={{
@@ -192,8 +210,7 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, priceId }: 
                   colorBackground: '#1a1a1a',
                   colorText: '#ffffff'
                 }
-              },
-              paymentMethodCreation: 'manual'
+              }
             }}
           >
             <CheckoutForm
@@ -203,10 +220,6 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, priceId }: 
               onClose={onClose}
             />
           </Elements>
-        ) : (
-          <div className="flex items-center justify-center py-4">
-            <Loader2 className="h-6 w-6 animate-spin" />
-          </div>
         )}
       </DialogContent>
     </Dialog>

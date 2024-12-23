@@ -2,7 +2,7 @@ import { useUser } from "../hooks/use-user";
 import { Button } from "../components/ui/button";
 import { Check } from "lucide-react";
 import { useLocation } from "wouter";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PaymentModal } from "../components/PaymentModal";
 import { useToast } from "../hooks/use-toast";
 
@@ -18,7 +18,7 @@ const plans = [
       "Email support",
       "Basic analytics"
     ],
-    buttonText: "Start Basic Plan",
+    buttonText: "Subscribe Now",
     popular: false,
     priceId: "price_1OaUYKFZtbGQk9LCIWAy5BxV" // Test mode price ID for Basic Plan
   },
@@ -34,7 +34,7 @@ const plans = [
       "Advanced analytics",
       "Custom intro/outro"
     ],
-    buttonText: "Start Pro Plan",
+    buttonText: "Subscribe Now",
     popular: true,
     priceId: "price_1OaUYvFZtbGQk9LCYQViVr3M" // Test mode price ID for Pro Plan
   },
@@ -51,7 +51,7 @@ const plans = [
       "API access",
       "Custom branding"
     ],
-    buttonText: "Start Enterprise Plan",
+    buttonText: "Subscribe Now",
     popular: false,
     priceId: "price_1OaUZVFZtbGQk9LCq9z6jk2M" // Test mode price ID for Enterprise Plan
   }
@@ -59,10 +59,35 @@ const plans = [
 
 export default function BillingPage() {
   const { user } = useUser();
-  const [, setLocation] = useLocation();
+  const [location] = useLocation();
   const [selectedPlan, setSelectedPlan] = useState<(typeof plans)[0] | null>(null);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const { toast } = useToast();
+
+  useEffect(() => {
+    // Check for payment status in URL
+    const params = new URLSearchParams(window.location.search);
+    const paymentStatus = params.get('payment_status');
+    const message = params.get('message');
+
+    if (paymentStatus === 'success') {
+      toast({
+        title: "Subscription Successful!",
+        description: "Your subscription has been activated. Welcome aboard!",
+        duration: 5000,
+      });
+      // Clean up URL
+      window.history.replaceState({}, '', '/billing');
+    } else if (paymentStatus === 'failed') {
+      toast({
+        title: "Payment Failed",
+        description: message || "There was an issue with your payment. Please try again.",
+        variant: "destructive",
+        duration: 5000,
+      });
+      window.history.replaceState({}, '', '/billing');
+    }
+  }, [location, toast]);
 
   if (!user) return null;
 
