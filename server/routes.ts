@@ -73,85 +73,205 @@ export function registerRoutes(app: Express) {
 
   // Initialize Stripe
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: "2024-12-18.acacia", // Update to latest supported version
+    apiVersion: "2023-10-16",
   });
 
-  // Create Payment Intent endpoint
+  // Create Payment Intent endpoint for subscriptions
   app.post("/api/create-payment-intent", async (req, res) => {
     try {
       if (!req.user?.id) {
         return res.status(401).json({ error: "Not authenticated" });
       }
 
-      const { planName, planPrice } = req.body;
+      const { priceId } = req.body;
 
-      // Create a PaymentIntent with the order amount and currency
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount: Math.round(planPrice * 100), // Convert to cents
-        currency: "usd",
-        metadata: {
-          userId: req.user.id,
-          planName,
-        },
+      // Get or create customer
+      let customer;
+      const existingCustomers = await stripe.customers.list({
+        email: req.user.email,
+        limit: 1,
       });
+
+      if (existingCustomers.data.length > 0) {
+        customer = existingCustomers.data[0];
+      } else {
+        customer = await stripe.customers.create({
+          email: req.user.email,
+        });
+      }
+
+      // Create the subscription
+      const subscription = await stripe.subscriptions.create({
+        customer: customer.id,
+        items: [{ price: priceId }],
+        payment_behavior: 'default_incomplete',
+        payment_settings: { save_default_payment_method: 'on_subscription' },
+        expand: ['latest_invoice.payment_intent'],
+        metadata: {
+          userId: req.user.id
+        }
+      });
+
+      const invoice = subscription.latest_invoice as any;
 
       res.json({
-        clientSecret: paymentIntent.client_secret,
+        subscriptionId: subscription.id,
+        clientSecret: invoice.payment_intent.client_secret,
       });
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Failed to create payment";
-      logger.error(errorMessage);
+      console.error('Payment intent error:', error);
+      const errorMessage = error instanceof Error ? error.message : "Failed to create payment intent";
       res.status(500).json({ error: errorMessage });
     }
   });
 
-  // Subscription endpoint
-  app.post("/api/subscriptions", async (req, res) => {
+  // Subscription webhook endpoint to handle subscription status updates
+  app.post("/api/webhooks/stripe", express.raw({ type: 'application/json' }), async (req, res) => {
+    try {
+      const sig = req.headers['stripe-signature'];
+      if (!sig) {
+        return res.status(400).json({ error: 'Missing stripe signature' });
+      }
+
+      const event = stripe.webhooks.constructEvent(
+        req.body,
+        sig,
+        process.env.STRIPE_WEBHOOK_SECRET || ''
+      );
+
+      switch (event.type) {
+        case 'invoice.payment_succeeded':
+          const invoice = event.data.object as any;
+          const subscription = await stripe.subscriptions.retrieve(invoice.subscription);
+          // Handle successful payment
+          console.log('Payment succeeded for subscription:', subscription.id);
+          break;
+
+        case 'customer.subscription.updated':
+        case 'customer.subscription.deleted':
+          const updatedSubscription = event.data.object as any;
+          // Handle subscription updates
+          console.log('Subscription updated:', updatedSubscription.id);
+          break;
+      }
+
+      res.json({ received: true });
+    } catch (error) {
+      console.error('Webhook error:', error);
+      const errorMessage = error instanceof Error ? error.message : "Webhook failed";
+      res.status(400).json({ error: errorMessage });
+    }
+  });
+
+
+  // Create Setup Intent endpoint
+  app.post("/api/create-setup-intent", async (req, res) => {
     try {
       if (!req.user?.id) {
         return res.status(401).json({ error: "Not authenticated" });
       }
 
-      const { planName, paymentMethodId } = req.body;
-
-      // Attach the payment method to the customer
-      const customer = await stripe.customers.create({
-        payment_method: paymentMethodId,
+      // Get or create customer
+      let customer;
+      const existingCustomers = await stripe.customers.list({
         email: req.user.email,
-        invoice_settings: {
-          default_payment_method: paymentMethodId,
-        },
+        limit: 1,
       });
 
-      // Create a subscription
-      const subscription = await stripe.subscriptions.create({
+      if (existingCustomers.data.length > 0) {
+        customer = existingCustomers.data[0];
+      } else {
+        customer = await stripe.customers.create({
+          email: req.user.email,
+        });
+      }
+
+      // Create a SetupIntent
+      const setupIntent = await stripe.setupIntents.create({
         customer: customer.id,
-        items: [{ price: getPriceIdForPlan(planName) }],
-        payment_behavior: 'default_incomplete',
-        payment_settings: { save_default_payment_method: 'on_subscription' },
-        expand: ['latest_invoice.payment_intent'],
+        payment_method_types: ['card'],
       });
 
       res.json({
-        message: "Subscription created successfully",
-        subscription,
+        clientSecret: setupIntent.client_secret,
       });
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Failed to process subscription";
-      logger.error(errorMessage);
+      console.error('Setup intent error:', error);
+      const errorMessage = error instanceof Error ? error.message : "Failed to create setup intent";
+      res.status(500).json({ error: errorMessage });
+    }
+  });
+
+  // Subscription endpoint
+  app.post("/api/subscriptions/create", async (req, res) => {
+    try {
+      if (!req.user?.id) {
+        return res.status(401).json({ error: "Not authenticated" });
+      }
+
+      const { priceId, paymentMethodId } = req.body;
+
+      // Get or create customer
+      let customer;
+      const existingCustomers = await stripe.customers.list({
+        email: req.user.email,
+        limit: 1,
+      });
+
+      if (existingCustomers.data.length > 0) {
+        customer = existingCustomers.data[0];
+        // Update the customer's payment method
+        await stripe.paymentMethods.attach(paymentMethodId, {
+          customer: customer.id,
+        });
+      } else {
+        // Create a new customer
+        customer = await stripe.customers.create({
+          email: req.user.email,
+          payment_method: paymentMethodId,
+          invoice_settings: {
+            default_payment_method: paymentMethodId,
+          },
+        });
+      }
+
+      // Create the subscription
+      const subscription = await stripe.subscriptions.create({
+        customer: customer.id,
+        items: [{ price: priceId }],
+        payment_behavior: 'default_incomplete',
+        payment_settings: { save_default_payment_method: 'on_subscription' },
+        expand: ['latest_invoice.payment_intent'],
+        metadata: {
+          userId: req.user.id
+        }
+      });
+
+      res.json({
+        subscriptionId: subscription.id,
+        clientSecret: (subscription.latest_invoice as any).payment_intent.client_secret,
+      });
+    } catch (error) {
+      console.error('Subscription error:', error);
+      const errorMessage = error instanceof Error ? error.message : "Failed to create subscription";
       res.status(500).json({ error: errorMessage });
     }
   });
 
   // Helper function to get price ID for a plan
   function getPriceIdForPlan(planName: string): string {
-    // Replace these with your actual Stripe price IDs
+    // Use test mode price IDs
     const priceIds: Record<string, string> = {
-      "Individual Plan": "price_individual",
-      "Creator Plan": "price_creator",
-      "Enterprise Plan": "price_enterprise",
+      "Individual Plan": "price_1234", // Replace with your test price ID
+      "Creator Plan": "price_5678",    // Replace with your test price ID
+      "Enterprise Plan": "price_9012"  // Replace with your test price ID
     };
-    return priceIds[planName] || priceIds["Individual Plan"];
+
+    const priceId = priceIds[planName];
+    if (!priceId) {
+      throw new Error(`Invalid plan name: ${planName}`);
+    }
+    return priceId;
   }
 
   // Helper function to get plan price
