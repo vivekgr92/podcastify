@@ -20,6 +20,10 @@ function log(message: string) {
 
 const app = express();
 
+// Basic middleware setup
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
 // Add raw body parsing for Stripe webhooks
 declare global {
   namespace Express {
@@ -29,28 +33,19 @@ declare global {
   }
 }
 
-// Configure raw body parsing for Stripe webhooks before any other middleware
 app.use((req, res, next) => {
   if (req.path === '/api/webhooks/stripe' && req.method === 'POST') {
-    let rawBody = '';
+    let data = '';
     req.setEncoding('utf8');
-
-    req.on('data', chunk => {
-      rawBody += chunk;
-    });
-
+    req.on('data', chunk => { data += chunk; });
     req.on('end', () => {
-      req.rawBody = rawBody;
+      req.rawBody = data;
       next();
     });
   } else {
     next();
   }
 });
-
-// Regular body parsing middleware for other routes
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 // Logging middleware
 app.use((req, res, next) => {
@@ -62,22 +57,12 @@ app.use((req, res, next) => {
   next();
 });
 
-// Global error handler with improved webhook error handling
-const errorHandler = (err: any, req: Request, res: Response, _next: NextFunction) => {
+// Global error handler
+const errorHandler = (err: any, _req: Request, res: Response, _next: NextFunction) => {
   const errorMessage = err instanceof Error ? err.message : String(err);
   log(`Error caught in middleware: ${errorMessage}`);
   if (err.stack) {
     log(`Stack trace: ${err.stack}`);
-  }
-
-  // Special handling for Stripe webhook errors
-  if (req.path === '/api/webhooks/stripe') {
-    log(`Stripe webhook error: ${errorMessage}`);
-    // Return a 400 for Stripe to retry the webhook
-    return res.status(400).json({
-      error: 'Webhook Error',
-      message: errorMessage
-    });
   }
 
   res.status(err.status || 500).json({ 
@@ -89,11 +74,6 @@ const errorHandler = (err: any, req: Request, res: Response, _next: NextFunction
 async function startServer() {
   try {
     log('Starting server initialization...');
-
-    // Verify Stripe configuration
-    if (!process.env.STRIPE_WEBHOOK_SECRET) {
-      throw new Error('STRIPE_WEBHOOK_SECRET is required for webhook handling');
-    }
 
     // Register routes first
     log('Registering routes...');
@@ -117,7 +97,6 @@ async function startServer() {
     // Start server
     server.listen(PORT, '0.0.0.0', () => {
       log(`Server started successfully on port ${PORT}`);
-      log('Webhook endpoint configured at /api/webhooks/stripe');
     });
 
   } catch (error) {
