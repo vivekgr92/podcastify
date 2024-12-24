@@ -4,7 +4,6 @@ import { db } from "../db/index.js";
 import multer from "multer";
 import path from "path";
 import { promises as fs } from "fs";
-import * as fsSync from "fs";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import {
@@ -16,7 +15,13 @@ import {
   users,
 } from "../db/schema.js";
 import { logger } from "./services/logging.js";
+import { eq, and, sql } from "drizzle-orm";
 import Stripe from "stripe";
+import { ttsService } from "./services/tts.js";
+import pdfParse from "pdf-parse";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Initialize Stripe with proper API version and error handling
 let stripe: Stripe;
@@ -35,6 +40,15 @@ try {
   const errorMessage = error instanceof Error ? error.message : String(error);
   logger.error(`Failed to initialize Stripe: ${errorMessage}`);
   throw error;
+}
+
+// Constants for usage limits
+const ARTICLE_LIMIT = 3;
+const PODIFY_TOKEN_LIMIT = 10000;
+
+// Helper function to convert raw tokens to Podify Tokens
+function convertToPodifyTokens(totalCost: number): number {
+  return Math.ceil(totalCost * 100); // Simple conversion for now
 }
 
 export function registerRoutes(app: Express) {
