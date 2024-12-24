@@ -20,32 +20,51 @@ function log(message: string) {
 
 const app = express();
 
-// Basic middleware setup
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
 // Add raw body parsing for Stripe webhooks
 declare global {
   namespace Express {
     interface Request {
-      rawBody?: string;
+      rawBody?: Buffer;
     }
   }
 }
 
+// Configure webhook endpoint to use raw body parser
 app.use((req, res, next) => {
   if (req.path === '/api/webhooks/stripe' && req.method === 'POST') {
-    let data = '';
-    req.setEncoding('utf8');
-    req.on('data', chunk => { data += chunk; });
+    const chunks: Buffer[] = [];
+
+    req.on('data', chunk => {
+      chunks.push(Buffer.from(chunk));
+    });
+
     req.on('end', () => {
-      req.rawBody = data;
+      req.rawBody = Buffer.concat(chunks);
+      // For webhook endpoints, we need the raw body for signature verification
+      if (req.headers['content-type'] === 'application/json') {
+        try {
+          const jsonBody = JSON.parse(req.rawBody.toString('utf8'));
+          req.body = jsonBody;
+        } catch (err) {
+          log(`Error parsing JSON body: ${err instanceof Error ? err.message : String(err)}`);
+          return res.status(400).json({ error: 'Invalid JSON' });
+        }
+      }
       next();
+    });
+
+    req.on('error', (err) => {
+      log(`Error processing webhook request: ${err.message}`);
+      res.status(400).json({ error: 'Failed to process webhook request' });
     });
   } else {
     next();
   }
 });
+
+// Configure body parsing middleware for non-webhook routes
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Logging middleware
 app.use((req, res, next) => {
