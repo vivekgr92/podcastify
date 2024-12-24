@@ -957,3 +957,4 @@ Usage limits check for user 1:
 [INFO] Created new customer: cus_RSUD7MLaKc47g5
 [INFO] Created subscription: sub_1QZZFCBwEMzOkTIKbduMTMJl
 [INFO] Created subscription: sub_1QZZFCBwEMzOkTIKu7NwCDt7
+[INFO] Stripe initialized successfully

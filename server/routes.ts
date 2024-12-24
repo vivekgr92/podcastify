@@ -1,4 +1,4 @@
-import type { Express } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import express from "express";
 import { setupAuth } from "./auth.js";
 import { db } from "../db/index.js";
@@ -23,6 +23,15 @@ import { eq, and, sql, desc } from "drizzle-orm";
 import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import Stripe from "stripe";
 
+// Add type declaration for raw body
+declare global {
+  namespace Express {
+    interface Request {
+      rawBody?: string;
+    }
+  }
+}
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -43,26 +52,6 @@ try {
   const errorMessage = error instanceof Error ? error.message : String(error);
   logger.error(`Failed to initialize Stripe: ${errorMessage}`);
   throw error;
-}
-
-// Constants for usage limits
-const ARTICLE_LIMIT = 3;
-const PODIFY_TOKEN_LIMIT = 10000;
-const PODIFY_TOKEN_RATE = 0.005; // $0.005 (0.5 cents) per Podify Token
-const PODIFY_MARGIN = 0.6; // 60% margin
-
-// Helper function to convert raw tokens to Podify Tokens
-function convertToPodifyTokens(totalCost: number): number {
-  if (totalCost <= 0) return 0; // No tokens for zero or negative costs
-  if (PODIFY_MARGIN <= 0 || PODIFY_MARGIN >= 1) {
-    throw new Error("PODIFY_MARGIN must be between 0 and 1");
-  }
-
-  // Add margin to the cost
-  const costWithMargin = totalCost / (1 - PODIFY_MARGIN);
-
-  // Convert to Podify tokens (round up to avoid undercharging)
-  return Math.ceil(costWithMargin / PODIFY_TOKEN_RATE);
 }
 
 // Configure multer for file uploads
@@ -88,6 +77,29 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 export function registerRoutes(app: Express) {
+  // Configure raw body parsing for Stripe webhooks before any other middleware
+  app.use('/api/webhooks/stripe', (req: Request, res: Response, next: NextFunction) => {
+    if (req.method === 'POST') {
+      let rawBody = '';
+      req.setEncoding('utf8');
+
+      req.on('data', chunk => {
+        rawBody += chunk;
+      });
+
+      req.on('end', () => {
+        (req as Express.Request).rawBody = rawBody;
+        next();
+      });
+    } else {
+      next();
+    }
+  });
+
+  // Regular body parsing middleware for other routes
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+
   setupAuth(app);
 
   // Create subscription endpoint with enhanced error handling
@@ -179,21 +191,42 @@ export function registerRoutes(app: Express) {
     }
   });
 
-  // Webhook handler for subscription events
-  app.post("/api/webhooks/stripe", express.raw({ type: 'application/json' }), async (req, res) => {
+  // Updated webhook handler with better error handling and logging
+  app.post("/api/webhooks/stripe", async (req: Request, res: Response) => {
     try {
       const sig = req.headers['stripe-signature'];
+
       if (!sig) {
-        return res.status(400).json({ error: 'Missing stripe signature' });
+        logger.error('Missing Stripe signature');
+        return res.status(400).json({ error: 'Missing Stripe signature' });
       }
 
-      const event = stripe.webhooks.constructEvent(
-        req.rawBody || '',
-        sig,
-        process.env.STRIPE_WEBHOOK_SECRET || ''
-      );
+      if (!process.env.STRIPE_WEBHOOK_SECRET) {
+        logger.error('Missing STRIPE_WEBHOOK_SECRET environment variable');
+        return res.status(500).json({ error: 'Webhook secret not configured' });
+      }
 
-      logger.info(`Processing webhook event: ${event.type}`);
+      // Log request details for debugging
+      logger.info(`Received webhook request with signature: ${sig}`);
+      logger.info('Request headers:', req.headers);
+
+      let event;
+      try {
+        if (!req.rawBody) {
+          throw new Error('No raw body available');
+        }
+
+        event = stripe.webhooks.constructEvent(
+          req.rawBody,
+          sig,
+          process.env.STRIPE_WEBHOOK_SECRET
+        );
+        logger.info(`Webhook verified successfully, event type: ${event.type}`);
+      } catch (err) {
+        const error = err instanceof Error ? err.message : 'Webhook verification failed';
+        logger.error(`Webhook verification error: ${error}`);
+        return res.status(400).json({ error });
+      }
 
       switch (event.type) {
         case 'invoice.payment_succeeded':
@@ -920,8 +953,7 @@ export function registerRoutes(app: Express) {
           id: podcastId,
         });
       } catch (dbError) {
-        const errorMessage =
-          dbError instanceof Error ? dbError.message : String(dbError);
+        const errorMessage =          dbError instanceof Error ? dbError.message : String(dbError);
         await logger.error(
           `Database error while deleting podcast: ${errorMessage}`,
         );
@@ -931,14 +963,12 @@ export function registerRoutes(app: Express) {
           message: "Database error occurred while deleting the podcast",
         });
       }
-    } catch (error) {
-      const errorMessage =
+    } catch (error) {      const errorMessage =
         error instanceof Error ? error.message : String(error);
       await logger.error(`Error in delete podcast route: ${errorMessage}`);
       res.status(500).json({
         error: "Failed to delete podcast",
-        type: "server",
-        message: "An unexpected error occurred",
+        type: "server",        message: "An unexpected error occurred",
       });
     }
   });
@@ -949,8 +979,7 @@ export function registerRoutes(app: Express) {
       if (!req.user) return res.status(401).send("Not authenticated");
 
       const userPlaylists = await db
-        .select()
-        .from(playlists)
+        .select()        .from(playlists)
         .where(eq(playlists.userId, req.user.id));
 
       res.json(userPlaylists);
