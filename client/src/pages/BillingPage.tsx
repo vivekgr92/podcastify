@@ -60,9 +60,7 @@ const plans = [
 export default function BillingPage() {
   const { user } = useUser();
   const [location] = useLocation();
-  const [selectedPlan, setSelectedPlan] = useState<(typeof plans)[0] | null>(
-    null,
-  );
+  const [selectedPlan, setSelectedPlan] = useState<(typeof plans)[0] | null>(null);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const { toast } = useToast();
 
@@ -165,6 +163,7 @@ export default function BillingPage() {
           planName={selectedPlan.name}
           planPrice={selectedPlan.price}
           priceId={selectedPlan.priceId}
+          userEmail={user.email} // Pass user's email to PaymentModal
         />
       )}
     </div>
