@@ -146,7 +146,8 @@ export function registerRoutes(app: Express) {
         },
         expand: ['latest_invoice.payment_intent'],
         metadata: {
-          userId: req.user.id.toString()
+          userId: req.user.id.toString(),
+          customerEmail: req.user.email // Add email to metadata
         }
       });
 
@@ -197,51 +198,49 @@ export function registerRoutes(app: Express) {
       switch (event.type) {
         case 'invoice.payment_succeeded':
           const invoice = event.data.object as Stripe.Invoice;
-          const subscription = await stripe.subscriptions.retrieve(invoice.subscription as string);
 
-          if (subscription.metadata.userId) {
-            try {
-              // Update user's subscription status in database
-              const [updatedUser] = await db.update(users)
-                .set({
-                  subscriptionStatus: 'active',
-                  subscriptionId: subscription.id,
-                  currentPeriodEnd: new Date(subscription.current_period_end * 1000)
-                })
-                .where(eq(users.id, parseInt(subscription.metadata.userId)))
-                .returning();
+          // Validate subscription data
+          if (!invoice.subscription) {
+            logger.error('Invoice missing subscription reference');
+            return res.status(400).json({ error: 'Invalid invoice data' });
+          }
 
-              if (!updatedUser) {
-                throw new Error(`Failed to update subscription status for user ${subscription.metadata.userId}`);
-              }
+          try {
+            const subscription = await stripe.subscriptions.retrieve(invoice.subscription as string);
 
-              logger.info(`Subscription status updated successfully`, {
-                userId: subscription.metadata.userId,
-                subscriptionId: subscription.id,
-                status: 'active',
-                currentPeriodEnd: new Date(subscription.current_period_end * 1000)
-              });
-
-              // Log successful payment details
-              logger.info(`Payment succeeded for subscription`, {
-                subscriptionId: subscription.id,
-                customerId: subscription.customer,
-                invoiceId: invoice.id,
-                amount: invoice.amount_paid,
-                currency: invoice.currency
-              });
-            } catch (error) {
-              logger.error(`Failed to update subscription status: ${error instanceof Error ? error.message : String(error)}`, {
-                userId: subscription.metadata.userId,
-                subscriptionId: subscription.id
-              });
-              throw error; // Re-throw to trigger webhook retry
+            // Validate subscription metadata
+            if (!subscription.metadata.userId) {
+              logger.warn(`Subscription missing userId in metadata for subscription ${subscription.id}`);
+              return res.status(400).json({ error: 'Invalid subscription metadata' });
             }
-          } else {
-            logger.warn(`Received payment success webhook without userId in metadata`, {
-              subscriptionId: subscription.id,
-              customerId: subscription.customer
-            });
+
+            // Update user's subscription status
+            const [updatedUser] = await db.update(users)
+              .set({
+                subscriptionStatus: 'active',
+                subscriptionId: subscription.id,
+                currentPeriodEnd: new Date(subscription.current_period_end * 1000)
+              })
+              .where(eq(users.id, parseInt(subscription.metadata.userId)))
+              .returning();
+
+            if (!updatedUser) {
+              throw new Error(`Failed to update subscription status for user ${subscription.metadata.userId}`);
+            }
+
+            // Log successful update
+            logger.info(`Subscription status updated successfully for user ${subscription.metadata.userId}`);
+
+            // Log payment details
+            logger.info(`Payment succeeded for subscription ${subscription.id}`);
+
+            res.json({ received: true });
+          } catch (error) {
+            // Log the error with detailed context
+            logger.error(`Failed to process subscription payment: ${error instanceof Error ? error.message : String(error)}`);
+
+            // Re-throw to trigger webhook retry
+            throw error;
           }
           break;
 

@@ -942,3 +942,18 @@ Usage limits check for user 1:
 [INFO] Stripe initialized successfully
 [INFO] Stripe initialized successfully
 [INFO] Stripe initialized successfully
+[INFO] Stripe initialized successfully
+[INFO] Stripe initialized successfully
+[INFO] Stripe initialized successfully
+[INFO] Stripe initialized successfully
+[INFO] Stripe initialized successfully
+[INFO] Stripe initialized successfully
+[INFO] Stripe initialized successfully
+[WARN] File not found: /home/runner/PodCasterella/uploads/1734449668326-article.pdf.mp3
+[WARN] File not found: /home/runner/PodCasterella/uploads/1734449668326-article.pdf.mp3
+[INFO] Creating subscription for user 1 with price price_1QZIHiBwEMzOkTIKmdHTjmv2
+[INFO] Creating subscription for user 1 with price price_1QZIHiBwEMzOkTIKmdHTjmv2
+[INFO] Created new customer: cus_RSUDo8F8nlQTE4
+[INFO] Created new customer: cus_RSUD7MLaKc47g5
+[INFO] Created subscription: sub_1QZZFCBwEMzOkTIKbduMTMJl
+[INFO] Created subscription: sub_1QZZFCBwEMzOkTIKu7NwCDt7

@@ -19,9 +19,10 @@ interface PaymentModalProps {
   planName: string;
   planPrice: string;
   priceId: string;
+  userEmail?: string; // Add email to props
 }
 
-function CheckoutForm({ planName, planPrice, priceId, onClose }: Omit<PaymentModalProps, 'isOpen'>) {
+function CheckoutForm({ planName, planPrice, priceId, userEmail, onClose }: Omit<PaymentModalProps, 'isOpen'>) {
   const stripe = useStripe();
   const elements = useElements();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -113,7 +114,7 @@ function CheckoutForm({ planName, planPrice, priceId, onClose }: Omit<PaymentMod
   );
 }
 
-export function PaymentModal({ isOpen, onClose, planName, planPrice, priceId }: PaymentModalProps) {
+export function PaymentModal({ isOpen, onClose, planName, planPrice, priceId, userEmail }: PaymentModalProps) {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -133,6 +134,7 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, priceId }: 
           body: JSON.stringify({
             priceId,
             planName,
+            email: userEmail, // Include user's email in the request
           }),
           credentials: 'include',
         });
@@ -151,7 +153,7 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, priceId }: 
     };
 
     initializePayment();
-  }, [isOpen, priceId, planName]);
+  }, [isOpen, priceId, planName, userEmail]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -199,6 +201,7 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, priceId }: 
               planName={planName}
               planPrice={planPrice}
               priceId={priceId}
+              userEmail={userEmail}
               onClose={onClose}
             />
           </Elements>
