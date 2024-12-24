@@ -957,21 +957,3 @@ Usage limits check for user 1:
 [INFO] Created new customer: cus_RSUD7MLaKc47g5
 [INFO] Created subscription: sub_1QZZFCBwEMzOkTIKbduMTMJl
 [INFO] Created subscription: sub_1QZZFCBwEMzOkTIKu7NwCDt7
-[INFO] Stripe initialized successfully
-[INFO] Stripe initialized successfully
-[INFO] Stripe initialized successfully
-[INFO] Stripe initialized successfully
-[INFO] Creating subscription for user 5 with price price_1QZIHiBwEMzOkTIKmdHTjmv2
-[INFO] Creating subscription for user 5 with price price_1QZIHiBwEMzOkTIKmdHTjmv2
-[INFO] Using existing customer: cus_RSUD7MLaKc47g5
-[INFO] Using existing customer: cus_RSUD7MLaKc47g5
-[INFO] Created subscription: sub_1QZdgyBwEMzOkTIKxElA9mXw
-[INFO] Created subscription: sub_1QZdh0BwEMzOkTIKvmCw5C8B
-[INFO] Stripe initialized successfully
-[INFO] Stripe initialized successfully
-[INFO] Stripe initialized successfully
-[INFO] Stripe initialized successfully
-[INFO] Stripe initialized successfully
-[INFO] Stripe initialized successfully
-[INFO] Stripe initialized successfully
-[INFO] Stripe initialized successfully
