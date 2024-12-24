@@ -1,5 +1,4 @@
-import type { Express, Request } from "express";
-import express from "express";
+import type { Express } from "express";
 import { setupAuth } from "./auth.js";
 import { db } from "../db/index.js";
 import multer from "multer";
@@ -17,12 +16,7 @@ import {
   users,
 } from "../db/schema.js";
 import { logger } from "./services/logging.js";
-import { ttsService } from "./services/tts.js";
-import type { ConversationPart, PricingDetails } from "./services/tts.js";
-import { eq, and, sql, desc } from "drizzle-orm";
-import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import Stripe from "stripe";
-import bodyParser from "body-parser";
 
 // Initialize Stripe with proper API version and error handling
 let stripe: Stripe;
@@ -43,48 +37,124 @@ try {
   throw error;
 }
 
-// Constants for usage limits
-const ARTICLE_LIMIT = 3;
-const PODIFY_TOKEN_LIMIT = 10000;
-const PODIFY_TOKEN_RATE = 0.005; // $0.005 (0.5 cents) per Podify Token
-const PODIFY_MARGIN = 0.6; // 60% margin
-
-// Helper function to convert raw tokens to Podify Tokens
-function convertToPodifyTokens(totalCost: number): number {
-  if (totalCost <= 0) return 0;
-  if (PODIFY_MARGIN <= 0 || PODIFY_MARGIN >= 1) {
-    throw new Error("PODIFY_MARGIN must be between 0 and 1");
-  }
-  const costWithMargin = totalCost / (1 - PODIFY_MARGIN);
-  return Math.ceil(costWithMargin / PODIFY_TOKEN_RATE);
-}
-
-const storage = multer.diskStorage({
-  destination: async (req, file, cb) => {
-    const dir = "./uploads";
-    try {
-      await fs.mkdir(dir, { recursive: true });
-      cb(null, dir);
-    } catch (err) {
-      cb(err as Error, dir);
-    }
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(
-      null,
-      file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname),
-    );
-  },
-});
-
-const upload = multer({ storage });
-
 export function registerRoutes(app: Express) {
   setupAuth(app);
 
-  app.use(bodyParser.json()); // Corrected middleware order and configuration
-  app.use(bodyParser.urlencoded({ extended: true })); // Added for url-encoded bodies
+  // Webhook handler for subscription events
+  app.post("/api/webhooks/stripe", async (req, res) => {
+    try {
+      const sig = req.headers['stripe-signature'];
+
+      if (!sig) {
+        logger.error('Missing Stripe signature in webhook request');
+        return res.status(400).json({ error: 'Missing stripe signature' });
+      }
+
+      if (!process.env.STRIPE_WEBHOOK_SECRET) {
+        logger.error('STRIPE_WEBHOOK_SECRET not configured');
+        return res.status(500).json({ error: 'Webhook secret not configured' });
+      }
+
+      let event: Stripe.Event;
+
+      try {
+        logger.info('Attempting to verify Stripe webhook signature...');
+        const rawBody = req.rawBody;
+        if (!rawBody) {
+          logger.error('Missing raw body in webhook request');
+          return res.status(400).json({ error: 'Missing request body' });
+        }
+
+        event = stripe.webhooks.constructEvent(
+          rawBody,
+          sig,
+          process.env.STRIPE_WEBHOOK_SECRET
+        );
+
+        logger.info(`Successfully verified webhook signature. Processing event type: ${event.type}`);
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : String(err);
+        logger.error(`Webhook signature verification failed: ${errorMessage}`);
+        return res.status(400).json({ error: `Webhook Error: ${errorMessage}` });
+      }
+
+      // Handle the event
+      switch (event.type) {
+        case 'invoice.payment_succeeded': {
+          const invoice = event.data.object as Stripe.Invoice;
+          logger.info(`Processing invoice.payment_succeeded event for invoice: ${invoice.id}`);
+
+          if (!invoice.subscription) {
+            logger.error('Invoice missing subscription reference');
+            return res.status(400).json({ error: 'Invalid invoice data' });
+          }
+
+          const subscription = await stripe.subscriptions.retrieve(invoice.subscription as string);
+          logger.info(`Retrieved subscription: ${subscription.id}`);
+
+          if (!subscription.metadata.userId) {
+            logger.warn(`Subscription missing userId in metadata for subscription ${subscription.id}`);
+            return res.status(400).json({ error: 'Invalid subscription metadata' });
+          }
+
+          const [updatedUser] = await db.update(users)
+            .set({
+              subscriptionStatus: 'active',
+              subscriptionId: subscription.id,
+              currentPeriodEnd: new Date(subscription.current_period_end * 1000)
+            })
+            .where(eq(users.id, parseInt(subscription.metadata.userId)))
+            .returning();
+
+          if (!updatedUser) {
+            throw new Error(`Failed to update subscription status for user ${subscription.metadata.userId}`);
+          }
+
+          logger.info(`Successfully updated subscription status for user ${subscription.metadata.userId}`);
+          return res.json({ received: true });
+        }
+
+        case 'invoice.payment_failed': {
+          const failedInvoice = event.data.object as Stripe.Invoice;
+          logger.info(`Processing invoice.payment_failed event for invoice: ${failedInvoice.id}`);
+
+          if (!failedInvoice.subscription) {
+            logger.error('Failed invoice missing subscription reference');
+            return res.status(400).json({ error: 'Invalid invoice data' });
+          }
+
+          const failedSubscription = await stripe.subscriptions.retrieve(failedInvoice.subscription as string);
+
+          if (!failedSubscription.metadata.userId) {
+            logger.warn(`Failed subscription missing userId in metadata for subscription ${failedSubscription.id}`);
+            return res.status(400).json({ error: 'Invalid subscription metadata' });
+          }
+
+          const [updatedUser] = await db.update(users)
+            .set({
+              subscriptionStatus: 'payment_failed'
+            })
+            .where(eq(users.id, parseInt(failedSubscription.metadata.userId)))
+            .returning();
+
+          if (!updatedUser) {
+            throw new Error(`Failed to update subscription status for user ${failedSubscription.metadata.userId}`);
+          }
+
+          logger.info(`Updated subscription status to payment_failed for user ${failedSubscription.metadata.userId}`);
+          return res.json({ received: true });
+        }
+
+        default:
+          logger.info(`Unhandled event type: ${event.type}`);
+          return res.json({ received: true });
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error(`Webhook error: ${errorMessage}`);
+      return res.status(400).json({ error: errorMessage });
+    }
+  });
 
   // Create subscription endpoint with enhanced error handling
   app.post("/api/create-subscription", async (req, res) => {
@@ -174,123 +244,27 @@ export function registerRoutes(app: Express) {
     }
   });
 
-  // Webhook handler for subscription events
-  app.post("/api/webhooks/stripe", async (req, res) => {
-    try {
-      const sig = req.headers['stripe-signature'];
 
-      if (!sig) {
-        logger.error('Missing Stripe signature in webhook request');
-        return res.status(400).json({ error: 'Missing stripe signature' });
-      }
-
-      if (!process.env.STRIPE_WEBHOOK_SECRET) {
-        logger.error('STRIPE_WEBHOOK_SECRET not configured');
-        return res.status(500).json({ error: 'Webhook secret not configured' });
-      }
-
-      let event: Stripe.Event;
-
+  const storage = multer.diskStorage({
+    destination: async (req, file, cb) => {
+      const dir = "./uploads";
       try {
-        logger.info('Attempting to verify Stripe webhook signature...');
-        // Use the raw body buffer for signature verification
-        const rawBody = req.rawBody;
-        if (!rawBody) {
-          logger.error('Missing raw body in webhook request');
-          return res.status(400).json({ error: 'Missing request body' });
-        }
-
-        event = stripe.webhooks.constructEvent(
-          rawBody,
-          sig,
-          process.env.STRIPE_WEBHOOK_SECRET
-        );
-        logger.info(`Successfully verified webhook signature. Processing event type: ${event.type}`);
+        await fs.mkdir(dir, { recursive: true });
+        cb(null, dir);
       } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : String(err);
-        logger.error(`Webhook signature verification failed: ${errorMessage}`);
-        return res.status(400).json({ error: `Webhook Error: ${errorMessage}` });
+        cb(err as Error, dir);
       }
-
-      // Handle the event
-      switch (event.type) {
-        case 'invoice.payment_succeeded': {
-          const invoice = event.data.object as Stripe.Invoice;
-          logger.info(`Processing invoice.payment_succeeded event for invoice: ${invoice.id}`);
-
-          if (!invoice.subscription) {
-            logger.error('Invoice missing subscription reference');
-            return res.status(400).json({ error: 'Invalid invoice data' });
-          }
-
-          const subscription = await stripe.subscriptions.retrieve(invoice.subscription as string);
-          logger.info(`Retrieved subscription: ${subscription.id}`);
-
-          if (!subscription.metadata.userId) {
-            logger.warn(`Subscription missing userId in metadata for subscription ${subscription.id}`);
-            return res.status(400).json({ error: 'Invalid subscription metadata' });
-          }
-
-          const [updatedUser] = await db.update(users)
-            .set({
-              subscriptionStatus: 'active',
-              subscriptionId: subscription.id,
-              currentPeriodEnd: new Date(subscription.current_period_end * 1000)
-            })
-            .where(eq(users.id, parseInt(subscription.metadata.userId)))
-            .returning();
-
-          if (!updatedUser) {
-            throw new Error(`Failed to update subscription status for user ${subscription.metadata.userId}`);
-          }
-
-          logger.info(`Successfully updated subscription status for user ${subscription.metadata.userId}`);
-          return res.json({ received: true });
-          break;
-        }
-
-        case 'invoice.payment_failed': {
-          const failedInvoice = event.data.object as Stripe.Invoice;
-          logger.info(`Processing invoice.payment_failed event for invoice: ${failedInvoice.id}`);
-
-          if (!failedInvoice.subscription) {
-            logger.error('Failed invoice missing subscription reference');
-            return res.status(400).json({ error: 'Invalid invoice data' });
-          }
-
-          const failedSubscription = await stripe.subscriptions.retrieve(failedInvoice.subscription as string);
-
-          if (!failedSubscription.metadata.userId) {
-            logger.warn(`Failed subscription missing userId in metadata for subscription ${failedSubscription.id}`);
-            return res.status(400).json({ error: 'Invalid subscription metadata' });
-          }
-
-          const [updatedUser] = await db.update(users)
-            .set({
-              subscriptionStatus: 'payment_failed'
-            })
-            .where(eq(users.id, parseInt(failedSubscription.metadata.userId)))
-            .returning();
-
-          if (!updatedUser) {
-            throw new Error(`Failed to update subscription status for user ${failedSubscription.metadata.userId}`);
-          }
-
-          logger.info(`Updated subscription status to payment_failed for user ${failedSubscription.metadata.userId}`);
-          return res.json({ received: true });
-          break;
-        }
-
-        default:
-          logger.info(`Unhandled event type: ${event.type}`);
-          return res.json({ received: true });
-      }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      logger.error(`Webhook error: ${errorMessage}`);
-      return res.status(400).json({ error: errorMessage });
-    }
+    },
+    filename: (req, file, cb) => {
+      const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+      cb(
+        null,
+        file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname),
+      );
+    },
   });
+
+  const upload = multer({ storage });
 
   // Create Setup Intent endpoint
   app.post("/api/create-setup-intent", async (req, res) => {
@@ -960,7 +934,8 @@ export function registerRoutes(app: Express) {
       if (!req.user) return res.status(401).send("Not authenticated");
 
       const [newPlaylist] = await db
-        .insert(playlists)        .values({
+        .insert(playlists)
+        .values({
           userId: req.user.id,
           title: req.body.title,
           description: req.body.description,
