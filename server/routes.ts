@@ -22,11 +22,18 @@ import type { ConversationPart, PricingDetails } from "./services/tts.js";
 import { eq, and, sql, desc } from "drizzle-orm";
 import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import Stripe from "stripe";
-import { 
-  ARTICLE_LIMIT, 
-  PODIFY_TOKEN_LIMIT, 
-  convertToPodifyTokens 
-} from "./constants.js";
+
+// Add type declaration for raw body
+declare global {
+  namespace Express {
+    interface Request {
+      rawBody?: string;
+    }
+  }
+}
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Initialize Stripe with proper API version and error handling
 let stripe: Stripe;
@@ -70,11 +77,119 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 export function registerRoutes(app: Express) {
+  // Configure raw body parsing for Stripe webhooks before any other middleware
+  app.use('/api/webhooks/stripe', (req: Request, res: Response, next: NextFunction) => {
+    if (req.method === 'POST') {
+      let rawBody = '';
+      req.setEncoding('utf8');
+
+      req.on('data', chunk => {
+        rawBody += chunk;
+      });
+
+      req.on('end', () => {
+        (req as Express.Request).rawBody = rawBody;
+        next();
+      });
+    } else {
+      next();
+    }
+  });
+
   // Regular body parsing middleware for other routes
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
   setupAuth(app);
+
+  // Create subscription endpoint with enhanced error handling
+  app.post("/api/create-subscription", async (req, res) => {
+    try {
+      if (!req.user?.id) {
+        return res.status(401).json({ error: 'Not authenticated' });
+      }
+
+      const { priceId } = req.body;
+      if (!priceId) {
+        return res.status(400).json({ error: 'Price ID is required' });
+      }
+
+      logger.info(`Creating subscription for user ${req.user.id} with price ${priceId}`);
+
+      // Get or create customer
+      let customer;
+      const existingCustomers = await stripe.customers.list({
+        email: req.user.email,
+        limit: 1,
+      });
+
+      if (existingCustomers.data.length > 0) {
+        customer = existingCustomers.data[0];
+        // Update customer metadata if needed
+        await stripe.customers.update(customer.id, {
+          metadata: {
+            userId: req.user.id.toString()
+          },
+          email: req.user.email // Ensure email is up to date
+        });
+        logger.info(`Using existing customer: ${customer.id}`);
+      } else {
+        customer = await stripe.customers.create({
+          email: req.user.email,
+          metadata: {
+            userId: req.user.id.toString()
+          }
+        });
+        logger.info(`Created new customer: ${customer.id}`);
+      }
+
+      // Create the subscription
+      const subscription = await stripe.subscriptions.create({
+        customer: customer.id,
+        items: [{ price: priceId }],
+        payment_behavior: 'default_incomplete',
+        payment_settings: { 
+          save_default_payment_method: 'on_subscription',
+          payment_method_options: {
+            card: {
+              request_three_d_secure: 'automatic'
+            }
+          }
+        },
+        expand: ['latest_invoice.payment_intent'],
+        metadata: {
+          userId: req.user.id.toString(),
+          customerEmail: req.user.email // Add email to metadata
+        }
+      });
+
+      logger.info(`Created subscription: ${subscription.id}`);
+
+      const invoice = subscription.latest_invoice as Stripe.Invoice;
+      const paymentIntent = invoice.payment_intent as Stripe.PaymentIntent;
+
+      if (!paymentIntent?.client_secret) {
+        throw new Error('Failed to get client secret from payment intent');
+      }
+
+      // Update user's subscription status to 'pending'
+      await db.update(users)
+        .set({
+          subscriptionStatus: 'pending',
+          subscriptionId: subscription.id
+        })
+        .where(eq(users.id, req.user.id));
+
+      res.json({
+        subscriptionId: subscription.id,
+        clientSecret: paymentIntent.client_secret,
+      });
+    } catch (error) {
+      logger.error(`Subscription creation error: ${error instanceof Error ? error.message : String(error)}`);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to create subscription';
+      res.status(500).json({ error: errorMessage });
+    }
+  });
 
   // Updated webhook handler with better error handling and logging
   app.post("/api/webhooks/stripe", async (req: Request, res: Response) => {
@@ -215,19 +330,12 @@ export function registerRoutes(app: Express) {
     }
   });
 
-  // Create subscription endpoint with enhanced error handling
-  app.post("/api/create-subscription", async (req, res) => {
+  // Create Setup Intent endpoint
+  app.post("/api/create-setup-intent", async (req, res) => {
     try {
       if (!req.user?.id) {
-        return res.status(401).json({ error: 'Not authenticated' });
+        return res.status(401).json({ error: "Not authenticated" });
       }
-
-      const { priceId } = req.body;
-      if (!priceId) {
-        return res.status(400).json({ error: 'Price ID is required' });
-      }
-
-      logger.info(`Creating subscription for user ${req.user.id} with price ${priceId}`);
 
       // Get or create customer
       let customer;
@@ -238,68 +346,24 @@ export function registerRoutes(app: Express) {
 
       if (existingCustomers.data.length > 0) {
         customer = existingCustomers.data[0];
-        // Update customer metadata if needed
-        await stripe.customers.update(customer.id, {
-          metadata: {
-            userId: req.user.id.toString()
-          },
-          email: req.user.email // Ensure email is up to date
-        });
-        logger.info(`Using existing customer: ${customer.id}`);
       } else {
         customer = await stripe.customers.create({
           email: req.user.email,
-          metadata: {
-            userId: req.user.id.toString()
-          }
         });
-        logger.info(`Created new customer: ${customer.id}`);
       }
 
-      // Create the subscription
-      const subscription = await stripe.subscriptions.create({
+      // Create a SetupIntent
+      const setupIntent = await stripe.setupIntents.create({
         customer: customer.id,
-        items: [{ price: priceId }],
-        payment_behavior: 'default_incomplete',
-        payment_settings: { 
-          save_default_payment_method: 'on_subscription',
-          payment_method_options: {
-            card: {
-              request_three_d_secure: 'automatic'
-            }
-          }
-        },
-        expand: ['latest_invoice.payment_intent'],
-        metadata: {
-          userId: req.user.id.toString(),
-          customerEmail: req.user.email // Add email to metadata
-        }
+        payment_method_types: ['card'],
       });
-
-      logger.info(`Created subscription: ${subscription.id}`);
-
-      const invoice = subscription.latest_invoice as Stripe.Invoice;
-      const paymentIntent = invoice.payment_intent as Stripe.PaymentIntent;
-
-      if (!paymentIntent?.client_secret) {
-        throw new Error('Failed to get client secret from payment intent');
-      }
-
-      // Update user's subscription status to 'pending'
-      await db.update(users)
-        .set({
-          subscriptionStatus: 'pending',
-          subscriptionId: subscription.id
-        })
-        .where(eq(users.id, req.user.id));
 
       res.json({
-        subscriptionId: subscription.id,
-        clientSecret: paymentIntent.client_secret,
+        clientSecret: setupIntent.client_secret,
       });
     } catch (error) {
-      logger.error(`Subscription creation error: ${error instanceof Error ? error.message : String(error)}`);
-      const errorMessage = error instanceof Error ? error.message : 'Failed to create subscription';
+      console.error('Setup intent error:', error);
+      const errorMessage = error instanceof Error ? error.message : "Failed to create setup intent";
       res.status(500).json({ error: errorMessage });
     }
   });
@@ -915,8 +979,7 @@ export function registerRoutes(app: Express) {
       if (!req.user) return res.status(401).send("Not authenticated");
 
       const userPlaylists = await db
-        .select()
-        .from(playlists)
+        .select()        .from(playlists)
         .where(eq(playlists.userId, req.user.id));
 
       res.json(userPlaylists);
