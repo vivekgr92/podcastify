@@ -1,4 +1,4 @@
-import type { Express } from "express";
+import type { Express, Request } from "express";
 import express from "express";
 import { setupAuth } from "./auth.js";
 import { db } from "../db/index.js";
@@ -22,6 +22,7 @@ import type { ConversationPart, PricingDetails } from "./services/tts.js";
 import { eq, and, sql, desc } from "drizzle-orm";
 import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import Stripe from "stripe";
+import bodyParser from "body-parser";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -53,19 +54,14 @@ const PODIFY_MARGIN = 0.6; // 60% margin
 
 // Helper function to convert raw tokens to Podify Tokens
 function convertToPodifyTokens(totalCost: number): number {
-  if (totalCost <= 0) return 0; // No tokens for zero or negative costs
+  if (totalCost <= 0) return 0;
   if (PODIFY_MARGIN <= 0 || PODIFY_MARGIN >= 1) {
     throw new Error("PODIFY_MARGIN must be between 0 and 1");
   }
-
-  // Add margin to the cost
   const costWithMargin = totalCost / (1 - PODIFY_MARGIN);
-
-  // Convert to Podify tokens (round up to avoid undercharging)
   return Math.ceil(costWithMargin / PODIFY_TOKEN_RATE);
 }
 
-// Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: async (req, file, cb) => {
     const dir = "./uploads";
@@ -88,6 +84,23 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 export function registerRoutes(app: Express) {
+  // Configure body parsing middleware
+  // Parse raw body for Stripe webhook route only
+  app.use('/api/webhooks/stripe', 
+    express.raw({
+      type: 'application/json'
+    })
+  );
+
+  // Parse JSON for all other routes
+  app.use((req: Request, res, next) => {
+    if (req.originalUrl !== '/api/webhooks/stripe') {
+      bodyParser.json()(req, res, next);
+    } else {
+      next();
+    }
+  });
+
   setupAuth(app);
 
   // Create subscription endpoint with enhanced error handling
@@ -113,12 +126,11 @@ export function registerRoutes(app: Express) {
 
       if (existingCustomers.data.length > 0) {
         customer = existingCustomers.data[0];
-        // Update customer metadata if needed
         await stripe.customers.update(customer.id, {
           metadata: {
             userId: req.user.id.toString()
           },
-          email: req.user.email // Ensure email is up to date
+          email: req.user.email
         });
         logger.info(`Using existing customer: ${customer.id}`);
       } else {
@@ -147,7 +159,7 @@ export function registerRoutes(app: Express) {
         expand: ['latest_invoice.payment_intent'],
         metadata: {
           userId: req.user.id.toString(),
-          customerEmail: req.user.email // Add email to metadata
+          customerEmail: req.user.email
         }
       });
 
@@ -180,26 +192,39 @@ export function registerRoutes(app: Express) {
   });
 
   // Webhook handler for subscription events
-  app.post("/api/webhooks/stripe", express.raw({ type: 'application/json' }), async (req, res) => {
+  app.post("/api/webhooks/stripe", async (req, res) => {
     try {
       const sig = req.headers['stripe-signature'];
+
       if (!sig) {
+        logger.error('Missing Stripe signature in webhook request');
         return res.status(400).json({ error: 'Missing stripe signature' });
       }
 
-      const event = stripe.webhooks.constructEvent(
-        req.rawBody || '',
-        sig,
-        process.env.STRIPE_WEBHOOK_SECRET || ''
-      );
+      if (!process.env.STRIPE_WEBHOOK_SECRET) {
+        logger.error('STRIPE_WEBHOOK_SECRET not configured');
+        return res.status(500).json({ error: 'Webhook secret not configured' });
+      }
 
-      logger.info(`Processing webhook event: ${event.type}`);
+      let event: Stripe.Event;
+
+      try {
+        event = stripe.webhooks.constructEvent(
+          req.body,
+          sig,
+          process.env.STRIPE_WEBHOOK_SECRET
+        );
+        logger.info(`Processing Stripe webhook event: ${event.type}`);
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : String(err);
+        logger.error(`Webhook signature verification failed: ${errorMessage}`);
+        return res.status(400).json({ error: `Webhook signature verification failed: ${errorMessage}` });
+      }
 
       switch (event.type) {
         case 'invoice.payment_succeeded':
           const invoice = event.data.object as Stripe.Invoice;
 
-          // Validate subscription data
           if (!invoice.subscription) {
             logger.error('Invoice missing subscription reference');
             return res.status(400).json({ error: 'Invalid invoice data' });
@@ -208,13 +233,11 @@ export function registerRoutes(app: Express) {
           try {
             const subscription = await stripe.subscriptions.retrieve(invoice.subscription as string);
 
-            // Validate subscription metadata
             if (!subscription.metadata.userId) {
               logger.warn(`Subscription missing userId in metadata for subscription ${subscription.id}`);
               return res.status(400).json({ error: 'Invalid subscription metadata' });
             }
 
-            // Update user's subscription status
             const [updatedUser] = await db.update(users)
               .set({
                 subscriptionStatus: 'active',
@@ -228,18 +251,12 @@ export function registerRoutes(app: Express) {
               throw new Error(`Failed to update subscription status for user ${subscription.metadata.userId}`);
             }
 
-            // Log successful update
             logger.info(`Subscription status updated successfully for user ${subscription.metadata.userId}`);
-
-            // Log payment details
             logger.info(`Payment succeeded for subscription ${subscription.id}`);
 
             res.json({ received: true });
           } catch (error) {
-            // Log the error with detailed context
             logger.error(`Failed to process subscription payment: ${error instanceof Error ? error.message : String(error)}`);
-
-            // Re-throw to trigger webhook retry
             throw error;
           }
           break;
@@ -291,8 +308,8 @@ export function registerRoutes(app: Express) {
 
       res.json({ received: true });
     } catch (error) {
-      logger.error(`Webhook error: ${error instanceof Error ? error.message : String(error)}`);
-      const errorMessage = error instanceof Error ? error.message : "Webhook failed";
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error(`Webhook error: ${errorMessage}`);
       res.status(400).json({ error: errorMessage });
     }
   });
