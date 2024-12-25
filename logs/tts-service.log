@@ -2,3 +2,60 @@
 [INFO] Stripe initialized successfully
 [WARN] File not found: /home/runner/PodCasterella/uploads/1734449668326-article.pdf.mp3
 [WARN] File not found: /home/runner/PodCasterella/uploads/1734449668326-article.pdf.mp3
+[INFO] Stripe initialized successfully
+[INFO] Stripe initialized successfully
+[INFO] Stripe initialized successfully
+[INFO] Stripe initialized successfully
+[INFO] Stripe initialized successfully
+[INFO] Stripe initialized successfully
+[INFO] Stripe initialized successfully
+[INFO] Stripe initialized successfully
+[INFO] Setting up Vite for development...
+[INFO] Starting server initialization...
+[INFO] Registering routes...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] GET / 200 in 76ms
+[INFO] GET /@vite/client 304 in 45ms
+[INFO] GET /@react-refresh 304 in 49ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 2ms
+[INFO] GET /src/main.tsx 200 in 126ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 651ms
+[INFO] GET /src/lib/queryClient.ts 200 in 1373ms
+[INFO] GET /src/components/ui/toaster.tsx 200 in 2ms
+[INFO] GET /src/pages/LibraryPage.tsx 200 in 2ms
+[INFO] GET /src/pages/HomePage.tsx 200 in 1ms
+[INFO] GET /src/pages/PricingPage.tsx 200 in 4ms
+[INFO] GET /src/pages/AuthPage.tsx 200 in 3ms
+[INFO] GET /src/index.css 304 in 2620ms
+[INFO] GET /src/pages/AdminPage.tsx 200 in 3ms
+[INFO] GET /src/pages/ProfilePage.tsx 200 in 2ms
+[INFO] GET /src/components/ui/button.tsx 200 in 2ms
+[INFO] GET /src/hooks/use-toast.ts 200 in 1ms
+[INFO] GET /src/pages/BillingPage.tsx 200 in 2ms
+[INFO] GET /src/hooks/use-user.ts 200 in 6ms
+[INFO] GET /src/components/Sidebar.tsx 200 in 3ms
+[INFO] GET /src/components/ui/toast.tsx 200 in 2ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 200 in 2ms
+[INFO] GET /src/components/ui/form.tsx 200 in 1ms
+[INFO] GET /src/components/ui/input.tsx 200 in 1ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 200 in 2ms
+[INFO] GET /src/hooks/use-audio.ts 200 in 1ms
+[INFO] GET /src/components/AudioPlayer.tsx 200 in 1ms
+[INFO] GET /src/lib/utils.ts 200 in 1ms
+[INFO] GET /src/components/Logo.tsx 200 in 1ms
+[INFO] GET /src/components/UsageProgress.tsx 200 in 0ms
+[INFO] GET /src/hooks/use-tts.ts 200 in 1ms
+[INFO] GET /src/components/ui/collapsible.tsx 200 in 1ms
+[INFO] GET /src/components/ui/card.tsx 200 in 3ms
+[INFO] GET /src/components/PaymentModal.tsx 200 in 1ms
+[INFO] GET /src/components/ui/tabs.tsx 200 in 1ms
+[INFO] GET /src/components/ui/avatar.tsx 200 in 2ms
+[INFO] GET /src/components/ui/scroll-area.tsx 200 in 1ms
+[INFO] GET /src/components/ui/label.tsx 200 in 1ms
+[INFO] GET /src/components/ui/progress.tsx 200 in 1ms
+[INFO] GET /src/components/ui/slider.tsx 200 in 2ms
+[INFO] GET /src/components/ui/popover.tsx 200 in 1ms
+[INFO] GET /src/components/ui/select.tsx 200 in 3ms
+[INFO] GET /src/components/ui/dialog.tsx 200 in 1ms
+[INFO] GET /api/user 401 in 8ms
