@@ -90,6 +90,16 @@ const upload = multer({ storage });
 export function registerRoutes(app: Express) {
   setupAuth(app);
 
+  // Configure express to use raw body for Stripe webhooks
+  app.use((req, res, next) => {
+    if (req.originalUrl === '/api/webhooks/stripe') {
+      next();
+    } else {
+      express.json()(req, res, next);
+    }
+  });
+
+
   // Create subscription endpoint with enhanced error handling
   app.post("/api/create-subscription", async (req, res) => {
     try {
@@ -180,122 +190,130 @@ export function registerRoutes(app: Express) {
   });
 
   // Webhook handler for subscription events
-  app.post("/api/webhooks/stripe", express.raw({ type: 'application/json' }), async (req, res) => {
-    try {
-      const sig = req.headers['stripe-signature'];
-      if (!sig) {
-        return res.status(400).json({ error: 'Missing stripe signature' });
-      }
+  app.post("/api/webhooks/stripe", 
+    express.raw({type: 'application/json'}), 
+    async (req, res) => {
+      try {
+        const sig = req.headers['stripe-signature'];
+        if (!sig) {
+          logger.error('Missing Stripe signature');
+          return res.status(400).json({ error: 'Missing stripe signature' });
+        }
 
-      const event = stripe.webhooks.constructEvent(
-        req.rawBody || '',
-        sig,
-        process.env.STRIPE_WEBHOOK_SECRET || ''
-      );
+        // Ensure rawBody is available
+        const rawBody = req.body instanceof Buffer ? req.body : Buffer.from(JSON.stringify(req.body));
 
-      logger.info(`Processing webhook event: ${event.type}`);
+        logger.info(`Received webhook event with signature: ${sig.substring(0, 10)}...`);
 
-      switch (event.type) {
-        case 'invoice.payment_succeeded':
-          const invoice = event.data.object as Stripe.Invoice;
+        const event = stripe.webhooks.constructEvent(
+          rawBody,
+          sig,
+          process.env.STRIPE_WEBHOOK_SECRET || ''
+        );
 
-          // Validate subscription data
-          if (!invoice.subscription) {
-            logger.error('Invoice missing subscription reference');
-            return res.status(400).json({ error: 'Invalid invoice data' });
-          }
+        logger.info(`Processing webhook event: ${event.type}`);
 
-          try {
-            const subscription = await stripe.subscriptions.retrieve(invoice.subscription as string);
+        switch (event.type) {
+          case 'invoice.payment_succeeded':
+            const invoice = event.data.object as Stripe.Invoice;
 
-            // Validate subscription metadata
-            if (!subscription.metadata.userId) {
-              logger.warn(`Subscription missing userId in metadata for subscription ${subscription.id}`);
-              return res.status(400).json({ error: 'Invalid subscription metadata' });
+            // Validate subscription data
+            if (!invoice.subscription) {
+              logger.error('Invoice missing subscription reference');
+              return res.status(400).json({ error: 'Invalid invoice data' });
             }
 
-            // Update user's subscription status
-            const [updatedUser] = await db.update(users)
-              .set({
-                subscriptionStatus: 'active',
-                subscriptionId: subscription.id,
-                currentPeriodEnd: new Date(subscription.current_period_end * 1000)
-              })
-              .where(eq(users.id, parseInt(subscription.metadata.userId)))
-              .returning();
+            try {
+              const subscription = await stripe.subscriptions.retrieve(invoice.subscription as string);
 
-            if (!updatedUser) {
-              throw new Error(`Failed to update subscription status for user ${subscription.metadata.userId}`);
+              // Validate subscription metadata
+              if (!subscription.metadata.userId) {
+                logger.warn(`Subscription missing userId in metadata for subscription ${subscription.id}`);
+                return res.status(400).json({ error: 'Invalid subscription metadata' });
+              }
+
+              // Update user's subscription status
+              const [updatedUser] = await db.update(users)
+                .set({
+                  subscriptionStatus: 'active',
+                  subscriptionId: subscription.id,
+                  currentPeriodEnd: new Date(subscription.current_period_end * 1000)
+                })
+                .where(eq(users.id, parseInt(subscription.metadata.userId)))
+                .returning();
+
+              if (!updatedUser) {
+                throw new Error(`Failed to update subscription status for user ${subscription.metadata.userId}`);
+              }
+
+              // Log successful update
+              logger.info(`Subscription status updated successfully for user ${subscription.metadata.userId}`);
+
+              // Log payment details
+              logger.info(`Payment succeeded for subscription ${subscription.id}`);
+
+              res.json({ received: true });
+            } catch (error) {
+              // Log the error with detailed context
+              logger.error(`Failed to process subscription payment: ${error instanceof Error ? error.message : String(error)}`);
+
+              // Re-throw to trigger webhook retry
+              throw error;
             }
+            break;
 
-            // Log successful update
-            logger.info(`Subscription status updated successfully for user ${subscription.metadata.userId}`);
+          case 'invoice.payment_failed':
+            const failedInvoice = event.data.object as Stripe.Invoice;
+            const failedSubscription = await stripe.subscriptions.retrieve(failedInvoice.subscription as string);
 
-            // Log payment details
-            logger.info(`Payment succeeded for subscription ${subscription.id}`);
+            if (failedSubscription.metadata.userId) {
+              await db.update(users)
+                .set({
+                  subscriptionStatus: 'payment_failed'
+                })
+                .where(eq(users.id, parseInt(failedSubscription.metadata.userId)));
 
-            res.json({ received: true });
-          } catch (error) {
-            // Log the error with detailed context
-            logger.error(`Failed to process subscription payment: ${error instanceof Error ? error.message : String(error)}`);
+              logger.info(`Updated subscription status to payment_failed for user ${failedSubscription.metadata.userId}`);
+            }
+            break;
 
-            // Re-throw to trigger webhook retry
-            throw error;
-          }
-          break;
+          case 'customer.subscription.updated':
+            const updatedSubscription = event.data.object as Stripe.Subscription;
+            if (updatedSubscription.metadata.userId) {
+              await db.update(users)
+                .set({
+                  subscriptionStatus: updatedSubscription.status,
+                  currentPeriodEnd: new Date(updatedSubscription.current_period_end * 1000)
+                })
+                .where(eq(users.id, parseInt(updatedSubscription.metadata.userId)));
 
-        case 'invoice.payment_failed':
-          const failedInvoice = event.data.object as Stripe.Invoice;
-          const failedSubscription = await stripe.subscriptions.retrieve(failedInvoice.subscription as string);
+              logger.info(`Updated subscription status for user ${updatedSubscription.metadata.userId}`);
+            }
+            break;
 
-          if (failedSubscription.metadata.userId) {
-            await db.update(users)
-              .set({
-                subscriptionStatus: 'payment_failed'
-              })
-              .where(eq(users.id, parseInt(failedSubscription.metadata.userId)));
+          case 'customer.subscription.deleted':
+            const deletedSubscription = event.data.object as Stripe.Subscription;
+            if (deletedSubscription.metadata.userId) {
+              await db.update(users)
+                .set({
+                  subscriptionStatus: 'canceled',
+                  subscriptionId: null,
+                  currentPeriodEnd: null
+                })
+                .where(eq(users.id, parseInt(deletedSubscription.metadata.userId)));
 
-            logger.info(`Updated subscription status to payment_failed for user ${failedSubscription.metadata.userId}`);
-          }
-          break;
+              logger.info(`Canceled subscription for user ${deletedSubscription.metadata.userId}`);
+            }
+            break;
+        }
 
-        case 'customer.subscription.updated':
-          const updatedSubscription = event.data.object as Stripe.Subscription;
-          if (updatedSubscription.metadata.userId) {
-            await db.update(users)
-              .set({
-                subscriptionStatus: updatedSubscription.status,
-                currentPeriodEnd: new Date(updatedSubscription.current_period_end * 1000)
-              })
-              .where(eq(users.id, parseInt(updatedSubscription.metadata.userId)));
-
-            logger.info(`Updated subscription status for user ${updatedSubscription.metadata.userId}`);
-          }
-          break;
-
-        case 'customer.subscription.deleted':
-          const deletedSubscription = event.data.object as Stripe.Subscription;
-          if (deletedSubscription.metadata.userId) {
-            await db.update(users)
-              .set({
-                subscriptionStatus: 'canceled',
-                subscriptionId: null,
-                currentPeriodEnd: null
-              })
-              .where(eq(users.id, parseInt(deletedSubscription.metadata.userId)));
-
-            logger.info(`Canceled subscription for user ${deletedSubscription.metadata.userId}`);
-          }
-          break;
+        res.json({ received: true });
+      } catch (error) {
+        logger.error(`Webhook error: ${error instanceof Error ? error.message : String(error)}`);
+        const errorMessage = error instanceof Error ? error.message : "Webhook failed";
+        res.status(400).json({ error: errorMessage });
       }
-
-      res.json({ received: true });
-    } catch (error) {
-      logger.error(`Webhook error: ${error instanceof Error ? error.message : String(error)}`);
-      const errorMessage = error instanceof Error ? error.message : "Webhook failed";
-      res.status(400).json({ error: errorMessage });
-    }
-  });
+    });
 
   // Create Setup Intent endpoint
   app.post("/api/create-setup-intent", async (req, res) => {
@@ -954,7 +972,7 @@ export function registerRoutes(app: Express) {
         .where(eq(playlists.userId, req.user.id));
 
       res.json(userPlaylists);
-    } catch (error) {
+    } catch(error) {
       res.status(500).send("Failed to fetch playlists");
     }
   });
