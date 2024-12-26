@@ -13,24 +13,6 @@ const app = express();
 // Basic middleware setup
 app.use(express.urlencoded({ extended: false }));
 
-// Configure raw body parsing middleware for Stripe webhooks
-app.use((req, res, next) => {
-  if (req.originalUrl === '/api/webhooks/stripe') {
-    let rawBody = Buffer.from([]);
-
-    req.on('data', (chunk) => {
-      rawBody = Buffer.concat([rawBody, chunk]);
-    });
-
-    req.on('end', () => {
-      req.body = rawBody;
-      next();
-    });
-  } else {
-    express.json()(req, res, next);
-  }
-});
-
 // Logging middleware
 app.use((req, res, next) => {
   const start = Date.now();
