@@ -1,7 +1,7 @@
 import { useUser } from "../hooks/use-user";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from 'zod';
+import { insertUserSchema, type InsertUser } from "@db/schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -16,50 +16,26 @@ import { useState } from "react";
 import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 
-// Login schema with just username and password
-const loginSchema = z.object({
-  username: z.string().min(1, "Username is required"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-});
-
-// Registration schema with all required fields
-const registerSchema = z.object({
-  username: z.string().min(1, "Username is required"),
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-  displayName: z.string().min(1, "Display name is required"),
-});
-
-type LoginFormData = z.infer<typeof loginSchema>;
-type RegisterFormData = z.infer<typeof registerSchema>;
-
 export default function AuthPage() {
-  const { login, register: registerUser } = useUser();
+  const { login, register } = useUser();
   const [location, setLocation] = useLocation();
   const [isLogin, setIsLogin] = useState(!location.includes("signup"));
   const { toast } = useToast();
 
-  const loginForm = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      username: "",
-      password: "",
-    },
-  });
-
-  const registerForm = useForm<RegisterFormData>({
-    resolver: zodResolver(registerSchema),
+  const form = useForm<InsertUser>({
+    resolver: zodResolver(insertUserSchema),
     defaultValues: {
       username: "",
       email: "",
       password: "",
       displayName: "",
     },
+    mode: "onBlur"
   });
 
-  async function onLoginSubmit(data: LoginFormData) {
+  async function onSubmit(data: InsertUser) {
     try {
-      const result = await login(data);
+      const result = await (isLogin ? login(data) : register(data));
       if (!result.ok) {
         toast({
           title: "Error",
@@ -69,38 +45,13 @@ export default function AuthPage() {
       } else {
         toast({
           title: "Success",
-          description: "Logged in successfully",
+          description: isLogin ? "Logged in successfully" : "Account created successfully",
         });
+        // Use setLocation for client-side routing
         setLocation("/library");
       }
     } catch (error) {
-      console.error('Login error:', error);
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred. Please try again.",
-        variant: "destructive",
-      });
-    }
-  }
-
-  async function onRegisterSubmit(data: RegisterFormData) {
-    try {
-      const result = await registerUser(data);
-      if (!result.ok) {
-        toast({
-          title: "Error",
-          description: result.message,
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Success",
-          description: "Account created successfully",
-        });
-        setLocation("/library");
-      }
-    } catch (error) {
-      console.error('Registration error:', error);
+      console.error('Auth error:', error);
       toast({
         title: "Error",
         description: "An unexpected error occurred. Please try again.",
@@ -119,119 +70,62 @@ export default function AuthPage() {
           {isLogin ? "Welcome Back" : "Create Account"}
         </h1>
 
-        {isLogin ? (
-          <Form {...loginForm}>
-            <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
-              <FormField
-                control={loginForm.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Username</FormLabel>
-                    <FormControl>
-                      <Input placeholder="username" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={loginForm.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input type="password" placeholder="••••••••" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <Button type="submit" className="w-full bg-[#4CAF50] hover:bg-[#45a049]">
-                Sign In
-              </Button>
-            </form>
-          </Form>
-        ) : (
-          <Form {...registerForm}>
-            <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
-              <FormField
-                control={registerForm.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Username</FormLabel>
-                    <FormControl>
-                      <Input placeholder="username" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={registerForm.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input type="email" placeholder="email@example.com" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={registerForm.control}
-                name="displayName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Display Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Your Name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={registerForm.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input type="password" placeholder="••••••••" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <Button type="submit" className="w-full bg-[#4CAF50] hover:bg-[#45a049]">
-                Sign Up
-              </Button>
-            </form>
-          </Form>
-        )}
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input placeholder="username" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {!isLogin && (
+              <>
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input type="email" placeholder="email@example.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+              </>
+            )}
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="••••••••" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit" className="w-full">
+              {isLogin ? "Sign In" : "Sign Up"}
+            </Button>
+          </form>
+        </Form>
 
         <div className="text-center">
           <Button
             variant="link"
-            onClick={() => {
-              setIsLogin(!isLogin);
-              if (isLogin) {
-                loginForm.reset();
-              } else {
-                registerForm.reset();
-              }
-            }}
+            onClick={() => setIsLogin(!isLogin)}
             className="text-primary"
           >
             {isLogin

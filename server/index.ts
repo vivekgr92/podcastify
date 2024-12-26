@@ -8,12 +8,9 @@ import { logger } from "./services/logging.js";
 // Load environment variables
 dotenv.config();
 
-// Create express app with initial logging
-logger.info('Initializing Express application...');
 const app = express();
 
-// Basic middleware setup with logging
-app.use(express.json());
+// Basic middleware setup
 app.use(express.urlencoded({ extended: false }));
 
 // Logging middleware
@@ -26,7 +23,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Global error handler with improved type safety and detailed logging
+// Global error handler
 const errorHandler = (err: any, _req: Request, res: Response, _next: NextFunction) => {
   const errorMessage = err instanceof Error ? err.message : String(err);
   logger.error(`Error caught in middleware: ${errorMessage}`);
@@ -44,36 +41,36 @@ async function startServer() {
   try {
     logger.info('Starting server initialization...');
 
+    // Register routes first
+    logger.info('Registering routes...');
+    await registerRoutes(app);
+
+    // Add error handler after routes
+    app.use(errorHandler);
+
     const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4000;
     const server = createServer(app);
 
     // Setup Vite or static serving
     if (process.env.NODE_ENV === "development") {
       logger.info('Setting up Vite for development...');
-      await setupVite(app);
-      logger.info('Vite setup completed');
+      await setupVite(app, server);
     } else {
       logger.info('Setting up static file serving for production...');
       serveStatic(app);
-      logger.info('Static file serving setup completed');
     }
 
-    // Register routes after Vite setup
-    logger.info('Registering routes...');
-    registerRoutes(app);
-    logger.info('Routes registered successfully');
-
-    // Add error handler after routes
-    logger.info('Setting up error handler...');
-    app.use(errorHandler);
-
-    // Start server with detailed error handling
+    // Start server
     server.listen(PORT, '0.0.0.0', () => {
+      // Construct webhook URL without port number
+      const webhookUrl = process.env.REPL_SLUG && process.env.REPL_OWNER
+        ? `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co/api/webhooks/stripe`
+        : `https://${process.env.REPL_ID}.id.repl.co/api/webhooks/stripe`;
+
       logger.info(`Server started successfully on port ${PORT}`);
-      logger.info(`Server environment: ${process.env.NODE_ENV}`);
+      logger.info(`Webhook endpoint available at: ${webhookUrl}`);
     });
 
-    return server;
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     logger.error(`Fatal error during server initialization: ${errorMessage}`);
@@ -84,11 +81,8 @@ async function startServer() {
   }
 }
 
-// Start the server with enhanced error handling
+// Start the server
 startServer().catch((error) => {
-  logger.error(`Uncaught error during server startup: ${error instanceof Error ? error.message : String(error)}`);
-  if (error instanceof Error && error.stack) {
-    logger.error(`Stack trace: ${error.stack}`);
-  }
+  logger.error(`Uncaught error: ${error instanceof Error ? error.message : String(error)}`);
   process.exit(1);
 });
