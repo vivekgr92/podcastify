@@ -1,6 +1,6 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
-import { type Express } from "express";
+import { type Express, Request, Response, NextFunction } from "express";
 import session from "express-session";
 import createMemoryStore from "memorystore";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
@@ -8,6 +8,7 @@ import { promisify } from "util";
 import { users, insertUserSchema, type User as SelectUser } from "@db/schema";
 import { db } from "../db";
 import { eq } from "drizzle-orm";
+import { logger } from "./services/logging.js";
 
 // Extend express User type
 declare global {
@@ -58,7 +59,7 @@ export function setupAuth(app: Express) {
   app.use(passport.session());
 
   passport.use(
-    new LocalStrategy(async (username, password, done) => {
+    new LocalStrategy(async (username: string, password: string, done) => {
       try {
         const [user] = await db
           .select()
@@ -77,7 +78,7 @@ export function setupAuth(app: Express) {
 
         return done(null, user);
       } catch (err) {
-        console.error('Authentication error:', err);
+        logger.error('Authentication error:', err);
         return done(err);
       }
     })
@@ -101,12 +102,12 @@ export function setupAuth(app: Express) {
 
       done(null, user);
     } catch (err) {
-      console.error('Deserialization error:', err);
+      logger.error('Deserialization error:', err);
       done(err);
     }
   });
 
-  app.post("/api/register", async (req, res) => {
+  app.post("/api/register", async (req: Request, res: Response) => {
     try {
       const result = insertUserSchema.safeParse(req.body);
       if (!result.success) {
@@ -164,7 +165,7 @@ export function setupAuth(app: Express) {
       // Log in the new user
       req.login(newUser, (err) => {
         if (err) {
-          console.error('Login error after registration:', err);
+          logger.error('Login error after registration:', err);
           return res.status(500).json({
             ok: false,
             message: "Registration successful but login failed"
@@ -183,7 +184,7 @@ export function setupAuth(app: Express) {
         });
       });
     } catch (error) {
-      console.error('Registration error:', error);
+      logger.error('Registration error:', error);
       res.status(500).json({
         ok: false,
         message: "An unexpected error occurred during registration"
@@ -191,10 +192,10 @@ export function setupAuth(app: Express) {
     }
   });
 
-  app.post("/api/login", (req, res, next) => {
-    passport.authenticate("local", (err, user, info) => {
+  app.post("/api/login", (req: Request, res: Response, next: NextFunction) => {
+    passport.authenticate("local", (err: Error | null, user: Express.User | false, info: { message: string } | undefined) => {
       if (err) {
-        console.error('Login error:', err);
+        logger.error('Login error:', err);
         return res.status(500).json({
           ok: false,
           message: "An unexpected error occurred during login"
@@ -210,7 +211,7 @@ export function setupAuth(app: Express) {
 
       req.login(user, (err) => {
         if (err) {
-          console.error('Session creation error:', err);
+          logger.error('Session creation error:', err);
           return res.status(500).json({
             ok: false,
             message: "Failed to create session"
@@ -232,10 +233,10 @@ export function setupAuth(app: Express) {
     })(req, res, next);
   });
 
-  app.post("/api/logout", (req, res) => {
+  app.post("/api/logout", (req: Request, res: Response) => {
     req.logout((err) => {
       if (err) {
-        console.error('Logout error:', err);
+        logger.error('Logout error:', err);
         return res.status(500).json({
           ok: false,
           message: "Logout failed"
@@ -248,16 +249,19 @@ export function setupAuth(app: Express) {
     });
   });
 
-  app.get("/api/user", (req, res) => {
+  app.get("/api/user", (req: Request, res: Response) => {
     if (req.isAuthenticated()) {
       const user = req.user;
       return res.json({
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        displayName: user.displayName,
-        isAdmin: user.isAdmin,
-        subscriptionStatus: user.subscriptionStatus
+        ok: true,
+        user: {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          displayName: user.displayName,
+          isAdmin: user.isAdmin,
+          subscriptionStatus: user.subscriptionStatus
+        }
       });
     }
     res.status(401).json({

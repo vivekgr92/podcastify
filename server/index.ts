@@ -13,6 +13,7 @@ logger.info('Initializing Express application...');
 const app = express();
 
 // Basic middleware setup with logging
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Logging middleware
@@ -43,22 +44,13 @@ async function startServer() {
   try {
     logger.info('Starting server initialization...');
 
-    // Register routes first
-    logger.info('Registering routes...');
-    await registerRoutes(app);
-    logger.info('Routes registered successfully');
-
-    // Add error handler after routes
-    logger.info('Setting up error handler...');
-    app.use(errorHandler);
-
     const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4000;
     const server = createServer(app);
 
     // Setup Vite or static serving
     if (process.env.NODE_ENV === "development") {
       logger.info('Setting up Vite for development...');
-      await setupVite(app, server);
+      await setupVite(app);
       logger.info('Vite setup completed');
     } else {
       logger.info('Setting up static file serving for production...');
@@ -66,21 +58,22 @@ async function startServer() {
       logger.info('Static file serving setup completed');
     }
 
+    // Register routes after Vite setup
+    logger.info('Registering routes...');
+    registerRoutes(app);
+    logger.info('Routes registered successfully');
+
+    // Add error handler after routes
+    logger.info('Setting up error handler...');
+    app.use(errorHandler);
+
     // Start server with detailed error handling
     server.listen(PORT, '0.0.0.0', () => {
       logger.info(`Server started successfully on port ${PORT}`);
       logger.info(`Server environment: ${process.env.NODE_ENV}`);
     });
 
-    // Handle server errors
-    server.on('error', (error: Error) => {
-      logger.error(`Server error: ${error.message}`);
-      if (error.stack) {
-        logger.error(`Server error stack: ${error.stack}`);
-      }
-      process.exit(1);
-    });
-
+    return server;
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     logger.error(`Fatal error during server initialization: ${errorMessage}`);
