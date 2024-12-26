@@ -2830,3 +2830,165 @@ Stripe Signature: t=1735229660,v1=dd39c86cda5ae4995ea39acd360687bdebc97e6ebb3f4f
 Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
 [INFO] Successfully verified webhook event: product.updated
 [INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735229662,v1=462792635c44c6c184437a5b7d2be1e2d6aeeb83ab663fb7d69e23288e5538cb,v0=5320b16ac0d3fc34624941daf7226e979bfc9bdd2f7d920009650d288f4d16f6
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.updated
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735229663,v1=5928697377a17d885cfd7bacc51acbda6220d1d4fdc195a29482350a5436836a,v0=ea92fccdfd769fc030bbf42288e22e406e84859c2538d75b6a21698159312848
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.updated
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735229664,v1=b3b35e1a37e3b370fbb73b44905e1ef92512fd09a15a679c2b1737e4b5000ed3,v0=1503285e26db510d232fe9ca736a8a53aa2db67bdd984e1fd0829f80ae522a84
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.updated
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735229666,v1=cb04172ffb3c07b81d40a4380f1de3d9563127abe4dd59d92233bff05a0ef2d8,v0=caed0468535c3bd6bb673d0e333f43df499f59a7813597d5b1ca24563ecf3ee4
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.updated
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735229668,v1=ad22ed927d90dd96f56cb5e0b444c838df133ca83e897a393f433ffb40b52e8b,v0=f95ffb5b73477238ca22beaaee70fa36c4a2f45ca276b6947b7c21f38659e161
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.updated
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735229675,v1=20b6b46b42112ea6f4cf3225e49f8ae9ffacffbe96a9578bc31cf6f39bf1343e,v0=df8fbbf29bdf2d436985b0b05b46363f7f78e4ba48670f40b1259cd822ee3ed9
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.updated
+[INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] 
+Stripe Signature: t=1735229675,v1=b3290689f098b71d4e51ffdf4dbb7b4633192be51cf2ea51f986477b9d3521e8,v0=1b25adad0283d2127675738178c0f778daf383ec2c02756d4de922914c5bba28
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.updated
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735229675,v1=19047d1ea90460fa07fdbd1c749cab3d08e0a7a942af89d4672b4e6fca7d7e58,v0=4a57d5ec7dd043169600aac3e35148c336cd91b4a150c921f7f777d4ff6717dc
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.updated
+[INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] 
+Stripe Signature: t=1735229675,v1=a10093171513a80b8bfca6e88acf554747ee135cb1cf5d3580ba8c84382c357b,v0=1e96067f7993038f64bc04136d274055cfbd36f214b03a0adcf24cde7b93cbc8
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.updated
+[INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] 
+Stripe Signature: t=1735229681,v1=e1476a10b0736e30ab2bb8ea8a3698ec8b68b0a2c8338982e498a2d6a8d1f886,v0=1de09e3d549e3cad44bb7cffa68ff5f8bba8245730026d9b9e01ea82e6a97452
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.updated
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735229681,v1=4f4f4a454e64284d7368e444a527d15fc04f8b8c7e128f1bbddc1061506453fe,v0=a0f12d6a45854b1b13d057f0fb80ccf9276878744fd9bb793974b6527cd41f54
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.updated
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735229682,v1=6141971988b99372fea937e8f8e8f75bb2f01cf693e7ee1b93567221a3d3c147,v0=009a51dde198b59b58c47494a3e002b07283f71064700f9a786d0ab6e6686e2e
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.updated
+[INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] 
+Stripe Signature: t=1735229684,v1=197e89dd51c2b17be071bc0a7dfc1defd487ded1054b646337f7df76e567482f,v0=6feef055bda038315c3e7a6324f515f05d9fb2106dd6f197996776874550d9ef
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.updated
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735229692,v1=be34c5e83f4ee1994f6b3b9444700970cfb8908b64c29488e32f077257334533,v0=8bfa57221d65781e49cbc279a640bf0222d5899f5367f5868f8e62df4a45ea63
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.updated
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735229692,v1=4914e33ff4dbe482ae1e8635abee34c05472f19515e41a048b40bfc4eeaf7a09,v0=9ad0fcd536ebe1e087de52191c538f640d05c744d23199a1910d77df6bb1a889
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.updated
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735229692,v1=9571cd579488db65e3e30609923259ebe29f36d1eeb8ba2808ad1e9acbcfb19d,v0=6f2dfe693085f16ae01e576d58e50d366b226dea9620c41c83e7ccf76f5d6fdb
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.updated
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735229694,v1=bee3ef0e0ef11768ec08a99320b44b5353d50b9ba6efe2ac170bc891bb44988c,v0=456fd64ba3d05bbc7a19213951ffb3273bd81f451837fd215eb455e2477f1f7e
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.updated
+[INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] 
+Stripe Signature: t=1735229695,v1=951f05dadbef7f6614b5d46b470352d731e7bb067c4c96088c09043e1bfc45d2,v0=511666ba10d909269abd581c31be1f98083d4f45c93db1e89f820af9e8b8d053
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.updated
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735229697,v1=be710d9a4f7b8b4a7906d1a30364780dffb66be457005c9d6c35cabdd87fa9f2,v0=8f52e28cbae896ab8358bd73b0d8efa65aea9070b29bb4c724d6d240b1ff0abd
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.updated
+[INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] 
+Stripe Signature: t=1735229699,v1=de56972a0d7892e897955778d1b3a8447be56f4b945a32ae71289f965f116158,v0=b4a86d6c4272f19befe2b32c6aa7c3a128610057b48d1c1de3a66a4336f1b0fc
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.updated
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735229699,v1=f49f38a5572647261fab83c587f79243db5eb8fa8dede6ccf53c9783e697172a,v0=110de3f184e256cd1a356a5c7425939988043c64b10bc73938c78ceb31c0a78b
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.updated
+[INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] 
+Stripe Signature: t=1735229706,v1=e408e548e128fd32cf1d5cb5df59576e732815e299734ff46d8f6778d15be092,v0=005becee5efb6905eacbd08cdcebebdab56cff245a2927584dd94657661616bf
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] Successfully verified webhook event: product.updated
+[INFO] 
+Stripe Signature: t=1735229707,v1=56971c614abb8e569f5c9d6d4f537258e7d704f7dee3620155a1179c1f9a95db,v0=135f962c4f32d975bf0e731d85f92a97f64de37e3c8952c114e6145a7b5db299
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.updated
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735229711,v1=8655cdff603b42989fb203e831baa5104e58cae1a7ccbd478ee466f7a9d82390,v0=e5edec663fbaa6ea579d3a14c85cd5980ec5bbf1e6f8506c5d23e09673d1d290
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.updated
+[INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] 
+Stripe Signature: t=1735229712,v1=22f3f927e09af0b25950311a367b5c88c6af09f1124a946d5770dd194f34a0e2,v0=934897323b4c286fc1fc1f917fee1feed89cd87f4e9abfeadc5c5a415eeb5b42
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.updated
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735229724,v1=64d0a0d72c8d0d9a29a5fa72ee946fe3c81e7b071a17ee25fd3e359986282b0d,v0=b09113956fcee05cebdd29a264e4a1b69e0a6e44ca177973561e6045ce5fb349
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.updated
+[INFO] POST /api/webhooks/stripe 200 in 13ms
+[INFO] 
+Stripe Signature: t=1735229724,v1=3dc386fc734f756d6619a8b1b57671d0c6cdb0a0ab107673d6ddd5e66f384bac,v0=c2d5805abff67add921fc9b41793edaf20f393bcf2561bf9f34f5c7f2b4103f2
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.updated
+[INFO] POST /api/webhooks/stripe 200 in 1ms
