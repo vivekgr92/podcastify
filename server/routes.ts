@@ -6,8 +6,7 @@ import multer from "multer";
 import path from "path";
 import { promises as fs } from "fs";
 import * as fsSync from "fs";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
+
 import {
   podcasts,
   playlists,
@@ -18,7 +17,6 @@ import {
 } from "../db/schema.js";
 import { logger } from "./services/logging.js";
 import { ttsService } from "./services/tts.js";
-import type { ConversationPart, PricingDetails } from "./services/tts.js";
 import { eq, and, sql, desc } from "drizzle-orm";
 import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import Stripe from "stripe";
@@ -392,16 +390,6 @@ export function registerRoutes(app: Express) {
       res.status(500).json({ error: errorMessage });
     }
   });
-
-  // Helper function to get plan price
-  function getPlanPrice(planName: string): string {
-    const prices: Record<string, string> = {
-      "Basic Plan": "$9.99",
-      "Pro Plan": "$24.99",
-      "Enterprise Plan": "Custom",
-    };
-    return prices[planName] || "$9.99";
-  }
 
   // Main ---Text-to-speech conversion endpoint
   app.post("/api/podcast", upload.single("file"), async (req, res) => {
