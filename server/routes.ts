@@ -21,6 +21,12 @@ import { eq, and, sql, desc } from "drizzle-orm";
 import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import Stripe from "stripe";
 
+// Constants for usage limits
+const ARTICLE_LIMIT = 3;
+const PODIFY_TOKEN_LIMIT = 10000;
+const PODIFY_TOKEN_RATE = 0.005;
+const PODIFY_MARGIN = 0.6;
+
 // Initialize Stripe with proper API version and error handling
 let stripe: Stripe;
 try {
@@ -39,12 +45,6 @@ try {
   logger.error(`Failed to initialize Stripe: ${errorMessage}`);
   throw error;
 }
-
-// Constants for usage limits
-const ARTICLE_LIMIT = 3;
-const PODIFY_TOKEN_LIMIT = 10000;
-const PODIFY_TOKEN_RATE = 0.005;
-const PODIFY_MARGIN = 0.6;
 
 export function registerRoutes(app: Express) {
   setupAuth(app);
