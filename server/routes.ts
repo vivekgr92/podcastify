@@ -982,7 +982,7 @@ export function registerRoutes(app: Express) {
         error instanceof Error ? error.message : String(error);
       await logger.error(`Error in delete podcast route: ${errorMessage}`);
       res.status(500).json({
-        error: "Failed to delete podcast",
+        error: "Failed todelete podcast",
         type: "server",
         message: "An unexpected error occurred",
       });
