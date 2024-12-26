@@ -1,3 +1,4 @@
+
 import { useUser } from "../hooks/use-user";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,9 +34,9 @@ export default function AuthPage() {
     mode: "onBlur",
   });
 
-  async function onSubmit(data: InsertUser) {
+  async function onSubmit(values: InsertUser) {
     try {
-      const result = await (isLogin ? login(data) : register(data));
+      const result = await (isLogin ? login(values) : register(values));
       if (!result.ok) {
         toast({
           title: "Error",
@@ -49,7 +50,6 @@ export default function AuthPage() {
             ? "Logged in successfully"
             : "Account created successfully",
         });
-        // Use setLocation for client-side routing
         setLocation("/library");
       }
     } catch (error) {
@@ -76,13 +76,7 @@ export default function AuthPage() {
         </h1>
 
         <Form {...form}>
-          <form
-            onSubmit={(e) => {
-              console.log("Form errors:", form.errors); // Debugging validation errors
-              form.handleSubmit(onSubmit)(e);
-            }}
-            className="space-y-4"
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
               name="username"
@@ -97,25 +91,23 @@ export default function AuthPage() {
               )}
             />
             {!isLogin && (
-              <>
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="email"
-                          placeholder="email@example.com"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </>
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        placeholder="email@example.com"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             )}
             <FormField
               control={form.control}
