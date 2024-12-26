@@ -8,9 +8,11 @@ import { logger } from "./services/logging.js";
 // Load environment variables
 dotenv.config();
 
+// Create express app with initial logging
+logger.info('Initializing Express application...');
 const app = express();
 
-// Basic middleware setup
+// Basic middleware setup with logging
 app.use(express.urlencoded({ extended: false }));
 
 // Logging middleware
@@ -23,7 +25,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Global error handler
+// Global error handler with improved type safety and detailed logging
 const errorHandler = (err: any, _req: Request, res: Response, _next: NextFunction) => {
   const errorMessage = err instanceof Error ? err.message : String(err);
   logger.error(`Error caught in middleware: ${errorMessage}`);
@@ -44,8 +46,10 @@ async function startServer() {
     // Register routes first
     logger.info('Registering routes...');
     await registerRoutes(app);
+    logger.info('Routes registered successfully');
 
     // Add error handler after routes
+    logger.info('Setting up error handler...');
     app.use(errorHandler);
 
     const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4000;
@@ -55,20 +59,26 @@ async function startServer() {
     if (process.env.NODE_ENV === "development") {
       logger.info('Setting up Vite for development...');
       await setupVite(app, server);
+      logger.info('Vite setup completed');
     } else {
       logger.info('Setting up static file serving for production...');
       serveStatic(app);
+      logger.info('Static file serving setup completed');
     }
 
-    // Start server
+    // Start server with detailed error handling
     server.listen(PORT, '0.0.0.0', () => {
-      // Construct webhook URL without port number
-      const webhookUrl = process.env.REPL_SLUG && process.env.REPL_OWNER
-        ? `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co/api/webhooks/stripe`
-        : `https://${process.env.REPL_ID}.id.repl.co/api/webhooks/stripe`;
-
       logger.info(`Server started successfully on port ${PORT}`);
-      logger.info(`Webhook endpoint available at: ${webhookUrl}`);
+      logger.info(`Server environment: ${process.env.NODE_ENV}`);
+    });
+
+    // Handle server errors
+    server.on('error', (error: Error) => {
+      logger.error(`Server error: ${error.message}`);
+      if (error.stack) {
+        logger.error(`Server error stack: ${error.stack}`);
+      }
+      process.exit(1);
     });
 
   } catch (error) {
@@ -81,8 +91,11 @@ async function startServer() {
   }
 }
 
-// Start the server
+// Start the server with enhanced error handling
 startServer().catch((error) => {
-  logger.error(`Uncaught error: ${error instanceof Error ? error.message : String(error)}`);
+  logger.error(`Uncaught error during server startup: ${error instanceof Error ? error.message : String(error)}`);
+  if (error instanceof Error && error.stack) {
+    logger.error(`Stack trace: ${error.stack}`);
+  }
   process.exit(1);
 });
