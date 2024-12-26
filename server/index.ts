@@ -4,27 +4,13 @@ import { setupVite, serveStatic } from "./vite.js";
 import { createServer } from "http";
 import * as dotenv from 'dotenv';
 import { logger } from "./services/logging.js";
-import cors from 'cors';
 
 // Load environment variables
 dotenv.config();
 
 const app = express();
 
-// Configure CORS for development
-const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
-    ? process.env.CLIENT_URL 
-    : ['http://localhost:5175', 'http://localhost:3000'],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-};
-
-app.use(cors(corsOptions));
-
-// Basic middleware setup - must be before route registration
-app.use(express.json());
+// Basic middleware setup
 app.use(express.urlencoded({ extended: false }));
 
 // Logging middleware
@@ -55,9 +41,9 @@ async function startServer() {
   try {
     logger.info('Starting server initialization...');
 
-    // Register routes first (this also sets up auth)
+    // Register routes first
     logger.info('Registering routes...');
-    registerRoutes(app);
+    await registerRoutes(app);
 
     // Add error handler after routes
     app.use(errorHandler);
