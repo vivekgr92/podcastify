@@ -38,22 +38,21 @@ const crypto = {
 
 export function setupAuth(app: Express) {
   const MemoryStore = createMemoryStore(session);
-  
-  app.use(
-    session({
-      secret: process.env.REPL_ID || "podcast-app-secret",
-      resave: false,
-      saveUninitialized: false,
-      cookie: {
-        secure: app.get("env") === "production",
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours
-      },
-      store: new MemoryStore({
-        checkPeriod: 86400000 // prune expired entries every 24h
-      })
+  const sessionSettings: session.SessionOptions = {
+    secret: process.env.REPL_ID || "podcast-app-secret",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: app.get("env") === "production",
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    },
+    store: new MemoryStore({
+      checkPeriod: 86400000 // prune expired entries every 24h
     })
-  );
+  };
 
+  // Configure session middleware
+  app.use(session(sessionSettings));
   app.use(passport.initialize());
   app.use(passport.session());
 
@@ -67,12 +66,12 @@ export function setupAuth(app: Express) {
           .limit(1);
 
         if (!user) {
-          return done(null, false, { message: "Incorrect username." });
+          return done(null, false, { message: "Invalid username or password." });
         }
 
         const isValid = await crypto.compare(password, user.password);
         if (!isValid) {
-          return done(null, false, { message: "Incorrect password." });
+          return done(null, false, { message: "Invalid username or password." });
         }
 
         return done(null, user);
@@ -93,14 +92,17 @@ export function setupAuth(app: Express) {
         .from(users)
         .where(eq(users.id, id))
         .limit(1);
-      
+
+      if (!user) {
+        return done(null, false);
+      }
       done(null, user);
     } catch (err) {
       done(err);
     }
   });
 
-  app.post("/api/register", async (req, res, next) => {
+  app.post("/api/register", async (req, res) => {
     try {
       const result = insertUserSchema.safeParse(req.body);
       if (!result.success) {
@@ -110,9 +112,9 @@ export function setupAuth(app: Express) {
       }
 
       const { username, email, password } = result.data;
-      const displayName = username; // Set displayName equal to username
+      const displayName = username; // Set displayName equal to username initially
 
-      // Check if username or email already exists
+      // Check if username already exists
       const [existingUser] = await db
         .select()
         .from(users)
@@ -123,6 +125,7 @@ export function setupAuth(app: Express) {
         return res.status(400).send("Username already exists");
       }
 
+      // Check if email already exists
       const [existingEmail] = await db
         .select()
         .from(users)
@@ -135,11 +138,8 @@ export function setupAuth(app: Express) {
 
       // Hash password and create user
       const hashedPassword = await crypto.hash(password);
-      // Set admin flag for @admin.com emails - ensure domain match is exact
-      const isAdmin = email.toLowerCase().endsWith('@admin.com');
-      console.log('Creating user with admin status:', isAdmin, 'for email:', email);
-      
-      // Create new user with admin status
+
+      // Create new user
       const [newUser] = await db
         .insert(users)
         .values({
@@ -147,29 +147,24 @@ export function setupAuth(app: Express) {
           email,
           displayName,
           password: hashedPassword,
-          isAdmin: !!isAdmin // Ensure it's a proper boolean
+          isAdmin: email.toLowerCase().endsWith('@admin.com') // Set admin flag
         })
         .returning();
 
-      console.log('Created user:', { 
-        id: newUser.id,
-        username: newUser.username,
-        email: newUser.email,
-        isAdmin: newUser.isAdmin 
-      });
-
       // Log in the new user
       req.login(newUser, (err) => {
-        if (err) return next(err);
-        return res.json({ 
-          id: newUser.id, 
-          username: newUser.username,
-          email: newUser.email,
-          isAdmin: newUser.isAdmin 
-        });
+        if (err) {
+          console.error("Login error after registration:", err);
+          return res.status(500).send("Error logging in after registration");
+        }
+
+        // Return user data without password
+        const { password: _, ...userWithoutPassword } = newUser;
+        return res.status(200).json(userWithoutPassword);
       });
     } catch (error) {
-      next(error);
+      console.error("Registration error:", error);
+      res.status(500).send("Internal server error during registration");
     }
   });
 
@@ -180,14 +175,9 @@ export function setupAuth(app: Express) {
 
       req.login(user, (err) => {
         if (err) return next(err);
-        // Ensure we return consistent user data including admin status
-        return res.json({ 
-          id: user.id, 
-          username: user.username,
-          email: user.email,
-          isAdmin: user.isAdmin, // This will be a boolean from the database
-          displayName: user.displayName
-        });
+        // Return user data without sensitive information
+        const { password: _, ...userWithoutPassword } = user;
+        return res.json(userWithoutPassword);
       });
     })(req, res, next);
   });
@@ -201,13 +191,8 @@ export function setupAuth(app: Express) {
 
   app.get("/api/user", (req, res) => {
     if (req.isAuthenticated()) {
-      const { password, ...userWithoutPassword } = req.user;
-      const userData = {
-        ...userWithoutPassword,
-        isAdmin: !!req.user.isAdmin // Ensure it's a boolean
-      };
-      console.log('User data:', userData);
-      return res.json(userData);
+      const { password: _, ...userWithoutPassword } = req.user;
+      return res.json(userWithoutPassword);
     }
     res.status(401).send("Not authenticated");
   });
