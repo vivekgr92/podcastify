@@ -1,5 +1,5 @@
 import passport from "passport";
-import { Strategy as LocalStrategy, IVerifyOptions } from "passport-local";
+import { Strategy as LocalStrategy } from "passport-local";
 import { type Express } from "express";
 import session from "express-session";
 import createMemoryStore from "memorystore";
@@ -38,7 +38,7 @@ const crypto = {
 
 export function setupAuth(app: Express) {
   const MemoryStore = createMemoryStore(session);
-  
+
   app.use(
     session({
       secret: process.env.REPL_ID || "podcast-app-secret",
@@ -67,16 +67,17 @@ export function setupAuth(app: Express) {
           .limit(1);
 
         if (!user) {
-          return done(null, false, { message: "Incorrect username." });
+          return done(null, false, { message: "Invalid username or password." });
         }
 
         const isValid = await crypto.compare(password, user.password);
         if (!isValid) {
-          return done(null, false, { message: "Incorrect password." });
+          return done(null, false, { message: "Invalid username or password." });
         }
 
         return done(null, user);
       } catch (err) {
+        console.error('Authentication error:', err);
         return done(err);
       }
     })
@@ -93,26 +94,31 @@ export function setupAuth(app: Express) {
         .from(users)
         .where(eq(users.id, id))
         .limit(1);
-      
+
+      if (!user) {
+        return done(new Error('User not found'));
+      }
+
       done(null, user);
     } catch (err) {
+      console.error('Deserialization error:', err);
       done(err);
     }
   });
 
-  app.post("/api/register", async (req, res, next) => {
+  app.post("/api/register", async (req, res) => {
     try {
       const result = insertUserSchema.safeParse(req.body);
       if (!result.success) {
-        return res.status(400).send(
-          "Invalid input: " + result.error.issues.map(i => i.message).join(", ")
-        );
+        return res.status(400).json({
+          ok: false,
+          message: result.error.issues.map(i => i.message).join(", ")
+        });
       }
 
-      const { username, email, password } = result.data;
-      const displayName = username; // Set displayName equal to username
+      const { username, email, password, displayName } = result.data;
 
-      // Check if username or email already exists
+      // Check if username already exists
       const [existingUser] = await db
         .select()
         .from(users)
@@ -120,7 +126,10 @@ export function setupAuth(app: Express) {
         .limit(1);
 
       if (existingUser) {
-        return res.status(400).send("Username already exists");
+        return res.status(400).json({
+          ok: false,
+          message: "Username already exists"
+        });
       }
 
       const [existingEmail] = await db
@@ -130,16 +139,16 @@ export function setupAuth(app: Express) {
         .limit(1);
 
       if (existingEmail) {
-        return res.status(400).send("Email already exists");
+        return res.status(400).json({
+          ok: false,
+          message: "Email already exists"
+        });
       }
 
       // Hash password and create user
       const hashedPassword = await crypto.hash(password);
-      // Set admin flag for @admin.com emails - ensure domain match is exact
-      const isAdmin = email.toLowerCase().endsWith('@admin.com');
-      console.log('Creating user with admin status:', isAdmin, 'for email:', email);
-      
-      // Create new user with admin status
+
+      // Create new user
       const [newUser] = await db
         .insert(users)
         .values({
@@ -147,46 +156,77 @@ export function setupAuth(app: Express) {
           email,
           displayName,
           password: hashedPassword,
-          isAdmin: !!isAdmin // Ensure it's a proper boolean
+          isAdmin: false,
+          subscriptionStatus: 'inactive'
         })
         .returning();
 
-      console.log('Created user:', { 
-        id: newUser.id,
-        username: newUser.username,
-        email: newUser.email,
-        isAdmin: newUser.isAdmin 
-      });
-
       // Log in the new user
       req.login(newUser, (err) => {
-        if (err) return next(err);
+        if (err) {
+          console.error('Login error after registration:', err);
+          return res.status(500).json({
+            ok: false,
+            message: "Registration successful but login failed"
+          });
+        }
         return res.json({ 
-          id: newUser.id, 
-          username: newUser.username,
-          email: newUser.email,
-          isAdmin: newUser.isAdmin 
+          ok: true,
+          user: {
+            id: newUser.id,
+            username: newUser.username,
+            email: newUser.email,
+            displayName: newUser.displayName,
+            isAdmin: newUser.isAdmin,
+            subscriptionStatus: newUser.subscriptionStatus
+          }
         });
       });
     } catch (error) {
-      next(error);
+      console.error('Registration error:', error);
+      res.status(500).json({
+        ok: false,
+        message: "An unexpected error occurred during registration"
+      });
     }
   });
 
   app.post("/api/login", (req, res, next) => {
-    passport.authenticate("local", (err: any, user: Express.User | false, info: IVerifyOptions) => {
-      if (err) return next(err);
-      if (!user) return res.status(400).send(info?.message || "Login failed");
+    passport.authenticate("local", (err, user, info) => {
+      if (err) {
+        console.error('Login error:', err);
+        return res.status(500).json({
+          ok: false,
+          message: "An unexpected error occurred during login"
+        });
+      }
+
+      if (!user) {
+        return res.status(400).json({
+          ok: false,
+          message: info?.message || "Login failed"
+        });
+      }
 
       req.login(user, (err) => {
-        if (err) return next(err);
-        // Ensure we return consistent user data including admin status
-        return res.json({ 
-          id: user.id, 
-          username: user.username,
-          email: user.email,
-          isAdmin: user.isAdmin, // This will be a boolean from the database
-          displayName: user.displayName
+        if (err) {
+          console.error('Session creation error:', err);
+          return res.status(500).json({
+            ok: false,
+            message: "Failed to create session"
+          });
+        }
+
+        return res.json({
+          ok: true,
+          user: {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            displayName: user.displayName,
+            isAdmin: user.isAdmin,
+            subscriptionStatus: user.subscriptionStatus
+          }
         });
       });
     })(req, res, next);
@@ -194,21 +234,35 @@ export function setupAuth(app: Express) {
 
   app.post("/api/logout", (req, res) => {
     req.logout((err) => {
-      if (err) return res.status(500).send("Logout failed");
-      res.json({ message: "Logged out successfully" });
+      if (err) {
+        console.error('Logout error:', err);
+        return res.status(500).json({
+          ok: false,
+          message: "Logout failed"
+        });
+      }
+      res.json({
+        ok: true,
+        message: "Logged out successfully"
+      });
     });
   });
 
   app.get("/api/user", (req, res) => {
     if (req.isAuthenticated()) {
-      const { password, ...userWithoutPassword } = req.user;
-      const userData = {
-        ...userWithoutPassword,
-        isAdmin: !!req.user.isAdmin // Ensure it's a boolean
-      };
-      console.log('User data:', userData);
-      return res.json(userData);
+      const user = req.user;
+      return res.json({
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        displayName: user.displayName,
+        isAdmin: user.isAdmin,
+        subscriptionStatus: user.subscriptionStatus
+      });
     }
-    res.status(401).send("Not authenticated");
+    res.status(401).json({
+      ok: false,
+      message: "Not authenticated"
+    });
   });
 }
