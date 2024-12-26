@@ -75,4 +75,4 @@ async function createProducts() {
   }
 }
 
-createProducts();
+//createProducts();

@@ -1,6 +1,6 @@
 import type { Express } from "express";
-import { setupAuth } from "./auth.js";
 import express from "express";
+import { setupAuth } from "./auth.js";
 import { db } from "../db/index.js";
 import multer from "multer";
 import path from "path";
@@ -21,12 +21,6 @@ import { eq, and, sql, desc } from "drizzle-orm";
 import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import Stripe from "stripe";
 
-// Constants for usage limits
-const ARTICLE_LIMIT = 3; // Free tier limit
-const PODIFY_TOKEN_LIMIT = 10000; // Free tier token limit
-const PODIFY_TOKEN_RATE = 0.005; // Cost per token
-const PODIFY_MARGIN = 0.6; // 60% margin for operational costs
-
 // Initialize Stripe with proper API version and error handling
 let stripe: Stripe;
 try {
@@ -46,18 +40,23 @@ try {
   throw error;
 }
 
+// Constants for usage limits
+const ARTICLE_LIMIT = 3;
+const PODIFY_TOKEN_LIMIT = 10000;
+const PODIFY_TOKEN_RATE = 0.005;
+const PODIFY_MARGIN = 0.6;
+
 export function registerRoutes(app: Express) {
+  setupAuth(app);
+
   // Configure express to use raw body for Stripe webhooks
   app.use((req, res, next) => {
     if (req.originalUrl === "/api/webhooks/stripe") {
       express.raw({ type: "*/*" })(req, res, next);
     } else {
-      next();
+      express.json()(req, res, next);
     }
   });
-
-  // Setup authentication - this will register /api/login, /api/register, /api/logout, /api/user
-  setupAuth(app);
 
   // Create subscription endpoint with enhanced error handling
   app.post("/api/create-subscription", async (req, res) => {
@@ -982,7 +981,7 @@ export function registerRoutes(app: Express) {
         error instanceof Error ? error.message : String(error);
       await logger.error(`Error in delete podcast route: ${errorMessage}`);
       res.status(500).json({
-        error: "Failed todelete podcast",
+        error: "Failed to delete podcast",
         type: "server",
         message: "An unexpected error occurred",
       });
