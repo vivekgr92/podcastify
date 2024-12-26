@@ -11,6 +11,7 @@ dotenv.config();
 const app = express();
 
 // Basic middleware setup
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Logging middleware
