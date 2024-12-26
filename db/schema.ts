@@ -55,9 +55,10 @@ export const progress = pgTable("progress", {
 
 // Zod schemas
 export const insertUserSchema = createInsertSchema(users, {
-  username: (schema) => schema.username.min(1, "Username is required"),
+  username: (schema) => schema.username.min(3, "Username must be at least 3 characters"),
   password: (schema) => schema.password.min(6, "Password must be at least 6 characters"),
-  email: (schema) => schema.email.email("Invalid email format")
+  email: (schema) => schema.email.email("Invalid email format").optional(),
+  displayName: (schema) => schema.displayName.optional()
 });
 export const selectUserSchema = createSelectSchema(users);
 export type InsertUser = z.infer<typeof insertUserSchema>;
