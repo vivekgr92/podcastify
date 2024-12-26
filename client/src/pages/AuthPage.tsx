@@ -30,7 +30,7 @@ export default function AuthPage() {
       password: "",
       displayName: "",
     },
-    mode: "onChange"
+    mode: "onBlur"
   });
 
   async function onSubmit(data: InsertUser) {
