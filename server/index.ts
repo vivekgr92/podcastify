@@ -24,6 +24,23 @@ app.use((req, res, next) => {
   next();
 });
 
+// CORS middleware for development
+if (process.env.NODE_ENV === "development") {
+  app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "http://localhost:5175");
+    res.header("Access-Control-Allow-Credentials", "true");
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept"
+    );
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    if (req.method === "OPTIONS") {
+      return res.sendStatus(200);
+    }
+    next();
+  });
+}
+
 // Global error handler
 const errorHandler = (
   err: any,
@@ -45,7 +62,7 @@ const errorHandler = (
 
 async function startServer() {
   try {
-    logger.info("***Starting server initialization...\n\n");
+    logger.info("Starting server initialization...");
 
     // Register routes first
     logger.info("Registering routes...");
@@ -66,17 +83,19 @@ async function startServer() {
       serveStatic(app);
     }
 
-    // Start server
-    server.listen(PORT, "0.0.0.0", () => {
-      // Construct webhook URL without port number
-      const webhookUrl =
-        process.env.REPL_SLUG && process.env.REPL_OWNER
-          ? `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co/api/webhooks/stripe`
-          : `https://${process.env.REPL_ID}.id.repl.co/api/webhooks/stripe`;
+    // Start server with explicit host binding
+    await new Promise<void>((resolve, reject) => {
+      server.listen(PORT, "0.0.0.0", () => {
+        logger.info(`Server started successfully on port ${PORT}`);
+        resolve();
+      });
 
-      logger.info(`Server started successfully on port ${PORT}`);
-      logger.info(`Webhook endpoint available at: ${webhookUrl}`);
+      server.on('error', (error: Error) => {
+        logger.error(`Failed to start server: ${error.message}`);
+        reject(error);
+      });
     });
+
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     logger.error(`Fatal error during server initialization: ${errorMessage}`);
@@ -87,10 +106,10 @@ async function startServer() {
   }
 }
 
-// Start the server
+// Start the server with improved error handling
 startServer().catch((error) => {
   logger.error(
-    `Uncaught error: ${error instanceof Error ? error.message : String(error)}`,
+    `Uncaught error during server startup: ${error instanceof Error ? error.message : String(error)}`,
   );
   process.exit(1);
 });
