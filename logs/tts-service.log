@@ -94,3 +94,148 @@ Signature verification is impossible without access to the original signed mater
 Learn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature
 
 [INFO] POST /api/webhooks/stripe 400 in 1ms
+[INFO] GET / 200 in 200ms
+[INFO] GET /src/index.css 200 in 335ms
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] 
+Stripe Signature: t=1735322771,v1=62fb6797224801d3e851d2c289715f99be117e65b6e513e18d9febc90b383de5,v0=3d262d94727e11dd3d73c8c929eae240f1414f764de83f3f911bcfd4e1db2a74
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[ERROR] Webhook signature verification failed: Webhook payload must be provided as a string or a Buffer (https://nodejs.org/api/buffer.html) instance representing the _raw_ request body.Payload was provided as a parsed JavaScript object instead. 
+Signature verification is impossible without access to the original signed material. 
+
+Learn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature
+
+[INFO] POST /api/webhooks/stripe 400 in 6ms
+[INFO] GET / 200 in 167ms
+[INFO] 
+Stripe Signature: t=1735322771,v1=c50c96caa173775880084f642efca1fceb53b1b33e4160ec93c3260ee206959c,v0=83acd34a1256dadc9a29243948ef2231580c57f7ec72268392b913dd3124b0f2
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[ERROR] Webhook signature verification failed: Webhook payload must be provided as a string or a Buffer (https://nodejs.org/api/buffer.html) instance representing the _raw_ request body.Payload was provided as a parsed JavaScript object instead. 
+Signature verification is impossible without access to the original signed material. 
+
+Learn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature
+
+[INFO] POST /api/webhooks/stripe 400 in 2ms
+[INFO] 
+Stripe Signature: t=1735322771,v1=65d265533e9d30a1fe3ed4916dc63e39b2087c61edc938f355c76e6396a7aa6b,v0=4c9672e95e8a60386f7f1c7b92af079a88bef5e88d5f3623e83079ac48eeffc1
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[ERROR] Webhook signature verification failed: Webhook payload must be provided as a string or a Buffer (https://nodejs.org/api/buffer.html) instance representing the _raw_ request body.Payload was provided as a parsed JavaScript object instead. 
+Signature verification is impossible without access to the original signed material. 
+
+Learn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature
+
+[INFO] POST /api/webhooks/stripe 400 in 1ms
+[INFO] 
+Stripe Signature: t=1735322772,v1=553fcd0f03a6195296e7a1120601b4fe31cfa585f0e70dd85fb12edf1f9f6753,v0=1c6e6a6ae5f946062d8d48fdb73fec26264652ca129791a7f6b27101a934544a
+[ERROR] Webhook signature verification failed: Webhook payload must be provided as a string or a Buffer (https://nodejs.org/api/buffer.html) instance representing the _raw_ request body.Payload was provided as a parsed JavaScript object instead. 
+Signature verification is impossible without access to the original signed material. 
+
+Learn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature
+
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] POST /api/webhooks/stripe 400 in 1ms
+[INFO] GET /@vite/client 304 in 33ms
+[INFO] GET /@react-refresh 304 in 254ms
+[INFO] 
+Stripe Signature: t=1735322772,v1=98cfb3693d097ea5b4bae21d6371b4cea304ee8e9152b4a7b351f8baebcadbc0,v0=90d65672b69fb977cd162108a84165a287b91249d9909ff845f6dbb3835823f7
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[ERROR] Webhook signature verification failed: Webhook payload must be provided as a string or a Buffer (https://nodejs.org/api/buffer.html) instance representing the _raw_ request body.Payload was provided as a parsed JavaScript object instead. 
+Signature verification is impossible without access to the original signed material. 
+
+Learn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature
+
+[INFO] POST /api/webhooks/stripe 400 in 1ms
+[INFO] 
+Stripe Signature: t=1735322772,v1=d1f9d699206e2328e9ab1e9b476a63ffcb5bb29b10da8a90e185756493b058a8,v0=5ac24f2d2b3105ec2083bf63cd3bdc509cf4483a865a92ff60499d2a21a6e348
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[ERROR] Webhook signature verification failed: Webhook payload must be provided as a string or a Buffer (https://nodejs.org/api/buffer.html) instance representing the _raw_ request body.Payload was provided as a parsed JavaScript object instead. 
+Signature verification is impossible without access to the original signed material. 
+
+Learn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature
+
+[INFO] POST /api/webhooks/stripe 400 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 678ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 956ms
+[INFO] GET /src/main.tsx 200 in 1900ms
+[INFO] GET /node_modules/.vite/deps/react_jsx-dev-runtime.js 200 in 1080ms
+[INFO] GET /node_modules/.vite/deps/react.js 200 in 1081ms
+[INFO] GET /node_modules/.vite/deps/wouter.js 200 in 1078ms
+[INFO] GET /node_modules/.vite/deps/react-dom_client.js 200 in 1081ms
+[INFO] GET /node_modules/.vite/deps/@tanstack_react-query.js 200 in 1081ms
+[INFO] GET /node_modules/.vite/deps/lucide-react.js 200 in 994ms
+[INFO] GET /src/index.css 304 in 1ms
+[INFO] GET /src/lib/queryClient.ts 200 in 0ms
+[INFO] GET /src/components/ui/toaster.tsx 200 in 1ms
+[INFO] GET /src/pages/HomePage.tsx 200 in 2ms
+[INFO] GET /src/pages/AuthPage.tsx 200 in 1ms
+[INFO] GET /src/pages/LibraryPage.tsx 200 in 1ms
+[INFO] GET /src/pages/PricingPage.tsx 200 in 1ms
+[INFO] GET /src/pages/AdminPage.tsx 200 in 1ms
+[INFO] GET /src/pages/ProfilePage.tsx 200 in 1ms
+[INFO] GET /src/pages/BillingPage.tsx 200 in 1ms
+[INFO] GET /src/components/Sidebar.tsx 200 in 1ms
+[INFO] GET /src/hooks/use-user.ts 200 in 1ms
+[INFO] GET /src/components/ui/button.tsx 200 in 0ms
+[INFO] GET /node_modules/.vite/deps/chunk-ZQ3TVT43.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/chunk-WOOG5QLI.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/chunk-44NJKXUD.js 200 in 7ms
+[INFO] GET /src/hooks/use-toast.ts 200 in 1ms
+[INFO] GET /src/components/ui/toast.tsx 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/chunk-R5L25AAF.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/@hookform_resolvers_zod.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/react-hook-form.js 200 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 200 in 0ms
+[INFO] GET /src/components/ui/form.tsx 200 in 1ms
+[INFO] GET /src/components/ui/input.tsx 200 in 1ms
+[INFO] GET /src/hooks/use-tts.ts 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/react-dropzone.js 200 in 1ms
+[INFO] GET /src/components/UsageProgress.tsx 200 in 1ms
+[INFO] GET /src/components/Logo.tsx 200 in 1ms
+[INFO] GET /src/components/ui/collapsible.tsx 200 in 0ms
+[INFO] GET /node_modules/.vite/deps/date-fns.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/recharts.js 200 in 7ms
+[INFO] GET /src/components/ui/card.tsx 200 in 1ms
+[INFO] GET /src/components/ui/tabs.tsx 200 in 0ms
+[INFO] GET /src/hooks/use-audio.ts 200 in 1ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 200 in 0ms
+[INFO] GET /src/components/AudioPlayer.tsx 200 in 1ms
+[INFO] GET /src/lib/utils.ts 200 in 1ms
+[INFO] GET /src/components/ui/avatar.tsx 200 in 1ms
+[INFO] GET /src/components/ui/scroll-area.tsx 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/@radix-ui_react-slot.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/class-variance-authority.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/@radix-ui_react-toast.js 200 in 1ms
+[INFO] GET / 200 in 56ms
+[INFO] GET /node_modules/.vite/deps/chunk-I6WWWGIQ.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/drizzle-orm.js 200 in 0ms
+[INFO] GET /node_modules/.vite/deps/drizzle-orm_pg-core.js 200 in 1ms
+[INFO] GET /src/components/ui/label.tsx 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/drizzle-zod.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/@radix-ui_react-collapsible.js 200 in 2ms
+[INFO] GET /node_modules/.vite/deps/chunk-BRRE5DHS.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/chunk-U3OSG4IC.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/@radix-ui_react-tabs.js 200 in 1ms
+[INFO] GET /src/components/ui/progress.tsx 200 in 3ms
+[INFO] GET /node_modules/.vite/deps/@radix-ui_react-alert-dialog.js 200 in 0ms
+[INFO] GET /src/components/ui/slider.tsx 200 in 1ms
+[INFO] GET /src/components/ui/select.tsx 200 in 1ms
+[INFO] GET /src/components/ui/popover.tsx 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/clsx.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/tailwind-merge.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/@radix-ui_react-avatar.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/chunk-FKSM7VDL.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/chunk-LPO6FEV6.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/@radix-ui_react-scroll-area.js 200 in 1ms
