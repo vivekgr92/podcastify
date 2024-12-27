@@ -36,16 +36,18 @@ export default function AuthPage() {
 
   async function onSubmit(values: InsertUser) {
     try {
-      // Force immediate console output
-      console.log("[Debug] Form submission started", new Date().toISOString());
-      console.log("[Debug] Form values:", JSON.stringify(values, null, 2));
-      console.log("[Debug] Is login mode:", isLogin);
+      console.log("===========================================");
+      console.log("🔍 [DEBUG] Form Submission Details:");
+      console.log("===========================================");
+      console.log("📝 Form values:", values);
+      console.log("🔑 Login mode:", isLogin);
       const loginData = {
         username: values.username,
         password: values.password,
         email: values.email || undefined
       };
-      console.log("[Debug] Sending login request with data:", JSON.stringify(loginData, null, 2));
+      console.log("📤 Sending request:", loginData);
+      console.log("===========================================");
       const result = await (isLogin ? login(values) : register(values));
       if (!result.ok) {
         toast({
