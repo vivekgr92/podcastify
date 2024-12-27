@@ -126,18 +126,24 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, priceId, us
         setError(null);
         setClientSecret(null);
 
-        const response = await fetch('/api/create-subscription', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            priceId,
-            planName,
-            email: userEmail, // Include user's email in the request
-          }),
-          credentials: 'include',
-        });
+        const [isLoading, setIsLoading] = useState(false);
+
+if (isLoading) return;
+setIsLoading(true);
+
+try {
+  const response = await fetch('/api/create-subscription', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      priceId,
+      planName,
+      email: userEmail,
+    }),
+    credentials: 'include',
+  });
 
         if (!response.ok) {
           const data = await response.json();
