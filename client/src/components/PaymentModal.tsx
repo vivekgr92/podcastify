@@ -120,6 +120,7 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, priceId, us
 
   useEffect(() => {
     if (!isOpen) return;
+    
 
     const initializePayment = async () => {
       try {
