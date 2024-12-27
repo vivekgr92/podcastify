@@ -4,6 +4,7 @@ import { setupVite, serveStatic } from "./vite.js";
 import { createServer } from "http";
 import * as dotenv from "dotenv";
 import { logger } from "./services/logging.js";
+import { setupAuth } from "./auth.js";
 
 // Load environment variables
 dotenv.config();
@@ -13,6 +14,9 @@ const app = express();
 // Basic middleware setup
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// Setup authentication first
+setupAuth(app);
 
 // Logging middleware
 app.use((req, res, next) => {
@@ -31,7 +35,7 @@ if (process.env.NODE_ENV === "development") {
     res.header("Access-Control-Allow-Credentials", "true");
     res.header(
       "Access-Control-Allow-Headers",
-      "Origin, X-Requested-With, Content-Type, Accept"
+      "Origin, X-Requested-With, Content-Type, Accept, Cookie"
     );
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     if (req.method === "OPTIONS") {
@@ -64,15 +68,15 @@ async function startServer() {
   try {
     logger.info("Starting server initialization...");
 
+    const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4000;
+    const server = createServer(app);
+
     // Register routes first
     logger.info("Registering routes...");
     await registerRoutes(app);
 
     // Add error handler after routes
     app.use(errorHandler);
-
-    const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4000;
-    const server = createServer(app);
 
     // Setup Vite or static serving
     if (process.env.NODE_ENV === "development") {

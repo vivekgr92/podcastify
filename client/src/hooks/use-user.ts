@@ -33,6 +33,15 @@ async function handleRequest(
       return { ok: false, message };
     }
 
+    // For login, we expect a user object in the response
+    if (url === '/api/login') {
+      const data = await response.json();
+      return { 
+        ok: true,
+        user: data.user 
+      };
+    }
+
     return { ok: true };
   } catch (e: any) {
     return { ok: false, message: e.toString() };
@@ -105,8 +114,10 @@ export function useUser() {
     },
     onSuccess: (data) => {
       if (data.ok && data.user) {
+        // Update the user data in the cache immediately
         queryClient.setQueryData(['user'], data.user);
       }
+      // Always invalidate the query to ensure fresh data
       queryClient.invalidateQueries({ queryKey: ['user'] });
     },
   });
@@ -114,6 +125,8 @@ export function useUser() {
   const logoutMutation = useMutation<RequestResult, Error>({
     mutationFn: () => handleRequest("/api/logout", "POST"),
     onSuccess: () => {
+      // Clear the user data from cache immediately
+      queryClient.setQueryData(['user'], null);
       queryClient.invalidateQueries({ queryKey: ["user"] });
     },
   });
