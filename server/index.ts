@@ -11,6 +11,7 @@ dotenv.config();
 const app = express();
 
 // Basic middleware setup
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Logging middleware
@@ -65,29 +66,17 @@ async function startServer() {
       serveStatic(app);
     }
 
-    // Start server with explicit host binding
+    // Start server
     server.listen(PORT, "0.0.0.0", () => {
-      logger.info(`Server started successfully on port ${PORT}`);
-
-      // Construct webhook URL without port number for production URLs
+      // Construct webhook URL without port number
       const webhookUrl =
         process.env.REPL_SLUG && process.env.REPL_OWNER
           ? `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co/api/webhooks/stripe`
           : `https://${process.env.REPL_ID}.id.repl.co/api/webhooks/stripe`;
 
-      logger.info(`Server is listening on http://0.0.0.0:${PORT}`);
+      logger.info(`Server started successfully on port ${PORT}`);
       logger.info(`Webhook endpoint available at: ${webhookUrl}`);
     });
-
-    // Add error handler for server
-    server.on('error', (error: Error) => {
-      logger.error(`Server error: ${error.message}`);
-      if (error.stack) {
-        logger.error(`Stack trace: ${error.stack}`);
-      }
-      process.exit(1);
-    });
-
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     logger.error(`Fatal error during server initialization: ${errorMessage}`);
