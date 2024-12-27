@@ -54,13 +54,104 @@ try {
 export function registerRoutes(app: Express) {
   setupAuth(app);
 
-
   // Configure express to use raw body for Stripe webhooks
-  app.use((req, res, next) => {
-    if (req.originalUrl === "/api/webhooks/stripe") {
-      express.raw({ type: "application/json" })(req, res, next);
-    } else {
-      express.json()(req, res, next);
+  app.use("/api/webhooks/stripe", express.raw({ type: "*/*" }));
+  app.use(express.json()); // For all other routes
+
+  // Create subscription endpoint with enhanced error handling
+  app.post("/api/create-subscription", async (req, res) => {
+    try {
+      if (!req.user?.id) {
+        return res.status(401).json({ error: "Not authenticated" });
+      }
+
+      const { priceId } = req.body;
+      if (!priceId) {
+        return res.status(400).json({ error: "Price ID is required" });
+      }
+
+      logger.info(
+        `Creating subscription for user ${req.user.id} with price ${priceId}`,
+      );
+
+      // Get or create customer
+      let customer;
+      const existingCustomers = await stripe.customers.list({
+        email: req.user.email,
+        limit: 1,
+      });
+
+      if (existingCustomers.data.length > 0) {
+        customer = existingCustomers.data[0];
+        // Update customer metadata if needed
+        await stripe.customers.update(customer.id, {
+          metadata: {
+            userId: req.user.id.toString(),
+          },
+          email: req.user.email, // Ensure email is up to date
+        });
+        logger.info(`Using existing customer: ${customer.id}`);
+      } else {
+        customer = await stripe.customers.create({
+          email: req.user.email,
+          metadata: {
+            userId: req.user.id.toString(),
+          },
+        });
+        logger.info(`Created new customer: ${customer.id}`);
+      }
+
+      // Create the subscription
+      const subscription = await stripe.subscriptions.create({
+        customer: customer.id,
+        items: [{ price: priceId }],
+        payment_behavior: "default_incomplete",
+        payment_settings: {
+          save_default_payment_method: "on_subscription",
+          payment_method_options: {
+            card: {
+              request_three_d_secure: "automatic",
+            },
+          },
+        },
+        expand: ["latest_invoice.payment_intent"],
+        metadata: {
+          userId: req.user.id.toString(),
+          customerEmail: req.user.email, // Add email to metadata
+        },
+      });
+
+      logger.info(`Created subscription: ${subscription.id}`);
+
+      const invoice = subscription.latest_invoice as Stripe.Invoice;
+      const paymentIntent = invoice.payment_intent as Stripe.PaymentIntent;
+
+      if (!paymentIntent?.client_secret) {
+        throw new Error("Failed to get client secret from payment intent");
+      }
+
+      // Update user's subscription status to 'pending'
+      await db
+        .update(users)
+        .set({
+          subscriptionStatus: "pending",
+          subscriptionId: subscription.id,
+        })
+        .where(eq(users.id, req.user.id));
+
+      res.json({
+        subscriptionId: subscription.id,
+        clientSecret: paymentIntent.client_secret,
+      });
+    } catch (error) {
+      logger.error(
+        `Subscription creation error: ${error instanceof Error ? error.message : String(error)}`,
+      );
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to create subscription";
+      res.status(500).json({ error: errorMessage });
     }
   });
 
@@ -85,7 +176,6 @@ export function registerRoutes(app: Express) {
       // logger.info(`\nRequest Body: ${req.body.toString()}`);
       logger.info(`\nStripe Signature: ${sig}`);
       logger.info(`\nWebhook signature: ${process.env.STRIPE_WEBHOOK_SECRET}`);
-
 
       try {
         event = stripe.webhooks.constructEvent(
@@ -223,105 +313,6 @@ export function registerRoutes(app: Express) {
       res.status(400).json({ error: errorMessage });
     }
   });
-
-  // Create subscription endpoint with enhanced error handling
-  app.post("/api/create-subscription", async (req, res) => {
-    try {
-      if (!req.user?.id) {
-        return res.status(401).json({ error: "Not authenticated" });
-      }
-
-      const { priceId } = req.body;
-      if (!priceId) {
-        return res.status(400).json({ error: "Price ID is required" });
-      }
-
-      logger.info(
-        `Creating subscription for user ${req.user.id} with price ${priceId}`,
-      );
-
-      // Get or create customer
-      let customer;
-      const existingCustomers = await stripe.customers.list({
-        email: req.user.email,
-        limit: 1,
-      });
-
-      if (existingCustomers.data.length > 0) {
-        customer = existingCustomers.data[0];
-        // Update customer metadata if needed
-        await stripe.customers.update(customer.id, {
-          metadata: {
-            userId: req.user.id.toString(),
-          },
-          email: req.user.email, // Ensure email is up to date
-        });
-        logger.info(`Using existing customer: ${customer.id}`);
-      } else {
-        customer = await stripe.customers.create({
-          email: req.user.email,
-          metadata: {
-            userId: req.user.id.toString(),
-          },
-        });
-        logger.info(`Created new customer: ${customer.id}`);
-      }
-
-      // Create the subscription
-      const subscription = await stripe.subscriptions.create({
-        customer: customer.id,
-        items: [{ price: priceId }],
-        payment_behavior: "default_incomplete",
-        payment_settings: {
-          save_default_payment_method: "on_subscription",
-          payment_method_options: {
-            card: {
-              request_three_d_secure: "automatic",
-            },
-          },
-        },
-        expand: ["latest_invoice.payment_intent"],
-        metadata: {
-          userId: req.user.id.toString(),
-          customerEmail: req.user.email, // Add email to metadata
-        },
-      });
-
-      logger.info(`Created subscription: ${subscription.id}`);
-
-      const invoice = subscription.latest_invoice as Stripe.Invoice;
-      const paymentIntent = invoice.payment_intent as Stripe.PaymentIntent;
-
-      if (!paymentIntent?.client_secret) {
-        throw new Error("Failed to get client secret from payment intent");
-      }
-
-      // Update user's subscription status to 'pending'
-      await db
-        .update(users)
-        .set({
-          subscriptionStatus: "pending",
-          subscriptionId: subscription.id,
-        })
-        .where(eq(users.id, req.user.id));
-
-      res.json({
-        subscriptionId: subscription.id,
-        clientSecret: paymentIntent.client_secret,
-      });
-    } catch (error) {
-      logger.error(
-        `Subscription creation error: ${error instanceof Error ? error.message : String(error)}`,
-      );
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "Failed to create subscription";
-      res.status(500).json({ error: errorMessage });
-    }
-  });
-
-
 
   // Helper function to convert raw tokens to Podify Tokens
   function convertToPodifyTokens(totalCost: number): number {
