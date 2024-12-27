@@ -369,3 +369,7 @@ Learn more about webhook signing and explore webhook integration examples for va
 [INFO] GET /src/components/ui/popover.tsx 304 in 0ms
 [INFO] GET /src/components/ui/select.tsx 304 in 0ms
 [INFO] GET /api/user 401 in 1ms
+[INFO] POST /api/login 400 in 1ms
+[INFO] GET /api/user 401 in 0ms
+[INFO] POST /api/login 400 in 1ms
+[INFO] GET /api/user 401 in 1ms
