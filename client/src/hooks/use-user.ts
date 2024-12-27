@@ -34,11 +34,11 @@ async function handleRequest(
     }
 
     // For login, we expect a user object in the response
-    if (url === '/api/login') {
+    if (url === "/api/login") {
       const data = await response.json();
-      return { 
+      return {
         ok: true,
-        user: data.user 
+        user: data.user,
       };
     }
 
@@ -85,40 +85,42 @@ export function useUser() {
   const loginMutation = useMutation<RequestResult, Error, InsertUser>({
     mutationFn: async (userData) => {
       try {
-        const response = await fetch('/api/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        console.log("======================", userData);
+        const response = await fetch("/api/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(userData),
-          credentials: 'include',
+          credentials: "include",
         });
 
         const data = await response.json();
 
         if (!response.ok) {
-          return { 
-            ok: false, 
-            message: data.message || data.error || 'Login failed' 
+          return {
+            ok: false,
+            message: data.message || data.error || "Login failed",
           };
         }
 
-        return { 
+        return {
           ok: true,
-          user: data.user 
+          user: data.user,
         };
       } catch (error) {
-        return { 
-          ok: false, 
-          message: error instanceof Error ? error.message : 'Network error occurred' 
+        return {
+          ok: false,
+          message:
+            error instanceof Error ? error.message : "Network error occurred",
         };
       }
     },
     onSuccess: (data) => {
       if (data.ok && data.user) {
         // Update the user data in the cache immediately
-        queryClient.setQueryData(['user'], data.user);
+        queryClient.setQueryData(["user"], data.user);
       }
       // Always invalidate the query to ensure fresh data
-      queryClient.invalidateQueries({ queryKey: ['user'] });
+      queryClient.invalidateQueries({ queryKey: ["user"] });
     },
   });
 
@@ -126,7 +128,7 @@ export function useUser() {
     mutationFn: () => handleRequest("/api/logout", "POST"),
     onSuccess: () => {
       // Clear the user data from cache immediately
-      queryClient.setQueryData(['user'], null);
+      queryClient.setQueryData(["user"], null);
       queryClient.invalidateQueries({ queryKey: ["user"] });
     },
   });
