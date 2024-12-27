@@ -5153,3 +5153,7 @@ Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
 [INFO] GET /node_modules/.vite/deps/chunk-ZTGYVKYI.js 200 in 1ms
 [INFO] GET /api/user 401 in 2ms
 [INFO] GET /api/user 401 in 1ms
+[INFO] GET /src/pages/AuthPage.tsx 200 in 58ms
+[INFO] GET /src/index.css 200 in 140ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 14ms
+[INFO] GET /src/index.css 304 in 1ms
