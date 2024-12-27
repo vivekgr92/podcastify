@@ -1,6 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { User, InsertUser } from "@db/schema";
 
+type LoginData = {
+  username: string;
+  password: string;
+};
+
 type RequestResult = {
   ok: true;
 } | {
@@ -66,7 +71,7 @@ export function useUser() {
     retry: false
   });
 
-  const loginMutation = useMutation<RequestResult, Error, InsertUser>({
+  const loginMutation = useMutation<RequestResult, Error, LoginData>({
     mutationFn: (userData) => handleRequest('/api/login', 'POST', userData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user'] });
