@@ -84,35 +84,25 @@ export function useUser() {
 
   const loginMutation = useMutation<RequestResult, Error, InsertUser>({
     mutationFn: async (userData) => {
-      try {
-        console.log("======================", userData);
-        const response = await fetch("/api/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(userData),
-          credentials: "include",
-        });
+      const loginData = {
+        username: userData.username,
+        password: userData.password
+      };
+      
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(loginData),
+        credentials: "include",
+      });
 
-        const data = await response.json();
+      const data = await response.json();
 
-        if (!response.ok) {
-          return {
-            ok: false,
-            message: data.message || data.error || "Login failed",
-          };
-        }
-
-        return {
-          ok: true,
-          user: data.user,
-        };
-      } catch (error) {
-        return {
-          ok: false,
-          message:
-            error instanceof Error ? error.message : "Network error occurred",
-        };
+      if (!response.ok) {
+        throw new Error(data.message || "Login failed");
       }
+
+      return data;
     },
     onSuccess: (data) => {
       if (data.ok && data.user) {

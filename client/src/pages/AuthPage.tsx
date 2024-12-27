@@ -36,21 +36,30 @@ export default function AuthPage() {
 
   async function onSubmit(values: InsertUser) {
     try {
-      console.log("===========================================");
-      console.log("🔍 [DEBUG] Form Submission Details:");
-      console.log("===========================================");
-      console.log("📝 Form values:", values);
-      console.log("🔑 Login mode:", isLogin);
-      const loginData = {
-        username: values.username,
-        password: values.password,
-        email: values.email || undefined
-      };
-      console.log("📤 Sending request:", loginData);
-      console.log("===========================================");
       const result = await (isLogin ? login(values) : register(values));
-      if (!result.ok) {
+      
+      if (result.ok) {
         toast({
+          title: "Success",
+          description: isLogin ? "Logged in successfully" : "Account created successfully",
+        });
+        setLocation("/library");
+      } else {
+        toast({
+          title: "Error",
+          description: result.message || "Authentication failed",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Auth error:", error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "An unexpected error occurred",
+        variant: "destructive",
+      });
+    }
+  }
           title: "Error",
           description: result.message,
           variant: "destructive",
