@@ -36,37 +36,27 @@ export default function AuthPage() {
 
   async function onSubmit(values: InsertUser) {
     try {
-      console.log("[Debug] Form submission started");
-      console.log("[Debug] Form values:", values);
-      console.log("[Debug] Is login mode:", isLogin);
-      const loginData = {
-        username: values.username,
-        password: values.password,
-        email: values.email || undefined
-      };
-      console.log("[Debug] Sending login request with data:", loginData);
       const result = await (isLogin ? login(values) : register(values));
-      if (!result.ok) {
-        toast({
-          title: "Error",
-          description: result.message,
-          variant: "destructive",
-        });
-      } else {
+      
+      if (result.ok) {
         toast({
           title: "Success",
-          description: isLogin
-            ? "Logged in successfully"
-            : "Account created successfully",
+          description: isLogin ? "Logged in successfully" : "Account created successfully"
         });
         setLocation("/library");
+      } else {
+        toast({
+          title: "Error",
+          description: result.message || "Authentication failed",
+          variant: "destructive"
+        });
       }
     } catch (error) {
       console.error("Auth error:", error);
       toast({
         title: "Error",
-        description: "An unexpected error occurred. Please try again.",
-        variant: "destructive",
+        description: error instanceof Error ? error.message : "An unexpected error occurred",
+        variant: "destructive"
       });
     }
   }
@@ -86,11 +76,7 @@ export default function AuthPage() {
 
         <Form {...form}>
           <form 
-            onSubmit={(e) => {
-              e.preventDefault();
-              console.log("Form submission started");
-              return form.handleSubmit(onSubmit)(e);
-            }} 
+            onSubmit={form.handleSubmit(onSubmit)} 
             className="space-y-4"
           >
             <FormField
