@@ -206,38 +206,28 @@ export function setupAuth(app: Express) {
   });
 
   app.post("/api/login", (req, res, next) => {
-    console.debug("Incoming login request:", { body: req.body }); // Debug statement
-
     passport.authenticate(
       "local",
       (err: any, user: Express.User | false, info: IVerifyOptions) => {
         if (err) {
-          console.error("Authentication error:", err); // Debug statement
+          console.error("Authentication error:", err);
           return next(err);
         }
         if (!user) {
-          console.warn("Authentication failed:", info?.message); // Debug statement
+          console.warn("Authentication failed:", info?.message);
           return res.status(401).json({ 
             ok: false,
             message: info?.message || "Invalid username or password" 
           });
         }
 
-        console.debug("Authentication successful for user:", user.username); // Debug statement
+        console.debug("Authentication successful for user:", user.username);
 
         req.login(user, (err) => {
           if (err) {
-            console.error("Error during login session creation:", err); // Debug statement
+            console.error("Error during login session creation:", err);
             return next(err);
           }
-
-          // Log the successful login attempt
-          console.info("Login successful for user:", {
-            id: user.id,
-            username: user.username,
-            email: user.email,
-            isAdmin: user.isAdmin,
-          }); // Debug statement
 
           // Return a consistent response format
           return res.json({
