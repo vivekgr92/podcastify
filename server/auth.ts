@@ -42,8 +42,8 @@ export function setupAuth(app: Express) {
   app.use(
     session({
       secret: process.env.REPL_ID || "podcast-app-secret",
-      resave: true,
-      saveUninitialized: true,
+      resave: false,
+      saveUninitialized: false,
       cookie: {
         secure: false,
         maxAge: 24 * 60 * 60 * 1000, // 24 hours
@@ -54,7 +54,6 @@ export function setupAuth(app: Express) {
       store: new MemoryStore({
         checkPeriod: 86400000, // prune expired entries every 24h
       }),
-      proxy: true
     }),
   );
 
@@ -64,6 +63,7 @@ export function setupAuth(app: Express) {
   passport.use(
     new LocalStrategy(async (username, password, done) => {
       try {
+        console.log("Attempting login for username:", username);
         const [user] = await db
           .select()
           .from(users)
@@ -71,16 +71,20 @@ export function setupAuth(app: Express) {
           .limit(1);
 
         if (!user) {
-          return done(null, false, { message: "Incorrect username." });
+          console.log("User not found:", username);
+          return done(null, false, { message: "Incorrect username or password" });
         }
 
         const isValid = await crypto.compare(password, user.password);
         if (!isValid) {
-          return done(null, false, { message: "Incorrect password." });
+          console.log("Invalid password for user:", username);
+          return done(null, false, { message: "Incorrect username or password" });
         }
 
+        console.log("Login successful for user:", username);
         return done(null, user);
       } catch (err) {
+        console.error("Login error:", err);
         return done(err);
       }
     }),
@@ -206,53 +210,49 @@ export function setupAuth(app: Express) {
   });
 
   app.post("/api/login", (req, res, next) => {
-    console.debug("Incoming login request:", { body: req.body }); // Debug statement
+    console.log("Received login request:", { username: req.body.username });
 
-    passport.authenticate(
-      "local",
-      (err: any, user: Express.User | false, info: IVerifyOptions) => {
+    passport.authenticate("local", (err: any, user: Express.User | false, info: IVerifyOptions) => {
+      if (err) {
+        console.error("Authentication error:", err);
+        return next(err);
+      }
+
+      if (!user) {
+        console.warn("Authentication failed:", info?.message);
+        return res.status(401).json({ 
+          ok: false,
+          message: info?.message || "Invalid username or password" 
+        });
+      }
+
+      req.login(user, (err) => {
         if (err) {
-          console.error("Authentication error:", err); // Debug statement
+          console.error("Login session creation error:", err);
           return next(err);
         }
-        if (!user) {
-          console.warn("Authentication failed:", info?.message); // Debug statement
-          return res.status(401).json({ 
-            ok: false,
-            message: info?.message || "Invalid username or password" 
-          });
-        }
 
-        console.debug("Authentication successful for user:", user.username); // Debug statement
-
-        req.login(user, (err) => {
-          if (err) {
-            console.error("Error during login session creation:", err); // Debug statement
-            return next(err);
-          }
-
-          // Log the successful login attempt
-          console.info("Login successful for user:", {
+        console.log("Login successful for user:", user.username);
+        return res.json({
+          ok: true,
+          user: {
             id: user.id,
             username: user.username,
             email: user.email,
             isAdmin: user.isAdmin,
-          }); // Debug statement
-
-          // Return a consistent response format
-          return res.json({
-            ok: true,
-            user: {
-              id: user.id,
-              username: user.username,
-              email: user.email,
-              isAdmin: user.isAdmin,
-              displayName: user.displayName,
-            }
-          });
+            displayName: user.displayName,
+          }
         });
-      },
-    )(req, res, next);
+      });
+    })(req, res, next);
+  });
+
+  app.get("/api/user", (req, res) => {
+    if (req.isAuthenticated()) {
+      const { password, ...userWithoutPassword } = req.user;
+      return res.json(userWithoutPassword);
+    }
+    res.status(401).send("Not authenticated");
   });
 
   app.post("/api/logout", (req, res) => {
@@ -260,18 +260,5 @@ export function setupAuth(app: Express) {
       if (err) return res.status(500).send("Logout failed");
       res.json({ message: "Logged out successfully" });
     });
-  });
-
-  app.get("/api/user", (req, res) => {
-    if (req.isAuthenticated()) {
-      const { password, ...userWithoutPassword } = req.user;
-      const userData = {
-        ...userWithoutPassword,
-        isAdmin: !!req.user.isAdmin, // Ensure it's a boolean
-      };
-      console.log("User data:", userData);
-      return res.json(userData);
-    }
-    res.status(401).send("Not authenticated");
   });
 }
