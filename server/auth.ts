@@ -42,11 +42,12 @@ export function setupAuth(app: Express) {
   app.use(
     session({
       secret: process.env.REPL_ID || "podcast-app-secret",
-      resave: false,
-      saveUninitialized: false,
+      resave: true,
+      saveUninitialized: true,
       cookie: {
-        secure: app.get("env") === "production",
+        secure: false,
         maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        sameSite: 'lax'
       },
       store: new MemoryStore({
         checkPeriod: 86400000, // prune expired entries every 24h
