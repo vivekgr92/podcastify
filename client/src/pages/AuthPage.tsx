@@ -1,4 +1,3 @@
-
 import { useUser } from "../hooks/use-user";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,7 +35,11 @@ export default function AuthPage() {
 
   async function onSubmit(values: InsertUser) {
     try {
-      const result = await (isLogin ? login(values) : register(values));
+      console.log("AuthPage: Starting auth submission", { isLogin, values });
+      const loginData = isLogin ? { username: values.username, password: values.password } : values;
+      console.log("AuthPage: Prepared login data", { loginData });
+      const result = await (isLogin ? login(loginData) : register(values));
+      console.log("AuthPage: Received auth result", { result });
       if (!result.ok) {
         toast({
           title: "Error",

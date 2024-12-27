@@ -206,7 +206,11 @@ export function setupAuth(app: Express) {
   });
 
   app.post("/api/login", (req, res, next) => {
-    console.debug("Incoming login request:", { body: req.body }); // Debug statement
+    console.debug("Server: Received login request", { 
+      body: req.body,
+      headers: req.headers,
+      session: req.session 
+    });
 
     passport.authenticate(
       "local",
