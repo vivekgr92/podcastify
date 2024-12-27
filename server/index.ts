@@ -11,23 +11,6 @@ dotenv.config();
 
 const app = express();
 
-// Basic middleware setup
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
-// Setup authentication first
-setupAuth(app);
-
-// Logging middleware
-app.use((req, res, next) => {
-  const start = Date.now();
-  res.on("finish", () => {
-    const duration = Date.now() - start;
-    logger.info(`${req.method} ${req.path} ${res.statusCode} in ${duration}ms`);
-  });
-  next();
-});
-
 // CORS middleware for development
 if (process.env.NODE_ENV === "development") {
   app.use((req, res, next) => {
@@ -45,13 +28,28 @@ if (process.env.NODE_ENV === "development") {
   });
 }
 
+// Setup authentication first, before any route handling
+setupAuth(app);
+
+// Body parsing middleware after auth setup
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+// Logging middleware
+app.use((req, res, next) => {
+  const start = Date.now();
+  res.on("finish", () => {
+    const duration = Date.now() - start;
+    logger.info(`${req.method} ${req.path} ${res.statusCode} in ${duration}ms`);
+  });
+  next();
+});
+
+// Register routes before error handler
+registerRoutes(app);
+
 // Global error handler
-const errorHandler = (
-  err: any,
-  _req: Request,
-  res: Response,
-  _next: NextFunction,
-) => {
+app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
   const errorMessage = err instanceof Error ? err.message : String(err);
   logger.error(`Error caught in middleware: ${errorMessage}`);
   if (err.stack) {
@@ -62,58 +60,21 @@ const errorHandler = (
     message: err.message || "Internal Server Error",
     type: err.type || "server_error",
   });
-};
+});
 
-async function startServer() {
-  try {
-    logger.info("Starting server initialization...");
-
-    const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4000;
-    const server = createServer(app);
-
-    // Register routes first
-    logger.info("Registering routes...");
-    await registerRoutes(app);
-
-    // Add error handler after routes
-    app.use(errorHandler);
-
-    // Setup Vite or static serving
-    if (process.env.NODE_ENV === "development") {
-      logger.info("Setting up Vite for development...");
-      await setupVite(app, server);
-    } else {
-      logger.info("Setting up static file serving for production...");
-      serveStatic(app);
-    }
-
-    // Start server with explicit host binding
-    await new Promise<void>((resolve, reject) => {
-      server.listen(PORT, "0.0.0.0", () => {
-        logger.info(`Server started successfully on port ${PORT}`);
-        resolve();
-      });
-
-      server.on('error', (error: Error) => {
-        logger.error(`Failed to start server: ${error.message}`);
-        reject(error);
-      });
-    });
-
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    logger.error(`Fatal error during server initialization: ${errorMessage}`);
-    if (error instanceof Error && error.stack) {
-      logger.error(`Stack trace: ${error.stack}`);
-    }
-    process.exit(1);
-  }
+// Setup Vite or static serving
+if (process.env.NODE_ENV === "development") {
+  setupVite(app, createServer(app));
+} else {
+  serveStatic(app);
 }
 
-// Start the server with improved error handling
-startServer().catch((error) => {
-  logger.error(
-    `Uncaught error during server startup: ${error instanceof Error ? error.message : String(error)}`,
-  );
+// Start server with explicit host binding
+const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4000;
+
+app.listen(PORT, "0.0.0.0", () => {
+  logger.info(`Server started successfully on port ${PORT}`);
+}).on('error', (error) => {
+  logger.error(`Failed to start server: ${error.message}`);
   process.exit(1);
 });
