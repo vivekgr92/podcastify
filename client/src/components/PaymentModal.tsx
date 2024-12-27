@@ -123,39 +123,34 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, priceId, us
 
     const initializePayment = async () => {
       try {
-        setError(null);
-        setClientSecret(null);
+        try {
+          setError(null);
+          setClientSecret(null);
+          
+          const response = await fetch('/api/create-subscription', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              priceId,
+              planName,
+              email: userEmail,
+            }),
+            credentials: 'include',
+          });
 
-        const [isLoading, setIsLoading] = useState(false);
+          if (!response.ok) {
+            const data = await response.json();
+            throw new Error(data.error || 'Failed to initialize subscription');
+          }
 
-if (isLoading) return;
-setIsLoading(true);
-
-try {
-  const response = await fetch('/api/create-subscription', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      priceId,
-      planName,
-      email: userEmail,
-    }),
-    credentials: 'include',
-  });
-
-        if (!response.ok) {
           const data = await response.json();
-          throw new Error(data.error || 'Failed to initialize subscription');
+          setClientSecret(data.clientSecret);
+        } catch (err) {
+          console.error('Subscription initialization error:', err);
+          setError(err instanceof Error ? err.message : 'Failed to initialize subscription');
         }
-
-        const data = await response.json();
-        setClientSecret(data.clientSecret);
-      } catch (err) {
-        console.error('Subscription initialization error:', err);
-        setError(err instanceof Error ? err.message : 'Failed to initialize subscription');
-      }
     };
 
     initializePayment();
