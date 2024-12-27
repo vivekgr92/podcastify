@@ -1,18 +1,21 @@
 import passport from "passport";
-import { Strategy as LocalStrategy, IVerifyOptions } from "passport-local";
+import { Strategy as LocalStrategy } from "passport-local";
 import { type Express } from "express";
 import session from "express-session";
 import createMemoryStore from "memorystore";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
-import { users, insertUserSchema, type User as SelectUser } from "@db/schema";
+import { users } from "../db/schema";
 import { db } from "../db";
 import { eq } from "drizzle-orm";
+import type { User } from "../db/schema";
 
-// Extend express User type
+// Define the user type without password for authentication
+type AuthUser = Omit<User, "password">;
+
 declare global {
   namespace Express {
-    interface User extends SelectUser {}
+    interface User extends AuthUser {}
   }
 }
 
@@ -42,10 +45,10 @@ export function setupAuth(app: Express) {
   app.use(
     session({
       secret: process.env.REPL_ID || "podcast-app-secret",
-      resave: true,
-      saveUninitialized: true,
+      resave: false,
+      saveUninitialized: false,
       cookie: {
-        secure: false,
+        secure: process.env.NODE_ENV === "production",
         maxAge: 24 * 60 * 60 * 1000, // 24 hours
         sameSite: 'lax',
         httpOnly: true,
@@ -54,7 +57,6 @@ export function setupAuth(app: Express) {
       store: new MemoryStore({
         checkPeriod: 86400000, // prune expired entries every 24h
       }),
-      proxy: true
     }),
   );
 
@@ -71,22 +73,23 @@ export function setupAuth(app: Express) {
           .limit(1);
 
         if (!user) {
-          return done(null, false, { message: "Incorrect username." });
+          return done(null, false, { message: "Invalid username or password" });
         }
 
         const isValid = await crypto.compare(password, user.password);
         if (!isValid) {
-          return done(null, false, { message: "Incorrect password." });
+          return done(null, false, { message: "Invalid username or password" });
         }
 
-        return done(null, user);
+        const { password: _, ...userWithoutPassword } = user;
+        return done(null, userWithoutPassword);
       } catch (err) {
         return done(err);
       }
     }),
   );
 
-  passport.serializeUser((user: Express.User, done) => {
+  passport.serializeUser((user, done) => {
     done(null, user.id);
   });
 
@@ -98,170 +101,71 @@ export function setupAuth(app: Express) {
         .where(eq(users.id, id))
         .limit(1);
 
-      done(null, user);
+      if (!user) {
+        return done(null, false);
+      }
+
+      const { password: _, ...userWithoutPassword } = user;
+      done(null, userWithoutPassword);
     } catch (err) {
       done(err);
     }
   });
 
-  app.post("/api/register", async (req, res, next) => {
-    try {
-      console.debug("Raw body received:", req.body);
-      console.debug("Incoming registration request:", { body: req.body }); // Log the incoming request body
-
-      const result = insertUserSchema.safeParse(req.body);
-      if (!result.success) {
-        console.warn(
-          "Registration input validation failed:",
-          result.error.issues.map((i) => i.message).join(", "),
-        ); // Log validation issues
-        return res
-          .status(400)
-          .send(
-            "Invalid input: " +
-              result.error.issues.map((i) => i.message).join(", "),
-          );
+  app.post("/api/login", (req, res, next) => {
+    passport.authenticate("local", (err: any, user: AuthUser | false, info?: { message: string }) => {
+      if (err) {
+        return res.status(500).json({
+          ok: false,
+          message: "Internal server error during authentication"
+        });
       }
 
-      const { username, email, password } = result.data;
-      const displayName = username; // Set displayName equal to username
-      console.debug("Validated input data:", { username, email }); // Log validated input data
-
-      // Check if username or email already exists
-      console.debug("Checking for existing username:", username); // Log username check
-      const [existingUser] = await db
-        .select()
-        .from(users)
-        .where(eq(users.username, username))
-        .limit(1);
-
-      if (existingUser) {
-        console.warn("Username already exists:", username); // Log existing username
-        return res.status(400).send("Username already exists");
+      if (!user) {
+        return res.status(401).json({
+          ok: false,
+          message: info?.message || "Invalid username or password"
+        });
       }
 
-      console.debug("Checking for existing email:", email); // Log email check
-      const [existingEmail] = await db
-        .select()
-        .from(users)
-        .where(eq(users.email, email))
-        .limit(1);
-
-      if (existingEmail) {
-        console.warn("Email already exists:", email); // Log existing email
-        return res.status(400).send("Email already exists");
-      }
-
-      // Hash password and create user
-      console.debug("Hashing password for user:", username); // Log password hashing step
-      const hashedPassword = await crypto.hash(password);
-
-      // Set admin flag for @admin.com emails
-      const isAdmin = email.toLowerCase().endsWith("@admin.com");
-      console.info(
-        "Creating user with admin status:",
-        isAdmin,
-        "for email:",
-        email,
-      ); // Log admin determination
-
-      // Create new user
-      const [newUser] = await db
-        .insert(users)
-        .values({
-          username,
-          email,
-          displayName,
-          password: hashedPassword,
-          isAdmin: !!isAdmin,
-        })
-        .returning();
-
-      console.info("Created new user:", {
-        id: newUser.id,
-        username: newUser.username,
-        email: newUser.email,
-        isAdmin: newUser.isAdmin,
-      }); // Log user creation details
-
-      // Log in the new user
-      console.debug("Logging in new user:", newUser.username); // Log login attempt
-      req.login(newUser, (err) => {
-        if (err) {
-          console.error("Error during login for new user:", err); // Log login error
-          return next(err);
+      req.login(user, (loginErr) => {
+        if (loginErr) {
+          return res.status(500).json({
+            ok: false,
+            message: "Failed to create login session"
+          });
         }
-        console.info("Successfully logged in new user:", newUser.username); // Log successful login
+
         return res.json({
-          id: newUser.id,
-          username: newUser.username,
-          email: newUser.email,
-          isAdmin: newUser.isAdmin,
+          ok: true,
+          user
         });
       });
-    } catch (error) {
-      console.error("Error during user registration:", error); // Log any unexpected errors
-      next(error);
-    }
-  });
-
-  app.post("/api/login", (req, res, next) => {
-    passport.authenticate(
-      "local",
-      (err: any, user: Express.User | false, info: IVerifyOptions) => {
-        if (err) {
-          console.error("Authentication error:", err);
-          return next(err);
-        }
-        if (!user) {
-          console.warn("Authentication failed:", info?.message);
-          return res.status(401).json({ 
-            ok: false,
-            message: info?.message || "Invalid username or password" 
-          });
-        }
-
-        console.debug("Authentication successful for user:", user.username);
-
-        req.login(user, (err) => {
-          if (err) {
-            console.error("Error during login session creation:", err);
-            return next(err);
-          }
-
-          // Return a consistent response format
-          return res.json({
-            ok: true,
-            user: {
-              id: user.id,
-              username: user.username,
-              email: user.email,
-              isAdmin: user.isAdmin,
-              displayName: user.displayName,
-            }
-          });
-        });
-      },
-    )(req, res, next);
+    })(req, res, next);
   });
 
   app.post("/api/logout", (req, res) => {
     req.logout((err) => {
-      if (err) return res.status(500).send("Logout failed");
-      res.json({ message: "Logged out successfully" });
+      if (err) {
+        return res.status(500).json({
+          ok: false,
+          message: "Logout failed"
+        });
+      }
+      res.json({
+        ok: true,
+        message: "Logged out successfully"
+      });
     });
   });
 
   app.get("/api/user", (req, res) => {
     if (req.isAuthenticated()) {
-      const { password, ...userWithoutPassword } = req.user;
-      const userData = {
-        ...userWithoutPassword,
-        isAdmin: !!req.user.isAdmin, // Ensure it's a boolean
-      };
-      console.log("User data:", userData);
-      return res.json(userData);
+      return res.json(req.user);
     }
-    res.status(401).send("Not authenticated");
+    res.status(401).json({
+      ok: false,
+      message: "Not authenticated"
+    });
   });
 }

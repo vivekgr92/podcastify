@@ -1,7 +1,5 @@
 import { useUser } from "../hooks/use-user";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { insertUserSchema, type InsertUser } from "@db/schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -16,80 +14,49 @@ import { useState } from "react";
 import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-type LoginCredentials = {
-  username: string;
-  password: string;
-};
+const loginSchema = z.object({
+  username: z.string().min(1, "Username is required"),
+  password: z.string().min(1, "Password is required"),
+});
+
+type LoginForm = z.infer<typeof loginSchema>;
 
 export default function AuthPage() {
-  const { login, register } = useUser();
+  const { login } = useUser();
   const [, setLocation] = useLocation();
-  const [isLogin, setIsLogin] = useState(window.location.pathname !== "/auth/signup");
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
-  const form = useForm<InsertUser>({
-    resolver: zodResolver(insertUserSchema),
+  const form = useForm<LoginForm>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       username: "",
-      email: "",
       password: "",
-      displayName: "",
     },
-    mode: "onBlur",
   });
 
-  async function onSubmit(values: InsertUser) {
+  async function onSubmit(values: LoginForm) {
     try {
       setIsLoading(true);
-      console.log("[Debug] Form submission started");
-      console.log("[Debug] Form values:", values);
-      console.log("[Debug] Is login mode:", isLogin);
+      const result = await login(values);
 
-      if (isLogin) {
-        // For login, only send username and password
-        const loginCredentials: LoginCredentials = {
-          username: values.username,
-          password: values.password,
-        };
-        const result = await login(loginCredentials);
-        if (result.ok) {
-          toast({
-            title: "Success",
-            description: "Logged in successfully"
-          });
-          setLocation("/library");
-        } else {
-          toast({
-            title: "Error",
-            description: result.message || "Login failed",
-            variant: "destructive"
-          });
-        }
+      if (result.ok && result.user) {
+        toast({
+          title: "Success",
+          description: "Logged in successfully",
+        });
+        setLocation("/library");
       } else {
-        // For registration, send all user data
-        const result = await register(values);
-        if (result.ok) {
-          toast({
-            title: "Success",
-            description: "Account created successfully"
-          });
-          setLocation("/library");
-        } else {
-          toast({
-            title: "Error",
-            description: result.message || "Registration failed",
-            variant: "destructive"
-          });
-        }
+        throw new Error(result.message || "Login failed");
       }
     } catch (error) {
-      console.error("Auth error:", error);
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : "An unexpected error occurred",
-        variant: "destructive"
+        variant: "destructive",
       });
     } finally {
       setIsLoading(false);
@@ -97,23 +64,12 @@ export default function AuthPage() {
   }
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center bg-cover bg-center"
-      style={{
-        backgroundImage:
-          'url("https://images.unsplash.com/photo-1532342342267-77e8db262ebc")',
-      }}
-    >
+    <div className="min-h-screen flex items-center justify-center bg-black">
       <div className="w-full max-w-md p-8 space-y-6 bg-background/95 backdrop-blur-sm rounded-lg shadow-xl">
-        <h1 className="text-3xl font-bold text-center">
-          {isLogin ? "Welcome Back" : "Create Account"}
-        </h1>
+        <h1 className="text-3xl font-bold text-center">Welcome Back</h1>
 
         <Form {...form}>
-          <form 
-            onSubmit={form.handleSubmit(onSubmit)} 
-            className="space-y-4"
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
               name="username"
@@ -127,25 +83,6 @@ export default function AuthPage() {
                 </FormItem>
               )}
             />
-            {!isLogin && (
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="email"
-                        placeholder="email@example.com"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
             <FormField
               control={form.control}
               name="password"
@@ -166,30 +103,12 @@ export default function AuthPage() {
             >
               {isLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
-              ) : isLogin ? (
-                "Sign In"
               ) : (
-                "Sign Up"
+                "Sign In"
               )}
             </Button>
           </form>
         </Form>
-
-        <div className="text-center">
-          <Button
-            variant="link"
-            onClick={() => {
-              setIsLogin(!isLogin);
-              setLocation(isLogin ? "/auth/signup" : "/auth");
-            }}
-            className="text-primary"
-            disabled={isLoading}
-          >
-            {isLogin
-              ? "Need an account? Sign up"
-              : "Already have an account? Sign in"}
-          </Button>
-        </div>
       </div>
     </div>
   );
