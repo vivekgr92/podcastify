@@ -20,7 +20,7 @@ const plans = [
     ],
     buttonText: "Subscribe Now",
     popular: false,
-    priceId: "price_1QZIHiBwEMzOkTIKmdHTjmv2",
+    priceId: "price_1QaJICBwEMzOkTIKlQxL5cd4",
   },
   {
     name: "Pro Plan",
@@ -36,7 +36,7 @@ const plans = [
     ],
     buttonText: "Subscribe Now",
     popular: true,
-    priceId: "price_1QZIHiBwEMzOkTIKpvCR2jKS",
+    priceId: "price_1QaJICBwEMzOkTIKbuyKiDjb",
   },
   {
     name: "Enterprise Plan",
@@ -53,14 +53,16 @@ const plans = [
     ],
     buttonText: "Subscribe Now",
     popular: false,
-    priceId: "price_1QZIHjBwEMzOkTIK8AXFZaXa",
+    priceId: "price_1QaJICBwEMzOkTIKRE8yNZHc",
   },
 ];
 
 export default function BillingPage() {
   const { user } = useUser();
   const [location] = useLocation();
-  const [selectedPlan, setSelectedPlan] = useState<(typeof plans)[0] | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<(typeof plans)[0] | null>(
+    null,
+  );
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const { toast } = useToast();
 
