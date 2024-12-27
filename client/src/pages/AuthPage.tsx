@@ -36,6 +36,7 @@ export default function AuthPage() {
 
   async function onSubmit(values: InsertUser) {
     try {
+      alert("Form submitted"); // This will show a visible alert
       console.log("[Debug] Form submission started");
       console.log("[Debug] Form values:", values);
       console.log("[Debug] Is login mode:", isLogin);
@@ -125,7 +126,11 @@ export default function AuthPage() {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
+            <Button 
+              type="submit" 
+              className="w-full"
+              onClick={() => console.log("Sign In button clicked")}
+            >
               {isLogin ? "Sign In" : "Sign Up"}
             </Button>
           </form>
