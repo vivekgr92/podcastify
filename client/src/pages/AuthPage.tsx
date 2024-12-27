@@ -41,14 +41,14 @@ export default function AuthPage() {
       if (result.ok) {
         toast({
           title: "Success",
-          description: isLogin ? "Logged in successfully" : "Account created successfully",
+          description: isLogin ? "Logged in successfully" : "Account created successfully"
         });
         setLocation("/library");
       } else {
         toast({
           title: "Error",
           description: result.message || "Authentication failed",
-          variant: "destructive",
+          variant: "destructive"
         });
       }
     } catch (error) {
@@ -56,29 +56,7 @@ export default function AuthPage() {
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : "An unexpected error occurred",
-        variant: "destructive",
-      });
-    }
-  }
-          title: "Error",
-          description: result.message,
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Success",
-          description: isLogin
-            ? "Logged in successfully"
-            : "Account created successfully",
-        });
-        setLocation("/library");
-      }
-    } catch (error) {
-      console.error("Auth error:", error);
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred. Please try again.",
-        variant: "destructive",
+        variant: "destructive"
       });
     }
   }
