@@ -4,34 +4,13 @@ import { setupVite, serveStatic } from "./vite.js";
 import { createServer } from "http";
 import * as dotenv from "dotenv";
 import { logger } from "./services/logging.js";
-import { setupAuth } from "./auth.js";
 
 // Load environment variables
 dotenv.config();
 
 const app = express();
 
-// CORS middleware for development
-if (process.env.NODE_ENV === "development") {
-  app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "http://localhost:5175");
-    res.header("Access-Control-Allow-Credentials", "true");
-    res.header(
-      "Access-Control-Allow-Headers",
-      "Origin, X-Requested-With, Content-Type, Accept, Cookie"
-    );
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-    if (req.method === "OPTIONS") {
-      return res.sendStatus(200);
-    }
-    next();
-  });
-}
-
-// Setup authentication first, before any route handling
-setupAuth(app);
-
-// Body parsing middleware after auth setup
+// Basic middleware setup
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -45,11 +24,13 @@ app.use((req, res, next) => {
   next();
 });
 
-// Register routes before error handler
-registerRoutes(app);
-
 // Global error handler
-app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+const errorHandler = (
+  err: any,
+  _req: Request,
+  res: Response,
+  _next: NextFunction,
+) => {
   const errorMessage = err instanceof Error ? err.message : String(err);
   logger.error(`Error caught in middleware: ${errorMessage}`);
   if (err.stack) {
@@ -60,21 +41,56 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     message: err.message || "Internal Server Error",
     type: err.type || "server_error",
   });
-});
+};
 
-// Setup Vite or static serving
-if (process.env.NODE_ENV === "development") {
-  setupVite(app, createServer(app));
-} else {
-  serveStatic(app);
+async function startServer() {
+  try {
+    logger.info("***Starting server initialization...\n\n");
+
+    // Register routes first
+    logger.info("Registering routes...");
+    await registerRoutes(app);
+
+    // Add error handler after routes
+    app.use(errorHandler);
+
+    const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4000;
+    const server = createServer(app);
+
+    // Setup Vite or static serving
+    if (process.env.NODE_ENV === "development") {
+      logger.info("Setting up Vite for development...");
+      await setupVite(app, server);
+    } else {
+      logger.info("Setting up static file serving for production...");
+      serveStatic(app);
+    }
+
+    // Start server
+    server.listen(PORT, "0.0.0.0", () => {
+      // Construct webhook URL without port number
+      const webhookUrl =
+        process.env.REPL_SLUG && process.env.REPL_OWNER
+          ? `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co/api/webhooks/stripe`
+          : `https://${process.env.REPL_ID}.id.repl.co/api/webhooks/stripe`;
+
+      logger.info(`Server started successfully on port ${PORT}`);
+      logger.info(`Webhook endpoint available at: ${webhookUrl}`);
+    });
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    logger.error(`Fatal error during server initialization: ${errorMessage}`);
+    if (error instanceof Error && error.stack) {
+      logger.error(`Stack trace: ${error.stack}`);
+    }
+    process.exit(1);
+  }
 }
 
-// Start server with explicit host binding
-const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4000;
-
-app.listen(PORT, "0.0.0.0", () => {
-  logger.info(`Server started successfully on port ${PORT}`);
-}).on('error', (error) => {
-  logger.error(`Failed to start server: ${error.message}`);
+// Start the server
+startServer().catch((error) => {
+  logger.error(
+    `Uncaught error: ${error instanceof Error ? error.message : String(error)}`,
+  );
   process.exit(1);
 });

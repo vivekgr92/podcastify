@@ -18,8 +18,8 @@ import { useToast } from "@/hooks/use-toast";
 
 export default function AuthPage() {
   const { login, register } = useUser();
-  const [, setLocation] = useLocation();
-  const [isLogin, setIsLogin] = useState(true);
+  const [location, setLocation] = useLocation();
+  const [isLogin, setIsLogin] = useState(!location.includes("signup"));
   const { toast } = useToast();
 
   const form = useForm<InsertUser>({
@@ -30,42 +30,43 @@ export default function AuthPage() {
       password: "",
       displayName: "",
     },
+    mode: "onChange"
   });
 
-  async function onSubmit(values: InsertUser) {
+  async function onSubmit(data: InsertUser) {
     try {
-      console.log("Form submitted:", { ...values, password: '***' });
-
-      const result = await (isLogin ? login(values) : register(values));
-      console.log("Auth result:", result);
-
-      if (result.ok) {
+      const result = await (isLogin ? login(data) : register(data));
+      if (!result.ok) {
+        toast({
+          title: "Error",
+          description: result.message,
+          variant: "destructive",
+        });
+      } else {
         toast({
           title: "Success",
           description: isLogin ? "Logged in successfully" : "Account created successfully",
         });
+        // Use setLocation for client-side routing
         setLocation("/library");
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: result.message || "Authentication failed",
-        });
       }
     } catch (error) {
-      console.error("Auth error:", error);
+      console.error('Auth error:', error);
       toast({
-        variant: "destructive",
         title: "Error",
-        description: error instanceof Error ? error.message : "An unexpected error occurred",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
       });
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="w-full max-w-md p-8 space-y-6 bg-card rounded-lg shadow-xl">
-        <h1 className="text-3xl font-bold text-center text-foreground">
+    <div 
+      className="min-h-screen flex items-center justify-center bg-cover bg-center"
+      style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1532342342267-77e8db262ebc")' }}
+    >
+      <div className="w-full max-w-md p-8 space-y-6 bg-background/95 backdrop-blur-sm rounded-lg shadow-xl">
+        <h1 className="text-3xl font-bold text-center">
           {isLogin ? "Welcome Back" : "Create Account"}
         </h1>
 
@@ -84,7 +85,6 @@ export default function AuthPage() {
                 </FormItem>
               )}
             />
-
             {!isLogin && (
               <>
                 <FormField
@@ -100,22 +100,9 @@ export default function AuthPage() {
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="displayName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Display Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Display Name" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                
               </>
             )}
-
             <FormField
               control={form.control}
               name="password"
@@ -129,7 +116,6 @@ export default function AuthPage() {
                 </FormItem>
               )}
             />
-
             <Button type="submit" className="w-full">
               {isLogin ? "Sign In" : "Sign Up"}
             </Button>
@@ -142,7 +128,9 @@ export default function AuthPage() {
             onClick={() => setIsLogin(!isLogin)}
             className="text-primary"
           >
-            {isLogin ? "Need an account? Sign up" : "Already have an account? Sign in"}
+            {isLogin
+              ? "Need an account? Sign up"
+              : "Already have an account? Sign in"}
           </Button>
         </div>
       </div>
