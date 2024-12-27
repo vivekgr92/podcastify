@@ -16,7 +16,7 @@ type RequestResult = {
 async function handleRequest(
   url: string,
   method: string,
-  body?: InsertUser
+  body?: InsertUser | LoginData
 ): Promise<RequestResult> {
   try {
     const response = await fetch(url, {
