@@ -86,11 +86,7 @@ export default function AuthPage() {
 
         <Form {...form}>
           <form 
-            onSubmit={(e) => {
-              e.preventDefault();
-              console.log("Form submission started");
-              return form.handleSubmit(onSubmit)(e);
-            }} 
+            onSubmit={form.handleSubmit(onSubmit)} 
             className="space-y-4"
           >
             <FormField
