@@ -52,16 +52,10 @@ try {
 }
 
 export function registerRoutes(app: Express) {
-  // Configure express to use raw body for Stripe webhooks BEFORE other middleware
-  app.use(
-    "/api/webhooks/stripe",
-    express.raw({ type: "application/json" })
-  );
-
-  // Setup auth middleware AFTER raw body middleware for webhooks
   setupAuth(app);
 
-  // Setup JSON parsing for all other routes
+  // Configure express to use raw body for Stripe webhooks
+  app.use("/api/webhooks/stripe", express.raw({ type: "*/*" }));
   app.use(express.json()); // For all other routes
 
   // Create subscription endpoint with enhanced error handling
@@ -179,25 +173,23 @@ export function registerRoutes(app: Express) {
         return res.status(500).json({ error: "Webhook secret not configured" });
       }
 
-      // Log debugging information
-      logger.info("Webhook received");
-      logger.info(`Content-Type: ${req.headers["content-type"]}`);
-      logger.info(`Signature: ${sig}`);
+      // logger.info(`\nRequest Body: ${req.body.toString()}`);
+      logger.info(`\nStripe Signature: ${sig}`);
+      logger.info(`\nWebhook signature: ${process.env.STRIPE_WEBHOOK_SECRET}`);
 
       try {
-        // Verify the webhook signature using the raw body
         event = stripe.webhooks.constructEvent(
           req.body,
           sig,
-          process.env.STRIPE_WEBHOOK_SECRET
+          process.env.STRIPE_WEBHOOK_SECRET,
         );
-
-        logger.info(`Successfully verified webhook event: ${event.type}`);
       } catch (err) {
         const error = err instanceof Error ? err.message : String(err);
         logger.error(`Webhook signature verification failed: ${error}`);
         return res.status(400).json({ error: `Webhook Error: ${error}` });
       }
+
+      logger.info(`Successfully verified webhook event: ${event.type}`);
 
       // Handle the event
       switch (event.type) {
