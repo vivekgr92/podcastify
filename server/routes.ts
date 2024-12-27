@@ -8,10 +8,6 @@ import { promises as fs } from "fs";
 import * as fsSync from "fs";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
 import {
   podcasts,
   playlists,
@@ -21,9 +17,7 @@ import {
   users,
 } from "../db/schema.js";
 import { logger } from "./services/logging.js";
-import { ttsService } from "./services/tts.js";
-import { eq, and, sql, desc } from "drizzle-orm";
-import pdfParse from "pdf-parse/lib/pdf-parse.js";
+import { eq, and, sql } from "drizzle-orm";
 import Stripe from "stripe";
 
 // Constants for usage limits
@@ -40,7 +34,7 @@ try {
   }
 
   stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-    apiVersion: "2024-12-18.acacia",
+    apiVersion: "2023-10-16",
     typescript: true,
   });
 
@@ -52,11 +46,172 @@ try {
 }
 
 export function registerRoutes(app: Express) {
+  // Setup authentication first
   setupAuth(app);
 
-  // Configure express to use raw body for Stripe webhooks
-  app.use("/api/webhooks/stripe", express.raw({ type: "*/*" }));
-  app.use(express.json()); // For all other routes
+  // Stripe webhook endpoint must be defined before any middleware that could parse the request body
+  app.post("/api/webhooks/stripe", express.raw({ type: "application/json" }), async (req, res) => {
+    let event: Stripe.Event;
+
+    try {
+      const sig = req.headers["stripe-signature"];
+
+      if (!sig) {
+        logger.error("Missing Stripe signature");
+        return res.status(400).json({ error: "Missing stripe signature" });
+      }
+
+      // Ensure we have the webhook secret
+      if (!process.env.STRIPE_WEBHOOK_SECRET) {
+        logger.error("Missing STRIPE_WEBHOOK_SECRET environment variable");
+        return res.status(500).json({ error: "Webhook secret not configured" });
+      }
+
+      try {
+        // Log debugging information
+        logger.info("Received webhook request");
+        logger.info(`Raw body type: ${typeof req.body}`);
+        logger.info(`Raw body length: ${req.body.length}`);
+        logger.info(`Content-Type: ${req.headers['content-type']}`);
+
+        event = stripe.webhooks.constructEvent(
+          req.body,
+          sig,
+          process.env.STRIPE_WEBHOOK_SECRET
+        );
+      } catch (err) {
+        const error = err instanceof Error ? err.message : String(err);
+        logger.error(`Webhook signature verification failed: ${error}`);
+        return res.status(400).json({ error: `Webhook Error: ${error}` });
+      }
+
+      logger.info(`Successfully verified webhook event: ${event.type}`);
+
+      // Handle the event
+      switch (event.type) {
+        case "invoice.payment_succeeded":
+          const invoice = event.data.object as Stripe.Invoice;
+          if (!invoice.subscription) {
+            logger.error("Invoice missing subscription reference");
+            return res.status(400).json({ error: "Invalid invoice data" });
+          }
+
+          try {
+            const subscription = await stripe.subscriptions.retrieve(
+              invoice.subscription as string
+            );
+            if (!subscription.metadata.userId) {
+              logger.warn(
+                `Subscription missing userId in metadata for subscription ${subscription.id}`
+              );
+              return res
+                .status(400)
+                .json({ error: "Invalid subscription metadata" });
+            }
+
+            const [updatedUser] = await db
+              .update(users)
+              .set({
+                subscriptionStatus: "active",
+                subscriptionId: subscription.id,
+                currentPeriodEnd: new Date(
+                  subscription.current_period_end * 1000
+                ),
+              })
+              .where(eq(users.id, parseInt(subscription.metadata.userId)))
+              .returning();
+
+            if (!updatedUser) {
+              throw new Error(
+                `Failed to update subscription status for user ${subscription.metadata.userId}`
+              );
+            }
+
+            logger.info(
+              `Successfully processed payment for subscription ${subscription.id}`
+            );
+          } catch (error) {
+            logger.error(
+              `Failed to process subscription payment: ${error instanceof Error ? error.message : String(error)}`
+            );
+            throw error;
+          }
+          break;
+        case "invoice.payment_failed":
+          const failedInvoice = event.data.object as Stripe.Invoice;
+          const failedSubscription = await stripe.subscriptions.retrieve(
+            failedInvoice.subscription as string,
+          );
+
+          if (failedSubscription.metadata.userId) {
+            await db
+              .update(users)
+              .set({
+                subscriptionStatus: "payment_failed",
+              })
+              .where(
+                eq(users.id, parseInt(failedSubscription.metadata.userId)),
+              );
+
+            logger.info(
+              `Updated subscription status to payment_failed for user ${failedSubscription.metadata.userId}`,
+            );
+          }
+          break;
+        case "customer.subscription.updated":
+          const updatedSubscription = event.data.object as Stripe.Subscription;
+          if (updatedSubscription.metadata.userId) {
+            await db
+              .update(users)
+              .set({
+                subscriptionStatus: updatedSubscription.status,
+                currentPeriodEnd: new Date(
+                  updatedSubscription.current_period_end * 1000,
+                ),
+              })
+              .where(
+                eq(users.id, parseInt(updatedSubscription.metadata.userId)),
+              );
+
+            logger.info(
+              `Updated subscription status for user ${updatedSubscription.metadata.userId}`,
+            );
+          }
+          break;
+        case "customer.subscription.deleted":
+          const deletedSubscription = event.data.object as Stripe.Subscription;
+          if (deletedSubscription.metadata.userId) {
+            await db
+              .update(users)
+              .set({
+                subscriptionStatus: "canceled",
+                subscriptionId: null,
+                currentPeriodEnd: null,
+              })
+              .where(
+                eq(users.id, parseInt(deletedSubscription.metadata.userId)),
+              );
+
+            logger.info(
+              `Canceled subscription for user ${deletedSubscription.metadata.userId}`,
+            );
+          }
+          break;
+      }
+
+      res.json({ received: true });
+    } catch (error) {
+      logger.error(
+        `Webhook error: ${error instanceof Error ? error.message : String(error)}`
+      );
+      const errorMessage =
+        error instanceof Error ? error.message : "Webhook failed";
+      res.status(400).json({ error: errorMessage });
+    }
+  });
+
+  // Apply JSON parsing middleware for all other routes
+  app.use(express.json());
 
   // Create subscription endpoint with enhanced error handling
   app.post("/api/create-subscription", async (req, res) => {
@@ -155,164 +310,7 @@ export function registerRoutes(app: Express) {
     }
   });
 
-  // Webhook handler for subscription events
-  app.post("/api/webhooks/stripe", async (req, res) => {
-    let event: Stripe.Event;
 
-    try {
-      const sig = req.headers["stripe-signature"];
-
-      if (!sig) {
-        logger.error("Missing Stripe signature");
-        return res.status(400).json({ error: "Missing stripe signature" });
-      }
-
-      // Ensure we have the webhook secret
-      if (!process.env.STRIPE_WEBHOOK_SECRET) {
-        logger.error("Missing STRIPE_WEBHOOK_SECRET environment variable");
-        return res.status(500).json({ error: "Webhook secret not configured" });
-      }
-
-      // logger.info(`\nRequest Body: ${req.body.toString()}`);
-      logger.info(`\nStripe Signature: ${sig}`);
-      logger.info(`\nWebhook signature: ${process.env.STRIPE_WEBHOOK_SECRET}`);
-
-      try {
-        event = stripe.webhooks.constructEvent(
-          req.body,
-          sig,
-          process.env.STRIPE_WEBHOOK_SECRET,
-        );
-      } catch (err) {
-        const error = err instanceof Error ? err.message : String(err);
-        logger.error(`Webhook signature verification failed: ${error}`);
-        return res.status(400).json({ error: `Webhook Error: ${error}` });
-      }
-
-      logger.info(`Successfully verified webhook event: ${event.type}`);
-
-      // Handle the event
-      switch (event.type) {
-        case "invoice.payment_succeeded":
-          const invoice = event.data.object as Stripe.Invoice;
-          if (!invoice.subscription) {
-            logger.error("Invoice missing subscription reference");
-            return res.status(400).json({ error: "Invalid invoice data" });
-          }
-
-          try {
-            const subscription = await stripe.subscriptions.retrieve(
-              invoice.subscription as string,
-            );
-            if (!subscription.metadata.userId) {
-              logger.warn(
-                `Subscription missing userId in metadata for subscription ${subscription.id}`,
-              );
-              return res
-                .status(400)
-                .json({ error: "Invalid subscription metadata" });
-            }
-
-            const [updatedUser] = await db
-              .update(users)
-              .set({
-                subscriptionStatus: "active",
-                subscriptionId: subscription.id,
-                currentPeriodEnd: new Date(
-                  subscription.current_period_end * 1000,
-                ),
-              })
-              .where(eq(users.id, parseInt(subscription.metadata.userId)))
-              .returning();
-
-            if (!updatedUser) {
-              throw new Error(
-                `Failed to update subscription status for user ${subscription.metadata.userId}`,
-              );
-            }
-
-            logger.info(
-              `Successfully processed payment for subscription ${subscription.id}`,
-            );
-          } catch (error) {
-            logger.error(
-              `Failed to process subscription payment: ${error instanceof Error ? error.message : String(error)}`,
-            );
-            throw error;
-          }
-          break;
-        case "invoice.payment_failed":
-          const failedInvoice = event.data.object as Stripe.Invoice;
-          const failedSubscription = await stripe.subscriptions.retrieve(
-            failedInvoice.subscription as string,
-          );
-
-          if (failedSubscription.metadata.userId) {
-            await db
-              .update(users)
-              .set({
-                subscriptionStatus: "payment_failed",
-              })
-              .where(
-                eq(users.id, parseInt(failedSubscription.metadata.userId)),
-              );
-
-            logger.info(
-              `Updated subscription status to payment_failed for user ${failedSubscription.metadata.userId}`,
-            );
-          }
-          break;
-        case "customer.subscription.updated":
-          const updatedSubscription = event.data.object as Stripe.Subscription;
-          if (updatedSubscription.metadata.userId) {
-            await db
-              .update(users)
-              .set({
-                subscriptionStatus: updatedSubscription.status,
-                currentPeriodEnd: new Date(
-                  updatedSubscription.current_period_end * 1000,
-                ),
-              })
-              .where(
-                eq(users.id, parseInt(updatedSubscription.metadata.userId)),
-              );
-
-            logger.info(
-              `Updated subscription status for user ${updatedSubscription.metadata.userId}`,
-            );
-          }
-          break;
-        case "customer.subscription.deleted":
-          const deletedSubscription = event.data.object as Stripe.Subscription;
-          if (deletedSubscription.metadata.userId) {
-            await db
-              .update(users)
-              .set({
-                subscriptionStatus: "canceled",
-                subscriptionId: null,
-                currentPeriodEnd: null,
-              })
-              .where(
-                eq(users.id, parseInt(deletedSubscription.metadata.userId)),
-              );
-
-            logger.info(
-              `Canceled subscription for user ${deletedSubscription.metadata.userId}`,
-            );
-          }
-          break;
-      }
-
-      res.json({ received: true });
-    } catch (error) {
-      logger.error(
-        `Webhook error: ${error instanceof Error ? error.message : String(error)}`,
-      );
-      const errorMessage =
-        error instanceof Error ? error.message : "Webhook failed";
-      res.status(400).json({ error: errorMessage });
-    }
-  });
 
   // Helper function to convert raw tokens to Podify Tokens
   function convertToPodifyTokens(totalCost: number): number {
