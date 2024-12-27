@@ -6,6 +6,11 @@ import multer from "multer";
 import path from "path";
 import { promises as fs } from "fs";
 import * as fsSync from "fs";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 import {
   podcasts,
@@ -20,6 +25,12 @@ import { ttsService } from "./services/tts.js";
 import { eq, and, sql, desc } from "drizzle-orm";
 import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import Stripe from "stripe";
+
+// Constants for usage limits
+const ARTICLE_LIMIT = 3;
+const PODIFY_TOKEN_LIMIT = 10000;
+const PODIFY_TOKEN_RATE = 0.005;
+const PODIFY_MARGIN = 0.6;
 
 // Initialize Stripe with proper API version and error handling
 let stripe: Stripe;
@@ -39,12 +50,6 @@ try {
   logger.error(`Failed to initialize Stripe: ${errorMessage}`);
   throw error;
 }
-
-// Constants for usage limits
-const ARTICLE_LIMIT = 3;
-const PODIFY_TOKEN_LIMIT = 10000;
-const PODIFY_TOKEN_RATE = 0.005;
-const PODIFY_MARGIN = 0.6;
 
 export function registerRoutes(app: Express) {
   setupAuth(app);

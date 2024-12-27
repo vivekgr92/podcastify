@@ -84,16 +84,16 @@ task = "shell.exec"
 args = "cd client && npm run dev"
 waitForPort = 5175
 
-[[workflows.workflow]]
-name = "StripeSetup"
-author = "agent"
+# [[workflows.workflow]]
+# name = "StripeSetup"
+# author = "agent"
 
-[workflows.workflow.metadata]
-agentRequireRestartOnSave = false
+# [workflows.workflow.metadata]
+# agentRequireRestartOnSave = false
 
-[[workflows.workflow.tasks]]
-task = "packager.installForAll"
+# [[workflows.workflow.tasks]]
+# task = "packager.installForAll"
 
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "NODE_ENV=development node --loader ts-node/esm server/setup-stripe-products.ts"
+# [[workflows.workflow.tasks]]
+# task = "shell.exec"
+# args = "NODE_ENV=development node --loader ts-node/esm server/setup-stripe-products.ts"

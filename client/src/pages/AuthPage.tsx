@@ -1,3 +1,4 @@
+
 import { useUser } from "../hooks/use-user";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,12 +31,21 @@ export default function AuthPage() {
       password: "",
       displayName: "",
     },
-    mode: "onBlur"
+    mode: "onBlur",
   });
 
-  async function onSubmit(data: InsertUser) {
+  async function onSubmit(values: InsertUser) {
     try {
-      const result = await (isLogin ? login(data) : register(data));
+      console.log("[Debug] Form submission started");
+      console.log("[Debug] Form values:", values);
+      console.log("[Debug] Is login mode:", isLogin);
+      const loginData = {
+        username: values.username,
+        password: values.password,
+        email: values.email || undefined
+      };
+      console.log("[Debug] Sending login request with data:", loginData);
+      const result = await (isLogin ? login(values) : register(values));
       if (!result.ok) {
         toast({
           title: "Error",
@@ -45,13 +55,14 @@ export default function AuthPage() {
       } else {
         toast({
           title: "Success",
-          description: isLogin ? "Logged in successfully" : "Account created successfully",
+          description: isLogin
+            ? "Logged in successfully"
+            : "Account created successfully",
         });
-        // Use setLocation for client-side routing
         setLocation("/library");
       }
     } catch (error) {
-      console.error('Auth error:', error);
+      console.error("Auth error:", error);
       toast({
         title: "Error",
         description: "An unexpected error occurred. Please try again.",
@@ -61,9 +72,12 @@ export default function AuthPage() {
   }
 
   return (
-    <div 
+    <div
       className="min-h-screen flex items-center justify-center bg-cover bg-center"
-      style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1532342342267-77e8db262ebc")' }}
+      style={{
+        backgroundImage:
+          'url("https://images.unsplash.com/photo-1532342342267-77e8db262ebc")',
+      }}
     >
       <div className="w-full max-w-md p-8 space-y-6 bg-background/95 backdrop-blur-sm rounded-lg shadow-xl">
         <h1 className="text-3xl font-bold text-center">
@@ -71,7 +85,14 @@ export default function AuthPage() {
         </h1>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form 
+            onSubmit={(e) => {
+              e.preventDefault();
+              console.log("Form submission started");
+              return form.handleSubmit(onSubmit)(e);
+            }} 
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="username"
@@ -86,22 +107,23 @@ export default function AuthPage() {
               )}
             />
             {!isLogin && (
-              <>
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input type="email" placeholder="email@example.com" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-              </>
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        placeholder="email@example.com"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             )}
             <FormField
               control={form.control}
@@ -116,7 +138,10 @@ export default function AuthPage() {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
+            <Button 
+              type="submit" 
+              className="w-full"
+            >
               {isLogin ? "Sign In" : "Sign Up"}
             </Button>
           </form>
