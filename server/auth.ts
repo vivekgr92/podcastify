@@ -217,7 +217,10 @@ export function setupAuth(app: Express) {
         }
         if (!user) {
           console.warn("Authentication failed:", info?.message); // Debug statement
-          return res.status(400).send(info?.message || "Login failed");
+          return res.status(401).json({ 
+            ok: false,
+            message: info?.message || "Invalid username or password" 
+          });
         }
 
         console.debug("Authentication successful for user:", user.username); // Debug statement
@@ -236,13 +239,16 @@ export function setupAuth(app: Express) {
             isAdmin: user.isAdmin,
           }); // Debug statement
 
-          // Ensure we return consistent user data including admin status
+          // Return a consistent response format
           return res.json({
-            id: user.id,
-            username: user.username,
-            email: user.email,
-            isAdmin: user.isAdmin, // This will be a boolean from the database
-            displayName: user.displayName,
+            ok: true,
+            user: {
+              id: user.id,
+              username: user.username,
+              email: user.email,
+              isAdmin: user.isAdmin,
+              displayName: user.displayName,
+            }
           });
         });
       },
