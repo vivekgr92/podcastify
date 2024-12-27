@@ -80,7 +80,14 @@ export default function AuthPage() {
         </h1>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form 
+            onSubmit={(e) => {
+              e.preventDefault();
+              console.log("Form submission started");
+              return form.handleSubmit(onSubmit)(e);
+            }} 
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="username"
@@ -129,7 +136,13 @@ export default function AuthPage() {
             <Button 
               type="submit" 
               className="w-full"
-              onClick={() => console.log("Sign In button clicked")}
+              onClick={(e) => {
+                console.log("Sign In button clicked");
+                console.log("Form values:", form.getValues());
+              }}
+              onSubmit={(e) => {
+                console.log("Form submit event triggered");
+              }}
             >
               {isLogin ? "Sign In" : "Sign Up"}
             </Button>
