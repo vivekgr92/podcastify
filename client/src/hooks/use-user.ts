@@ -1,19 +1,23 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { User, InsertUser } from "@db/schema";
 
-type RequestResult =
-  | {
-      ok: true;
-      user?: User;
-    }
-  | {
-      ok: false;
-      message: string;
-    };
-
 type LoginCredentials = {
   username: string;
   password: string;
+};
+
+type LoginResponse = {
+  ok: boolean;
+  user?: User;
+  message?: string;
+};
+
+type RequestResult = {
+  ok: true;
+  user?: User;
+} | {
+  ok: false;
+  message: string;
 };
 
 async function handleRequest(
@@ -87,17 +91,12 @@ export function useUser() {
     retry: false,
   });
 
-  const loginMutation = useMutation<RequestResult, Error, LoginCredentials>({
+  const loginMutation = useMutation<LoginResponse, Error, LoginCredentials>({
     mutationFn: async (userData) => {
-      const loginData = {
-        username: userData.username,
-        password: userData.password
-      };
-
       const response = await fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(loginData),
+        body: JSON.stringify(userData),
         credentials: "include",
       });
 
