@@ -36,7 +36,8 @@ export default function AuthPage() {
 
   async function onSubmit(values: InsertUser) {
     try {
-      const result = await (isLogin ? login(values) : register(values));
+      const loginData = isLogin ? { username: values.username, password: values.password } : values;
+      const result = await (isLogin ? login(loginData) : register(values));
       if (!result.ok) {
         toast({
           title: "Error",
