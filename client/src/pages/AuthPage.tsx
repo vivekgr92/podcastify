@@ -1,4 +1,3 @@
-
 import { useUser } from "../hooks/use-user";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,12 +15,19 @@ import {
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
+import { Loader2 } from "lucide-react";
+
+type LoginCredentials = {
+  username: string;
+  password: string;
+};
 
 export default function AuthPage() {
   const { login, register } = useUser();
-  const [location, setLocation] = useLocation();
-  const [isLogin, setIsLogin] = useState(!location.includes("signup"));
+  const [, setLocation] = useLocation();
+  const [isLogin, setIsLogin] = useState(window.location.pathname !== "/auth/signup");
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<InsertUser>({
     resolver: zodResolver(insertUserSchema),
@@ -36,20 +42,47 @@ export default function AuthPage() {
 
   async function onSubmit(values: InsertUser) {
     try {
-      const result = await (isLogin ? login(values) : register(values));
-      
-      if (result.ok) {
-        toast({
-          title: "Success",
-          description: isLogin ? "Logged in successfully" : "Account created successfully"
-        });
-        setLocation("/library");
+      setIsLoading(true);
+      console.log("[Debug] Form submission started");
+      console.log("[Debug] Form values:", values);
+      console.log("[Debug] Is login mode:", isLogin);
+
+      if (isLogin) {
+        // For login, only send username and password
+        const loginCredentials: LoginCredentials = {
+          username: values.username,
+          password: values.password,
+        };
+        const result = await login(loginCredentials);
+        if (result.ok) {
+          toast({
+            title: "Success",
+            description: "Logged in successfully"
+          });
+          setLocation("/library");
+        } else {
+          toast({
+            title: "Error",
+            description: result.message || "Login failed",
+            variant: "destructive"
+          });
+        }
       } else {
-        toast({
-          title: "Error",
-          description: result.message || "Authentication failed",
-          variant: "destructive"
-        });
+        // For registration, send all user data
+        const result = await register(values);
+        if (result.ok) {
+          toast({
+            title: "Success",
+            description: "Account created successfully"
+          });
+          setLocation("/library");
+        } else {
+          toast({
+            title: "Error",
+            description: result.message || "Registration failed",
+            variant: "destructive"
+          });
+        }
       }
     } catch (error) {
       console.error("Auth error:", error);
@@ -58,6 +91,8 @@ export default function AuthPage() {
         description: error instanceof Error ? error.message : "An unexpected error occurred",
         variant: "destructive"
       });
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -127,8 +162,15 @@ export default function AuthPage() {
             <Button 
               type="submit" 
               className="w-full"
+              disabled={isLoading}
             >
-              {isLogin ? "Sign In" : "Sign Up"}
+              {isLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : isLogin ? (
+                "Sign In"
+              ) : (
+                "Sign Up"
+              )}
             </Button>
           </form>
         </Form>
@@ -136,8 +178,12 @@ export default function AuthPage() {
         <div className="text-center">
           <Button
             variant="link"
-            onClick={() => setIsLogin(!isLogin)}
+            onClick={() => {
+              setIsLogin(!isLogin);
+              setLocation(isLogin ? "/auth/signup" : "/auth");
+            }}
             className="text-primary"
+            disabled={isLoading}
           >
             {isLogin
               ? "Need an account? Sign up"
