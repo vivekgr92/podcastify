@@ -1717,3 +1717,56 @@
 [INFO] GET /src/components/ui/popover.tsx 304 in 1ms
 [INFO] GET /src/components/ui/select.tsx 304 in 0ms
 [INFO] GET /src/components/ui/dialog.tsx 304 in 0ms
+[INFO] GET /src/components/AudioPlayer.tsx 200 in 12ms
+[INFO] GET /src/pages/ProfilePage.tsx 200 in 11ms
+[INFO] GET /src/main.tsx 200 in 10ms
+[INFO] GET /src/pages/AuthPage.tsx 200 in 3ms
+[INFO] GET /src/pages/LibraryPage.tsx 200 in 2ms
+[INFO] GET /src/index.css 200 in 359ms
+[INFO] GET /src/components/Sidebar.tsx 200 in 10ms
+[INFO] GET /src/pages/BillingPage.tsx 200 in 15ms
+[INFO] GET /src/pages/HomePage.tsx 200 in 2ms
+[INFO] GET /src/hooks/use-user.ts 200 in 6ms
+[INFO] GET /src/index.css 200 in 801ms
+[INFO] GET / 200 in 808ms
+[INFO] Stripe initialized successfully
+[INFO] Starting server initialization...
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] GET / 200 in 46ms
+[INFO] GET /@vite/client 304 in 678ms
+[INFO] GET /@react-refresh 304 in 6ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 18ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 498ms
+[INFO] GET /src/main.tsx 200 in 3563ms
+[INFO] GET /node_modules/.vite/deps/react_jsx-dev-runtime.js 200 in 1405ms
+[INFO] GET /node_modules/.vite/deps/react.js 200 in 1402ms
+[INFO] GET /node_modules/.vite/deps/react-dom_client.js 200 in 1405ms
+[INFO] GET /node_modules/.vite/deps/wouter.js 200 in 1401ms
+[INFO] GET /node_modules/.vite/deps/@tanstack_react-query.js 200 in 1297ms
+[INFO] GET /node_modules/.vite/deps/lucide-react.js 200 in 1284ms
+[INFO] GET /src/lib/queryClient.ts 200 in 17ms
+[INFO] GET /src/index.css 304 in 16ms
+[INFO] GET /src/components/ui/toaster.tsx 200 in 22ms
+[INFO] GET /src/pages/HomePage.tsx 200 in 1ms
+[INFO] GET /src/pages/PricingPage.tsx 200 in 5ms
+[INFO] GET /src/pages/LibraryPage.tsx 200 in 3ms
+[INFO] GET /src/pages/AdminPage.tsx 200 in 4ms
+[INFO] GET / 200 in 84ms
+[INFO] GET /src/pages/ProfilePage.tsx 200 in 1ms
+[INFO] GET /src/pages/BillingPage.tsx 200 in 2ms
+[INFO] GET /src/hooks/use-user.ts 200 in 1ms
+[INFO] GET /src/components/ui/button.tsx 200 in 1ms
+[INFO] GET /src/components/Sidebar.tsx 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/chunk-44NJKXUD.js 200 in 15ms
+[INFO] GET /node_modules/.vite/deps/chunk-ZQ3TVT43.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/chunk-WOOG5QLI.js 200 in 0ms
+[INFO] GET /node_modules/.vite/deps/chunk-R5L25AAF.js 200 in 7ms
+[INFO] GET /src/hooks/use-toast.ts 200 in 4ms
+[INFO] GET /src/components/ui/toast.tsx 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/react-dropzone.js 200 in 1ms
+[INFO] GET /src/hooks/use-tts.ts 200 in 1ms
+[INFO] GET /src/components/UsageProgress.tsx 200 in 2ms
+[INFO] GET /src/components/Logo.tsx 200 in 0ms
+[INFO] GET /src/components/ui/collapsible.tsx 200 in 1ms
