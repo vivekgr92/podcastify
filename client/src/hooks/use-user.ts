@@ -76,9 +76,14 @@ export function useUser() {
     mutationFn: async (userData) => {
       console.log("[Debug] Login mutation started");
       console.log("[Debug] User data:", userData);
-      const result = await handleRequest("/api/login", "POST", userData);
-      console.log("[Debug] Login request result:", result);
-      return result;
+      try {
+        const result = await handleRequest("/api/login", "POST", userData);
+        console.log("[Debug] Login request result:", result);
+        return result;
+      } catch (error) {
+        console.error("[Debug] Login request failed:", error);
+        throw error;
+      }
     },
 
     onMutate: (variables) => {
