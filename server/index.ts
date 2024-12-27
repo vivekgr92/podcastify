@@ -10,10 +10,6 @@ dotenv.config();
 
 const app = express();
 
-// Basic middleware setup
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
 // Logging middleware
 app.use((req, res, next) => {
   const start = Date.now();
@@ -47,9 +43,9 @@ async function startServer() {
   try {
     logger.info("***Starting server initialization...\n\n");
 
-    // Register routes first
+    // Register routes first (includes Stripe webhook raw body handler)
     logger.info("Registering routes...");
-    await registerRoutes(app);
+    registerRoutes(app);
 
     // Add error handler after routes
     app.use(errorHandler);
