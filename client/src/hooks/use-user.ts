@@ -73,10 +73,13 @@ export function useUser() {
   });
 
   const loginMutation = useMutation<RequestResult, Error, InsertUser>({
-    mutationFn: (userData) => handleRequest("/api/login", "POST", userData),
+    mutationFn: (userData) => {
+      console.log("Login request initiated with:", userData);
+      return handleRequest("/api/login", "POST", userData);
+    },
 
     onMutate: (variables) => {
-      console.log("Mutation started with data:", variables);
+      console.log("Login mutation started with data:", variables);
     },
 
     onSuccess: (data) => {
