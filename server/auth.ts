@@ -47,11 +47,14 @@ export function setupAuth(app: Express) {
       cookie: {
         secure: false,
         maxAge: 24 * 60 * 60 * 1000, // 24 hours
-        sameSite: 'lax'
+        sameSite: 'lax',
+        httpOnly: true,
+        path: '/'
       },
       store: new MemoryStore({
         checkPeriod: 86400000, // prune expired entries every 24h
       }),
+      proxy: true
     }),
   );
 
