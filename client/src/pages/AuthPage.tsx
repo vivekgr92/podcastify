@@ -36,7 +36,9 @@ export default function AuthPage() {
 
   async function onSubmit(values: InsertUser) {
     try {
-      console.log("Form submitted:", values, "isLogin:", isLogin);
+      console.log("[Debug] Form submission started");
+      console.log("[Debug] Form values:", values);
+      console.log("[Debug] Is login mode:", isLogin);
       const result = await (isLogin ? login(values) : register(values));
       if (!result.ok) {
         toast({
