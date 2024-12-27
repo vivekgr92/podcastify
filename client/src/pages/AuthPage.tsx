@@ -136,13 +136,6 @@ export default function AuthPage() {
             <Button 
               type="submit" 
               className="w-full"
-              onClick={(e) => {
-                console.log("Sign In button clicked");
-                console.log("Form values:", form.getValues());
-              }}
-              onSubmit={(e) => {
-                console.log("Form submit event triggered");
-              }}
             >
               {isLogin ? "Sign In" : "Sign Up"}
             </Button>
