@@ -77,9 +77,32 @@ export function useUser() {
       console.log("[Debug] Login mutation started");
       console.log("[Debug] User data:", userData);
       try {
-        const result = await handleRequest("/api/login", "POST", userData);
-        console.log("[Debug] Login request result:", result);
-        return result;
+        console.log("[Debug] Making login request to /api/login");
+        const response = await fetch("/api/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(userData),
+          credentials: "include",
+        });
+        console.log("[Debug] Login response status:", response.status);
+        const text = await response.text();
+        console.log("[Debug] Login response text:", text);
+        
+        let result;
+        try {
+          result = text ? JSON.parse(text) : {};
+        } catch (e) {
+          console.log("[Debug] Response is not JSON:", text);
+          return { ok: false, message: text };
+        }
+        
+        if (!response.ok) {
+          console.log("[Debug] Login failed:", result);
+          return { ok: false, message: result.message || "Login failed" };
+        }
+        
+        console.log("[Debug] Login successful:", result);
+        return { ok: true };
       } catch (error) {
         console.error("[Debug] Login request failed:", error);
         throw error;

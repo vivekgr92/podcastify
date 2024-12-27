@@ -44,6 +44,7 @@ export default function AuthPage() {
         password: values.password,
         email: values.email || undefined
       };
+      console.log("[Debug] Sending login request with data:", loginData);
       const result = await (isLogin ? login(values) : register(values));
       if (!result.ok) {
         toast({
