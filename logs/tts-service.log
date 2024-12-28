@@ -1,341 +1,251 @@
-[INFO] Before Middleware - Type of req.body: object - Path: /api/create-subscription
+[INFO] GET / 200 in 62ms
 [INFO] Creating subscription for user 13 with price price_1QaJICBwEMzOkTIKlQxL5cd4
-[INFO] Before Middleware - Type of req.body: object - Path: /api/create-subscription
 [INFO] Creating subscription for user 13 with price price_1QaJICBwEMzOkTIKlQxL5cd4
 [INFO] Using existing customer: cus_RTeZN8oh56GySo
 [INFO] Using existing customer: cus_RTeZN8oh56GySo
-[INFO] Created subscription: sub_1Qb19HBwEMzOkTIKtsDxClXX
-[INFO] POST /api/create-subscription 200 in 1719ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
+[INFO] Created subscription: sub_1Qb1DwBwEMzOkTIK2KDbXD6d
+[INFO] POST /api/create-subscription 200 in 1552ms
 [INFO] 
-Stripe Signature: t=1735396672,v1=63fad617f859a3c7c807625bef52c3e63f873496eb7ec4a63978f4b2642a7d6b,v0=ae5f4d2d426599a241128a5b920b8d22e5c1ba143a869adc00034a5cbbd6f9e2
+Stripe Signature: t=1735396961,v1=e8e972615c696bbd42f4160c5c4d7b6c5028ab13a5191d32778b5f118fdb14af,v0=3a19fec693a16338703729caabc776fcb846b008d3a197ceb2dae02577366775
 [INFO] 
 Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
 [INFO] Successfully verified webhook event: payment_intent.created
-[INFO] POST /api/webhooks/stripe 200 in 1ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
+[INFO] POST /api/webhooks/stripe 200 in 3ms
 [INFO] 
-Stripe Signature: t=1735396672,v1=b11c87ca8f14fa3c5debb3c96dbd98cceec66a52f4c51de4265f7a5e86d95335,v0=5ef1d600a9c60df79ae5d55c1b64d81ec0b022bbff6c0d101d593606dcf68248
+Stripe Signature: t=1735396961,v1=3b332462389922256cf6501579c8c158352228e2070b5a6324cada6e83ee8500,v0=8362e0aacef746597215f42b9ae803240642ef87ff601e5662f47a134d02e411
 [INFO] 
 Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
 [INFO] Successfully verified webhook event: customer.subscription.created
-[INFO] POST /api/webhooks/stripe 200 in 1ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
+[INFO] POST /api/webhooks/stripe 200 in 2ms
 [INFO] 
-Stripe Signature: t=1735396672,v1=5a6114bf2f513f1afa271e4c0806558be69b6f61e811dbef326325e880b68bed,v0=e2de895c14aeb2354c0ff5cc67ee2fa36eb5a4cfec87ba99b10f248d41834a07
+Stripe Signature: t=1735396961,v1=bf387c8fb02f12cdf861c06094466a2aacba6947057fb02aa852a92af6fe4e69,v0=0e5272cd0e07c356d6aed4f8a054934ad083fb7a39a6bcfdcea458da5a8f4aa0
 [INFO] 
 Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
 [INFO] Successfully verified webhook event: invoice.created
-[INFO] POST /api/webhooks/stripe 200 in 1ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
+[INFO] POST /api/webhooks/stripe 200 in 2ms
 [INFO] 
-Stripe Signature: t=1735396672,v1=2b60ed0c8109c4a4f7ff41303bc71bb59063dfef608841818e118e3593e7ce60,v0=61114af4c0b4b4293e4b44f8304eadbf10e213c46383457d4121614fdb59880e
+Stripe Signature: t=1735396961,v1=43d753ddf287bef7735fb7a1d52d5ce570225bd840244995682063fe1525f90d,v0=085f9a59028cf6a8af88c257d48454d293898f0691a0812bb13030fc1dc5cfc6
 [INFO] 
 Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
 [INFO] Successfully verified webhook event: invoice.finalized
 [INFO] POST /api/webhooks/stripe 200 in 1ms
-[INFO] Created subscription: sub_1Qb19IBwEMzOkTIKRVBS0APM
-[INFO] POST /api/create-subscription 200 in 2724ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
+[INFO] Created subscription: sub_1Qb1DxBwEMzOkTIK3spy5BM3
+[INFO] POST /api/create-subscription 200 in 2946ms
 [INFO] 
-Stripe Signature: t=1735396673,v1=840bf53482832e4c85fe13730eb5e61c2d7ddd9f1d5db34889bc03835e098dc3,v0=debb327ebda19b6c3a0728a6e4ef11b6badad38ad273821da851799c52ff5f6b
+Stripe Signature: t=1735396962,v1=839544fc983d2dd420bafc94e7ba7f99770bbfda67b2da6bc032cba11d795bc2,v0=301574cb0125fd37de8fb1b92acc6c18fba3b5b2f7a4f9484757afc3d35144c4
 [INFO] 
 Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
-[INFO] POST /api/webhooks/stripe 200 in 1ms
 [INFO] Successfully verified webhook event: payment_intent.created
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
+[INFO] POST /api/webhooks/stripe 200 in 2ms
 [INFO] 
-Stripe Signature: t=1735396673,v1=dfe2dc076f86196f1b68dbb724ce338f413d7d89068858240313cc1922a8a148,v0=0f1baf029bbf31dd179dbcb7aab857d6f696114739e6b77d389ac56babbbe826
+Stripe Signature: t=1735396962,v1=52d2cbc9373186179ac98146c2a89fe494ef9a7fc81f86929d8f0fc0bc06dff3,v0=b8fad6ba2ad650202fe49c53d5f93ac143029f771f263db6473d92e26bde5ee9
 [INFO] 
 Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
 [INFO] Successfully verified webhook event: customer.subscription.created
-[INFO] POST /api/webhooks/stripe 200 in 2ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
+[INFO] POST /api/webhooks/stripe 200 in 1ms
 [INFO] 
-Stripe Signature: t=1735396673,v1=ba4c2803480f09c2b0aff85afd275921335e862bbfa1c4791cbe6aabf1e1b086,v0=b4faa1b21afe43e017b4d5cf0166d5671ec24bab7cb9c18c4a852eead7dedd32
+Stripe Signature: t=1735396962,v1=c7015cba17a49b58125d1066ab159902b3b4bd4e7245bc3a43d5c40bc8914789,v0=04437661364610fd7a0173ddb771d8d6a19755979d058c6748a1bca780300475
 [INFO] 
 Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
 [INFO] Successfully verified webhook event: invoice.created
 [INFO] POST /api/webhooks/stripe 200 in 1ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
 [INFO] 
-Stripe Signature: t=1735396673,v1=61517b5a7f5d6a1ca267fb40b1a3b6c56df8380cb317cdcc0e2c6d7a90270b3e,v0=50ac3c22ffcfd630a1e2081a9d9a49f4110e44156c64c8c592eaa4abe81d4b5a
-[INFO] 
-Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
-[INFO] Successfully verified webhook event: invoice.finalized
-[INFO] POST /api/webhooks/stripe 200 in 1ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
-[INFO] 
-Stripe Signature: t=1735396678,v1=f62c18c39aac7f25185b16a8fe85f00bfd900aa21a067ebe74452e17789126db,v0=88818cf2a198170783fe17f328906270ef69fa2a35d2ae1e795831dd7dfcfdeb
-[INFO] 
-Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
-[INFO] Successfully verified webhook event: invoice.created
-[INFO] POST /api/webhooks/stripe 200 in 1ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
-[INFO] 
-Stripe Signature: t=1735396720,v1=4c348ebe31b30fde1866611e36486d70bb9781839d763a4c073b67443ca99085,v0=adb1998d2357ee1dcbbe7236f8d804f63a2febab166648fc6b93e343aa5c1f1f
-[INFO] 
-Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
-[INFO] Successfully verified webhook event: plan.deleted
-[INFO] POST /api/webhooks/stripe 200 in 2ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
-[INFO] 
-Stripe Signature: t=1735396720,v1=cf9573b891a8903831f08f5a94693b078f311285a9f14ae94c9c992365fd9810,v0=c9a668a070f5f6acce518f243b615a307c9b8c0bf3846c3a942d23c5243023c5
-[INFO] 
-Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
-[INFO] Successfully verified webhook event: price.deleted
-[INFO] POST /api/webhooks/stripe 200 in 1ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
-[INFO] 
-Stripe Signature: t=1735396720,v1=1d82245f1a13d3b9b3310aa74a1586267fa6d65ccdee00b4d1dfe7870cebe047,v0=e7b8e15471eafd937b15ca9418a2ef0772d510a25a3d299dadd9df866e281a53
-[INFO] 
-Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
-[INFO] Successfully verified webhook event: product.deleted
-[INFO] POST /api/webhooks/stripe 200 in 1ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
-[INFO] 
-Stripe Signature: t=1735396724,v1=8692e686b26fb2367471a47022750e4279654b58264098fb61b46e432e2ce012,v0=a6f532055389ba1b4b5f0e6d44dc67c3867c4a83e957af60f574a55ff634beaa
-[INFO] 
-Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
-[INFO] Successfully verified webhook event: plan.deleted
-[INFO] POST /api/webhooks/stripe 200 in 1ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
-[INFO] 
-Stripe Signature: t=1735396724,v1=80b35c8e26deedfa6866fbaa219be8869380de16415ea185e19d21c0ffacda90,v0=30992abf76d1497fb4c27c64e8d9650b0339d5584b3aa135e84bf2a8d0dd1b94
-[INFO] 
-Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
-[INFO] Successfully verified webhook event: price.deleted
-[INFO] POST /api/webhooks/stripe 200 in 1ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
-[INFO] 
-Stripe Signature: t=1735396724,v1=19d07eda5c1b54a8b87ed60fdebfc7e575c03e4d6a0a9ccc5b4a17779a5d5a21,v0=e603b86e18eaa0f205236e83ec41f6a5d9623094695ddde2d66fbec69ef3db2c
-[INFO] 
-Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
-[INFO] Successfully verified webhook event: product.deleted
-[INFO] POST /api/webhooks/stripe 200 in 1ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
-[INFO] 
-Stripe Signature: t=1735396731,v1=6914a6eff0c0dfccf453be326362aac575e0030c1c6a034ebd75ee0dc58d5ae3,v0=0a5d218d0c0cb031a1934b88258a749972b58f06361166618e4d37ef446cae16
-[INFO] 
-Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
-[INFO] Successfully verified webhook event: plan.deleted
-[INFO] POST /api/webhooks/stripe 200 in 1ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
-[INFO] 
-Stripe Signature: t=1735396731,v1=e1bbf794795d15e4d48dd9e4d83d5811685e53240c37c5d9e9bf8b2f43f314c3,v0=568d77a4eac91753d9c22d3e588495755223f15c7a8c8646f49b5e7e63693fe6
-[INFO] 
-Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
-[INFO] Successfully verified webhook event: price.deleted
-[INFO] POST /api/webhooks/stripe 200 in 1ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
-[INFO] 
-Stripe Signature: t=1735396732,v1=8300afa77b1a2b3856cc0fb81a15febff3be682964443188b9005e4e1800dc8d,v0=ad89f774b634f9d216fc5c3bf5807c428b547ea8323d7749d3ae9e52971af008
-[INFO] 
-Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
-[INFO] Successfully verified webhook event: product.deleted
-[INFO] POST /api/webhooks/stripe 200 in 1ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
-[INFO] 
-Stripe Signature: t=1735396735,v1=4ea0296d32c6803d68fb737141fc396c9b6754377a90bf200c3fa812d555187a,v0=baf63cbd884fcf67b93820c604657160f221c28467983faea27667bea5ced5d2
-[INFO] 
-Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
-[INFO] Successfully verified webhook event: plan.deleted
-[INFO] POST /api/webhooks/stripe 200 in 1ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
-[INFO] 
-Stripe Signature: t=1735396735,v1=7b716c6eef0a311076799a37c1064b6a54015098cc625e12918f698b314b7bc9,v0=d10348cede0dc1ccb880e6dcfff92f2edbc9ed8229fbb39467c8085b19efe191
-[INFO] 
-Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
-[INFO] Successfully verified webhook event: price.deleted
-[INFO] POST /api/webhooks/stripe 200 in 2ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
-[INFO] 
-Stripe Signature: t=1735396736,v1=f69e2eeea2f84baaf3039e3ea3e1c77630b7801915de20a7e9b63d1f29250688,v0=b54275eda256286b8c2214466276b5b83a1a1b38300e850961022815ba8efff4
-[INFO] 
-Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
-[INFO] Successfully verified webhook event: product.deleted
-[INFO] POST /api/webhooks/stripe 200 in 2ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
-[INFO] 
-Stripe Signature: t=1735396739,v1=e3164c92cc8835e53d885c22345e2dc360728c6273b1cbad4a85b8cdb078a71c,v0=a88df75d2526c08879723fd15c74e174d7dc2ab604e305e1c1b11dde9203fd7e
-[INFO] 
-Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
-[INFO] Successfully verified webhook event: plan.deleted
-[INFO] POST /api/webhooks/stripe 200 in 2ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
-[INFO] 
-Stripe Signature: t=1735396739,v1=05d50dd1d0d804623378fdf8ef69cef738b183add3a4b73a7fe51ae4a0301e42,v0=ccda4dac776fe12ed6bb01c5c79990797b1993e6906bbc7d4e3d53f8d195ba25
-[INFO] 
-Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
-[INFO] Successfully verified webhook event: price.deleted
-[INFO] POST /api/webhooks/stripe 200 in 1ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
-[INFO] 
-Stripe Signature: t=1735396740,v1=dbe6dbff9140e626fb52502926dcbe80942fc609a7472babd5a614fba9eab96b,v0=0fc31732e594bd13327ac48f31d8eb68741702aa678876459961648c0c913013
-[INFO] 
-Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
-[INFO] Successfully verified webhook event: product.deleted
-[INFO] POST /api/webhooks/stripe 200 in 1ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
-[INFO] 
-Stripe Signature: t=1735396743,v1=1ff9c2c921dfb5dcad0a9511aeb1c9acdf559b45b4a2d012d928c19386d2d447,v0=3c4ca8cbf49990e691a219d977946d88a11e8cac84af9d16f14d231e14c21f45
-[INFO] 
-Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
-[INFO] Successfully verified webhook event: price.deleted
-[INFO] POST /api/webhooks/stripe 200 in 1ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
-[INFO] 
-Stripe Signature: t=1735396743,v1=0bbb81bf4c83dc158b435e00f081e6fd3f31e0a58ab00d79ed75aa44f3037ec7,v0=4a693c9ed5ef08c5016d923f38252490e9fa58fb0589e4e736d5379d0f315733
-[INFO] 
-Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
-[INFO] Successfully verified webhook event: plan.deleted
-[INFO] POST /api/webhooks/stripe 200 in 1ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
-[INFO] 
-Stripe Signature: t=1735396743,v1=b89ddb2bc7d3320e129a70bad9e84ccc827ce43cfe1eee265aabc57b55928ea1,v0=b3d06fdb4680ae7a677b7f231d8e790964d2a7d24b0dc4c31a3e7ee9791a7225
-[INFO] 
-Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
-[INFO] Successfully verified webhook event: product.deleted
-[INFO] POST /api/webhooks/stripe 200 in 1ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
-[INFO] 
-Stripe Signature: t=1735396774,v1=6ab08f5fcc60bd985f38add7930a02546fc9e57be02d96abbea81d275cc51b04,v0=346e9c9fd98a914b6863aad98f2c39b437c2dc9f31f46c5f0bc4c4b9ffcaa96b
-[INFO] 
-Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
-[INFO] Successfully verified webhook event: invoice.created
-[INFO] POST /api/webhooks/stripe 200 in 1ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
-[INFO] 
-Stripe Signature: t=1735396799,v1=b76f29a63691372f636e883b8fe1b83d1e7e317ff1f9569e644171e05ffb4006,v0=dc041f77c7c64c5ada1c1117d839220b5e8730ab8cab206c4328839dfd4c93cb
-[INFO] 
-Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
-[INFO] Successfully verified webhook event: payment_intent.created
-[INFO] POST /api/webhooks/stripe 200 in 1ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
-[INFO] 
-Stripe Signature: t=1735396803,v1=5c5f8826278c08cfa39aeb3fadd0d21e861c87468d8c822289fede099e2d546a,v0=09bc312f1287a66ebbd2eaeb077aba5c90df1bab0e11ed629b24fc44c211aba7
-[INFO] 
-Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
-[INFO] Successfully verified webhook event: customer.subscription.created
-[INFO] POST /api/webhooks/stripe 200 in 2ms
-[INFO] Before Middleware - Type of req.body: Buffer - Path: /api/webhooks/stripe
-[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
-[INFO] 
-Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
-[INFO] 
-Stripe Signature: t=1735396830,v1=c7b7a1462356dd1234077c9c680c65decc9e2610db34a11944e34c27ada613a9,v0=320ee2a2ef5ec6de5fe71135f5837e324f0174b1e42c5f14014faf545c87f12d
-[INFO] Successfully verified webhook event: payment_intent.created
-[INFO] POST /api/webhooks/stripe 200 in 1ms
-[INFO] Stripe initialized successfully
-[INFO] ***Starting server initialization...
-
-
-[INFO] Registering routes...
-[INFO] Setting up Vite for development...
-[INFO] Stripe initialized successfully
-[INFO] ***Starting server initialization...
-
-
-[INFO] Registering routes...
-[INFO] Setting up Vite for development...
-[INFO] Server started successfully on port 4000
-[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
-[INFO] GET / 200 in 32ms
-[INFO] GET /@vite/client 304 in 60ms
-[INFO] GET /@react-refresh 304 in 54ms
-[INFO] GET /src/main.tsx 304 in 113ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 0ms
-[INFO] Stripe initialized successfully
-[INFO] ***Starting server initialization...
-
-
-[INFO] Registering routes...
-[INFO] Setting up Vite for development...
-[INFO] Server started successfully on port 4000
-[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
-[INFO] GET / 200 in 45ms
-[INFO] GET /@vite/client 304 in 45ms
-[INFO] GET /@react-refresh 304 in 29ms
-[INFO] GET /src/main.tsx 304 in 76ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 475ms
-[INFO] GET /src/pages/PricingPage.tsx 200 in 3ms
-[INFO] GET /src/components/ui/toaster.tsx 200 in 1ms
-[INFO] GET /src/pages/AdminPage.tsx 200 in 2ms
-[INFO] GET /src/pages/AuthPage.tsx 200 in 1ms
-[INFO] GET /src/pages/ProfilePage.tsx 200 in 2ms
-[INFO] GET /src/pages/LibraryPage.tsx 200 in 2ms
-[INFO] GET /src/pages/BillingPage.tsx 200 in 1ms
-[INFO] GET /src/hooks/use-user.ts 200 in 1ms
-[INFO] GET /src/components/Sidebar.tsx 200 in 1ms
-[INFO] GET /src/index.css 200 in 2242ms
-[INFO] GET /src/lib/queryClient.ts 304 in 1ms
-[INFO] GET /src/hooks/use-toast.ts 200 in 2ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 4ms
-[INFO] GET /src/components/ui/button.tsx 200 in 3ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 2ms
-[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 1ms
-[INFO] GET /src/components/ui/input.tsx 304 in 1ms
-[INFO] GET /src/components/ui/form.tsx 304 in 1ms
-[INFO] GET /src/components/ui/card.tsx 304 in 1ms
-[INFO] GET /src/components/ui/avatar.tsx 304 in 1ms
-[INFO] GET /src/lib/utils.ts 304 in 1ms
-[INFO] GET /src/components/ui/tabs.tsx 304 in 1ms
-[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-audio.ts 304 in 2ms
-[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 0ms
-[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-tts.ts 200 in 1ms
-[INFO] GET /src/components/Logo.tsx 200 in 1ms
-[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
-[INFO] GET /src/components/UsageProgress.tsx 200 in 1ms
-[INFO] GET /src/components/ui/collapsible.tsx 200 in 1ms
-[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
-[INFO] GET /src/components/ui/slider.tsx 304 in 1ms
-[INFO] GET /src/components/ui/label.tsx 304 in 1ms
-[INFO] GET /src/components/ui/popover.tsx 304 in 0ms
-[INFO] GET /src/components/ui/select.tsx 304 in 1ms
-[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
-[INFO] GET /api/user 401 in 2ms
-[INFO] 
-Stripe Signature: t=1735396846,v1=b4c3676e166f8176ea7949ad6c259be71ad5506c23bdacc0eb4f12b4663a18c7,v0=f0072112c48378c05d530fb3102f050efe1e889e74e3ad67db8b6baa24a257c5
-[INFO] 
-Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
-[INFO] Successfully verified webhook event: customer.subscription.created
-[INFO] POST /api/webhooks/stripe 200 in 4ms
-[INFO] 
-Stripe Signature: t=1735396851,v1=a2829d4252c6049537f98784c84b31c5c0320863819b1a0104650a946ed0a17e,v0=a03f08a433d8882948600a1d2024672aa2615d1717b810098de2ca55b8756624
+Stripe Signature: t=1735396962,v1=2e33393dcf2d420e2c28aa61e29081752fd29c272f1c61a3eb637e32404875a7,v0=49ce83f572ca3a7217b9f6587c3295d112066332820d7139f7ea962ce57c7229
 [INFO] 
 Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
 [INFO] Successfully verified webhook event: invoice.finalized
 [INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] 
+Stripe Signature: t=1735397018,v1=8119aeac9f2699ff42e8543cf23c35d5e8196699e6da4427353a777d8916933b,v0=712838452bcc624d3b19f2f539d99f7372f10683402d455b61e8cc0efa7d0c2f
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: price.created
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735397042,v1=7f646e448156fa10f129aec4408b28c2328809e017206b2b9566fe4ccf19d68e,v0=447364badd0ca2c08673647bf39b9b12efe91833d3a1703e06bb0bd683fea4aa
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: plan.created
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] GET / 200 in 59ms
+[INFO] GET /@vite/client 304 in 55ms
+[INFO] GET /@react-refresh 304 in 86ms
+[INFO] 
+Stripe Signature: t=1735397060,v1=0f18d43f083f8da4cf4ad1ad57bd0d01b7afc63f3f64eed8d63124d35027a516,v0=f90faf877f779d9b905ac5260722be45cc495c64cc9107e09b61568cedd1f37a
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: charge.succeeded
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735397060,v1=22dca5b5d20d7442486bd7d3001c5158a2daa77d64bedd86d8757ce179f5d94d,v0=2e29ba44d84e0433d060b012c9044b467e83bef45c691f12cb89e8c66be4d860
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: payment_method.attached
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] GET /src/main.tsx 304 in 139ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 192ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 117ms
+[INFO] 
+Stripe Signature: t=1735397060,v1=b4357329334f56186f44178b9199f215ee13f39c61e9de3da158f986a867a3e3,v0=5d99e6f0e404eeaf57e5bdee2ca529dfe2c6553d00b22d6a2d338579b1417aa0
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: customer.subscription.updated
+[INFO] GET /src/index.css 304 in 101ms
+[INFO] 
+Stripe Signature: t=1735397060,v1=83f53d4c02edade8f480225d30a392e900dccb7c1331778b02398cf8a2142e62,v0=b256d3f133a812f94ce8a6013ec28800d660e0b2914ca2ced31af888c3b2e7bb
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: payment_intent.succeeded
+[INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] GET /src/lib/queryClient.ts 304 in 153ms
+[INFO] 
+Stripe Signature: t=1735397060,v1=98c512629642270452f8dcf83a5eec5ecc7d8512081eca965c46eb7d3dd5344e,v0=5cf62c0a3243326702a5e8b4283ff689d7e3d72a0f11d7895b21b2284a0aa4d8
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: invoice.updated
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 163ms
+[INFO] 
+Stripe Signature: t=1735397060,v1=56a7c6702b4bd07be83e0e4fa44d78e4ce189b624654ab563ff8d7b82dd75264,v0=0233ec1e0b980d9ca4b72870092cab56ebe4ffb15a7c3a7b00e9246f406b57e9
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: invoice.paid
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 171ms
+[INFO] 
+Stripe Signature: t=1735397060,v1=bfde4ea9d2eba3bfea5430cca42dbee6a295a5b3565d1e2ea0930bd2385082be,v0=7d1fe77fc8cfefe8487ed1ffc4fb494f4248387f80b53cbd807447d7ac87cecc
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: invoice.payment_succeeded
+[INFO] Updated subscription status for user 13
+[INFO] POST /api/webhooks/stripe 200 in 222ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 250ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 302ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 330ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 332ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 331ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 327ms
+[INFO] GET /src/hooks/use-user.ts 304 in 279ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 275ms
+[INFO] 
+Stripe Signature: t=1735397061,v1=10631cebeec9df7910025b95cf0791592cd0d64a3454f8c46f225fd7601335a3,v0=833daac2d2069b5a8ff8404527f9146eed4bf8b067a1bc484cb727e36bae6269
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: price.created
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] Successfully processed payment for subscription sub_1Qb1DwBwEMzOkTIK2KDbXD6d
+[INFO] POST /api/webhooks/stripe 200 in 502ms
+[INFO] GET /src/components/ui/button.tsx 304 in 331ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 332ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 331ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 331ms
+[INFO] GET /src/components/Logo.tsx 304 in 330ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 326ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 275ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 274ms
+[INFO] GET /src/components/ui/input.tsx 304 in 277ms
+[INFO] GET /src/components/ui/form.tsx 304 in 278ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 278ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 277ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 278ms
+[INFO] GET /src/lib/utils.ts 304 in 280ms
+[INFO] GET /src/components/ui/card.tsx 304 in 274ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 276ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 278ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 273ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 275ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 276ms
+[INFO] GET /src/components/ui/label.tsx 304 in 275ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 277ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 276ms
+[INFO] GET /src/components/ui/select.tsx 304 in 259ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 278ms
+[INFO] GET /api/user 200 in 56ms
+[INFO] GET / 200 in 57ms
+[INFO] GET / 200 in 126ms
+[INFO] GET / 200 in 119ms
+[INFO] GET /api/playlists 304 in 264ms
+[INFO] 
+Stripe Signature: t=1735397075,v1=8ca150a2895e5c2881a83a5f9e1525a12a078ff2d97e67bad90447ba8925905a,v0=0d74ad7c6ba68eae98b1b5b1238e186213dc9c02a1391c50633fe40ffa7b646f
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: price.created
+[INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] 
+Stripe Signature: t=1735397077,v1=3505484840ec5a76e53548358100c1eebdc602169bd19a5a48286357c5e913e5,v0=055e429463873e03f804f365f84aa6f241d7117f73cf8ee589c0433ee25c108d
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: plan.created
+[INFO] POST /api/webhooks/stripe 200 in 0ms
+[INFO] 
+Stripe Signature: t=1735397078,v1=d1c74605f09182c2c5ac91ae76bebd14315d8f8cda720f3487eb45c56d2dcade,v0=4597ce56f0b2a0b078c332ceab3749228482d6b61b693faf5e4dc6ac81a706d4
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: plan.created
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735397094,v1=d6fce63d70a1f7eed71e72b6ea05666a0cff55b44224ef443c1983c33ffa3618,v0=bdbc1d9a67b7b2935b4627359d37c5060f7c28a417c9b61ca71659bf2b3ad86a
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.created
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735397123,v1=cb8e6a320209feb7a4699cd3a564e30db4f40c9f9fa79e7ebae87713e82a6117,v0=944b9fd248ac53947e09124906a80dbe3af1e31dacfeecb5d84fd90b4f27c534
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: invoice.finalized
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735397132,v1=3661c8cec129b1cd0fefad2a2323ee419d03145875b4f66c65d1e1eb3900f867,v0=5cace0a70ff34a0b2f0128aa6b58680b41da7fc2cfec5e8a9e462655bdab736c
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: payment_intent.created
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735397134,v1=3dffc419199b1cab825eded4934ce651265acfffcbf8d9f183e85c6a1872e903,v0=70fd0f5c2b2e9afc659ce9fd275b26cbc3a3528dd6c09dec9f74eaa4ce549049
+[INFO] Successfully verified webhook event: product.created
+[INFO] POST /api/webhooks/stripe 200 in 0ms
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] 
+Stripe Signature: t=1735397135,v1=b832c6bcf3578f7540fa14570494a1902c80893f5cb8d97fe04e59301f1b9b29,v0=893af3cb3093e163450b2648b70adf754c7408f79bae2045a1c9e8c871173094
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: invoice.created
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735397150,v1=f94b25f702289234080df15a91eb1a6d1c345ed15ca32735c1119f5bd5e48035,v0=fb2bc3cfb50eda66faeccfd815081635c3ce1accbb7af7b523ff0471c6336174
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.created
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735397169,v1=bbffa8774c18dad44b3424f0069e51ebc68e4e639bfabf4f31fbc9f608bee9b6,v0=e554b79818807f6b365cfb0c88678458018380658b12d430ca14d39934c4cb21
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: customer.subscription.created
+[INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] 
+Stripe Signature: t=1735397190,v1=9f0b27f680562b403fe92514292514b18e2812be5230d509df54233ce42505b6,v0=08d712c7ae364ac5a0bb47403924243fcef41fd393ab1b07e7e8f9ad5a3162a1
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: invoice.finalized
+[INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] 
+Stripe Signature: t=1735397198,v1=3572cd6dbba5e922868d3f94f2a4b1184bbf0dfc5a1fe0199dddbb5f735b9922,v0=3d4285d4f341447cca38c1b98f26a0d4c3f8c0d4f1e3d79d3c5971a77d35cc7f
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: invoice.created
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735397205,v1=9c93fcacee3c23bbbc98913a7a01b7a7df0a3a81ca84a7a8ea0d935e5c47bf9e,v0=ae5b4eeb20835f35668a9076421b5d8c1ba0051a72c6bcd39c8bada0a76f432e
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: payment_intent.created
+[INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] 
+Stripe Signature: t=1735397206,v1=beab9fd96fa35177eb398ef0d32d363ac8728ca2ade29d65b810ea96dde3fd02,v0=91d65d27e3b223748c9fed0e56a74dcaf89fd6566b0906404863789aae241065
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: customer.subscription.created
+[INFO] POST /api/webhooks/stripe 200 in 1ms

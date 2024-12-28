@@ -54,15 +54,6 @@ try {
 export function registerRoutes(app: Express) {
   setupAuth(app);
 
-  // // Log req.body type for all routes
-  // app.use((req: Request, res: Response, next: NextFunction) => {
-  //   const bodyType = Buffer.isBuffer(req.body) ? "Buffer" : typeof req.body;
-  //   logger.info(
-  //     `Before Middleware - Type of req.body: ${bodyType} - Path: ${req.path}`,
-  //   );
-  //   next();
-  // });
-
   // Parse as raw body for Stripe webhook requests, json for others
   app.use((req, res, next) => {
     if (req.originalUrl === "/api/webhooks/stripe") {
@@ -173,9 +164,6 @@ export function registerRoutes(app: Express) {
   app.post("/api/webhooks/stripe", async (req, res) => {
     let event: Stripe.Event;
 
-    // const bodyType = Buffer.isBuffer(req.body) ? "Buffer" : typeof req.body;
-    // logger.info(`Inside /api/webhooks/stripe: Type of req.body: ${bodyType}`);
-
     try {
       const sig = req.headers["stripe-signature"];
 
@@ -190,7 +178,6 @@ export function registerRoutes(app: Express) {
         return res.status(500).json({ error: "Webhook secret not configured" });
       }
 
-      // logger.info(`\nRequest Body: ${req.body.toString()}`);
       logger.info(`\nStripe Signature: ${sig}`);
       logger.info(`\nWebhook signature: ${process.env.STRIPE_WEBHOOK_SECRET}`);
 
