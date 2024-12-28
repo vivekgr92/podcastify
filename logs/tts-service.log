@@ -2721,3 +2721,94 @@ Learn more about webhook signing and explore webhook integration examples for va
 [INFO] GET /api/user/usage/check 304 in 116ms
 [INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
 [INFO] GET /api/user/usage/check 304 in 116ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 116ms
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] Before Middleware - Type of req.body: undefined - Path: /
+[INFO] Before Middleware - Type of req.body: undefined - Path: /api/webhooks/stripe
+[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
+[INFO] 
+Stripe Signature: t=1735394290,v1=0f23d3e6be5011f4183fb2a158ed5b58837e55d999094238b4541ae56e87b2a9,v0=955bfd357714f203573cb6946a39f1328e1558ce4c876a846524e991542f1900
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.created
+[INFO] POST /api/webhooks/stripe 200 in 8ms
+[INFO] Before Middleware - Type of req.body: undefined - Path: /api/webhooks/stripe
+[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
+[INFO] 
+Stripe Signature: t=1735394290,v1=890964a3e52cd6f4b6156a9c501fc5b4088eb9ec669c444a89b018b180070110,v0=da692ed9ef720d19cda39d0a56b73c01797c1c0a1bd0e1a3b38d398e72dfa55a
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: plan.created
+[INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] Before Middleware - Type of req.body: undefined - Path: /api/webhooks/stripe
+[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
+[INFO] 
+Stripe Signature: t=1735394290,v1=cb601c9e7197f04bbfeaf70449acb42ed48dfa5d4a9bf2babc9d8e237728bd7c,v0=f774d340c436f86354a727cdd8a8d74030ad18045e4860fffcba608292a4a98e
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: price.created
+[INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] Before Middleware - Type of req.body: undefined - Path: /api/webhooks/stripe
+[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
+[INFO] 
+Stripe Signature: t=1735394291,v1=870145fb70b1db95aad62e5b6eff9bb27cc48a189d0133100426055b467ef212,v0=70a9a9c60cc2925884d7047cc89d42f4f784ebf427344bdac2ce90863b5279a3
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.created
+[INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] Before Middleware - Type of req.body: undefined - Path: /api/webhooks/stripe
+[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: plan.created
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735394291,v1=f175653438fce0092047617b882d960310b952c16b20800675a3350b1db084e9,v0=e5d34beee3c28ddafa70e14a8dd2eb960b3577300a65aa9c6157361d8f87e95f
+[INFO] Before Middleware - Type of req.body: undefined - Path: /api/webhooks/stripe
+[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
+[INFO] 
+Stripe Signature: t=1735394291,v1=51d5bf8bfa82edcdb2fb19b985c18d246389ac2d81bcdd6aa143feaa1b6b8dac,v0=593b35caf813213329a338d295c2be04b5f93e803e6f88985cf484f6e072e8bd
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: price.created
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] GET / 200 in 114ms
+[INFO] Before Middleware - Type of req.body: undefined - Path: /api/webhooks/stripe
+[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
+[INFO] 
+Stripe Signature: t=1735394291,v1=b15740f54a5b0d0162170c1239c44280830a496d6ccb480aefbe5fb0b87d0cc4,v0=7964b760bfe0358abd307321fa069ad01a6af19631a716f1637c47d0e8dd57c8
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: product.created
+[INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] Before Middleware - Type of req.body: undefined - Path: /
+[INFO] Before Middleware - Type of req.body: undefined - Path: /src/main.tsx
+[INFO] GET / 200 in 743ms
+[INFO] Before Middleware - Type of req.body: undefined - Path: /@vite/client
+[INFO] Before Middleware - Type of req.body: undefined - Path: /api/webhooks/stripe
+[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
+[INFO] 
+Stripe Signature: t=1735394291,v1=4f854da8c02bb3aa3063992392feca2bbc9b381892d1d54c0d986776d5371ecb,v0=27078d9b70d1d6ea3bcd3be588ef02f31c081bc91949d5914229bd5cd9cee47f
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: plan.created
+[INFO] POST /api/webhooks/stripe 200 in 13ms
+[INFO] Before Middleware - Type of req.body: undefined - Path: /api/webhooks/stripe
+[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
+[INFO] 
+Stripe Signature: t=1735394291,v1=d616f26f8ccc0407b721afade82125a29046447aa9952f6919362a5bb23d67e7,v0=efb1b913ec5ab0ded7fbff907ded5ed5c3fd667673fac51e2934eeb864012106
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: price.created
+[INFO] POST /api/webhooks/stripe 200 in 3ms
+[INFO] Before Middleware - Type of req.body: undefined - Path: /@react-refresh
+[INFO] GET /@react-refresh 304 in 1ms
+[INFO] Before Middleware - Type of req.body: undefined - Path: /@vite-plugin-checker-runtime
