@@ -55,7 +55,11 @@ export function registerRoutes(app: Express) {
   setupAuth(app);
 
   // Configure express to use raw body for Stripe webhooks
-  app.use("/api/webhooks/stripe", express.raw({ type: "*/*" }));
+  app.use(
+    "/api/webhooks/stripe",
+    express.raw({ type: "application/json" }), // Ensure raw body for Stripe
+  );
+
   app.use(express.json()); // For all other routes
 
   // Create subscription endpoint with enhanced error handling
@@ -158,6 +162,8 @@ export function registerRoutes(app: Express) {
   // Webhook handler for subscription events
   app.post("/api/webhooks/stripe", async (req, res) => {
     let event: Stripe.Event;
+
+    logger.info(`************Received webhook: ${req.body.type}`);
 
     try {
       const sig = req.headers["stripe-signature"];
