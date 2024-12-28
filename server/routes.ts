@@ -54,6 +54,15 @@ try {
 export function registerRoutes(app: Express) {
   setupAuth(app);
 
+  // Log req.body type for all routes
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    const bodyType = Buffer.isBuffer(req.body) ? "Buffer" : typeof req.body;
+    logger.info(
+      `Before Middleware - Type of req.body: ${bodyType} - Path: ${req.path}`,
+    );
+    next();
+  });
+
   // Configure express to use raw body for Stripe webhooks
   app.use(
     "/api/webhooks/stripe",
@@ -163,7 +172,8 @@ export function registerRoutes(app: Express) {
   app.post("/api/webhooks/stripe", async (req, res) => {
     let event: Stripe.Event;
 
-    logger.info(`************Received webhook: ${req.body.type}`);
+    const bodyType = Buffer.isBuffer(req.body) ? "Buffer" : typeof req.body;
+    logger.info(`Inside /api/webhooks/stripe: Type of req.body: ${bodyType}`);
 
     try {
       const sig = req.headers["stripe-signature"];
