@@ -221,6 +221,25 @@ export default function HomePage() {
             </div>
           </div>
 
+          {isConverting && (
+            <div className="w-full bg-gray-900 rounded-lg p-4 mb-12">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm text-gray-400">
+                  Converting to podcast...
+                </span>
+                <span className="text-sm text-gray-400">
+                  {Math.round(progress)}%
+                </span>
+              </div>
+              <div className="w-full bg-gray-800 rounded-full h-2">
+                <div
+                  className="bg-[#4CAF50] h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+            </div>
+          )}
+
           <div className="bg-gray-900/50 rounded-lg p-6">
             <h2 className="text-xl font-bold mb-6">Frequently Asked Questions</h2>
             <div className="space-y-4">
@@ -246,25 +265,6 @@ export default function HomePage() {
               ))}
             </div>
           </div>
-
-          {isConverting && (
-            <div className="w-full bg-gray-900 rounded-lg p-4 mb-12">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-gray-400">
-                  Converting to podcast...
-                </span>
-                <span className="text-sm text-gray-400">
-                  {Math.round(progress)}%
-                </span>
-              </div>
-              <div className="w-full bg-gray-800 rounded-full h-2">
-                <div
-                  className="bg-[#4CAF50] h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-            </div>
-          )}
         </div>
       </div>
     );
