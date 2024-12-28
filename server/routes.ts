@@ -26,11 +26,36 @@ import { eq, and, sql, desc } from "drizzle-orm";
 import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import Stripe from "stripe";
 
-// Constants for usage limits
-const ARTICLE_LIMIT = 3;
-const PODIFY_TOKEN_LIMIT = 10000;
+// Plan-specific usage limits
+const USAGE_LIMITS = {
+  free: {
+    articleLimit: 3,
+    podifyTokenLimit: 10000
+  },
+  pro: {
+    articleLimit: Infinity,
+    podifyTokenLimit: 40000
+  },
+  proAnnual: {
+    articleLimit: Infinity,
+    podifyTokenLimit: 60000
+  }
+};
+
 const PODIFY_TOKEN_RATE = 0.005;
 const PODIFY_MARGIN = 0.6;
+
+// Helper to get limits based on subscription status
+function getLimits(subscriptionStatus: string) {
+  switch (subscriptionStatus) {
+    case 'active:pro':
+      return USAGE_LIMITS.pro;
+    case 'active:proAnnual':
+      return USAGE_LIMITS.proAnnual;
+    default:
+      return USAGE_LIMITS.free;
+  }
+}
 
 // Initialize Stripe with proper API version and error handling
 let stripe: Stripe;
@@ -217,10 +242,14 @@ export function registerRoutes(app: Express) {
                 .json({ error: "Invalid subscription metadata" });
             }
 
+            // Determine subscription type from price metadata
+            const priceId = subscription.items.data[0].price.id;
+            const subscriptionType = priceId.includes('annual') ? 'active:proAnnual' : 'active:pro';
+
             const [updatedUser] = await db
               .update(users)
               .set({
-                subscriptionStatus: "active",
+                subscriptionStatus: subscriptionType,
                 subscriptionId: subscription.id,
                 currentPeriodEnd: new Date(
                   subscription.current_period_end * 1000,
@@ -228,6 +257,23 @@ export function registerRoutes(app: Express) {
               })
               .where(eq(users.id, parseInt(subscription.metadata.userId)))
               .returning();
+
+            // Reset usage for the current month
+            const currentMonth = new Date().toISOString().slice(0, 7);
+            await db
+              .update(userUsage)
+              .set({
+                articlesConverted: 0,
+                tokensUsed: 0,
+                podifyTokens: "0",
+                lastConversion: new Date(),
+              })
+              .where(
+                and(
+                  eq(userUsage.userId, parseInt(subscription.metadata.userId)),
+                  eq(userUsage.monthYear, currentMonth),
+                ),
+              );
 
             if (!updatedUser) {
               throw new Error(
@@ -481,17 +527,20 @@ export function registerRoutes(app: Express) {
       }
 
       // Calculate estimated total tokens and check usage limits
-      const wouldExceedArticles = currentArticles >= ARTICLE_LIMIT;
+      const currentLimits = getLimits(user.subscriptionStatus || 'free');
+      const wouldExceedArticles = currentArticles >= currentLimits.articleLimit;
       const estimatedTotalCost = estimatedPricing.totalCost;
       const estimatedPodifyTokens = convertToPodifyTokens(estimatedTotalCost);
 
       const wouldExceedPodifyTokens =
-        currentPodifyTokens + estimatedPodifyTokens > PODIFY_TOKEN_LIMIT;
+        currentPodifyTokens + estimatedPodifyTokens > currentLimits.podifyTokenLimit;
 
-      const remainingArticles = Math.max(0, ARTICLE_LIMIT - currentArticles);
+      const remainingArticles = currentLimits.articleLimit === Infinity ? 
+        Infinity : 
+        Math.max(0, currentLimits.articleLimit - currentArticles);
       const remainingPodifyTokens = Math.max(
         0,
-        PODIFY_TOKEN_LIMIT - currentPodifyTokens,
+        currentLimits.podifyTokenLimit - currentPodifyTokens,
       );
 
       await logger.info([
