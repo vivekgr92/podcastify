@@ -3093,3 +3093,19 @@ Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
 [INFO] GET /api/user 401 in 1ms
 [INFO] POST /api/login 400 in 1ms
 [INFO] GET /api/user 401 in 0ms
+[INFO] Before Middleware - Type of req.body: undefined - Path: /api/webhooks/stripe
+[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
+[INFO] 
+Stripe Signature: t=1735394399,v1=635d705bb9be403eb7d5a709106f5c88c39034117aa8111c752233f79e629ec8,v0=aaa953900332ebc52e212e9bb42642ecc5b491d64d339f240e9aca6aa5f2848c
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: invoice.finalized
+[INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] Before Middleware - Type of req.body: undefined - Path: /api/webhooks/stripe
+[INFO] Inside /api/webhooks/stripe: Type of req.body: Buffer
+[INFO] 
+Stripe Signature: t=1735394416,v1=d1028c3ff20e10f2b14cb41909eb6551f73391c755edaa36ec0ed8a6205baed7,v0=c81a2d753bcb37bc642cd0cc6fe244e6316916fca10d14156a6f7343e214d158
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: customer.subscription.created
+[INFO] POST /api/webhooks/stripe 200 in 1ms
