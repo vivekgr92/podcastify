@@ -63,13 +63,14 @@ export function registerRoutes(app: Express) {
     next();
   });
 
-  // Configure express to use raw body for Stripe webhooks
-  app.use(
-    "/api/webhooks/stripe",
-    express.raw({ type: "application/json" }), // Ensure raw body for Stripe
-  );
-
-  app.use(express.json()); // For all other routes
+  // Parse as raw body for Stripe webhook requests, json for others
+  app.use((req, res, next) => {
+    if (req.originalUrl === '/api/webhooks/stripe') {
+      express.raw({type: 'application/json'})(req, res, next);
+    } else {
+      express.json()(req, res, next);
+    }
+  });
 
   // Create subscription endpoint with enhanced error handling
   app.post("/api/create-subscription", async (req, res) => {
