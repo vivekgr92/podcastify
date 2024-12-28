@@ -10,10 +10,6 @@ dotenv.config();
 
 const app = express();
 
-// Basic middleware setup
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
 // Logging middleware
 app.use((req, res, next) => {
   const start = Date.now();
