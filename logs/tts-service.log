@@ -2706,3 +2706,18 @@ Learn more about webhook signing and explore webhook integration examples for va
 [INFO] GET /src/components/ui/scroll-area.tsx 304 in 58ms
 [INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/dialog.tsx
 [INFO] GET /src/components/ui/dialog.tsx 200 in 62ms
+[INFO] GET /api/user 304 in 61ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/stats
+[INFO] GET / 200 in 64ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/playlists
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/playlists 304 in 225ms
+[INFO] GET /api/user/usage/check 304 in 203ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 116ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 115ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 116ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 116ms
