@@ -10,6 +10,13 @@ dotenv.config();
 
 const app = express();
 
+// Add raw body parser for Stripe webhook first
+app.post("/api/webhooks/stripe", express.raw({ type: "application/json" }));
+
+// Body parsing middleware after auth setup
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
 // Logging middleware
 app.use((req, res, next) => {
   const start = Date.now();
