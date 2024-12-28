@@ -20,7 +20,7 @@ const plans = [
     ],
     buttonText: "Subscribe Now",
     popular: false,
-    priceId: "price_1QaJICBwEMzOkTIKlQxL5cd4",
+    priceId: "price_1Qb8xDBwEMzOkTIKEcpAxav4",
   },
   {
     name: "Pro Plan",

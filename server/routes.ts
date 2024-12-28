@@ -29,29 +29,37 @@ import Stripe from "stripe";
 const PODIFY_TOKEN_RATE = 0.005;
 const PODIFY_MARGIN = 0.6;
 
-// Plan-specific usage limits
+// ToDO: figure out Plan-specific usage limits
 const USAGE_LIMITS = {
   free: {
     articleLimit: 3,
     podifyTokenLimit: 10000,
   },
-  basic: {
+  basic_monthly: {
     articleLimit: 20,
     podifyTokenLimit: 40000,
   },
-  pro: {
+  basic_annual: {
+    articleLimit: 240, // Example: 12x the monthly limit
+    podifyTokenLimit: 480000, // Example: 12x the monthly limit
+  },
+  pro_monthly: {
     articleLimit: 50,
     podifyTokenLimit: 60000,
+  },
+  pro_annual: {
+    articleLimit: 600, // Example: 12x the monthly limit
+    podifyTokenLimit: 720000, // Example: 12x the monthly limit
   },
 };
 
 // Helper to get limits based on subscription status
 function getLimits(subscriptionStatus: string) {
   switch (subscriptionStatus) {
-    case "active:basic":
-      return USAGE_LIMITS.basic;
-    case "active:pro":
-      return USAGE_LIMITS.pro;
+    case "basic:monthly":
+      return USAGE_LIMITS.basic_monthly;
+    case "pro:monthly":
+      return USAGE_LIMITS.pro_monthly;
     default:
       return USAGE_LIMITS.free;
   }
@@ -246,13 +254,20 @@ export function registerRoutes(app: Express) {
             const price = await stripe.prices.retrieve(
               subscription.items.data[0].price.id,
               {
-                expand: ['product']
-              }
+                expand: ["product"],
+              },
             );
             const productName = (price.product as Stripe.Product).name;
-            const subscriptionType = price.metadata?.billing_period === "monthly"
-              ? "active:basic_monthly"
-              : "active:pro";
+            const billingType = price.metadata.billing_period;
+
+            // Combine the values
+            const subscriptionType = `${productName}:${billingType}`;
+
+            logger.info(
+              `\n\n ------Subscription Type ------- ${subscriptionType}`,
+            );
+
+            console.log(combinedName); // Outputs something like "Basic:monthly"
 
             const [updatedUser] = await db
               .update(users)
@@ -557,7 +572,7 @@ export function registerRoutes(app: Express) {
         `Estimated Podify Tokens: ${estimatedPodifyTokens}`,
         `\n\nUsage limits check for user ${user.id}:\n`,
         `Current articles: ${currentArticles}/${ARTICLE_LIMIT}\n`,
-        `Current Podify tokens: ${currentPodifyTokens}/${PODIFY_TOKEN_LIMIT}\n`,
+        `Current Podify tokens: ${currentPodifyTokens}/${currentLimits.podifyTokenLimit}\n`,
         `Would exceed article limit: ${wouldExceedArticles}\n`,
         `Would exceed token limit: ${wouldExceedPodifyTokens}`,
       ]);
