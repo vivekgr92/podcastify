@@ -244,8 +244,8 @@ export function registerRoutes(app: Express) {
 
             // Determine subscription type from price metadata
             const priceId = subscription.items.data[0].price.id;
-            const subscriptionType = priceId.includes("annual")
-              ? "active:proAnnual"
+            const subscriptionType = priceId.includes("monthly")
+              ? "active:basic"
               : "active:pro";
 
             const [updatedUser] = await db
