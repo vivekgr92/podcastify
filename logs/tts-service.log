@@ -2294,3 +2294,415 @@ Learn more about webhook signing and explore webhook integration examples for va
 [INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
 [INFO] GET /api/user/usage/check 304 in 115ms
 [INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 117ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 121ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/webhooks/stripe
+[INFO] Inside /api/webhooks/stripe: Type of req.body: object
+[INFO] 
+Stripe Signature: t=1735393958,v1=4488ae8c2daf32c0899dae85b34fe7b857dfb08b28b767a5df5bc62e7e5991eb,v0=d0e437f16effa3cecd2795aa4071f6667194c9268cbe8704bc8303de64d4fc02
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[ERROR] Webhook signature verification failed: Webhook payload must be provided as a string or a Buffer (https://nodejs.org/api/buffer.html) instance representing the _raw_ request body.Payload was provided as a parsed JavaScript object instead. 
+Signature verification is impossible without access to the original signed material. 
+
+Learn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature
+
+[INFO] POST /api/webhooks/stripe 400 in 2ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 162ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 116ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 117ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 116ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/webhooks/stripe
+[INFO] Inside /api/webhooks/stripe: Type of req.body: object
+[INFO] 
+Stripe Signature: t=1735393978,v1=12d2480456533c9943ad322b54a5bc54be3ac5dd539cd4bb4c26954fe5730fae,v0=cf87879174abc381dc01fd104925910ddf9ac912a74eb933dfd11c06e8f85a69
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[ERROR] Webhook signature verification failed: Webhook payload must be provided as a string or a Buffer (https://nodejs.org/api/buffer.html) instance representing the _raw_ request body.Payload was provided as a parsed JavaScript object instead. 
+Signature verification is impossible without access to the original signed material. 
+
+Learn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature
+
+[INFO] POST /api/webhooks/stripe 400 in 1ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 116ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/webhooks/stripe
+[INFO] Inside /api/webhooks/stripe: Type of req.body: object
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] 
+Stripe Signature: t=1735393981,v1=c742e7bb86631d4dd24f05fbbd8842dd34552c1244568c79228ddcc81e3c7283,v0=4d98b1cb1d35e2512895a9468b4b136290e3bef477b9c6b8b3f51cfa3cdba41c
+[ERROR] Webhook signature verification failed: Webhook payload must be provided as a string or a Buffer (https://nodejs.org/api/buffer.html) instance representing the _raw_ request body.Payload was provided as a parsed JavaScript object instead. 
+Signature verification is impossible without access to the original signed material. 
+
+Learn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature
+
+[INFO] POST /api/webhooks/stripe 400 in 2ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 116ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 140ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 115ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 114ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/webhooks/stripe
+[INFO] Inside /api/webhooks/stripe: Type of req.body: object
+[INFO] 
+Stripe Signature: t=1735394004,v1=c6e2fe7362826ad156ca3c0f43e1420614daaed420f39a7e4bde8e5b3934e20b,v0=5cf22a23029d3cb67c6b32c443e1a87255ff60eac3926654134fa817fcffcc89
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[ERROR] Webhook signature verification failed: Webhook payload must be provided as a string or a Buffer (https://nodejs.org/api/buffer.html) instance representing the _raw_ request body.Payload was provided as a parsed JavaScript object instead. 
+Signature verification is impossible without access to the original signed material. 
+
+Learn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature
+
+[INFO] POST /api/webhooks/stripe 400 in 2ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 115ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/webhooks/stripe
+[INFO] Inside /api/webhooks/stripe: Type of req.body: object
+[INFO] 
+Stripe Signature: t=1735394009,v1=9d6b520c798f973f622e03afaa6eadaa029f7f6e5c3505304fc0e2d956d1aba4,v0=08f6285ae272b65188335b7a38b01f8322db3a4b63f6be264aef2da2d7a19f34
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[ERROR] Webhook signature verification failed: Webhook payload must be provided as a string or a Buffer (https://nodejs.org/api/buffer.html) instance representing the _raw_ request body.Payload was provided as a parsed JavaScript object instead. 
+Signature verification is impossible without access to the original signed material. 
+
+Learn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature
+
+[INFO] POST /api/webhooks/stripe 400 in 2ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 115ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/webhooks/stripe
+[INFO] Inside /api/webhooks/stripe: Type of req.body: object
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] 
+Stripe Signature: t=1735394013,v1=176fb777821227e4129b59e5faeb14c4fb37fd9fc5f8746e8b4832e2b80202b5,v0=e3399b83121d6f05f22cdb0f26054819d95637485ee55fb41de52b677a1f64c1
+[ERROR] Webhook signature verification failed: Webhook payload must be provided as a string or a Buffer (https://nodejs.org/api/buffer.html) instance representing the _raw_ request body.Payload was provided as a parsed JavaScript object instead. 
+Signature verification is impossible without access to the original signed material. 
+
+Learn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature
+
+[INFO] POST /api/webhooks/stripe 400 in 1ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 116ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 119ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 115ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 115ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/webhooks/stripe
+[INFO] Inside /api/webhooks/stripe: Type of req.body: object
+[INFO] 
+Stripe Signature: t=1735394035,v1=50f4e41cd222fd656f591dbe380c9793e1179be272816e4b3a3a84b1ba19b740,v0=74bd09f456bfa2d34eecf260252611975e7ff6d25cc1338528177956cb6cc8cb
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[ERROR] Webhook signature verification failed: Webhook payload must be provided as a string or a Buffer (https://nodejs.org/api/buffer.html) instance representing the _raw_ request body.Payload was provided as a parsed JavaScript object instead. 
+Signature verification is impossible without access to the original signed material. 
+
+Learn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature
+
+[INFO] POST /api/webhooks/stripe 400 in 1ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 116ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 115ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 115ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 115ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 115ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 116ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 116ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 116ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 120ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 116ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 115ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 115ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 116ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 116ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 118ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 115ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/usage/check
+[INFO] GET /api/user/usage/check 304 in 116ms
+[INFO] Before Middleware - Type of req.body: object - Path: /
+[INFO] GET / 204 in 59ms
+[INFO] Before Middleware - Type of req.body: object - Path: /
+[INFO] GET / 204 in 58ms
+[INFO] Before Middleware - Type of req.body: object - Path: /billing
+[INFO] GET / 200 in 62ms
+[INFO] Before Middleware - Type of req.body: object - Path: /
+[INFO] GET / 200 in 61ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/main.tsx
+[INFO] GET /src/main.tsx 304 in 58ms
+[INFO] Before Middleware - Type of req.body: object - Path: /@vite/client
+[INFO] GET /@vite/client 304 in 94ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/main.tsx
+[INFO] GET /src/main.tsx 304 in 57ms
+[INFO] Before Middleware - Type of req.body: object - Path: /@vite/client
+[INFO] GET /@vite/client 304 in 59ms
+[INFO] Before Middleware - Type of req.body: object - Path: /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 59ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/pages/LibraryPage.tsx
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 114ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/Sidebar.tsx
+[INFO] GET /src/components/Sidebar.tsx 304 in 170ms
+[INFO] Before Middleware - Type of req.body: object - Path: /@react-refresh
+[INFO] GET /@react-refresh 304 in 227ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/pages/PricingPage.tsx
+[INFO] GET /src/pages/PricingPage.tsx 304 in 245ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/index.css
+[INFO] GET /src/index.css 304 in 274ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/lib/queryClient.ts
+[INFO] GET /src/lib/queryClient.ts 304 in 299ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/pages/AdminPage.tsx
+[INFO] GET /src/pages/AdminPage.tsx 304 in 302ms
+[INFO] Before Middleware - Type of req.body: object - Path: /@vite-plugin-checker-runtime
+[INFO] GET /@vite-plugin-checker-runtime 304 in 303ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/toaster.tsx
+[INFO] GET /src/components/ui/toaster.tsx 304 in 303ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/pages/AuthPage.tsx
+[INFO] GET /src/pages/AuthPage.tsx 304 in 300ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/pages/ProfilePage.tsx
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 302ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/pages/BillingPage.tsx
+[INFO] GET /src/pages/BillingPage.tsx 304 in 303ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/pages/HomePage.tsx
+[INFO] GET /src/pages/HomePage.tsx 304 in 305ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/button.tsx
+[INFO] GET /src/components/ui/button.tsx 304 in 302ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/hooks/use-user.ts
+[INFO] GET /src/hooks/use-user.ts 304 in 306ms
+[INFO] Before Middleware - Type of req.body: object - Path: /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 302ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/pages/LibraryPage.tsx
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 304ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/alert-dialog.tsx
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 304ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/lib/utils.ts
+[INFO] GET /src/lib/utils.ts 304 in 306ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/hooks/use-audio.ts
+[INFO] GET /src/hooks/use-audio.ts 304 in 304ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/AudioPlayer.tsx
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 301ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/hooks/use-toast.ts
+[INFO] GET /src/hooks/use-toast.ts 304 in 303ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/Sidebar.tsx
+[INFO] GET /src/components/Sidebar.tsx 304 in 305ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/Logo.tsx
+[INFO] GET /src/components/Logo.tsx 304 in 301ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/scroll-area.tsx
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 303ms
+[INFO] Before Middleware - Type of req.body: object - Path: /@react-refresh
+[INFO] GET /@react-refresh 304 in 301ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/pages/PricingPage.tsx
+[INFO] GET /src/pages/PricingPage.tsx 304 in 301ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/index.css
+[INFO] GET /src/index.css 304 in 297ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/lib/queryClient.ts
+[INFO] GET /src/lib/queryClient.ts 304 in 303ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/pages/AdminPage.tsx
+[INFO] GET /src/pages/AdminPage.tsx 304 in 300ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/card.tsx
+[INFO] GET /src/components/ui/card.tsx 304 in 303ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/tabs.tsx
+[INFO] GET /src/components/ui/tabs.tsx 304 in 300ms
+[INFO] Before Middleware - Type of req.body: object - Path: /@vite-plugin-checker-runtime
+[INFO] GET /@vite-plugin-checker-runtime 304 in 301ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/toaster.tsx
+[INFO] GET /src/components/ui/toaster.tsx 304 in 301ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/toast.tsx
+[INFO] GET /src/components/ui/toast.tsx 304 in 303ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/pages/AuthPage.tsx
+[INFO] GET /src/pages/AuthPage.tsx 304 in 299ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/input.tsx
+[INFO] GET /src/components/ui/input.tsx 304 in 301ms
+[INFO] Before Middleware - Type of req.body: object - Path: /@fs/home/runner/PodCasterella/db/schema.ts
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 298ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/form.tsx
+[INFO] GET /src/components/ui/form.tsx 304 in 300ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/pages/ProfilePage.tsx
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 300ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/avatar.tsx
+[INFO] GET /src/components/ui/avatar.tsx 304 in 303ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/pages/BillingPage.tsx
+[INFO] GET /src/pages/BillingPage.tsx 304 in 303ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/PaymentModal.tsx
+[INFO] GET /src/components/PaymentModal.tsx 304 in 305ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/pages/HomePage.tsx
+[INFO] GET /src/pages/HomePage.tsx 304 in 302ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/hooks/use-tts.ts
+[INFO] GET /src/hooks/use-tts.ts 304 in 299ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/UsageProgress.tsx
+[INFO] GET /src/components/UsageProgress.tsx 304 in 303ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/collapsible.tsx
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 298ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/button.tsx
+[INFO] GET /src/components/ui/button.tsx 304 in 298ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/hooks/use-user.ts
+[INFO] GET /src/hooks/use-user.ts 304 in 304ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/alert-dialog.tsx
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 301ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/lib/utils.ts
+[INFO] GET /src/lib/utils.ts 304 in 307ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/hooks/use-audio.ts
+[INFO] GET /src/hooks/use-audio.ts 304 in 308ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/AudioPlayer.tsx
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 316ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/slider.tsx
+[INFO] GET /src/components/ui/slider.tsx 304 in 312ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/select.tsx
+[INFO] GET /src/components/ui/select.tsx 304 in 323ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/popover.tsx
+[INFO] GET /src/components/ui/popover.tsx 304 in 322ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/hooks/use-toast.ts
+[INFO] GET /src/hooks/use-toast.ts 304 in 319ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/Logo.tsx
+[INFO] GET /src/components/Logo.tsx 304 in 316ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/scroll-area.tsx
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 315ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/card.tsx
+[INFO] GET /src/components/ui/card.tsx 304 in 340ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/tabs.tsx
+[INFO] GET /src/components/ui/tabs.tsx 304 in 336ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/toast.tsx
+[INFO] GET /src/components/ui/toast.tsx 304 in 332ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/input.tsx
+[INFO] GET /src/components/ui/input.tsx 304 in 333ms
+[INFO] Before Middleware - Type of req.body: object - Path: /@fs/home/runner/PodCasterella/db/schema.ts
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 334ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/form.tsx
+[INFO] GET /src/components/ui/form.tsx 304 in 332ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/label.tsx
+[INFO] GET /src/components/ui/label.tsx 304 in 300ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/avatar.tsx
+[INFO] GET /src/components/ui/avatar.tsx 304 in 303ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/PaymentModal.tsx
+[INFO] GET /src/components/PaymentModal.tsx 304 in 301ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/dialog.tsx
+[INFO] GET /src/components/ui/dialog.tsx 304 in 302ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/hooks/use-tts.ts
+[INFO] GET /src/hooks/use-tts.ts 304 in 303ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/UsageProgress.tsx
+[INFO] GET /src/components/UsageProgress.tsx 304 in 305ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/progress.tsx
+[INFO] GET /src/components/ui/progress.tsx 304 in 302ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/collapsible.tsx
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 304ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/slider.tsx
+[INFO] GET /src/components/ui/slider.tsx 304 in 301ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/select.tsx
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/popover.tsx
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/label.tsx
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/dialog.tsx
+[INFO] Before Middleware - Type of req.body: object - Path: /
+[INFO] GET / 200 in 133ms
+[INFO] GET /api/user 304 in 179ms
+[INFO] Before Middleware - Type of req.body: object - Path: /@vite/client
+[INFO] GET /@vite/client 304 in 58ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/main.tsx
+[INFO] GET /src/main.tsx 304 in 60ms
+[INFO] Before Middleware - Type of req.body: object - Path: /api/playlists
+[INFO] Before Middleware - Type of req.body: object - Path: /api/user/stats
+[INFO] GET / 200 in 125ms
+[INFO] GET /api/playlists 304 in 192ms
+[INFO] Before Middleware - Type of req.body: object - Path: /@vite-plugin-checker-runtime
+[INFO] GET /@vite-plugin-checker-runtime 304 in 170ms
+[INFO] Before Middleware - Type of req.body: object - Path: /@react-refresh
+[INFO] GET /@react-refresh 304 in 226ms
+[INFO] Before Middleware - Type of req.body: object - Path: /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 258ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/index.css
+[INFO] GET /src/index.css 304 in 299ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/lib/queryClient.ts
+[INFO] GET /src/lib/queryClient.ts 304 in 297ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/toaster.tsx
+[INFO] GET /src/components/ui/toaster.tsx 304 in 301ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/pages/HomePage.tsx
+[INFO] GET /src/pages/HomePage.tsx 304 in 303ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/pages/AuthPage.tsx
+[INFO] GET /src/pages/AuthPage.tsx 304 in 300ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/pages/LibraryPage.tsx
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 301ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/pages/PricingPage.tsx
+[INFO] GET /src/pages/PricingPage.tsx 304 in 302ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/pages/AdminPage.tsx
+[INFO] GET /src/pages/AdminPage.tsx 304 in 303ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/pages/ProfilePage.tsx
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 299ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/pages/BillingPage.tsx
+[INFO] GET /src/pages/BillingPage.tsx 304 in 301ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/hooks/use-user.ts
+[INFO] GET /src/hooks/use-user.ts 304 in 302ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/Sidebar.tsx
+[INFO] GET /src/components/Sidebar.tsx 304 in 303ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/button.tsx
+[INFO] GET /src/components/ui/button.tsx 304 in 285ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/hooks/use-toast.ts
+[INFO] GET /src/hooks/use-toast.ts 304 in 303ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/toast.tsx
+[INFO] GET /src/components/ui/toast.tsx 304 in 302ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/hooks/use-tts.ts
+[INFO] GET /src/hooks/use-tts.ts 304 in 300ms
+[INFO] GET /src/components/Logo.tsx 304 in 59ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/Logo.tsx
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/UsageProgress.tsx
+[INFO] GET /src/components/UsageProgress.tsx 304 in 58ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/collapsible.tsx
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 60ms
+[INFO] Before Middleware - Type of req.body: object - Path: /@fs/home/runner/PodCasterella/db/schema.ts
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 59ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/input.tsx
+[INFO] GET /src/components/ui/input.tsx 304 in 58ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/form.tsx
+[INFO] GET /src/components/ui/form.tsx 304 in 60ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/alert-dialog.tsx
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 58ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/hooks/use-audio.ts
+[INFO] GET /src/hooks/use-audio.ts 304 in 58ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/AudioPlayer.tsx
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 59ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/lib/utils.ts
+[INFO] GET /src/lib/utils.ts 304 in 59ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/card.tsx
+[INFO] GET /src/components/ui/card.tsx 304 in 58ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/tabs.tsx
+[INFO] GET /src/components/ui/tabs.tsx 304 in 59ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/avatar.tsx
+[INFO] GET /src/components/ui/avatar.tsx 304 in 61ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/PaymentModal.tsx
+[INFO] GET /src/components/PaymentModal.tsx 304 in 58ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/progress.tsx
+[INFO] GET /src/components/ui/progress.tsx 200 in 58ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/label.tsx
+[INFO] GET /src/components/ui/label.tsx 200 in 58ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/slider.tsx
+[INFO] GET /src/components/ui/slider.tsx 200 in 59ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/popover.tsx
+[INFO] GET /src/components/ui/popover.tsx 200 in 58ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/select.tsx
+[INFO] GET /src/components/ui/select.tsx 200 in 61ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/scroll-area.tsx
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 58ms
+[INFO] Before Middleware - Type of req.body: object - Path: /src/components/ui/dialog.tsx
+[INFO] GET /src/components/ui/dialog.tsx 200 in 62ms
