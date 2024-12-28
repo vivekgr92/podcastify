@@ -243,8 +243,8 @@ export function registerRoutes(app: Express) {
             }
 
             // Determine subscription type from price metadata
-            const priceId = subscription.items.data[0].price.id;
-            const subscriptionType = priceId.includes("monthly")
+            const price = subscription.items.data[0].price;
+            const subscriptionType = price.metadata?.billing_period === "monthly"
               ? "active:basic"
               : "active:pro";
 
