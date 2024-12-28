@@ -26,32 +26,32 @@ import { eq, and, sql, desc } from "drizzle-orm";
 import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import Stripe from "stripe";
 
+const PODIFY_TOKEN_RATE = 0.005;
+const PODIFY_MARGIN = 0.6;
+
 // Plan-specific usage limits
 const USAGE_LIMITS = {
   free: {
     articleLimit: 3,
-    podifyTokenLimit: 10000
+    podifyTokenLimit: 10000,
+  },
+  basic: {
+    articleLimit: 20,
+    podifyTokenLimit: 40000,
   },
   pro: {
-    articleLimit: Infinity,
-    podifyTokenLimit: 40000
+    articleLimit: 50,
+    podifyTokenLimit: 60000,
   },
-  proAnnual: {
-    articleLimit: Infinity,
-    podifyTokenLimit: 60000
-  }
 };
-
-const PODIFY_TOKEN_RATE = 0.005;
-const PODIFY_MARGIN = 0.6;
 
 // Helper to get limits based on subscription status
 function getLimits(subscriptionStatus: string) {
   switch (subscriptionStatus) {
-    case 'active:pro':
+    case "active:basic":
+      return USAGE_LIMITS.basic;
+    case "active:pro":
       return USAGE_LIMITS.pro;
-    case 'active:proAnnual':
-      return USAGE_LIMITS.proAnnual;
     default:
       return USAGE_LIMITS.free;
   }
@@ -244,7 +244,9 @@ export function registerRoutes(app: Express) {
 
             // Determine subscription type from price metadata
             const priceId = subscription.items.data[0].price.id;
-            const subscriptionType = priceId.includes('annual') ? 'active:proAnnual' : 'active:pro';
+            const subscriptionType = priceId.includes("annual")
+              ? "active:proAnnual"
+              : "active:pro";
 
             const [updatedUser] = await db
               .update(users)
@@ -527,17 +529,19 @@ export function registerRoutes(app: Express) {
       }
 
       // Calculate estimated total tokens and check usage limits
-      const currentLimits = getLimits(user.subscriptionStatus || 'free');
+      const currentLimits = getLimits(user.subscriptionStatus || "free");
       const wouldExceedArticles = currentArticles >= currentLimits.articleLimit;
       const estimatedTotalCost = estimatedPricing.totalCost;
       const estimatedPodifyTokens = convertToPodifyTokens(estimatedTotalCost);
 
       const wouldExceedPodifyTokens =
-        currentPodifyTokens + estimatedPodifyTokens > currentLimits.podifyTokenLimit;
+        currentPodifyTokens + estimatedPodifyTokens >
+        currentLimits.podifyTokenLimit;
 
-      const remainingArticles = currentLimits.articleLimit === Infinity ? 
-        Infinity : 
-        Math.max(0, currentLimits.articleLimit - currentArticles);
+      const remainingArticles =
+        currentLimits.articleLimit === Infinity
+          ? Infinity
+          : Math.max(0, currentLimits.articleLimit - currentArticles);
       const remainingPodifyTokens = Math.max(
         0,
         currentLimits.podifyTokenLimit - currentPodifyTokens,
