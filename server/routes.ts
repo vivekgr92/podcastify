@@ -243,7 +243,13 @@ export function registerRoutes(app: Express) {
             }
 
             // Determine subscription type from price metadata
-            const price = subscription.items.data[0].price;
+            const price = await stripe.prices.retrieve(
+              subscription.items.data[0].price.id,
+              {
+                expand: ['product']
+              }
+            );
+            const productName = (price.product as Stripe.Product).name;
             const subscriptionType = price.metadata?.billing_period === "monthly"
               ? "active:basic_monthly"
               : "active:pro";
