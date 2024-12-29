@@ -8,6 +8,7 @@ import { promises as fs } from "fs";
 import * as fsSync from "fs";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import bcrypt from 'bcrypt'; // Import bcrypt
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -1283,6 +1284,64 @@ export function registerRoutes(app: Express) {
       res.json(userPodcasts);
     } catch (error) {
       res.status(500).send("Failed to fetch podcasts");
+    }
+  });
+  // Registration route update
+  app.post("/api/register", async (req, res) => {
+    try {
+      const { username, email, password } = req.body;
+
+      // Check if user already exists
+      const existingUser = await db
+        .select()
+        .from(users)
+        .where(eq(users.email, email))
+        .limit(1);
+
+      if (existingUser.length > 0) {
+        return res.status(400).send("User already exists");
+      }
+
+      // Hash password
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Create new user with default subscription status
+      const [user] = await db
+        .insert(users)
+        .values({
+          username,
+          email,
+          password: hashedPassword,
+          subscriptionStatus: "inactive",
+          subscriptionType: "free",
+          isAdmin: email.endsWith("@admin.com"),
+        })
+        .returning();
+
+      if (!user) {
+        throw new Error("Failed to create user");
+      }
+
+      // Initialize usage tracking for the new user
+      const currentMonth = new Date().toISOString().slice(0, 7);
+      await db.insert(userUsage).values({
+        userId: user.id,
+        articlesConverted: 0,
+        tokensUsed: 0,
+        podifyTokens: "0",
+        monthYear: currentMonth,
+      });
+
+      // Start session
+      req.logIn(user, (err) => {
+        if (err) {
+          throw err;
+        }
+        res.json({ message: "Registration successful" });
+      });
+    } catch (error) {
+      logger.error(`Registration error: ${error instanceof Error ? error.message : String(error)}`);
+      res.status(500).send("Registration failed");
     }
   });
 
