@@ -61,7 +61,7 @@ const plans = [
 
 export default function BillingPage() {
   const { user, isLoading: isUserLoading } = useUser();
-  const [location] = useLocation();
+  const [, setLocation] = useLocation();
   const [selectedPlan, setSelectedPlan] = useState<(typeof plans)[0] | null>(null);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
@@ -89,7 +89,7 @@ export default function BillingPage() {
       });
       window.history.replaceState({}, "", "/billing");
     }
-  }, [location, toast]);
+  }, [toast]);
 
   const redirectToCustomerPortal = async () => {
     try {
@@ -125,13 +125,13 @@ export default function BillingPage() {
     setIsPaymentModalOpen(true);
   };
 
-  // Parse subscription status to get plan details and active status
+  // Parse subscription status to get plan details
   const getCurrentPlanDetails = () => {
     if (!user.subscriptionStatus) return null;
     const [planName, billingPeriod] = user.subscriptionStatus.split(":");
     return {
       name: planName,
-      billingPeriod: billingPeriod || "monthly"
+      billingPeriod: billingPeriod || "monthly",
     };
   };
 
@@ -152,6 +152,7 @@ export default function BillingPage() {
         </p>
       </div>
 
+      {/* Current Subscription Section */}
       {hasActiveSubscription && (
         <div className="max-w-md mx-auto">
           <h2 className="text-2xl font-semibold mb-6">Current Subscription</h2>
@@ -194,6 +195,7 @@ export default function BillingPage() {
 
       <Separator className="my-12" />
 
+      {/* Available Plans Section */}
       <div className="mt-16">
         <div className="text-center mb-12">
           <h2 className="text-2xl font-semibold mb-4">Available Plans</h2>
