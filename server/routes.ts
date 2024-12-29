@@ -856,10 +856,12 @@ export function registerRoutes(app: Express) {
       }
 
       const podifyTokensUsed = Number(usage.podifyTokens) || 0;
-      const podifyTokenLimit = PODIFY_TOKEN_LIMIT;
+      const currentLimits = getLimits(req.user.subscriptionStatus || "free");
+      const podifyTokenLimit = currentLimits.podifyTokenLimit;
+      const articleLimit = currentLimits.articleLimit;
 
       const hasReachedLimit =
-        (usage.articlesConverted ?? 0) >= ARTICLE_LIMIT ||
+        (usage.articlesConverted ?? 0) >= articleLimit ||
         podifyTokensUsed >= podifyTokenLimit;
 
       res.json({
@@ -867,18 +869,18 @@ export function registerRoutes(app: Express) {
         limits: {
           articles: {
             used: usage.articlesConverted || 0,
-            limit: ARTICLE_LIMIT,
+            limit: articleLimit,
             remaining: Math.max(
               0,
-              ARTICLE_LIMIT - (usage.articlesConverted || 0),
+              articleLimit - (usage.articlesConverted || 0),
             ),
           },
           tokens: {
             used: usage.tokensUsed || 0,
-            limit: PODIFY_TOKEN_LIMIT,
+            limit: podifyTokenLimit,
             remaining: Math.max(
               0,
-              PODIFY_TOKEN_LIMIT - (usage.tokensUsed || 0),
+              podifyTokenLimit - (usage.tokensUsed || 0),
             ),
             podifyTokens: {
               used: podifyTokensUsed,
