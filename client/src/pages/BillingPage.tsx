@@ -257,7 +257,7 @@ const BillingPage: React.FC = () => {
                     }`}
                     variant={plan.popular ? "default" : "outline"}
                     onClick={() => handlePlanSelect(plan)}
-                    disabled={hasActiveSubscription && !isCurrentPlan}
+                    disabled={Boolean(hasActiveSubscription) && !isCurrentPlan}
                   >
                     {isCurrentPlan 
                       ? "Current Plan"
