@@ -976,14 +976,13 @@ export function registerRoutes(app: Express) {
     }
   });
 
-  // Delete podcast endpoint with proper type safety
   app.delete("/api/podcasts/:id", async (req, res) => {
     try {
       const user = req.user;
       if (!user?.id) {
         return res.status(401).json({
           error: "Not authenticated",
-          type: "auth",
+          type: "auth"
         });
       }
 
@@ -991,7 +990,7 @@ export function registerRoutes(app: Express) {
       if (isNaN(podcastId)) {
         return res.status(400).json({
           error: "Invalid podcast ID",
-          type: "validation",
+          type: "validation"
         });
       }
 
@@ -1000,68 +999,64 @@ export function registerRoutes(app: Express) {
         `Attempting to delete podcast ${podcastId} by user ${user.id}`,
       );
 
-      // First fetch the podcast to get the file path and verify ownership
+      // First check if the podcast exists and belongs to the user
       const [podcast] = await db
         .select()
         .from(podcasts)
-        .where(and(eq(podcasts.id, podcastId), eq(podcasts.userId, user.id)))
+        .where(
+          and(
+            eq(podcasts.id, podcastId),
+            eq(podcasts.userId, user.id)
+          )
+        )
         .limit(1);
 
       if (!podcast) {
         return res.status(404).json({
-          error: "Podcast not found or unauthorized",
-          type: "not_found",
+          error: "Podcast not found",
+          type: "not_found"
         });
       }
 
-      // Delete the audio file if it exists
-      if (podcast.audioUrl) {
-        const filePath = path.join(__dirname, "..", podcast.audioUrl.replace(/^\//, ''));
-        try {
-          const fileExists = await fs
-            .access(filePath)
-            .then(() => true)
-            .catch(() => false);
+      // Delete the podcast
+      await db
+        .delete(podcasts)
+        .where(
+          and(
+            eq(podcasts.id, podcastId),
+            eq(podcasts.userId, user.id)
+          )
+        );
 
-          if (fileExists) {
-            await fs.unlink(filePath);
-            await logger.info(`Successfully deleted audio file: ${filePath}`);
-          } else {
-            await logger.warn(
-              `Audio file not found for podcast ${podcastId}: ${filePath}`,
-            );
-          }
+      // Try to delete the associated audio file
+      if (podcast.audioUrl) {
+        const audioPath = path.join(
+          __dirname,
+          "..",
+          podcast.audioUrl.replace(/^\//, "")
+        );
+        try {
+          await fs.unlink(audioPath);
+          await logger.info(`Deleted audio file: ${audioPath}`);
         } catch (error) {
-          await logger.error(
-            `Error deleting audio file for podcast ${podcastId}: ${error instanceof Error ? error.message : String(error)}`,
+          // Log but don't fail if file deletion fails
+          await logger.warn(
+            `Failed to delete audio file ${audioPath}: ${error instanceof Error ? error.message : String(error)}`
           );
-          // Continue with database deletion even if file deletion fails
         }
       }
 
-      // Delete from database
-      const [deletedPodcast] = await db
-        .delete(podcasts)
-        .where(and(eq(podcasts.id, podcastId), eq(podcasts.userId, user.id)))
-        .returning();
-
-      if (!deletedPodcast) {
-        throw new Error(`Failed to delete podcast ${podcastId} from database`);
-      }
-
-      await logger.info(`Successfully deleted podcast ${podcastId}`);
-
       res.json({
         message: "Podcast deleted successfully",
-        id: podcastId,
+        id: podcastId
       });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      await logger.error(`Error in delete podcast route: ${errorMessage}`);
+      await logger.error(`Error deleting podcast: ${errorMessage}`);
       res.status(500).json({
         error: "Failed to delete podcast",
         type: "server",
-        message: errorMessage,
+        message: errorMessage
       });
     }
   });

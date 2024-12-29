@@ -123,10 +123,18 @@ export default function BillingPage() {
     setIsPaymentModalOpen(true);
   };
 
+  // Check if user has an active subscription
   const hasActiveSubscription = Boolean(
     user.subscriptionStatus && 
-    !["canceled", "free", "payment_failed"].includes(user.subscriptionStatus)
+    !["canceled", "free", "payment_failed", null, undefined].includes(user.subscriptionStatus)
   );
+
+  const getCurrentPlanName = () => {
+    if (!user.subscriptionStatus) return null;
+    return user.subscriptionStatus.split(":")[0];
+  };
+
+  const currentPlanName = getCurrentPlanName();
 
   return (
     <div className="container mx-auto px-6 py-12 space-y-16">
@@ -144,7 +152,7 @@ export default function BillingPage() {
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <span className="text-gray-400">Status</span>
-                <span className="capitalize">{user.subscriptionStatus}</span>
+                <span className="capitalize">{currentPlanName || "Unknown"}</span>
               </div>
               {user.currentPeriodEnd && (
                 <div className="flex justify-between items-center">
@@ -186,57 +194,61 @@ export default function BillingPage() {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
-          {plans.map((plan) => (
-            <div
-              key={plan.name}
-              className={`relative rounded-2xl p-8 flex flex-col ${
-                plan.popular
-                  ? "border-2 border-[#4CAF50] bg-[#4CAF50]/10"
-                  : "border border-gray-800 bg-gray-900"
-              }`}
-              style={{ minHeight: "600px" }}
-            >
-              {plan.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <span className="bg-[#4CAF50] text-white px-3 py-1 rounded-full text-sm">
-                    Most Popular
-                  </span>
+          {plans.map((plan) => {
+            const isCurrentPlan = currentPlanName === plan.name;
+
+            return (
+              <div
+                key={plan.name}
+                className={`relative rounded-2xl p-8 flex flex-col ${
+                  plan.popular
+                    ? "border-2 border-[#4CAF50] bg-[#4CAF50]/10"
+                    : "border border-gray-800 bg-gray-900"
+                }`}
+                style={{ minHeight: "600px" }}
+              >
+                {plan.popular && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                    <span className="bg-[#4CAF50] text-white px-3 py-1 rounded-full text-sm">
+                      Most Popular
+                    </span>
+                  </div>
+                )}
+
+                <div className="text-center mb-8">
+                  <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
+                  <div className="text-3xl font-bold mb-1">${plan.price}</div>
+                  <div className="text-gray-400 text-sm">{plan.period}</div>
                 </div>
-              )}
 
-              <div className="text-center mb-8">
-                <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
-                <div className="text-3xl font-bold mb-1">${plan.price}</div>
-                <div className="text-gray-400 text-sm">{plan.period}</div>
+                <ul className="space-y-4 mb-8">
+                  {plan.features.map((feature) => (
+                    <li key={feature} className="flex items-start">
+                      <Check className="h-5 w-5 text-[#4CAF50] shrink-0 mr-3" />
+                      <span className="text-gray-300">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="mt-auto pt-4">
+                  <Button
+                    className={`w-full h-10 ${
+                      plan.popular ? "bg-[#4CAF50] hover:bg-[#45a049]" : ""
+                    }`}
+                    variant={plan.popular ? "default" : "outline"}
+                    onClick={() => handlePlanSelect(plan)}
+                    disabled={hasActiveSubscription && isCurrentPlan}
+                  >
+                    {hasActiveSubscription 
+                      ? isCurrentPlan
+                        ? "Current Plan"
+                        : "Switch Plan"
+                      : plan.buttonText}
+                  </Button>
+                </div>
               </div>
-
-              <ul className="space-y-4 mb-8">
-                {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-start">
-                    <Check className="h-5 w-5 text-[#4CAF50] shrink-0 mr-3" />
-                    <span className="text-gray-300">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-auto pt-4">
-                <Button
-                  className={`w-full h-10 ${
-                    plan.popular ? "bg-[#4CAF50] hover:bg-[#45a049]" : ""
-                  }`}
-                  variant={plan.popular ? "default" : "outline"}
-                  onClick={() => handlePlanSelect(plan)}
-                  disabled={hasActiveSubscription}
-                >
-                  {hasActiveSubscription 
-                    ? user.subscriptionStatus?.includes(plan.name)
-                      ? "Current Plan"
-                      : "Already Subscribed"
-                    : plan.buttonText}
-                </Button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
