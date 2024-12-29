@@ -272,7 +272,8 @@ export function registerRoutes(app: Express) {
             const [updatedUser] = await db
               .update(users)
               .set({
-                subscriptionStatus: subscriptionType,
+                subscriptionStatus: "active",
+                subscriptionType: subscriptionType,
                 subscriptionId: subscription.id,
                 currentPeriodEnd: new Date(
                   subscription.current_period_end * 1000,
@@ -338,21 +339,38 @@ export function registerRoutes(app: Express) {
         case "customer.subscription.updated":
           const updatedSubscription = event.data.object as Stripe.Subscription;
           if (updatedSubscription.metadata.userId) {
-            await db
-              .update(users)
-              .set({
-                subscriptionStatus: updatedSubscription.status,
-                currentPeriodEnd: new Date(
-                  updatedSubscription.current_period_end * 1000,
-                ),
-              })
-              .where(
-                eq(users.id, parseInt(updatedSubscription.metadata.userId)),
-              );
+            const userId = parseInt(updatedSubscription.metadata.userId);
 
-            logger.info(
-              `Updated subscription status for user ${updatedSubscription.metadata.userId}`,
-            );
+            // Handle canceled or expired subscriptions
+            if (updatedSubscription.status === "canceled") {
+              await db
+                .update(users)
+                .set({
+                  subscriptionStatus: "canceled",
+                  subscriptionType: "free",
+                  currentPeriodEnd: new Date(
+                    updatedSubscription.current_period_end * 1000,
+                  ),
+                })
+                .where(eq(users.id, userId));
+
+              logger.info(`Subscription canceled for user ${userId}`);
+            } else {
+              // Update other statuses
+              await db
+                .update(users)
+                .set({
+                  subscriptionStatus: updatedSubscription.status,
+                  currentPeriodEnd: new Date(
+                    updatedSubscription.current_period_end * 1000,
+                  ),
+                })
+                .where(eq(users.id, userId));
+
+              logger.info(
+                `Updated subscription status for user ${userId}: ${updatedSubscription.status}`,
+              );
+            }
           }
           break;
         case "customer.subscription.deleted":
