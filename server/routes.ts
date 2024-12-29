@@ -48,12 +48,12 @@ const USAGE_LIMITS = {
   "Enterprise Plan:monthly": {
     articleLimit: Infinity,
     podifyTokenLimit: 1000000,
-  }
+  },
 };
 
 // Helper to get limits based on subscription status
 function getLimits(subscriptionStatus: string) {
-  return USAGE_LIMITS[subscriptionStatus as keyof typeof USAGE_LIMITS] || USAGE_LIMITS.free;
+  return USAGE_LIMITS[subscriptionStatus as keyof typeof USAGE_LIMITS];
 }
 
 // Initialize Stripe with proper API version and error handling
@@ -539,7 +539,7 @@ export function registerRoutes(app: Express) {
       }
 
       // Calculate estimated total tokens and check usage limits
-      const currentLimits = getLimits(user.subscriptionStatus || "free");
+      const currentLimits = getLimits(user.subscriptionStatus);
 
       PODIFY_TOKEN_LIMIT = currentLimits.podifyTokens;
       ARTICLE_LIMIT = currentLimits.articleLimit;
@@ -856,7 +856,7 @@ export function registerRoutes(app: Express) {
       }
 
       const podifyTokensUsed = Number(usage.podifyTokens) || 0;
-      const currentLimits = getLimits(req.user.subscriptionStatus || "free");
+      const currentLimits = getLimits(req.user.subscriptionStatus);
       const podifyTokenLimit = currentLimits.podifyTokenLimit;
       const articleLimit = currentLimits.articleLimit;
 
@@ -878,10 +878,7 @@ export function registerRoutes(app: Express) {
           tokens: {
             used: usage.tokensUsed || 0,
             limit: podifyTokenLimit,
-            remaining: Math.max(
-              0,
-              podifyTokenLimit - (usage.tokensUsed || 0),
-            ),
+            remaining: Math.max(0, podifyTokenLimit - (usage.tokensUsed || 0)),
             podifyTokens: {
               used: podifyTokensUsed,
               limit: podifyTokenLimit,
