@@ -7170,3 +7170,86 @@ Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
 [INFO] GET /api/user/usage/check 304 in 110ms
 [INFO] GET /api/user/usage/check 304 in 110ms
 [INFO] GET /api/user/usage/check 304 in 114ms
+[INFO] GET /api/user/usage/check 304 in 110ms
+[INFO] GET /api/user/usage/check 304 in 127ms
+[INFO] GET /api/user/usage/check 304 in 111ms
+[INFO] GET /api/user/usage/check 304 in 110ms
+[INFO] GET /api/user/usage/check 304 in 111ms
+[INFO] GET /api/user/usage/check 304 in 110ms
+[INFO] GET / 200 in 57ms
+[INFO] Creating subscription for user 13 with price price_1Qb8xDBwEMzOkTIKEcpAxav4
+[INFO] Creating subscription for user 13 with price price_1Qb8xDBwEMzOkTIKEcpAxav4
+[INFO] Using existing customer: cus_RU8Oe0EMwc74Kh
+[INFO] Using existing customer: cus_RU8Oe0EMwc74Kh
+[INFO] Created subscription: sub_1QbAhmBwEMzOkTIKyrIFp6TZ
+[INFO] POST /api/create-subscription 200 in 1699ms
+[INFO] 
+Stripe Signature: t=1735433407,v1=ce19006f2d029a5254845de11e24ce05a629b77c610d36d60dc38071503f36e1,v0=0a56b46a35bdd168d729e8566970bc8085239ca4a3d7bef1b349d3d37841a452
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: payment_intent.created
+[INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] 
+Stripe Signature: t=1735433407,v1=bd239d4c5b5516620cf6e1df69ad8e45a91a48ac6940e95254bbc819a3f5d9a5,v0=ec6f3af64e2b8c73ee09aa1b36686c41e05c5bafe5073a77409b8af086713474
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: customer.subscription.created
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735433407,v1=a7e3db2fad8c46d62be9548587be42f66c8a8103df3ed779ffd727bb44383dd5,v0=4be24aa39fd13f16b8e0235968e2a5f7439b80a81ce280c586fd23a53f8147a6
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: invoice.finalized
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735433407,v1=18949d1e07cb51cfd6bfbf5fe91850355dc93acfbcb295a199a7b93495fc199d,v0=d647037c2f92af217d4ba58df47e52b1cd1dc4fa0e6645b7d62fcf1f4c4d59a2
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: invoice.created
+[INFO] POST /api/webhooks/stripe 200 in 0ms
+[INFO] Created subscription: sub_1QbAhoBwEMzOkTIKK3QhPuF2
+[INFO] POST /api/create-subscription 200 in 4068ms
+[INFO] 
+Stripe Signature: t=1735433410,v1=84ec8fcecbcdb112ad3ad89ad73f015bb19223c7a7b8c750795e8a3199661573,v0=6461b68563d336169e45bc1e30e9f01ee793d08e3da7a53b560e9dc00b967cf5
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: payment_intent.created
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735433410,v1=69be4e29ac5879d52aeff97bb3913974809075190d969e2912ff982a5ced61fc,v0=416b4c4edbf10fe62b3053dbd70d70a77fbc539b8b351b1472bda74bd25d9ba3
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: customer.subscription.created
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735433410,v1=c576c85ba82d3b283ec68351e51f76168d52ad404c2017605bac56aa0976a47e,v0=872b10256946de7bb9289b0d371aea402020fdd6c0578b0e6584277ed6237273
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: invoice.created
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735433410,v1=a4958903489f6e7ef53225b170a82bd1721946bce3162773f668120851106b03,v0=947989a89132ad387be9be11c78c7a6326f17c0aa455b0e08b90792aa02c0f6f
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: invoice.finalized
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[ERROR] Error checking usage limits: Cannot read properties of undefined (reading 'podifyTokenLimit')
+[INFO] GET /api/user/usage/check 500 in 112ms
+[ERROR] Error checking usage limits: Cannot read properties of undefined (reading 'podifyTokenLimit')
+[INFO] GET /api/user/usage/check 500 in 111ms
+[ERROR] Error checking usage limits: Cannot read properties of undefined (reading 'podifyTokenLimit')
+[INFO] GET /api/user/usage/check 500 in 110ms
+[ERROR] Error checking usage limits: Cannot read properties of undefined (reading 'podifyTokenLimit')
+[INFO] GET /api/user/usage/check 500 in 110ms
+[ERROR] Error checking usage limits: Cannot read properties of undefined (reading 'podifyTokenLimit')
+[INFO] GET /api/user/usage/check 500 in 111ms
+[ERROR] Error checking usage limits: Cannot read properties of undefined (reading 'podifyTokenLimit')
+[INFO] GET /api/user/usage/check 500 in 111ms
+[ERROR] Error checking usage limits: Cannot read properties of undefined (reading 'podifyTokenLimit')
+[INFO] GET /api/user/usage/check 500 in 110ms
+[ERROR] Error checking usage limits: Cannot read properties of undefined (reading 'podifyTokenLimit')
+[INFO] GET /api/user/usage/check 500 in 111ms
+[ERROR] Error checking usage limits: Cannot read properties of undefined (reading 'podifyTokenLimit')
+[INFO] GET /api/user/usage/check 500 in 115ms
+[ERROR] Error checking usage limits: Cannot read properties of undefined (reading 'podifyTokenLimit')
+[INFO] GET /api/user/usage/check 500 in 112ms
