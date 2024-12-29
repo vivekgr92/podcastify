@@ -1,14 +1,24 @@
+import React, { useState, useEffect } from "react";
 import { useUser } from "../hooks/use-user";
 import { Button } from "../components/ui/button";
-import { Check } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 import { useLocation } from "wouter";
-import { useState, useEffect } from "react";
 import { PaymentModal } from "../components/PaymentModal";
 import { useToast } from "../hooks/use-toast";
 import { LoadingScreen } from "../components/LoadingScreen";
 import { Separator } from "../components/ui/separator";
 
-const plans = [
+type Plan = {
+  name: string;
+  price: string;
+  period: string;
+  features: string[];
+  buttonText: string;
+  popular: boolean;
+  priceId: string;
+};
+
+const plans: Plan[] = [
   {
     name: "Basic Plan",
     price: "9.99",
@@ -59,10 +69,10 @@ const plans = [
   },
 ];
 
-export default function BillingPage() {
+const BillingPage: React.FC = () => {
   const { user } = useUser();
   const [, setLocation] = useLocation();
-  const [selectedPlan, setSelectedPlan] = useState<(typeof plans)[0] | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [isLoadingPortal, setIsLoadingPortal] = useState(false);
@@ -116,21 +126,26 @@ export default function BillingPage() {
     }
   };
 
-  if (!user) return null;
+  if (!user) {
+    return null;
+  }
 
-  const handlePlanSelect = (plan: (typeof plans)[0]) => {
+  const handlePlanSelect = (plan: Plan) => {
     setSelectedPlan(plan);
     setIsPaymentModalOpen(true);
   };
 
   // Check if user has an active subscription
-  const hasActiveSubscription = user.subscriptionType && user.subscriptionType !== "free" && 
+  const hasActiveSubscription = user.subscriptionStatus && 
                               user.subscriptionStatus !== "inactive" && 
-                              user.subscriptionStatus !== "canceled";
+                              user.subscriptionStatus !== "canceled" &&
+                              user.subscriptionType !== "free";
 
   const getCurrentPlan = () => {
-    if (!user.subscriptionType || user.subscriptionType === "free") return null;
-    return plans.find(plan => plan.name === user.subscriptionType.split(":")[0]) || null;
+    if (!user.subscriptionType || user.subscriptionType === "free") {
+      return null;
+    }
+    return plans.find(plan => plan.name === user.subscriptionType) || null;
   };
 
   const currentPlan = getCurrentPlan();
@@ -153,7 +168,7 @@ export default function BillingPage() {
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <span className="text-gray-400">Plan</span>
-                <span className="capitalize">{currentPlan?.name || "Unknown Plan"}</span>
+                <span className="capitalize">{currentPlan?.name || user.subscriptionType || "Free"}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-400">Status</span>
@@ -174,7 +189,7 @@ export default function BillingPage() {
               >
                 {isLoadingPortal ? (
                   <div className="flex items-center justify-center gap-2">
-                    <LoadingScreen />
+                    <Loader2 className="h-4 w-4 animate-spin" />
                     <span>Loading...</span>
                   </div>
                 ) : (
@@ -242,7 +257,7 @@ export default function BillingPage() {
                     }`}
                     variant={plan.popular ? "default" : "outline"}
                     onClick={() => handlePlanSelect(plan)}
-                    disabled={isCurrentPlan || (hasActiveSubscription && !isCurrentPlan)}
+                    disabled={hasActiveSubscription && !isCurrentPlan}
                   >
                     {isCurrentPlan 
                       ? "Current Plan"
@@ -272,4 +287,6 @@ export default function BillingPage() {
       {(isProcessingPayment || isLoadingPortal) && <LoadingScreen />}
     </div>
   );
-}
+};
+
+export default BillingPage;
