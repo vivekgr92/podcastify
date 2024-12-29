@@ -132,14 +132,32 @@ export default function BillingPage() {
     return {
       name: planName,
       billingPeriod: billingPeriod || "monthly",
+      status: user.subscriptionStatus
     };
   };
 
   const currentPlanDetails = getCurrentPlanDetails();
   const hasActiveSubscription = Boolean(
     user.subscriptionStatus && 
-    !["canceled", "free", "payment_failed", null, undefined].includes(user.subscriptionStatus)
+    !["canceled", "free", "payment_failed", "pending", null, undefined].includes(user.subscriptionStatus)
   );
+
+  const getSubscriptionStatusDisplay = (status: string | null | undefined) => {
+    if (!status) return "No active subscription";
+
+    switch (status) {
+      case "pending":
+        return "Payment Pending";
+      case "canceled":
+        return "Canceled";
+      case "payment_failed":
+        return "Payment Failed";
+      case "free":
+        return "Free Plan";
+      default:
+        return "Active";
+    }
+  };
 
   return (
     <div className="container mx-auto px-6 py-12 space-y-16">
@@ -151,49 +169,6 @@ export default function BillingPage() {
             : "Choose a plan to get started"}
         </p>
       </div>
-
-      {/* Current Subscription Section */}
-      {hasActiveSubscription && (
-        <div className="max-w-md mx-auto">
-          <h2 className="text-2xl font-semibold mb-6">Current Subscription</h2>
-          <div className="bg-gray-900 rounded-2xl p-8 border border-gray-800">
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-gray-400">Plan</span>
-                <span className="capitalize">{currentPlanDetails?.name || 'No active plan'}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-400">Billing Period</span>
-                <span>{currentPlanDetails?.billingPeriod === 'monthly' ? 'Monthly' : 'Annual'}</span>
-              </div>
-              {user.currentPeriodEnd && (
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-400">Next billing date</span>
-                  <span>
-                    {new Date(user.currentPeriodEnd).toLocaleDateString()}
-                  </span>
-                </div>
-              )}
-              <Button
-                onClick={redirectToCustomerPortal}
-                disabled={isLoadingPortal}
-                className="w-full mt-6"
-              >
-                {isLoadingPortal ? (
-                  <div className="flex items-center justify-center">
-                    <LoadingScreen />
-                    <span className="ml-2">Loading...</span>
-                  </div>
-                ) : (
-                  "Manage Subscription"
-                )}
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <Separator className="my-12" />
 
       {/* Available Plans Section */}
       <div className="mt-16">
@@ -250,9 +225,15 @@ export default function BillingPage() {
                     }`}
                     variant={plan.popular ? "default" : "outline"}
                     onClick={() => handlePlanSelect(plan)}
-                    disabled={isCurrentPlan}
+                    disabled={isCurrentPlan && hasActiveSubscription}
                   >
-                    {isCurrentPlan ? "Current Plan" : hasActiveSubscription ? "Switch Plan" : "Subscribe Now"}
+                    {isCurrentPlan && hasActiveSubscription
+                      ? "Current Plan"
+                      : user.subscriptionStatus === "pending"
+                      ? "Payment Pending"
+                      : hasActiveSubscription
+                      ? "Switch Plan"
+                      : "Subscribe Now"}
                   </Button>
                 </div>
               </div>
@@ -260,6 +241,55 @@ export default function BillingPage() {
           })}
         </div>
       </div>
+
+      {/* Current Subscription Section */}
+      {(hasActiveSubscription || user.subscriptionStatus === "pending") && (
+        <div className="max-w-md mx-auto">
+          <h2 className="text-2xl font-semibold mb-6">Current Subscription</h2>
+          <div className="bg-gray-900 rounded-2xl p-8 border border-gray-800">
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-400">Plan</span>
+                <span className="capitalize">{currentPlanDetails?.name || 'No active plan'}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-400">Status</span>
+                <span className="capitalize">{getSubscriptionStatusDisplay(user.subscriptionStatus)}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-400">Billing Period</span>
+                <span className="capitalize">{currentPlanDetails?.billingPeriod || 'N/A'}</span>
+              </div>
+              {user.currentPeriodEnd && (
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-400">Next billing date</span>
+                  <span>
+                    {new Date(user.currentPeriodEnd).toLocaleDateString()}
+                  </span>
+                </div>
+              )}
+              {hasActiveSubscription && (
+                <Button
+                  onClick={redirectToCustomerPortal}
+                  disabled={isLoadingPortal}
+                  className="w-full mt-6"
+                >
+                  {isLoadingPortal ? (
+                    <div className="flex items-center justify-center">
+                      <LoadingScreen />
+                      <span className="ml-2">Loading...</span>
+                    </div>
+                  ) : (
+                    "Manage Subscription"
+                  )}
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      <Separator className="my-12" />
 
       {selectedPlan && (
         <PaymentModal
