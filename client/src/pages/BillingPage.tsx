@@ -5,6 +5,7 @@ import { useLocation } from "wouter";
 import { useState, useEffect } from "react";
 import { PaymentModal } from "../components/PaymentModal";
 import { useToast } from "../hooks/use-toast";
+import { SubscriptionSuccess } from "@/components/SubscriptionSuccess";
 
 const plans = [
   {
@@ -65,6 +66,8 @@ export default function BillingPage() {
   );
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const { toast } = useToast();
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+
 
   useEffect(() => {
     // Check for payment status in URL
@@ -73,11 +76,7 @@ export default function BillingPage() {
     const message = params.get("message");
 
     if (paymentStatus === "success") {
-      toast({
-        title: "Subscription Successful!",
-        description: "Your subscription has been activated. Welcome aboard!",
-        duration: 5000,
-      });
+      setShowSuccessDialog(true);
       // Clean up URL
       window.history.replaceState({}, "", "/billing");
     } else if (paymentStatus === "failed") {
@@ -168,6 +167,7 @@ export default function BillingPage() {
           userEmail={user.email} // Pass user's email to PaymentModal
         />
       )}
+      {showSuccessDialog && <SubscriptionSuccess onClose={() => setShowSuccessDialog(false)} />}
     </div>
   );
 }
