@@ -158,7 +158,7 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, priceId, us
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="max-h-[90vh] overflow-y-auto bg-background sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Subscribe to {planName}</DialogTitle>
           <DialogDescription>
