@@ -7253,3 +7253,354 @@ Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
 [INFO] GET /api/user/usage/check 500 in 115ms
 [ERROR] Error checking usage limits: Cannot read properties of undefined (reading 'podifyTokenLimit')
 [INFO] GET /api/user/usage/check 500 in 112ms
+[ERROR] Error checking usage limits: Cannot read properties of undefined (reading 'podifyTokenLimit')
+[INFO] GET /api/user/usage/check 500 in 112ms
+[ERROR] Error checking usage limits: Cannot read properties of undefined (reading 'podifyTokenLimit')
+[INFO] GET /api/user/usage/check 500 in 111ms
+[ERROR] Error checking usage limits: Cannot read properties of undefined (reading 'podifyTokenLimit')
+[INFO] GET /api/user/usage/check 500 in 121ms
+[ERROR] Error checking usage limits: Cannot read properties of undefined (reading 'podifyTokenLimit')
+[INFO] GET /api/user/usage/check 500 in 111ms
+[ERROR] Error checking usage limits: Cannot read properties of undefined (reading 'podifyTokenLimit')
+[INFO] GET /api/user/usage/check 500 in 109ms
+[INFO] GET /src/components/PaymentModal.tsx 200 in 160ms
+[INFO] GET /src/index.css 200 in 280ms
+[INFO] GET /src/components/PaymentModal.tsx 200 in 308ms
+[INFO] GET /src/index.css 200 in 217ms
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] GET / 200 in 281ms
+[INFO] GET /@react-refresh 304 in 4ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 371ms
+[INFO] GET /@vite/client 304 in 413ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 4ms
+[INFO] GET / 200 in 909ms
+[INFO] GET /@vite/client 304 in 1ms
+[INFO] GET /@react-refresh 304 in 1ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
+[INFO] GET /src/main.tsx 200 in 3365ms
+[INFO] GET /src/main.tsx 200 in 457ms
+[INFO] GET /node_modules/.vite/deps/react.js 200 in 1483ms
+[INFO] GET /node_modules/.vite/deps/react.js 200 in 1481ms
+[INFO] GET /node_modules/.vite/deps/@tanstack_react-query.js 200 in 1483ms
+[INFO] GET /node_modules/.vite/deps/react-dom_client.js 200 in 1538ms
+[INFO] GET /node_modules/.vite/deps/react_jsx-dev-runtime.js 200 in 1563ms
+[INFO] GET /node_modules/.vite/deps/react_jsx-dev-runtime.js 200 in 1498ms
+[INFO] GET /node_modules/.vite/deps/wouter.js 200 in 1497ms
+[INFO] GET /node_modules/.vite/deps/react-dom_client.js 200 in 1ms
+[INFO] GET /src/lib/queryClient.ts 200 in 0ms
+[INFO] GET /node_modules/.vite/deps/lucide-react.js 200 in 1531ms
+[INFO] GET /src/index.css 200 in 2ms
+[INFO] GET /src/components/ui/toaster.tsx 200 in 1ms
+[INFO] GET /src/pages/HomePage.tsx 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/wouter.js 200 in 1ms
+[INFO] GET /src/pages/LibraryPage.tsx 200 in 2ms
+[INFO] GET /src/index.css 200 in 2ms
+[INFO] GET /src/pages/AuthPage.tsx 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/@tanstack_react-query.js 200 in 1ms
+[INFO] GET /src/pages/PricingPage.tsx 200 in 1ms
+[INFO] GET /src/pages/AdminPage.tsx 200 in 1ms
+[INFO] GET /src/pages/ProfilePage.tsx 200 in 1ms
+[INFO] GET /src/pages/BillingPage.tsx 200 in 1ms
+[INFO] GET /src/hooks/use-user.ts 200 in 1ms
+[INFO] GET /src/components/Sidebar.tsx 200 in 1ms
+[INFO] GET /src/components/ui/button.tsx 200 in 3ms
+[INFO] GET /node_modules/.vite/deps/chunk-ZQ3TVT43.js 200 in 2ms
+[INFO] GET /src/lib/queryClient.ts 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/chunk-WOOG5QLI.js 200 in 0ms
+[INFO] GET /node_modules/.vite/deps/chunk-44NJKXUD.js 200 in 8ms
+[INFO] GET /node_modules/.vite/deps/chunk-R5L25AAF.js 200 in 1ms
+[INFO] GET /src/components/ui/toaster.tsx 200 in 1ms
+[INFO] GET /src/components/ui/toast.tsx 200 in 1ms
+[INFO] GET /src/hooks/use-toast.ts 200 in 1ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 200 in 0ms
+[INFO] GET /src/pages/HomePage.tsx 200 in 1ms
+[INFO] GET /src/components/AudioPlayer.tsx 200 in 1ms
+[INFO] GET /src/hooks/use-audio.ts 200 in 1ms
+[INFO] GET /src/pages/AuthPage.tsx 200 in 1ms
+[INFO] GET /src/lib/utils.ts 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/react-dropzone.js 200 in 1ms
+[INFO] GET /src/hooks/use-tts.ts 200 in 1ms
+[INFO] GET /src/pages/LibraryPage.tsx 200 in 2ms
+[INFO] GET /src/components/UsageProgress.tsx 200 in 2ms
+[INFO] GET /src/components/Logo.tsx 200 in 1ms
+[INFO] GET /src/pages/PricingPage.tsx 200 in 1ms
+[INFO] GET /src/components/ui/collapsible.tsx 200 in 2ms
+[INFO] GET /node_modules/.vite/deps/react-hook-form.js 200 in 0ms
+[INFO] GET /src/pages/AdminPage.tsx 200 in 0ms
+[INFO] GET /node_modules/.vite/deps/@hookform_resolvers_zod.js 200 in 2ms
+[INFO] GET /node_modules/.vite/deps/recharts.js 200 in 11ms
+[INFO] GET /node_modules/.vite/deps/date-fns.js 200 in 3ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 200 in 1ms
+[INFO] GET /src/pages/ProfilePage.tsx 200 in 1ms
+[INFO] GET /src/components/ui/input.tsx 200 in 7ms
+[INFO] GET /src/pages/BillingPage.tsx 200 in 2ms
+[INFO] GET /src/components/ui/form.tsx 200 in 1ms
+[INFO] GET /src/components/ui/card.tsx 200 in 0ms
+[INFO] GET /node_modules/.vite/deps/lucide-react.js 200 in 2ms
+[INFO] GET /src/hooks/use-user.ts 200 in 1ms
+[INFO] GET /src/components/ui/tabs.tsx 200 in 0ms
+[INFO] GET /node_modules/.vite/deps/@radix-ui_react-slot.js 200 in 0ms
+[INFO] GET /src/components/ui/avatar.tsx 200 in 0ms
+[INFO] GET /src/components/PaymentModal.tsx 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/class-variance-authority.js 200 in 0ms
+[INFO] GET /src/components/ui/scroll-area.tsx 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/@radix-ui_react-toast.js 200 in 1ms
+[INFO] GET /src/components/Sidebar.tsx 200 in 2ms
+[INFO] GET /node_modules/.vite/deps/@radix-ui_react-alert-dialog.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/clsx.js 200 in 0ms
+[INFO] GET /node_modules/.vite/deps/tailwind-merge.js 200 in 1ms
+[INFO] GET /src/components/ui/slider.tsx 200 in 1ms
+[INFO] GET /src/components/ui/popover.tsx 200 in 1ms
+[INFO] GET /src/components/ui/select.tsx 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/chunk-U3OSG4IC.js 200 in 1ms
+[INFO] GET /src/components/ui/progress.tsx 200 in 1ms
+[INFO] GET /src/components/ui/button.tsx 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/chunk-BRRE5DHS.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/@radix-ui_react-collapsible.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/chunk-I6WWWGIQ.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/drizzle-orm_pg-core.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/drizzle-orm.js 200 in 0ms
+[INFO] GET /node_modules/.vite/deps/chunk-ZQ3TVT43.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/drizzle-zod.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/chunk-WOOG5QLI.js 200 in 1ms
+[INFO] GET /src/components/ui/label.tsx 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/chunk-FKSM7VDL.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/@radix-ui_react-tabs.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/@radix-ui_react-avatar.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/chunk-LPO6FEV6.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/chunk-R5L25AAF.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/chunk-44NJKXUD.js 200 in 6ms
+[INFO] GET /node_modules/.vite/deps/@stripe_stripe-js.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/@stripe_react-stripe-js.js 200 in 1ms
+[INFO] GET /src/components/ui/dialog.tsx 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/@radix-ui_react-scroll-area.js 200 in 0ms
+[INFO] GET /node_modules/.vite/deps/chunk-7FHWVVNK.js 200 in 1ms
+[INFO] GET /src/hooks/use-toast.ts 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/chunk-OY74BMY4.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/chunk-EY657BW4.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/chunk-NF2BQ4FM.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/chunk-KVYZLX4W.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/chunk-IOOQYIHO.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/chunk-PNXGSXXY.js 200 in 1ms
+[INFO] GET /src/components/ui/toast.tsx 200 in 1ms
+[INFO] GET /src/hooks/use-tts.ts 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/@radix-ui_react-popover.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/@radix-ui_react-slider.js 200 in 0ms
+[INFO] GET /node_modules/.vite/deps/@radix-ui_react-select.js 200 in 2ms
+[INFO] GET /node_modules/.vite/deps/@radix-ui_react-progress.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/chunk-VJBK4ZL6.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/chunk-OEDDKL4V.js 200 in 1ms
+[INFO] GET /src/components/Logo.tsx 200 in 2ms
+[INFO] GET /node_modules/.vite/deps/react-dropzone.js 200 in 2ms
+[INFO] GET /node_modules/.vite/deps/chunk-SZWQCOIT.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/@radix-ui_react-label.js 200 in 0ms
+[INFO] GET /node_modules/.vite/deps/chunk-YFVCHPAV.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/@radix-ui_react-dialog.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/chunk-UQF5EARV.js 200 in 1ms
+[INFO] GET /src/components/UsageProgress.tsx 200 in 0ms
+[INFO] GET /node_modules/.vite/deps/chunk-6BEZKPX5.js 200 in 0ms
+[INFO] GET /src/components/ui/collapsible.tsx 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/chunk-ZTGYVKYI.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/chunk-S764NO5S.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/@hookform_resolvers_zod.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/react-hook-form.js 200 in 1ms
+[INFO] GET /src/components/ui/input.tsx 200 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 200 in 1ms
+[INFO] GET /api/user 401 in 4ms
+[INFO] GET /src/components/ui/form.tsx 200 in 6ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 1ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 0ms
+[INFO] GET / 200 in 7ms
+[INFO] GET /src/components/ui/card.tsx 200 in 1ms
+[INFO] GET /src/lib/utils.ts 304 in 1ms
+[INFO] GET /src/components/ui/tabs.tsx 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/recharts.js 200 in 7ms
+[INFO] GET /node_modules/.vite/deps/date-fns.js 200 in 6ms
+[INFO] GET /src/components/ui/avatar.tsx 200 in 1ms
+[INFO] GET /src/components/PaymentModal.tsx 200 in 1ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 0ms
+[INFO] GET /node_modules/.vite/deps/chunk-FKSM7VDL.js 200 in 1ms
+[INFO] GET /node_modules/.vite/deps/chunk-LPO6FEV6.js 200 in 1ms
+[INFO] GET /src/components/ui/label.tsx 304 in 1ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 1ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
+[INFO] GET /src/components/ui/select.tsx 304 in 1ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
+[INFO] GET /api/user 401 in 2ms
+[INFO] POST /api/login 200 in 373ms
+[INFO] GET / 200 in 61ms
+[INFO] GET /api/user 200 in 115ms
+[INFO] GET / 200 in 114ms
+[INFO] GET /api/podcasts 304 in 285ms
+[INFO] GET /api/playlists 304 in 290ms
+[INFO] GET /uploads/1735320158224-article.mp3 206 in 508ms
+[INFO] GET / 200 in 59ms
+[INFO] Creating subscription for user 13 with price price_1Qb8xDBwEMzOkTIKEcpAxav4
+[INFO] Creating subscription for user 13 with price price_1Qb8xDBwEMzOkTIKEcpAxav4
+[INFO] Using existing customer: cus_RU8Oe0EMwc74Kh
+[INFO] Using existing customer: cus_RU8Oe0EMwc74Kh
+[INFO] Created subscription: sub_1QbAkXBwEMzOkTIKBaZIzpKC
+[INFO] POST /api/create-subscription 200 in 1489ms
+[INFO] 
+Stripe Signature: t=1735433578,v1=e8d1ea1a0b2ca676004d315329f7ea2a4f5f667cdd390f4e7a4f7cd582d8995f,v0=88cee1f9ca80bab5c771d1116beb9bfc6c699df1691af4bf6a6b31ea001518c1
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: payment_intent.created
+[INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] 
+Stripe Signature: t=1735433578,v1=5404df3c11c1a09157e218e2c556917cb925dbdfee76e90c175d8eba87889d48,v0=c27e502ff8b0ca2476df8c071c2aff9291107bfeba0bb4263f589c4bef0087c8
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: customer.subscription.created
+[INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] 
+Stripe Signature: t=1735433578,v1=6f4de73ccbe1931c01abe08a1bed425b343b871a5439f66755f8f0ebba5a9a89,v0=8306e07d508af032eb41a03ca0e32d802be7928d6972a6e89811efacd04a6503
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: invoice.created
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735433578,v1=a1e0b711551c420bb9e2309e130250eb33f89c022bf474f76fd08f6929066e74,v0=c4fbcda96a7bc6e1b0284c8147b138f40dad26e661d31aab704cd1470f23c280
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: invoice.finalized
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] Created subscription: sub_1QbAkYBwEMzOkTIKIllh1UiP
+[INFO] POST /api/create-subscription 200 in 2818ms
+[INFO] 
+Stripe Signature: t=1735433579,v1=d7eb56307079f27f69bd2a3f5347bb379ef82bdaedace5b164a436afee558fe4,v0=d4e74b6ae628e6801a3779bb7f61b660918690ec53417e253d60981b3d844af3
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: customer.subscription.created
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735433579,v1=770ad340fef55db31a5ac04d1aeba4829c217f23cd5cc588b0713128ae813ccb,v0=74c3b994d089320e9554c35ec5cc062710431c8ce23e5fc20be9f77a69e0d5a0
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] Successfully verified webhook event: payment_intent.created
+[INFO] 
+Stripe Signature: t=1735433579,v1=9b9006cd1fa9d5bdf03dc21fdc0df04bbdc1d17177cf74e96fed95263997a6ef,v0=798becfdbd265421e1202d6871806fe7d70449286577d8c260a9cde61cde3412
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: invoice.created
+[INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] 
+Stripe Signature: t=1735433579,v1=207a62c9d8808c85e0d8b040bb86707f6dc047ccebc716f0e74fc2cef56bed8c,v0=dcc218180b3eddde0a7280be4629793f18012409b912af800416de3300c18c29
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: invoice.finalized
+[INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] GET / 200 in 62ms
+[INFO] 
+Stripe Signature: t=1735433597,v1=3b3a99ddb912a64b652ab273101731de9b1996e4a6df4408b44f47ad1936d968,v0=5acdffa658bc6666743bac742282c7b82e4b9de7d953a299be6e0bdfdfd10558
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: charge.succeeded
+[INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] GET /@vite/client 304 in 56ms
+[INFO] 
+Stripe Signature: t=1735433597,v1=0850775894e21d80d49eb27be4079fe3c61345224cfb8e082920737a5592665a,v0=9696e824bda61d60af56908039f9b677d2f169c44149d67bd69c665b1988f045
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: payment_method.attached
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 87ms
+[INFO] 
+Stripe Signature: t=1735433597,v1=8acb82cdbe138cf14db05dfbf320a17682813d26664e2de5513b3da3ecf3cd6a,v0=a290d6dd2d38c294f6453f4ecf35e24ced1029b63201347d5f57b610209d50f2
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: customer.subscription.updated
+[INFO] GET /src/main.tsx 304 in 141ms
+[INFO] 
+Stripe Signature: t=1735433597,v1=dc2138f8dd903e38645deb6c2d0aa9076f2f7cc783e96ce704f39a85a33bdabc,v0=3a6f266b6f74348d3e3626bba1c3e564a8e51f79ebd4e32ab394c11ed8f39a89
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: payment_intent.succeeded
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] GET /@react-refresh 304 in 125ms
+[INFO] 
+Stripe Signature: t=1735433598,v1=fece435c884bfd31a030a807275f5922bea773805a9d30c0ad1ed3db7d374825,v0=fa974cbf352f61f30499b303c523e0d08a38ef3289c5cd5ba488aac3ad8b9505
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: invoice.updated
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] Updated subscription status for user 13
+[INFO] POST /api/webhooks/stripe 200 in 157ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 177ms
+[INFO] 
+Stripe Signature: t=1735433598,v1=4bc4292b4166e3f3fb7b6f82794348998599dc7c17aeea4b818a3dbb357af94d,v0=f3b83a1997334ff7598f6654a578b5bcb230d650956851b85df4bc7e80826faa
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: invoice.paid
+[INFO] POST /api/webhooks/stripe 200 in 0ms
+[INFO] 
+Stripe Signature: t=1735433598,v1=706b70f56a1d57bb6e79f8cd685c4c6b6d5e4a7523bc3ec0aa74a430806dbf07,v0=06bad866d537c35a75c641a6dccd183d117e43c42c876f3e1c98fd6ce4f161a2
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: invoice.payment_succeeded
+[INFO] GET /src/lib/queryClient.ts 304 in 176ms
+[INFO] GET /src/index.css 304 in 230ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 270ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 292ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 263ms
+[INFO] 
+
+ ------Subscription Type ------- Basic Plan:monthly
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 285ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 199ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 255ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 290ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 292ms
+[INFO] GET /src/hooks/use-user.ts 304 in 347ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 345ms
+[INFO] GET /src/components/ui/button.tsx 304 in 346ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 346ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 346ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 344ms
+[INFO] Successfully processed payment for subscription sub_1QbAkXBwEMzOkTIKBaZIzpKC
+[INFO] POST /api/webhooks/stripe 200 in 943ms
+[INFO] GET /src/components/Logo.tsx 304 in 342ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 325ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 312ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 325ms
+[INFO] GET /src/components/ui/input.tsx 304 in 357ms
+[INFO] GET /src/components/ui/form.tsx 304 in 360ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 294ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 302ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 302ms
+[INFO] GET /src/lib/utils.ts 304 in 301ms
+[INFO] GET /src/components/ui/card.tsx 304 in 288ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 291ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 290ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 289ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 289ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 292ms
+[INFO] GET /src/components/ui/label.tsx 304 in 292ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 286ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 289ms
+[INFO] GET /src/components/ui/select.tsx 304 in 287ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 288ms
+[INFO] GET /api/user 200 in 58ms
+[INFO] GET / 200 in 60ms
+[INFO] GET / 200 in 63ms
+[INFO] GET / 200 in 127ms
+[INFO] GET /api/playlists 304 in 224ms
+[INFO] GET / 200 in 64ms
+[INFO] GET /api/user/usage/check 304 in 169ms
+[INFO] GET /api/user/usage/check 304 in 111ms
+[INFO] GET /api/user/usage/check 304 in 112ms
+[INFO] GET /api/user/usage/check 304 in 111ms
+[INFO] GET /api/user/usage/check 304 in 112ms
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] GET /api/user/usage/check 304 in 111ms
