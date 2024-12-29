@@ -1250,9 +1250,9 @@ export function registerRoutes(app: Express) {
           },
           tokens: {
             used: currentTokens,
-            limit: PODIFY_TOKEN_LIMIT,
-            remaining: Math.max(0, PODIFY_TOKEN_LIMIT - currentTokens),
-            wouldExceed: currentTokens + totalTokens > PODIFY_TOKEN_LIMIT,
+            limit: currentLimits.podifyTokenLimit,
+            remaining: Math.max(0, currentLimits.podifyTokenLimit - currentTokens),
+            wouldExceed: currentTokens + totalTokens > currentLimits.podifyTokenLimit,
             estimated: totalTokens,
           },
         },
