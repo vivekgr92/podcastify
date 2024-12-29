@@ -126,15 +126,15 @@ export default function BillingPage() {
   // Check if user has an active subscription
   const hasActiveSubscription = Boolean(
     user.subscriptionStatus && 
-    !["canceled", "free", "payment_failed", null, undefined].includes(user.subscriptionStatus)
+    !["canceled", "inactive", "free", "payment_failed", null, undefined].includes(user.subscriptionStatus)
   );
 
-  const getCurrentPlanName = () => {
-    if (!user.subscriptionStatus) return null;
-    return user.subscriptionStatus.split(":")[0];
+  const getCurrentPlan = () => {
+    if (!user.subscriptionType) return null;
+    return plans.find(plan => plan.name === user.subscriptionType) || null;
   };
 
-  const currentPlanName = getCurrentPlanName();
+  const currentPlan = getCurrentPlan();
 
   return (
     <div className="container mx-auto px-6 py-12 space-y-16">
@@ -151,8 +151,12 @@ export default function BillingPage() {
           <div className="bg-gray-900 rounded-2xl p-8 border border-gray-800">
             <div className="space-y-4">
               <div className="flex justify-between items-center">
+                <span className="text-gray-400">Plan</span>
+                <span className="capitalize">{currentPlan?.name || "Unknown Plan"}</span>
+              </div>
+              <div className="flex justify-between items-center">
                 <span className="text-gray-400">Status</span>
-                <span className="capitalize">{currentPlanName || "Unknown"}</span>
+                <span className="capitalize">{user.subscriptionStatus}</span>
               </div>
               {user.currentPeriodEnd && (
                 <div className="flex justify-between items-center">
@@ -189,13 +193,13 @@ export default function BillingPage() {
           <p className="text-gray-400">
             {hasActiveSubscription 
               ? "Compare your current plan with other options"
-              : "Select a monthly plan that best fits your needs"}
+              : "Select a plan that best fits your needs"}
           </p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
           {plans.map((plan) => {
-            const isCurrentPlan = currentPlanName === plan.name;
+            const isCurrentPlan = currentPlan?.name === plan.name;
 
             return (
               <div
@@ -237,12 +241,10 @@ export default function BillingPage() {
                     }`}
                     variant={plan.popular ? "default" : "outline"}
                     onClick={() => handlePlanSelect(plan)}
-                    disabled={hasActiveSubscription && isCurrentPlan}
+                    disabled={hasActiveSubscription}
                   >
                     {hasActiveSubscription 
-                      ? isCurrentPlan
-                        ? "Current Plan"
-                        : "Switch Plan"
+                      ? "Manage subscription first"
                       : plan.buttonText}
                   </Button>
                 </div>
