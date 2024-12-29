@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { PaymentModal } from "../components/PaymentModal";
 import { useToast } from "../hooks/use-toast";
 import { LoadingScreen } from "../components/LoadingScreen";
+import { Separator } from "../components/ui/separator";
 
 const plans = [
   {
@@ -122,26 +123,24 @@ export default function BillingPage() {
     setIsPaymentModalOpen(true);
   };
 
-  const hasActiveSubscription = user.subscriptionStatus && 
-    !["canceled", "free", "payment_failed"].includes(user.subscriptionStatus);
+  const hasActiveSubscription = Boolean(
+    user.subscriptionStatus && 
+    !["canceled", "free", "payment_failed"].includes(user.subscriptionStatus)
+  );
 
   return (
-    <div className="container mx-auto px-6 py-24">
-      <div className="text-center mb-16">
-        <h1 className="text-4xl font-bold mb-4">
-          {hasActiveSubscription ? "Manage Subscription" : "Choose Your Plan"}
-        </h1>
+    <div className="container mx-auto px-6 py-12 space-y-16">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold mb-4">Billing & Subscription</h1>
         <p className="text-gray-400 max-w-2xl mx-auto">
-          {hasActiveSubscription
-            ? "Manage your subscription, view invoices, and update payment methods."
-            : "Select a monthly plan that best fits your needs. All plans include our core features with different usage limits."}
+          Manage your subscription and explore our pricing plans
         </p>
       </div>
 
-      {hasActiveSubscription ? (
+      {hasActiveSubscription && (
         <div className="max-w-md mx-auto">
+          <h2 className="text-2xl font-semibold mb-6">Current Subscription</h2>
           <div className="bg-gray-900 rounded-2xl p-8 border border-gray-800">
-            <h2 className="text-xl font-semibold mb-4">Current Subscription</h2>
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <span className="text-gray-400">Status</span>
@@ -172,7 +171,20 @@ export default function BillingPage() {
             </div>
           </div>
         </div>
-      ) : (
+      )}
+
+      <Separator className="my-12" />
+
+      <div className="mt-16">
+        <div className="text-center mb-12">
+          <h2 className="text-2xl font-semibold mb-4">Available Plans</h2>
+          <p className="text-gray-400">
+            {hasActiveSubscription 
+              ? "Compare your current plan with other options"
+              : "Select a monthly plan that best fits your needs"}
+          </p>
+        </div>
+
         <div className="grid md:grid-cols-3 gap-8">
           {plans.map((plan) => (
             <div
@@ -214,14 +226,19 @@ export default function BillingPage() {
                   }`}
                   variant={plan.popular ? "default" : "outline"}
                   onClick={() => handlePlanSelect(plan)}
+                  disabled={hasActiveSubscription}
                 >
-                  {plan.buttonText}
+                  {hasActiveSubscription 
+                    ? user.subscriptionStatus?.includes(plan.name)
+                      ? "Current Plan"
+                      : "Already Subscribed"
+                    : plan.buttonText}
                 </Button>
               </div>
             </div>
           ))}
         </div>
-      )}
+      </div>
 
       {selectedPlan && (
         <PaymentModal
