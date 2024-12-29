@@ -60,7 +60,7 @@ const plans = [
 ];
 
 export default function BillingPage() {
-  const { user } = useUser();
+  const { user, isLoading: isUserLoading } = useUser();
   const [location] = useLocation();
   const [selectedPlan, setSelectedPlan] = useState<(typeof plans)[0] | null>(null);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
@@ -116,32 +116,39 @@ export default function BillingPage() {
     }
   };
 
-  if (!user) return null;
+  if (isUserLoading || !user) {
+    return <LoadingScreen />;
+  }
 
   const handlePlanSelect = (plan: (typeof plans)[0]) => {
     setSelectedPlan(plan);
     setIsPaymentModalOpen(true);
   };
 
-  // Check if user has an active subscription
+  // Parse subscription status to get plan details and active status
+  const getCurrentPlanDetails = () => {
+    if (!user.subscriptionStatus) return null;
+    const [planName, billingPeriod] = user.subscriptionStatus.split(":");
+    return {
+      name: planName,
+      billingPeriod: billingPeriod || "monthly"
+    };
+  };
+
+  const currentPlanDetails = getCurrentPlanDetails();
   const hasActiveSubscription = Boolean(
     user.subscriptionStatus && 
     !["canceled", "free", "payment_failed", null, undefined].includes(user.subscriptionStatus)
   );
-
-  const getCurrentPlanName = () => {
-    if (!user.subscriptionStatus) return null;
-    return user.subscriptionStatus.split(":")[0];
-  };
-
-  const currentPlanName = getCurrentPlanName();
 
   return (
     <div className="container mx-auto px-6 py-12 space-y-16">
       <div className="text-center">
         <h1 className="text-4xl font-bold mb-4">Billing & Subscription</h1>
         <p className="text-gray-400 max-w-2xl mx-auto">
-          Manage your subscription and explore our pricing plans
+          {hasActiveSubscription 
+            ? "Manage your subscription and explore other plans"
+            : "Choose a plan to get started"}
         </p>
       </div>
 
@@ -151,8 +158,12 @@ export default function BillingPage() {
           <div className="bg-gray-900 rounded-2xl p-8 border border-gray-800">
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-gray-400">Status</span>
-                <span className="capitalize">{currentPlanName || "Unknown"}</span>
+                <span className="text-gray-400">Plan</span>
+                <span className="capitalize">{currentPlanDetails?.name || 'No active plan'}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-400">Billing Period</span>
+                <span>{currentPlanDetails?.billingPeriod === 'monthly' ? 'Monthly' : 'Annual'}</span>
               </div>
               {user.currentPeriodEnd && (
                 <div className="flex justify-between items-center">
@@ -168,9 +179,9 @@ export default function BillingPage() {
                 className="w-full mt-6"
               >
                 {isLoadingPortal ? (
-                  <div className="flex items-center">
+                  <div className="flex items-center justify-center">
                     <LoadingScreen />
-                    <span>Loading...</span>
+                    <span className="ml-2">Loading...</span>
                   </div>
                 ) : (
                   "Manage Subscription"
@@ -189,13 +200,13 @@ export default function BillingPage() {
           <p className="text-gray-400">
             {hasActiveSubscription 
               ? "Compare your current plan with other options"
-              : "Select a monthly plan that best fits your needs"}
+              : "Select a plan that best fits your needs"}
           </p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
           {plans.map((plan) => {
-            const isCurrentPlan = currentPlanName === plan.name;
+            const isCurrentPlan = currentPlanDetails?.name === plan.name;
 
             return (
               <div
@@ -237,13 +248,9 @@ export default function BillingPage() {
                     }`}
                     variant={plan.popular ? "default" : "outline"}
                     onClick={() => handlePlanSelect(plan)}
-                    disabled={hasActiveSubscription && isCurrentPlan}
+                    disabled={isCurrentPlan}
                   >
-                    {hasActiveSubscription 
-                      ? isCurrentPlan
-                        ? "Current Plan"
-                        : "Switch Plan"
-                      : plan.buttonText}
+                    {isCurrentPlan ? "Current Plan" : hasActiveSubscription ? "Switch Plan" : "Subscribe Now"}
                   </Button>
                 </div>
               </div>
