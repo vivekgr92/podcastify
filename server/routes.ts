@@ -31,40 +31,29 @@ const PODIFY_MARGIN = 0.6;
 let PODIFY_TOKEN_LIMIT = 10000;
 let ARTICLE_LIMIT = 3;
 
-// ToDO: figure out Plan-specific usage limits
+// Plan-specific usage limits
 const USAGE_LIMITS = {
   free: {
     articleLimit: 3,
     podifyTokenLimit: 10000,
   },
-  basic_monthly: {
+  "Basic Plan:monthly": {
     articleLimit: 20,
     podifyTokenLimit: 40000,
   },
-  basic_annual: {
-    articleLimit: 240, // Example: 12x the monthly limit
-    podifyTokenLimit: 480000, // Example: 12x the monthly limit
-  },
-  pro_monthly: {
+  "Pro Plan:monthly": {
     articleLimit: 50,
     podifyTokenLimit: 60000,
   },
-  pro_annual: {
-    articleLimit: 600, // Example: 12x the monthly limit
-    podifyTokenLimit: 720000, // Example: 12x the monthly limit
-  },
+  "Enterprise Plan:monthly": {
+    articleLimit: Infinity,
+    podifyTokenLimit: 1000000,
+  }
 };
 
 // Helper to get limits based on subscription status
 function getLimits(subscriptionStatus: string) {
-  switch (subscriptionStatus) {
-    case "basic:monthly":
-      return USAGE_LIMITS.basic_monthly;
-    case "pro:monthly":
-      return USAGE_LIMITS.pro_monthly;
-    default:
-      return USAGE_LIMITS.free;
-  }
+  return USAGE_LIMITS[subscriptionStatus as keyof typeof USAGE_LIMITS] || USAGE_LIMITS.free;
 }
 
 // Initialize Stripe with proper API version and error handling
