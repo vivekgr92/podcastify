@@ -16,15 +16,12 @@ import { Loader2, Menu } from "lucide-react";
 import { useUser } from "./hooks/use-user";
 import Sidebar from "./components/Sidebar";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
+import { FC, useState } from "react";
 
-function Router() {
+// Extract AppRouter into its own component to properly use hooks
+const AppRouter: FC = () => {
   const { user, isLoading } = useUser();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [location]);
 
   if (isLoading) {
     return (
@@ -103,15 +100,16 @@ function Router() {
       </div>
     </div>
   );
-}
+};
 
+// Main app render
 const root = document.getElementById("root");
 if (!root) throw new Error("Root element not found");
 
 createRoot(root).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <Router />
+      <AppRouter />
       <Toaster />
     </QueryClientProvider>
   </StrictMode>

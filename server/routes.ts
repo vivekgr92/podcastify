@@ -8,7 +8,7 @@ import { promises as fs } from "fs";
 import * as fsSync from "fs";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
-import bcrypt from 'bcrypt'; // Import bcrypt
+import bcrypt from "bcrypt"; // Import bcrypt
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -31,7 +31,11 @@ import Stripe from "stripe";
 const PODIFY_TOKEN_RATE = 0.005;
 const PODIFY_MARGIN = 0.6;
 
-type SubscriptionTier = "free" | "Basic Plan:monthly" | "Pro Plan:monthly" | "Enterprise Plan:monthly";
+type SubscriptionTier =
+  | "free"
+  | "Basic Plan:monthly"
+  | "Pro Plan:monthly"
+  | "Enterprise Plan:monthly";
 
 const USAGE_LIMITS = {
   free: {
@@ -55,7 +59,7 @@ const USAGE_LIMITS = {
 // Helper to get limits based on subscription status with proper type checking
 function getLimits(subscriptionStatus: string | null | undefined) {
   const defaultLimits = USAGE_LIMITS.free;
-  const normalizedStatus = (subscriptionStatus || 'free') as SubscriptionTier;
+  const normalizedStatus = (subscriptionStatus || "free") as SubscriptionTier;
   const limits = USAGE_LIMITS[normalizedStatus] || defaultLimits;
   return {
     articleLimit: limits.articleLimit,
@@ -206,9 +210,7 @@ export function registerRoutes(app: Express) {
       // Ensure we have the webhook secret
       if (!process.env.STRIPE_WEBHOOK_SECRET) {
         logger.error("Missing STRIPE_WEBHOOK_SECRET environment variable");
-        return res
-          .status(500)
-          .json({ error: "Webhook secret not configured" });
+        return res.status(500).json({ error: "Webhook secret not configured" });
       }
 
       logger.info(`\nStripe Signature: ${sig}`);
@@ -969,7 +971,8 @@ export function registerRoutes(app: Express) {
 
       res.json(userPodcasts);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
       res.status(500).json({
         error: "Failed to fetch podcasts",
         message: errorMessage,
@@ -983,7 +986,7 @@ export function registerRoutes(app: Express) {
       if (!user?.id) {
         return res.status(401).json({
           error: "Not authenticated",
-          type: "auth"
+          type: "auth",
         });
       }
 
@@ -991,7 +994,7 @@ export function registerRoutes(app: Express) {
       if (isNaN(podcastId)) {
         return res.status(400).json({
           error: "Invalid podcast ID",
-          type: "validation"
+          type: "validation",
         });
       }
 
@@ -1004,37 +1007,27 @@ export function registerRoutes(app: Express) {
       const [podcast] = await db
         .select()
         .from(podcasts)
-        .where(
-          and(
-            eq(podcasts.id, podcastId),
-            eq(podcasts.userId, user.id)
-          )
-        )
+        .where(and(eq(podcasts.id, podcastId), eq(podcasts.userId, user.id)))
         .limit(1);
 
       if (!podcast) {
         return res.status(404).json({
           error: "Podcast not found",
-          type: "not_found"
+          type: "not_found",
         });
       }
 
       // Delete the podcast
       await db
         .delete(podcasts)
-        .where(
-          and(
-            eq(podcasts.id, podcastId),
-            eq(podcasts.userId, user.id)
-          )
-        );
+        .where(and(eq(podcasts.id, podcastId), eq(podcasts.userId, user.id)));
 
       // Try to delete the associated audio file
       if (podcast.audioUrl) {
         const audioPath = path.join(
           __dirname,
           "..",
-          podcast.audioUrl.replace(/^\//, "")
+          podcast.audioUrl.replace(/^\//, ""),
         );
         try {
           await fs.unlink(audioPath);
@@ -1042,22 +1035,23 @@ export function registerRoutes(app: Express) {
         } catch (error) {
           // Log but don't fail if file deletion fails
           await logger.warn(
-            `Failed to delete audio file ${audioPath}: ${error instanceof Error ? error.message : String(error)}`
+            `Failed to delete audio file ${audioPath}: ${error instanceof Error ? error.message : String(error)}`,
           );
         }
       }
 
       res.json({
         message: "Podcast deleted successfully",
-        id: podcastId
+        id: podcastId,
       });
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
       await logger.error(`Error deleting podcast: ${errorMessage}`);
       res.status(500).json({
         error: "Failed to delete podcast",
         type: "server",
-        message: errorMessage
+        message: errorMessage,
       });
     }
   });
@@ -1248,12 +1242,8 @@ export function registerRoutes(app: Express) {
           tokens: {
             used: currentTokens,
             limit: limits.podifyTokenLimit,
-            remaining: Math.max(
-              0,
-              limits.podifyTokenLimit - currentTokens,
-            ),
-            wouldExceed:
-              currentTokens + totalTokens > limits.podifyTokenLimit,
+            remaining: Math.max(0, limits.podifyTokenLimit - currentTokens),
+            wouldExceed: currentTokens + totalTokens > limits.podifyTokenLimit,
             estimated: totalTokens,
           },
         },
@@ -1312,6 +1302,7 @@ export function registerRoutes(app: Express) {
           username,
           email,
           password: hashedPassword,
+          displayName: username,
           subscriptionStatus: "inactive",
           subscriptionType: "free",
           isAdmin: email.endsWith("@admin.com"),
@@ -1340,7 +1331,9 @@ export function registerRoutes(app: Express) {
         res.json({ message: "Registration successful" });
       });
     } catch (error) {
-      logger.error(`Registration error: ${error instanceof Error ? error.message : String(error)}`);
+      logger.error(
+        `Registration error: ${error instanceof Error ? error.message : String(error)}`,
+      );
       res.status(500).send("Registration failed");
     }
   });

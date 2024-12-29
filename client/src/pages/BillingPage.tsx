@@ -61,7 +61,7 @@ const plans = [
 
 export default function BillingPage() {
   const { user } = useUser();
-  const [location] = useLocation();
+  const [, setLocation] = useLocation();
   const [selectedPlan, setSelectedPlan] = useState<(typeof plans)[0] | null>(null);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
@@ -89,7 +89,7 @@ export default function BillingPage() {
       });
       window.history.replaceState({}, "", "/billing");
     }
-  }, [location, toast]);
+  }, [toast]);
 
   const redirectToCustomerPortal = async () => {
     try {
@@ -124,14 +124,13 @@ export default function BillingPage() {
   };
 
   // Check if user has an active subscription
-  const hasActiveSubscription = Boolean(
-    user.subscriptionStatus && 
-    !["canceled", "inactive", "free", "payment_failed", null, undefined].includes(user.subscriptionStatus)
-  );
+  const hasActiveSubscription = user.subscriptionType && user.subscriptionType !== "free" && 
+                              user.subscriptionStatus !== "inactive" && 
+                              user.subscriptionStatus !== "canceled";
 
   const getCurrentPlan = () => {
-    if (!user.subscriptionType) return null;
-    return plans.find(plan => plan.name === user.subscriptionType) || null;
+    if (!user.subscriptionType || user.subscriptionType === "free") return null;
+    return plans.find(plan => plan.name === user.subscriptionType.split(":")[0]) || null;
   };
 
   const currentPlan = getCurrentPlan();
@@ -141,7 +140,9 @@ export default function BillingPage() {
       <div className="text-center">
         <h1 className="text-4xl font-bold mb-4">Billing & Subscription</h1>
         <p className="text-gray-400 max-w-2xl mx-auto">
-          Manage your subscription and explore our pricing plans
+          {hasActiveSubscription 
+            ? "Manage your subscription and billing details"
+            : "Choose a plan that best fits your needs"}
         </p>
       </div>
 
@@ -172,7 +173,7 @@ export default function BillingPage() {
                 className="w-full mt-6"
               >
                 {isLoadingPortal ? (
-                  <div className="flex items-center">
+                  <div className="flex items-center justify-center gap-2">
                     <LoadingScreen />
                     <span>Loading...</span>
                   </div>
@@ -241,10 +242,12 @@ export default function BillingPage() {
                     }`}
                     variant={plan.popular ? "default" : "outline"}
                     onClick={() => handlePlanSelect(plan)}
-                    disabled={hasActiveSubscription}
+                    disabled={isCurrentPlan || (hasActiveSubscription && !isCurrentPlan)}
                   >
-                    {hasActiveSubscription 
-                      ? "Manage subscription first"
+                    {isCurrentPlan 
+                      ? "Current Plan"
+                      : hasActiveSubscription
+                      ? "Manage Current Plan First"
                       : plan.buttonText}
                   </Button>
                 </div>
