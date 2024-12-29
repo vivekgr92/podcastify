@@ -28,6 +28,8 @@ import Stripe from "stripe";
 
 const PODIFY_TOKEN_RATE = 0.005;
 const PODIFY_MARGIN = 0.6;
+let PODIFY_TOKEN_LIMIT = 10000;
+let ARTICLE_LIMIT = 3;
 
 // ToDO: figure out Plan-specific usage limits
 const USAGE_LIMITS = {
@@ -266,8 +268,6 @@ export function registerRoutes(app: Express) {
             logger.info(
               `\n\n ------Subscription Type ------- ${subscriptionType}`,
             );
-
-            console.log(combinedName); // Outputs something like "Basic:monthly"
 
             const [updatedUser] = await db
               .update(users)
@@ -551,6 +551,7 @@ export function registerRoutes(app: Express) {
 
       // Calculate estimated total tokens and check usage limits
       const currentLimits = getLimits(user.subscriptionStatus || "free");
+      PODIFY_TOKEN_LIMIT = currentLimits.podifyTokens;
       const wouldExceedArticles = currentArticles >= currentLimits.articleLimit;
       const estimatedTotalCost = estimatedPricing.totalCost;
       const estimatedPodifyTokens = convertToPodifyTokens(estimatedTotalCost);
@@ -572,7 +573,7 @@ export function registerRoutes(app: Express) {
         `Estimated Podify Tokens: ${estimatedPodifyTokens}`,
         `\n\nUsage limits check for user ${user.id}:\n`,
         `Current articles: ${currentArticles}/${ARTICLE_LIMIT}\n`,
-        `Current Podify tokens: ${currentPodifyTokens}/${currentLimits.podifyTokenLimit}\n`,
+        `Current Podify tokens: ${currentPodifyTokens}/${PODIFY_TOKEN_LIMIT}\n`,
         `Would exceed article limit: ${wouldExceedArticles}\n`,
         `Would exceed token limit: ${wouldExceedPodifyTokens}`,
       ]);
@@ -1251,8 +1252,12 @@ export function registerRoutes(app: Express) {
           tokens: {
             used: currentTokens,
             limit: currentLimits.podifyTokenLimit,
-            remaining: Math.max(0, currentLimits.podifyTokenLimit - currentTokens),
-            wouldExceed: currentTokens + totalTokens > currentLimits.podifyTokenLimit,
+            remaining: Math.max(
+              0,
+              currentLimits.podifyTokenLimit - currentTokens,
+            ),
+            wouldExceed:
+              currentTokens + totalTokens > currentLimits.podifyTokenLimit,
             estimated: totalTokens,
           },
         },
