@@ -551,7 +551,10 @@ export function registerRoutes(app: Express) {
 
       // Calculate estimated total tokens and check usage limits
       const currentLimits = getLimits(user.subscriptionStatus || "free");
+
       PODIFY_TOKEN_LIMIT = currentLimits.podifyTokens;
+      ARTICLE_LIMIT = currentLimits.articleLimit;
+
       const wouldExceedArticles = currentArticles >= currentLimits.articleLimit;
       const estimatedTotalCost = estimatedPricing.totalCost;
       const estimatedPodifyTokens = convertToPodifyTokens(estimatedTotalCost);
