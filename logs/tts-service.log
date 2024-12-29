@@ -7604,3 +7604,275 @@ Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
 [INFO] GET /api/user/usage/check 304 in 112ms
 [INFO] GET /api/user/usage/check 304 in 113ms
 [INFO] GET /api/user/usage/check 304 in 111ms
+[INFO] GET /src/index.css 200 in 252ms
+[INFO] GET /src/pages/BillingPage.tsx 200 in 350ms
+[INFO] GET /src/index.css 200 in 384ms
+[INFO] GET /src/pages/BillingPage.tsx 200 in 433ms
+[INFO] GET / 200 in 249ms
+[INFO] GET /src/index.css 200 in 230ms
+[INFO] GET / 200 in 305ms
+[INFO] GET /src/index.css 200 in 219ms
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] GET / 200 in 42ms
+[INFO] GET /@vite/client 304 in 32ms
+[INFO] GET /src/main.tsx 200 in 68ms
+[INFO] GET /@react-refresh 304 in 52ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 0ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 371ms
+[INFO] GET /src/lib/queryClient.ts 200 in 1ms
+[INFO] GET /src/components/ui/toaster.tsx 200 in 1ms
+[INFO] GET /src/pages/HomePage.tsx 200 in 1ms
+[INFO] GET /src/pages/LibraryPage.tsx 200 in 1ms
+[INFO] GET /src/pages/AuthPage.tsx 200 in 2ms
+[INFO] GET /src/pages/PricingPage.tsx 200 in 1ms
+[INFO] GET /src/index.css 200 in 811ms
+[INFO] GET /src/pages/AdminPage.tsx 200 in 1ms
+[INFO] GET /src/pages/ProfilePage.tsx 200 in 1ms
+[INFO] GET /src/components/Sidebar.tsx 200 in 1ms
+[INFO] GET /src/pages/BillingPage.tsx 200 in 1ms
+[INFO] GET /src/hooks/use-user.ts 200 in 1ms
+[INFO] GET /src/components/ui/button.tsx 200 in 1ms
+[INFO] GET /src/hooks/use-toast.ts 200 in 1ms
+[INFO] GET /src/components/ui/toast.tsx 200 in 1ms
+[INFO] GET /src/hooks/use-tts.ts 200 in 1ms
+[INFO] GET /src/components/Logo.tsx 200 in 0ms
+[INFO] GET /src/components/UsageProgress.tsx 200 in 1ms
+[INFO] GET /src/components/ui/collapsible.tsx 200 in 1ms
+[INFO] GET /src/components/ui/input.tsx 200 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 200 in 0ms
+[INFO] GET /src/components/ui/form.tsx 200 in 1ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 1ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 0ms
+[INFO] GET /src/components/AudioPlayer.tsx 200 in 1ms
+[INFO] GET /src/lib/utils.ts 304 in 0ms
+[INFO] GET /src/components/ui/card.tsx 200 in 0ms
+[INFO] GET /src/components/ui/avatar.tsx 200 in 1ms
+[INFO] GET /src/components/PaymentModal.tsx 200 in 2ms
+[INFO] GET /src/components/ui/tabs.tsx 200 in 1ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
+[INFO] GET /src/components/ui/progress.tsx 200 in 1ms
+[INFO] GET /src/components/ui/label.tsx 304 in 0ms
+[INFO] GET /src/components/ui/popover.tsx 200 in 1ms
+[INFO] GET /src/components/ui/slider.tsx 200 in 1ms
+[INFO] GET /src/components/ui/select.tsx 200 in 1ms
+[INFO] GET /src/components/ui/dialog.tsx 200 in 0ms
+[INFO] GET /api/user 401 in 2ms
+[INFO] GET / 200 in 6ms
+[INFO] GET /@vite/client 304 in 0ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 1ms
+[INFO] GET /src/main.tsx 304 in 1ms
+[INFO] GET /@react-refresh 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 0ms
+[INFO] GET /src/lib/queryClient.ts 200 in 1ms
+[INFO] GET /src/index.css 304 in 1ms
+[INFO] GET /src/pages/AuthPage.tsx 200 in 1ms
+[INFO] GET /src/pages/LibraryPage.tsx 200 in 1ms
+[INFO] GET /src/pages/HomePage.tsx 200 in 0ms
+[INFO] GET /src/components/ui/toaster.tsx 200 in 1ms
+[INFO] GET /src/pages/PricingPage.tsx 200 in 1ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 0ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-user.ts 304 in 1ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
+[INFO] GET /src/components/ui/button.tsx 304 in 1ms
+[INFO] GET /src/components/ui/card.tsx 304 in 1ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 0ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 1ms
+[INFO] GET /src/components/ui/form.tsx 304 in 1ms
+[INFO] GET /src/components/ui/input.tsx 304 in 1ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 0ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 1ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
+[INFO] GET /src/lib/utils.ts 304 in 0ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
+[INFO] GET /src/components/Logo.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 0ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
+[INFO] GET /src/components/ui/label.tsx 304 in 1ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 1ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
+[INFO] GET /src/components/ui/select.tsx 304 in 0ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
+[INFO] GET /api/user 401 in 1ms
+[INFO] GET / 200 in 3ms
+[INFO] POST /api/login 200 in 348ms
+[INFO] GET /api/user 304 in 62ms
+[INFO] GET / 200 in 115ms
+[INFO] GET / 200 in 61ms
+[INFO] GET /api/playlists 304 in 287ms
+[INFO] GET /api/podcasts 304 in 307ms
+[INFO] GET / 200 in 112ms
+[INFO] GET /api/user/usage/check 304 in 171ms
+[INFO] GET / 200 in 59ms
+[INFO] Creating subscription for user 13 with price price_1Qb8xDBwEMzOkTIKEcpAxav4
+[INFO] Creating subscription for user 13 with price price_1Qb8xDBwEMzOkTIKEcpAxav4
+[INFO] Using existing customer: cus_RU8Oe0EMwc74Kh
+[INFO] Using existing customer: cus_RU8Oe0EMwc74Kh
+[INFO] Created subscription: sub_1QbAr1BwEMzOkTIKxhUdY9Gh
+[INFO] POST /api/create-subscription 200 in 1722ms
+[INFO] 
+Stripe Signature: t=1735433980,v1=d998c89e28789733d1f230ab351bbcd0ff5116a013c1ef2dab326427b8fe4ae8,v0=9faae0db262479e3a7c1dd6ba87cb74e6a2fb8706a581e074b65ec8bb484c38f
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: payment_intent.created
+[INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] 
+Stripe Signature: t=1735433980,v1=405cd5a654fd4ef4ea96b9201b78ca0d256cae0b0ef2b7ea484a3d7fc3361e2f,v0=f34cf228be8c9aad2160af3041b3cad4d012bc273f7a5b6183e042081c12cd52
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: customer.subscription.created
+[INFO] POST /api/webhooks/stripe 200 in 0ms
+[INFO] 
+Stripe Signature: t=1735433980,v1=60b7259ee5d7c7e07584540cae97fa13a75b74e92134399e11bde9823decfcda,v0=8ae64b8195ba3d2bd5c1b54b42a6ca4639f364ffbc4e5823274c1ac7a7a2a7bb
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: invoice.created
+[INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] 
+Stripe Signature: t=1735433980,v1=409d52b75e88eac2ad26ca42318dd001e0d76547c7928b879ef49f4e1bdf8cee,v0=a21cae32dba2bd1b189818de85d859b4405c5e8ce73b948b1459069906d3fe2a
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: invoice.finalized
+[INFO] POST /api/webhooks/stripe 200 in 0ms
+[INFO] Created subscription: sub_1QbAr2BwEMzOkTIKavG6RjhR
+[INFO] POST /api/create-subscription 200 in 2999ms
+[INFO] 
+Stripe Signature: t=1735433981,v1=fd03326fc27ca85364a5f02dfcc4b62661bb290fdfd372678b71c46cba8dc9de,v0=7dcea3bdad2855c4594e1ed4c9ed684c19585f3e346ebd64b7f9aa4c649b9b24
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: payment_intent.created
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735433981,v1=cda4fe6fd91ae3337063785653f294dbb2aa04bf4732d26e3114abbc0024ba11,v0=c1985bf1284c804f7dc4a3cae40be721ce732d40fc9afc779038a9357ed94809
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: customer.subscription.created
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] 
+Stripe Signature: t=1735433981,v1=d3440b88e3f742dc05c93fa02219d7de3f462dc93d9f5bf93c09847a228713ea,v0=6c86bd9146cf27a4283ed0d8ba4c72d1803aa89ed2c00eb9033032bdba672a4d
+[INFO] Successfully verified webhook event: invoice.created
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] POST /api/webhooks/stripe 200 in 0ms
+[INFO] 
+Stripe Signature: t=1735433981,v1=01b5f2294b3c0086081f4450a9bb29377743db4b727c8b1faf2df92d34fc8507,v0=81450882d8131f53a205f7c8310ea6159e82aaf1d55ec736f7fc361a61a8a1dc
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: invoice.finalized
+[INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] GET / 200 in 60ms
+[INFO] GET /@vite/client 304 in 58ms
+[INFO] 
+Stripe Signature: t=1735433995,v1=4af5908f055d575a83203f561b2f1607f4d6cd17d5575176e80af8e420af23e7,v0=498f1e6ec1ce6cb6d809ca6df83dbc9ee906af24062d603c8ff646802a5f0b10
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: charge.succeeded
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 94ms
+[INFO] GET /src/main.tsx 200 in 150ms
+[INFO] 
+Stripe Signature: t=1735433995,v1=c792ecc97ed8bde503357ac8da8f89b3229113a42429bdafe95939c932c54511,v0=3f1b42137c8ab2b61367d2aa6fb900abd69bfc09dd36d117857bdde5244bd5e0
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: payment_method.attached
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] GET /@react-refresh 304 in 75ms
+[INFO] 
+Stripe Signature: t=1735433995,v1=a0a79f5ef521a025f7c8ac925505de7765d09d1c5d9049e9b9dad13f8758d34d,v0=6a65aa28abe82fe549568af112997a317d9d95dc7d4960cee6609f338358a802
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: customer.subscription.updated
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 130ms
+[INFO] 
+Stripe Signature: t=1735433995,v1=3125a397f5ff17b2d256e9b78b31ca5fa8a1e4bf604dc87a7ef438b8b2cac4a2,v0=1145215dabb77f70ee82424999bf7a714c081e92ca5270f2b7d8e8361f728ccb
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: payment_intent.succeeded
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] Updated subscription status for user 13
+[INFO] POST /api/webhooks/stripe 200 in 101ms
+[INFO] 
+Stripe Signature: t=1735433995,v1=d782d782131192e69a0b0a21aeca83ecccebabcc94e23171f2e06852ebfaefb5,v0=4e31d8ffe5ac085e633c4cf6e5176a0ed9fb0a3e9aede49aa6bcb121488e027b
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: invoice.updated
+[INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] GET /src/index.css 200 in 117ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 169ms
+[INFO] 
+Stripe Signature: t=1735433995,v1=a981ee92b22d646d9002a3f1f5c81096105d13caa406f94bbb893dd99a3a05b9,v0=bc7611ca84f254da0c1a294f3c7840f190a51a31db991ce601a27ff938177853
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: invoice.paid
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] GET /src/lib/queryClient.ts 304 in 224ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 272ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 291ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 261ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 242ms
+[INFO] GET /src/pages/AdminPage.tsx 200 in 297ms
+[INFO] GET /src/pages/ProfilePage.tsx 200 in 295ms
+[INFO] GET /src/pages/BillingPage.tsx 200 in 288ms
+[INFO] GET /src/hooks/use-user.ts 200 in 297ms
+[INFO] GET /src/components/Sidebar.tsx 200 in 296ms
+[INFO] GET /src/components/ui/button.tsx 200 in 297ms
+[INFO] GET /src/hooks/use-toast.ts 200 in 218ms
+[INFO] GET /src/components/ui/toast.tsx 200 in 257ms
+[INFO] GET /src/hooks/use-tts.ts 200 in 245ms
+[INFO] GET /src/components/Logo.tsx 200 in 276ms
+[INFO] GET /src/components/UsageProgress.tsx 200 in 235ms
+[INFO] GET /src/components/ui/collapsible.tsx 200 in 289ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 200 in 294ms
+[INFO] GET /src/components/ui/form.tsx 200 in 258ms
+[INFO] GET /src/components/ui/input.tsx 200 in 294ms
+[INFO] 
+Stripe Signature: t=1735433997,v1=1075c848c0e0b79010cf833ecbe370706145dc8df56ff183da87dd81ef979958,v0=4d8d9f7690563b66a0ddc296158320a32928b09004f8e3d4bcb70419093e43c7
+[INFO] 
+Webhook signature: whsec_UFwgLrC33onZYRP4TIpcrUJEa0Pa5jzk
+[INFO] Successfully verified webhook event: invoice.payment_succeeded
+[INFO] GET /src/components/ui/alert-dialog.tsx 200 in 290ms
+[INFO] GET /src/hooks/use-audio.ts 200 in 258ms
+[INFO] GET /src/components/AudioPlayer.tsx 200 in 296ms
+[INFO] GET /src/lib/utils.ts 200 in 288ms
+[INFO] 
+
+ ------Subscription Type ------- Basic Plan:monthly
+[INFO] GET /src/components/ui/card.tsx 200 in 259ms
+[INFO] GET /src/components/ui/tabs.tsx 200 in 292ms
+[INFO] GET /src/components/ui/avatar.tsx 200 in 252ms
+[INFO] GET /src/components/PaymentModal.tsx 200 in 244ms
+[INFO] GET /src/components/ui/scroll-area.tsx 200 in 295ms
+[INFO] GET /src/components/ui/progress.tsx 200 in 319ms
+[INFO] GET /src/components/ui/label.tsx 200 in 351ms
+[INFO] GET /src/components/ui/slider.tsx 200 in 345ms
+[INFO] GET /src/components/ui/popover.tsx 200 in 354ms
+[INFO] Successfully processed payment for subscription sub_1QbAr1BwEMzOkTIKxhUdY9Gh
+[INFO] POST /api/webhooks/stripe 200 in 815ms
+[INFO] GET /src/components/ui/select.tsx 200 in 395ms
+[INFO] GET /src/components/ui/dialog.tsx 200 in 321ms
+[INFO] GET /api/user 200 in 57ms
+[INFO] GET / 200 in 71ms
+[INFO] GET / 200 in 66ms
+[INFO] GET / 200 in 129ms
+[INFO] GET /api/playlists 304 in 221ms
+[INFO] GET / 200 in 116ms
+[INFO] GET /api/user/usage/check 304 in 202ms
+[INFO] GET /api/user/usage/check 304 in 115ms
+[INFO] GET /api/user/usage/check 304 in 114ms
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] GET /api/user/usage/check 304 in 113ms
