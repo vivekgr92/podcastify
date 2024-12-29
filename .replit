@@ -42,17 +42,16 @@ name = "Project"
 mode = "parallel"
 author = "agent"
 
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "Server"
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
 
 [[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "Client"
+task = "packager.installForAll"
 
 [[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "StripeSetup"
+task = "shell.exec"
+args = "npm run dev"
+waitForPort = 4000
 
 [[workflows.workflow]]
 name = "Server"
