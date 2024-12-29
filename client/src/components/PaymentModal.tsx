@@ -19,7 +19,9 @@ interface PaymentModalProps {
   planName: string;
   planPrice: string;
   priceId: string;
-  userEmail?: string; // Add email to props
+  userEmail?: string;
+  onProcessingStart?: () => void;
+  onProcessingEnd?: () => void;
 }
 
 function CheckoutForm({ planName, planPrice, priceId, userEmail, onClose }: Omit<PaymentModalProps, 'isOpen'>) {
@@ -40,6 +42,7 @@ function CheckoutForm({ planName, planPrice, priceId, userEmail, onClose }: Omit
     setIsSubmitting(true);
     setError(null);
     setPaymentStatus('processing');
+    props.onProcessingStart?.();
 
     try {
       const { error: submitError } = await elements.submit();
@@ -67,6 +70,7 @@ function CheckoutForm({ planName, planPrice, priceId, userEmail, onClose }: Omit
       setPaymentStatus('failed');
     } finally {
       setIsSubmitting(false);
+      props.onProcessingEnd?.();
     }
   };
 

@@ -5,6 +5,7 @@ import { useLocation } from "wouter";
 import { useState, useEffect } from "react";
 import { PaymentModal } from "../components/PaymentModal";
 import { useToast } from "../hooks/use-toast";
+import { LoadingScreen } from "../components/LoadingScreen";
 
 const plans = [
   {
@@ -64,6 +65,7 @@ export default function BillingPage() {
     null,
   );
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -165,9 +167,12 @@ export default function BillingPage() {
           planName={selectedPlan.name}
           planPrice={selectedPlan.price}
           priceId={selectedPlan.priceId}
-          userEmail={user.email} // Pass user's email to PaymentModal
+          userEmail={user.email}
+          onProcessingStart={() => setIsProcessingPayment(true)}
+          onProcessingEnd={() => setIsProcessingPayment(false)}
         />
       )}
+      {isProcessingPayment && <LoadingScreen />}
     </div>
   );
 }
