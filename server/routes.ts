@@ -213,9 +213,6 @@ export function registerRoutes(app: Express) {
         return res.status(500).json({ error: "Webhook secret not configured" });
       }
 
-      logger.info(`\nStripe Signature: ${sig}`);
-      logger.info(`\nWebhook signature: ${process.env.STRIPE_WEBHOOK_SECRET}`);
-
       try {
         event = stripe.webhooks.constructEvent(
           req.body,
@@ -340,6 +337,10 @@ export function registerRoutes(app: Express) {
           const updatedSubscription = event.data.object as Stripe.Subscription;
           if (updatedSubscription.metadata.userId) {
             const userId = parseInt(updatedSubscription.metadata.userId);
+
+            logger.info(
+              `\n\n=======>Updated subscription status for user ${userId} to ${updatedSubscription.status}`,
+            );
 
             // Handle canceled or expired subscriptions
             if (updatedSubscription.status === "canceled") {
