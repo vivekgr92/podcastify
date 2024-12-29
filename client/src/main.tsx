@@ -98,6 +98,7 @@ const AppRouter: FC = () => {
           </Switch>
         </div>
       </div>
+      <Toaster />
     </div>
   );
 };
@@ -110,7 +111,6 @@ createRoot(root).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <AppRouter />
-      <Toaster />
     </QueryClientProvider>
   </StrictMode>
 );
