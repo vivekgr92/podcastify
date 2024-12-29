@@ -31,7 +31,7 @@ const PODIFY_MARGIN = 0.6;
 let PODIFY_TOKEN_LIMIT = 10000;
 let ARTICLE_LIMIT = 3;
 
-// Plan-specific usage limits
+// Fix the type issues in the usage limits
 const USAGE_LIMITS = {
   free: {
     articleLimit: 3,
@@ -49,11 +49,17 @@ const USAGE_LIMITS = {
     articleLimit: Infinity,
     podifyTokenLimit: 1000000,
   },
-};
+} as const;
 
-// Helper to get limits based on subscription status
-function getLimits(subscriptionStatus: string) {
-  return USAGE_LIMITS[subscriptionStatus as keyof typeof USAGE_LIMITS];
+// Helper to get limits based on subscription status with proper type checking
+function getLimits(subscriptionStatus: string | null | undefined) {
+  const defaultLimits = USAGE_LIMITS.free;
+  const normalizedStatus = subscriptionStatus || 'free';
+  const limits = USAGE_LIMITS[normalizedStatus as keyof typeof USAGE_LIMITS] || defaultLimits;
+  return {
+    articleLimit: limits.articleLimit,
+    podifyTokenLimit: limits.podifyTokenLimit,
+  };
 }
 
 // Initialize Stripe with proper API version and error handling
@@ -199,7 +205,9 @@ export function registerRoutes(app: Express) {
       // Ensure we have the webhook secret
       if (!process.env.STRIPE_WEBHOOK_SECRET) {
         logger.error("Missing STRIPE_WEBHOOK_SECRET environment variable");
-        return res.status(500).json({ error: "Webhook secret not configured" });
+        return res
+          .status(500)
+          .json({ error: "Webhook secret not configured" });
       }
 
       logger.info(`\nStripe Signature: ${sig}`);
@@ -541,7 +549,7 @@ export function registerRoutes(app: Express) {
       // Calculate estimated total tokens and check usage limits
       const currentLimits = getLimits(user.subscriptionStatus);
 
-      PODIFY_TOKEN_LIMIT = currentLimits.podifyTokens;
+      PODIFY_TOKEN_LIMIT = currentLimits.podifyTokenLimit;
       ARTICLE_LIMIT = currentLimits.articleLimit;
 
       const wouldExceedArticles = currentArticles >= currentLimits.articleLimit;
@@ -855,30 +863,29 @@ export function registerRoutes(app: Express) {
         usage = newUsage;
       }
 
-      const podifyTokensUsed = Number(usage.podifyTokens) || 0;
-      const currentLimits = getLimits(req.user.subscriptionStatus);
-      const podifyTokenLimit = currentLimits.podifyTokenLimit;
-      const articleLimit = currentLimits.articleLimit;
+      const podifyTokensUsed = Number(usage?.podifyTokens || "0");
+      const limits = getLimits(req.user.subscriptionStatus || "free");
+      const { articleLimit, podifyTokenLimit } = limits;
 
       const hasReachedLimit =
-        (usage.articlesConverted ?? 0) >= articleLimit ||
+        (usage?.articlesConverted ?? 0) >= articleLimit ||
         podifyTokensUsed >= podifyTokenLimit;
 
       res.json({
         hasReachedLimit,
         limits: {
           articles: {
-            used: usage.articlesConverted || 0,
+            used: usage?.articlesConverted || 0,
             limit: articleLimit,
             remaining: Math.max(
               0,
-              articleLimit - (usage.articlesConverted || 0),
+              articleLimit - (usage?.articlesConverted || 0),
             ),
           },
           tokens: {
-            used: usage.tokensUsed || 0,
+            used: usage?.tokensUsed || 0,
             limit: podifyTokenLimit,
-            remaining: Math.max(0, podifyTokenLimit - (usage.tokensUsed || 0)),
+            remaining: Math.max(0, podifyTokenLimit - (usage?.tokensUsed || 0)),
             podifyTokens: {
               used: podifyTokensUsed,
               limit: podifyTokenLimit,
@@ -894,34 +901,55 @@ export function registerRoutes(app: Express) {
             1,
           ).toISOString(),
         },
-        upgradePlans: {
-          monthly: {
-            name: "Pro",
-            price: 9.99,
-            features: [
-              "Unlimited articles",
-              "40,000 Podify Tokens per month",
-              "Priority support",
-            ],
-          },
-          annual: {
-            name: "Pro Annual",
-            price: 99.99,
-            features: [
-              "Unlimited articles",
-              "60,000 Podify Tokens per month",
-              "Priority support",
-              "2 months free",
-            ],
-          },
-        },
       });
     } catch (error) {
-      await logger.error([
-        "Error checking usage limits:",
-        error instanceof Error ? error.message : String(error),
-      ]);
+      logger.error(
+        `Usage check error: ${error instanceof Error ? error.message : String(error)}`,
+      );
       res.status(500).send("Failed to check usage limits");
+    }
+  });
+
+  // Create Portal Session endpoint with proper error handling
+  app.post("/api/create-portal-session", async (req, res) => {
+    try {
+      if (!req.user?.id) {
+        return res.status(401).json({ error: "Not authenticated" });
+      }
+
+      const user = req.user;
+      if (!user.email) {
+        return res.status(400).json({ error: "User email is required" });
+      }
+
+      // Get customer ID from Stripe
+      const existingCustomers = await stripe.customers.list({
+        email: user.email,
+        limit: 1,
+      });
+
+      if (!existingCustomers.data.length) {
+        return res.status(404).json({ error: "No subscription found" });
+      }
+
+      const customer = existingCustomers.data[0];
+
+      // Create the portal session
+      const session = await stripe.billingPortal.sessions.create({
+        customer: customer.id,
+        return_url: `${process.env.PUBLIC_URL || "http://localhost:3000"}/billing`,
+      });
+
+      res.json({ url: session.url });
+    } catch (error) {
+      logger.error(
+        `Portal session error: ${error instanceof Error ? error.message : String(error)}`,
+      );
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to create portal session";
+      res.status(500).json({ error: errorMessage });
     }
   });
 
@@ -941,7 +969,7 @@ export function registerRoutes(app: Express) {
     }
   });
 
-  // Delete podcast
+  // Delete podcast endpoint with proper type safety
   app.delete("/api/podcasts/:id", async (req, res) => {
     try {
       if (!req.user) {
@@ -970,19 +998,35 @@ export function registerRoutes(app: Express) {
         .from(podcasts)
         .where(
           and(eq(podcasts.id, podcastId), eq(podcasts.userId, req.user.id)),
-        )
-        .limit(1);
+        );
 
       if (!podcast) {
         return res.status(404).json({
-          error: "Podcast not found or unauthorized",
+          error: "Podcast not found",
           type: "not_found",
         });
       }
 
-      // Delete the audio file if it exists
+      // Delete from database first
+      const [deletedPodcast] = await db
+        .delete(podcasts)
+        .where(
+          and(eq(podcasts.id, podcastId), eq(podcasts.userId, req.user.id)),
+        )
+        .returning();
+
+      if (!deletedPodcast) {
+        throw new Error(`Failed to delete podcast ${podcastId} from database`);
+      }
+
+      // Then try to delete the audio file if it exists
       if (podcast.audioUrl) {
-        const filePath = path.join(__dirname, "..", podcast.audioUrl);
+        const filePath = path.join(
+          __dirname,
+          "..",
+          podcast.audioUrl.replace(/^\//, ""),
+        );
+
         try {
           const fileExists = await fs
             .access(filePath)
@@ -1001,59 +1045,27 @@ export function registerRoutes(app: Express) {
           }
         } catch (error) {
           await logger.error(
-            `Error deleting audio file for podcast ${podcastId}: ${error instanceof Error ? error.message : String(error)}`,
+            `Failed to delete audio file for podcast ${podcastId}: ${
+              error instanceof Error ? error.message : String(error)
+            }`,
           );
-          // Continue with database deletion even if file deletion fails
         }
       }
 
-      try {
-        // Delete the database record
-        const [deletedPodcast] = await db
-          .delete(podcasts)
-          .where(
-            and(eq(podcasts.id, podcastId), eq(podcasts.userId, req.user.id)),
-          )
-          .returning();
-
-        if (!deletedPodcast) {
-          await logger.warn(
-            `No podcast found to delete with id ${podcastId} for user ${req.user.id}`,
-          );
-          return res.status(404).json({
-            error: "Podcast not found or already deleted",
-            type: "not_found",
-          });
-        }
-
-        await logger.info(
-          `Successfully deleted podcast ${podcastId} from database`,
-        );
-
-        res.json({
-          message: "Podcast deleted successfully",
-          id: podcastId,
-        });
-      } catch (dbError) {
-        const errorMessage =
-          dbError instanceof Error ? dbError.message : String(dbError);
-        await logger.error(
-          `Database error while deleting podcast: ${errorMessage}`,
-        );
-        res.status(500).json({
-          error: "Failed to delete podcast",
-          type: "server",
-          message: "Database error occurred while deleting the podcast",
-        });
-      }
+      res.json({
+        message: "Podcast deleted successfully",
+        id: podcastId,
+      });
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
-      await logger.error(`Error in delete podcast route: ${errorMessage}`);
+      await logger.error(
+        `Failed to delete podcast: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      );
       res.status(500).json({
         error: "Failed to delete podcast",
         type: "server",
-        message: "An unexpected error occurred",
+        message: error instanceof Error ? error.message : "Unknown error",
       });
     }
   });
@@ -1263,6 +1275,22 @@ export function registerRoutes(app: Express) {
         type: "server",
         message: error instanceof Error ? error.message : "Unknown error",
       });
+    }
+  });
+
+  // Get user's podcasts
+  app.get("/api/podcasts", async (req, res) => {
+    try {
+      if (!req.user) return res.status(401).send("Not authenticated");
+
+      const userPodcasts = await db
+        .select()
+        .from(podcasts)
+        .where(eq(podcasts.userId, req.user.id));
+
+      res.json(userPodcasts);
+    } catch (error) {
+      res.status(500).send("Failed to fetch podcasts");
     }
   });
 
