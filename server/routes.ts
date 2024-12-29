@@ -26,11 +26,35 @@ import { eq, and, sql, desc } from "drizzle-orm";
 import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import Stripe from "stripe";
 
-// Constants for usage limits
-const ARTICLE_LIMIT = 3;
-const PODIFY_TOKEN_LIMIT = 10000;
 const PODIFY_TOKEN_RATE = 0.005;
 const PODIFY_MARGIN = 0.6;
+let PODIFY_TOKEN_LIMIT = 10000;
+let ARTICLE_LIMIT = 3;
+
+// Plan-specific usage limits
+const USAGE_LIMITS = {
+  free: {
+    articleLimit: 3,
+    podifyTokenLimit: 10000,
+  },
+  "Basic Plan:monthly": {
+    articleLimit: 20,
+    podifyTokenLimit: 40000,
+  },
+  "Pro Plan:monthly": {
+    articleLimit: 50,
+    podifyTokenLimit: 60000,
+  },
+  "Enterprise Plan:monthly": {
+    articleLimit: Infinity,
+    podifyTokenLimit: 1000000,
+  },
+};
+
+// Helper to get limits based on subscription status
+function getLimits(subscriptionStatus: string) {
+  return USAGE_LIMITS[subscriptionStatus as keyof typeof USAGE_LIMITS];
+}
 
 // Initialize Stripe with proper API version and error handling
 let stripe: Stripe;
@@ -54,9 +78,14 @@ try {
 export function registerRoutes(app: Express) {
   setupAuth(app);
 
-  // Configure express to use raw body for Stripe webhooks
-  app.use("/api/webhooks/stripe", express.raw({ type: "*/*" }));
-  app.use(express.json()); // For all other routes
+  // Parse as raw body for Stripe webhook requests, json for others
+  app.use((req, res, next) => {
+    if (req.originalUrl === "/api/webhooks/stripe") {
+      express.raw({ type: "application/json" })(req, res, next);
+    } else {
+      express.json()(req, res, next);
+    }
+  });
 
   // Create subscription endpoint with enhanced error handling
   app.post("/api/create-subscription", async (req, res) => {
@@ -173,7 +202,6 @@ export function registerRoutes(app: Express) {
         return res.status(500).json({ error: "Webhook secret not configured" });
       }
 
-      // logger.info(`\nRequest Body: ${req.body.toString()}`);
       logger.info(`\nStripe Signature: ${sig}`);
       logger.info(`\nWebhook signature: ${process.env.STRIPE_WEBHOOK_SECRET}`);
 
@@ -213,10 +241,27 @@ export function registerRoutes(app: Express) {
                 .json({ error: "Invalid subscription metadata" });
             }
 
+            // Determine subscription type from price metadata
+            const price = await stripe.prices.retrieve(
+              subscription.items.data[0].price.id,
+              {
+                expand: ["product"],
+              },
+            );
+            const productName = (price.product as Stripe.Product).name;
+            const billingType = price.metadata.billing_period;
+
+            // Combine the values
+            const subscriptionType = `${productName}:${billingType}`;
+
+            logger.info(
+              `\n\n ------Subscription Type ------- ${subscriptionType}`,
+            );
+
             const [updatedUser] = await db
               .update(users)
               .set({
-                subscriptionStatus: "active",
+                subscriptionStatus: subscriptionType,
                 subscriptionId: subscription.id,
                 currentPeriodEnd: new Date(
                   subscription.current_period_end * 1000,
@@ -224,6 +269,23 @@ export function registerRoutes(app: Express) {
               })
               .where(eq(users.id, parseInt(subscription.metadata.userId)))
               .returning();
+
+            // Reset usage for the current month
+            const currentMonth = new Date().toISOString().slice(0, 7);
+            await db
+              .update(userUsage)
+              .set({
+                articlesConverted: 0,
+                tokensUsed: 0,
+                podifyTokens: "0",
+                lastConversion: new Date(),
+              })
+              .where(
+                and(
+                  eq(userUsage.userId, parseInt(subscription.metadata.userId)),
+                  eq(userUsage.monthYear, currentMonth),
+                ),
+              );
 
             if (!updatedUser) {
               throw new Error(
@@ -477,17 +539,26 @@ export function registerRoutes(app: Express) {
       }
 
       // Calculate estimated total tokens and check usage limits
-      const wouldExceedArticles = currentArticles >= ARTICLE_LIMIT;
+      const currentLimits = getLimits(user.subscriptionStatus);
+
+      PODIFY_TOKEN_LIMIT = currentLimits.podifyTokens;
+      ARTICLE_LIMIT = currentLimits.articleLimit;
+
+      const wouldExceedArticles = currentArticles >= currentLimits.articleLimit;
       const estimatedTotalCost = estimatedPricing.totalCost;
       const estimatedPodifyTokens = convertToPodifyTokens(estimatedTotalCost);
 
       const wouldExceedPodifyTokens =
-        currentPodifyTokens + estimatedPodifyTokens > PODIFY_TOKEN_LIMIT;
+        currentPodifyTokens + estimatedPodifyTokens >
+        currentLimits.podifyTokenLimit;
 
-      const remainingArticles = Math.max(0, ARTICLE_LIMIT - currentArticles);
+      const remainingArticles =
+        currentLimits.articleLimit === Infinity
+          ? Infinity
+          : Math.max(0, currentLimits.articleLimit - currentArticles);
       const remainingPodifyTokens = Math.max(
         0,
-        PODIFY_TOKEN_LIMIT - currentPodifyTokens,
+        currentLimits.podifyTokenLimit - currentPodifyTokens,
       );
 
       await logger.info([
@@ -785,10 +856,12 @@ export function registerRoutes(app: Express) {
       }
 
       const podifyTokensUsed = Number(usage.podifyTokens) || 0;
-      const podifyTokenLimit = PODIFY_TOKEN_LIMIT;
+      const currentLimits = getLimits(req.user.subscriptionStatus);
+      const podifyTokenLimit = currentLimits.podifyTokenLimit;
+      const articleLimit = currentLimits.articleLimit;
 
       const hasReachedLimit =
-        (usage.articlesConverted ?? 0) >= ARTICLE_LIMIT ||
+        (usage.articlesConverted ?? 0) >= articleLimit ||
         podifyTokensUsed >= podifyTokenLimit;
 
       res.json({
@@ -796,19 +869,16 @@ export function registerRoutes(app: Express) {
         limits: {
           articles: {
             used: usage.articlesConverted || 0,
-            limit: ARTICLE_LIMIT,
+            limit: articleLimit,
             remaining: Math.max(
               0,
-              ARTICLE_LIMIT - (usage.articlesConverted || 0),
+              articleLimit - (usage.articlesConverted || 0),
             ),
           },
           tokens: {
             used: usage.tokensUsed || 0,
-            limit: PODIFY_TOKEN_LIMIT,
-            remaining: Math.max(
-              0,
-              PODIFY_TOKEN_LIMIT - (usage.tokensUsed || 0),
-            ),
+            limit: podifyTokenLimit,
+            remaining: Math.max(0, podifyTokenLimit - (usage.tokensUsed || 0)),
             podifyTokens: {
               used: podifyTokensUsed,
               limit: podifyTokenLimit,
@@ -1172,9 +1242,13 @@ export function registerRoutes(app: Express) {
           },
           tokens: {
             used: currentTokens,
-            limit: PODIFY_TOKEN_LIMIT,
-            remaining: Math.max(0, PODIFY_TOKEN_LIMIT - currentTokens),
-            wouldExceed: currentTokens + totalTokens > PODIFY_TOKEN_LIMIT,
+            limit: currentLimits.podifyTokenLimit,
+            remaining: Math.max(
+              0,
+              currentLimits.podifyTokenLimit - currentTokens,
+            ),
+            wouldExceed:
+              currentTokens + totalTokens > currentLimits.podifyTokenLimit,
             estimated: totalTokens,
           },
         },

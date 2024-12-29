@@ -11,7 +11,7 @@ export const users = pgTable("users", {
   password: text("password").notNull(),
   isAdmin: boolean("is_admin").notNull().default(false),
   createdAt: timestamp("created_at").defaultNow(),
-  subscriptionStatus: text("subscription_status").default('inactive'),
+  subscriptionStatus: text("subscription_status").default('free'),
   subscriptionId: text("subscription_id"),
   currentPeriodEnd: timestamp("current_period_end"),
 });

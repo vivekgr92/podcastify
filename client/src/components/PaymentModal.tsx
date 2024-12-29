@@ -19,10 +19,12 @@ interface PaymentModalProps {
   planName: string;
   planPrice: string;
   priceId: string;
-  userEmail?: string; // Add email to props
+  userEmail?: string;
+  onProcessingStart?: () => void;
+  onProcessingEnd?: () => void;
 }
 
-function CheckoutForm({ planName, planPrice, priceId, userEmail, onClose }: Omit<PaymentModalProps, 'isOpen'>) {
+function CheckoutForm({ planName, planPrice, priceId, userEmail, onClose, onProcessingStart, onProcessingEnd }: Omit<PaymentModalProps, 'isOpen'>) {
   const stripe = useStripe();
   const elements = useElements();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -40,6 +42,7 @@ function CheckoutForm({ planName, planPrice, priceId, userEmail, onClose }: Omit
     setIsSubmitting(true);
     setError(null);
     setPaymentStatus('processing');
+    onProcessingStart?.();
 
     try {
       const { error: submitError } = await elements.submit();
@@ -67,6 +70,7 @@ function CheckoutForm({ planName, planPrice, priceId, userEmail, onClose }: Omit
       setPaymentStatus('failed');
     } finally {
       setIsSubmitting(false);
+      onProcessingEnd?.();
     }
   };
 
@@ -158,7 +162,7 @@ export function PaymentModal({ isOpen, onClose, planName, planPrice, priceId, us
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="max-h-[90vh] overflow-y-auto bg-background sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Subscribe to {planName}</DialogTitle>
           <DialogDescription>
