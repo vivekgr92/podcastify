@@ -1503,7 +1503,14 @@ export function registerRoutes(app: Express) {
         `,
       };
 
-      await sgMail.send(msg);
+      try {
+        const [response] = await sgMail.send(msg);
+        await logger.info(`Welcome email sent successfully to ${email}. Status code: ${response.statusCode}`);
+      } catch (emailError) {
+        const errorMessage = emailError instanceof Error ? emailError.message : String(emailError);
+        await logger.error(`Failed to send welcome email to ${email}: ${errorMessage}`);
+        // Continue with registration even if email fails
+      }
 
       // Start session
       req.logIn(user, (err) => {
