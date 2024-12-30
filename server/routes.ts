@@ -1302,6 +1302,46 @@ export function registerRoutes(app: Express) {
     }
   });
 
+
+  // Update password endpoint
+  app.post("/api/update-password", async (req, res) => {
+    try {
+      if (!req.user?.id) {
+        return res.status(401).json({ error: "Not authenticated" });
+      }
+
+      const { currentPassword, newPassword } = req.body;
+      if (!currentPassword || !newPassword) {
+        return res.status(400).json({ error: "Both current and new passwords are required" });
+      }
+
+      // Get user's current password
+      const [user] = await db
+        .select()
+        .from(users)
+        .where(eq(users.id, req.user.id))
+        .limit(1);
+
+      // Verify current password
+      const isValid = await crypto.compare(currentPassword, user.password);
+      if (!isValid) {
+        return res.status(400).json({ error: "Current password is incorrect" });
+      }
+
+      // Hash and update new password
+      const hashedPassword = await crypto.hash(newPassword);
+      await db
+        .update(users)
+        .set({ password: hashedPassword })
+        .where(eq(users.id, req.user.id));
+
+      res.json({ message: "Password updated successfully" });
+    } catch (error) {
+      logger.error(`Password update error: ${error instanceof Error ? error.message : String(error)}`);
+      res.status(500).json({ error: "Failed to update password" });
+    }
+  });
+
   // Reset password endpoint
   app.post("/api/reset-password", async (req, res) => {
     try {
