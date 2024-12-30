@@ -761,18 +761,17 @@ export function registerRoutes(app: Express) {
           `Podify Tokens: ${updatedUsage.podifyTokens}/${currentLimits.podifyTokenLimit}`,
         ]);
 
-        // Save the audio file
+        // Save the audio file to Object Storage
         const timestamp = Date.now();
         const sanitizedFileName = file.originalname
-          .replace(/\.[^/.]+$/, "") // Remove extension
-          .replace(/[^a-zA-Z0-9]/g, "_"); // Replace invalid chars
+          .replace(/\.[^/.]+$/, "") 
+          .replace(/[^a-zA-Z0-9]/g, "_");
         const audioFileName = `${timestamp}-${sanitizedFileName}.mp3`;
-        const audioPath = path.join("./uploads", audioFileName);
-
+        
         try {
-          await fs.mkdir("./uploads", { recursive: true });
-          await fs.writeFile(audioPath, audioBuffer);
-          await logger.info(`Successfully saved audio file: ${audioFileName}`);
+          const storage = new (await import('@replit/object-storage')).Client();
+          await storage.put(audioFileName, audioBuffer);
+          await logger.info(`Successfully saved audio file to Object Storage: ${audioFileName}`);
         } catch (writeError) {
           const errorMessage =
             writeError instanceof Error
