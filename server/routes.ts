@@ -1297,6 +1297,7 @@ export function registerRoutes(app: Express) {
       res.status(500).send("Failed to fetch podcasts");
     }
   });
+  
   // Reset password endpoint
   app.post("/api/reset-password", async (req, res) => {
     try {
