@@ -122,6 +122,51 @@ export default function AuthPage() {
           </form>
         </Form>
 
+        {isLogin && (
+          <Button
+            variant="link"
+            onClick={async () => {
+              const email = form.getValues("email");
+              if (!email) {
+                toast({
+                  title: "Error",
+                  description: "Please enter your email first",
+                  variant: "destructive",
+                });
+                return;
+              }
+
+              try {
+                const response = await fetch("/api/reset-password", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ email }),
+                });
+
+                const data = await response.json();
+                
+                if (!response.ok) {
+                  throw new Error(data.error);
+                }
+
+                toast({
+                  title: "Success",
+                  description: `Your temporary password is: ${data.temporaryPassword}`,
+                });
+              } catch (error) {
+                toast({
+                  title: "Error",
+                  description: error instanceof Error ? error.message : "Failed to reset password",
+                  variant: "destructive",
+                });
+              }
+            }}
+            className="text-primary"
+          >
+            Forgot Password?
+          </Button>
+        )}
+
         <div className="text-center">
           <Button
             variant="link"

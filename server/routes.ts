@@ -1297,6 +1297,44 @@ export function registerRoutes(app: Express) {
       res.status(500).send("Failed to fetch podcasts");
     }
   });
+  // Reset password endpoint
+  app.post("/api/reset-password", async (req, res) => {
+    try {
+      const { email } = req.body;
+      
+      // Find user with provided email
+      const [user] = await db
+        .select()
+        .from(users)
+        .where(eq(users.email, email))
+        .limit(1);
+
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      // Generate temporary password
+      const tempPassword = Math.random().toString(36).slice(-8);
+      const hashedPassword = await bcrypt.hash(tempPassword, 10);
+
+      // Update user's password
+      await db
+        .update(users)
+        .set({ password: hashedPassword })
+        .where(eq(users.id, user.id));
+
+      // In a real application, you would send this via email
+      // For demo purposes, we'll return it in the response
+      res.json({ 
+        message: "Password reset successful", 
+        temporaryPassword: tempPassword 
+      });
+    } catch (error) {
+      logger.error(`Password reset error: ${error instanceof Error ? error.message : String(error)}`);
+      res.status(500).json({ error: "Failed to reset password" });
+    }
+  });
+
   // Registration route update
   app.post("/api/register", async (req, res) => {
     try {
