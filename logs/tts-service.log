@@ -3352,3 +3352,7 @@
     at async Strategy._verify (/home/runner/PodCasterella/server/auth.ts:73:25)
 [INFO] POST /api/login 500 in 124ms
 [INFO] GET /api/user 401 in 1ms
+[INFO] GET / 200 in 1ms
+[INFO] GET / 200 in 2ms
+[INFO] GET / 200 in 2ms
+[INFO] GET / 200 in 2ms
