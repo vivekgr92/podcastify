@@ -309,25 +309,31 @@ export function registerRoutes(app: Express) {
             // Send subscription confirmation email
             try {
               const { default: sgMail } = await import("@sendgrid/mail");
-              
-              if (!process.env.SENDGRID_API_KEY || !process.env.SENDGRID_FROM_EMAIL) {
+
+              if (
+                !process.env.SENDGRID_API_KEY ||
+                !process.env.SENDGRID_FROM_EMAIL
+              ) {
                 throw new Error("SendGrid configuration missing");
               }
 
               sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
               // Get invoice details
-              const invoiceDetails = await stripe.invoices.retrieve(invoice.id, {
-                expand: ['lines.data.price.product']
-              });
+              const invoiceDetails = await stripe.invoices.retrieve(
+                invoice.id,
+                {
+                  expand: ["lines.data.price.product"],
+                },
+              );
 
               const amount = (invoiceDetails.amount_paid / 100).toFixed(2);
-              const planName = subscriptionType.split(':')[0];
-              
+              const planName = subscriptionType.split(":")[0];
+
               const msg = {
                 to: subscription.metadata.customerEmail,
                 from: process.env.SENDGRID_FROM_EMAIL,
-                subject: "Thank You for Your Subscription!",
+                subject: "Podify Cloud: Thank You for Your Subscription!",
                 html: `
                   <div style="background-color: #0A0A0A; color: #ffffff; padding: 1.5rem; font-family: system-ui, -apple-system, sans-serif; border: 1px solid #4CAF50;">
                     <div style="max-width: 600px; margin: 0 auto;">
@@ -349,13 +355,17 @@ export function registerRoutes(app: Express) {
                       </p>
                     </div>
                   </div>
-                `
+                `,
               };
 
               const [response] = await sgMail.send(msg);
-              logger.info(`Subscription confirmation email sent. Status: ${response.statusCode}`);
+              logger.info(
+                `Subscription confirmation email sent. Status: ${response.statusCode}`,
+              );
             } catch (emailError) {
-              logger.error(`Failed to send subscription confirmation email: ${emailError instanceof Error ? emailError.message : String(emailError)}`);
+              logger.error(
+                `Failed to send subscription confirmation email: ${emailError instanceof Error ? emailError.message : String(emailError)}`,
+              );
               // Continue even if email fails
             }
           } catch (error) {
