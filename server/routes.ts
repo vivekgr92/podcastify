@@ -1302,7 +1302,6 @@ export function registerRoutes(app: Express) {
     }
   });
 
-
   // Update password endpoint
   app.post("/api/update-password", async (req, res) => {
     try {
@@ -1312,7 +1311,9 @@ export function registerRoutes(app: Express) {
 
       const { currentPassword, newPassword } = req.body;
       if (!currentPassword || !newPassword) {
-        return res.status(400).json({ error: "Both current and new passwords are required" });
+        return res
+          .status(400)
+          .json({ error: "Both current and new passwords are required" });
       }
 
       // Get user's current password
@@ -1337,7 +1338,9 @@ export function registerRoutes(app: Express) {
 
       res.json({ message: "Password updated successfully" });
     } catch (error) {
-      logger.error(`Password update error: ${error instanceof Error ? error.message : String(error)}`);
+      logger.error(
+        `Password update error: ${error instanceof Error ? error.message : String(error)}`,
+      );
       res.status(500).json({ error: "Failed to update password" });
     }
   });
@@ -1370,11 +1373,11 @@ export function registerRoutes(app: Express) {
 
       // Send email with SendGrid
       const { default: sgMail } = await import("@sendgrid/mail");
-      
+
       if (!process.env.SENDGRID_API_KEY) {
         throw new Error("SENDGRID_API_KEY is not configured");
       }
-      
+
       sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
       const fromEmail = process.env.SENDGRID_FROM_EMAIL;
@@ -1452,11 +1455,11 @@ export function registerRoutes(app: Express) {
 
       // Send welcome email
       const { default: sgMail } = await import("@sendgrid/mail");
-      
+
       if (!process.env.SENDGRID_API_KEY) {
         throw new Error("SENDGRID_API_KEY is not configured");
       }
-      
+
       sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
       const fromEmail = process.env.SENDGRID_FROM_EMAIL;
@@ -1505,10 +1508,15 @@ export function registerRoutes(app: Express) {
 
       try {
         const [response] = await sgMail.send(msg);
-        await logger.info(`Welcome email sent successfully to ${email}. Status code: ${response.statusCode}`);
+        await logger.info(
+          `Welcome email sent successfully to ${email}. Status code: ${response.statusCode}`,
+        );
       } catch (emailError) {
-        const errorMessage = emailError instanceof Error ? emailError.message : String(emailError);
-        await logger.error(`Failed to send welcome email to ${email}: ${errorMessage}`);
+        const errorMessage =
+          emailError instanceof Error ? emailError.message : String(emailError);
+        await logger.error(
+          `Failed to send welcome email to ${email}: ${errorMessage}`,
+        );
         // Continue with registration even if email fails
       }
 
