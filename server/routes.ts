@@ -1473,45 +1473,45 @@ export function registerRoutes(app: Express) {
         subject: "Welcome to Podify Cloud",
         text: `Welcome to Podify Cloud! We're excited to have you on board.`,
         html: `
-          <div style="background-color: #000000; color: #ffffff; padding: 3rem; font-family: system-ui, -apple-system, sans-serif; border: 1px solid #4CAF50;">
+          <div style="background-color: #0A0A0A; color: #ffffff; padding: 1.5rem; font-family: system-ui, -apple-system, sans-serif; border: 1px solid #4CAF50;">
             <div style="max-width: 600px; margin: 0 auto; text-align: center;">
-              <div style="margin-bottom: 2rem;">
+              <div style="margin-bottom: 1.5rem;">
                 <svg width="48" height="48" viewBox="0 0 24 24" style="margin: 0 auto;">
                   <rect width="24" height="24" rx="6" fill="#4CAF50"/>
                   <path d="M16 10a4 4 0 11-8 0 4 4 0 018 0zm-2 4a3 3 0 00-6 0v1h6v-1z" fill="white"/>
                 </svg>
               </div>
               
-              <h1 style="background: linear-gradient(90deg, #4CAF50, #45a049); -webkit-background-clip: text; color: transparent; font-size: 2.5rem; margin-bottom: 1.5rem; font-weight: 800;">Welcome to PodCasterella!</h1>
+              <h1 style="color: #4CAF50; font-size: 1.8rem; margin-bottom: 1.2rem; font-weight: 800;">Welcome to PodCasterella!</h1>
               
-              <div style="background: linear-gradient(145deg, rgba(76, 175, 80, 0.1), rgba(0, 0, 0, 0.3)); border: 1px solid rgba(76, 175, 80, 0.2); border-radius: 1rem; padding: 2.5rem; margin: 2rem 0; backdrop-filter: blur(10px);">
-                <h2 style="color: #ffffff; font-size: 1.8rem; margin-bottom: 1.5rem;">Hi ${username}!</h2>
-                <p style="color: #e0e0e0; line-height: 1.8; margin-bottom: 2rem; font-size: 1.1rem;">
+              <div style="background-color: rgba(76, 175, 80, 0.05); border: 1px solid rgba(76, 175, 80, 0.2); border-radius: 0.75rem; padding: 1.5rem; margin: 1.5rem 0;">
+                <h2 style="color: #ffffff; font-size: 1.5rem; margin-bottom: 1rem;">Hi ${username}!</h2>
+                <p style="color: #ffffff; line-height: 1.6; margin-bottom: 1.5rem; font-size: 1rem;">
                   We're thrilled to have you join our community! Transform your articles into engaging podcasts with just a few clicks.
                 </p>
                 
-                <div style="margin: 2.5rem 0; text-align: left;">
-                  <p style="color: #4CAF50; margin-bottom: 1rem; font-weight: 600; font-size: 1.2rem;">Here's what you can do now:</p>
-                  <ul style="list-style: none; padding: 0; color: #e0e0e0;">
-                    <li style="margin: 1rem 0; padding-left: 2rem; position: relative;">
-                      <span style="color: #4CAF50; position: absolute; left: 0;">✦</span> Convert articles to podcasts
+                <div style="margin: 1.5rem 0; text-align: left;">
+                  <p style="color: #4CAF50; margin-bottom: 0.75rem; font-weight: 600; font-size: 1.1rem;">Here's what you can do now:</p>
+                  <ul style="list-style: none; padding: 0; color: #ffffff;">
+                    <li style="margin: 0.75rem 0; padding-left: 1.5rem; position: relative;">
+                      <span style="color: #4CAF50; position: absolute; left: 0;">→</span> Convert articles to podcasts
                     </li>
-                    <li style="margin: 1rem 0; padding-left: 2rem; position: relative;">
-                      <span style="color: #4CAF50; position: absolute; left: 0;">✦</span> Build your podcast library
+                    <li style="margin: 0.75rem 0; padding-left: 1.5rem; position: relative;">
+                      <span style="color: #4CAF50; position: absolute; left: 0;">→</span> Build your podcast library
                     </li>
-                    <li style="margin: 1rem 0; padding-left: 2rem; position: relative;">
-                      <span style="color: #4CAF50; position: absolute; left: 0;">✦</span> Listen on any device
+                    <li style="margin: 0.75rem 0; padding-left: 1.5rem; position: relative;">
+                      <span style="color: #4CAF50; position: absolute; left: 0;">→</span> Listen on any device
                     </li>
                   </ul>
                 </div>
 
                 <a href="https://podify.cloud" 
-                   style="display: inline-block; background: linear-gradient(90deg, #4CAF50, #45a049); color: white; padding: 1rem 2rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; font-size: 1.1rem; margin-top: 1rem; border: none; transition: transform 0.2s;">
+                   style="display: inline-block; background-color: #4CAF50; color: white; padding: 0.75rem 1.5rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; font-size: 1rem; margin-top: 1rem; border: none;">
                   Start Creating Now
                 </a>
               </div>
               
-              <p style="color: #888888; font-size: 0.9rem; margin-top: 2rem; border-top: 1px solid rgba(76, 175, 80, 0.2); padding-top: 2rem;">
+              <p style="color: #a0a0a0; font-size: 0.875rem; margin-top: 1.5rem; border-top: 1px solid rgba(76, 175, 80, 0.2); padding-top: 1.5rem;">
                 Need help? Reply to this email and we'll be happy to assist you.
               </p>
             </div>
