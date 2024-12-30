@@ -1325,12 +1325,12 @@ export function registerRoutes(app: Express) {
         .where(eq(users.id, user.id));
         
       // Send email with SendGrid
-      const sgMail = require('@sendgrid/mail');
+      const { default: sgMail } = await import('@sendgrid/mail');
       sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
       const msg = {
         to: email,
-        from: process.env.SENDGRID_FROM_EMAIL,
+        from: process.env.SENDGRID_FROM_EMAIL || 'noreply@example.com',
         subject: 'Your Temporary Password',
         text: `Your temporary password is: ${tempPassword}\nPlease change it after logging in.`,
         html: `<p>Your temporary password is: <strong>${tempPassword}</strong></p><p>Please change it after logging in.</p>`,
