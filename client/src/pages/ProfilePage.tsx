@@ -11,7 +11,8 @@ import { useToast } from "@/hooks/use-toast";
 export default function ProfilePage() {
   const { user } = useUser();
   const [isUploading, setIsUploading] = useState(false);
-  const { toast } = useToast();
+  const [updateError, setUpdateError] = useState<string | null>(null);
+  const [updateSuccess, setUpdateSuccess] = useState(false);
 
   if (!user) return null;
 
@@ -88,24 +89,17 @@ export default function ProfilePage() {
 
               const data = await response.json();
               if (response.ok) {
-                toast({
-                  title: "Success",
-                  description: "Password updated successfully"
-                });
+                setUpdateError(null);
+                setUpdateSuccess(true);
                 (e.target as HTMLFormElement).reset();
+                setTimeout(() => setUpdateSuccess(false), 3000);
               } else {
-                toast({
-                  title: "Error",
-                  description: data.error,
-                  variant: "destructive"
-                });
+                setUpdateError(data.error);
+                setUpdateSuccess(false);
               }
             } catch (error) {
-              toast({
-                title: "Error",
-                description: "Failed to update password",
-                variant: "destructive"
-              });
+              setUpdateError("Failed to update password");
+              setUpdateSuccess(false);
             }
           }} className="space-y-4">
             <div>
@@ -115,6 +109,12 @@ export default function ProfilePage() {
             <div>
               <label className="block text-sm font-medium mb-2">New Password</label>
               <Input type="password" name="newPassword" required />
+              {updateError && (
+                <p className="mt-2 text-sm text-red-500">{updateError}</p>
+              )}
+              {updateSuccess && (
+                <p className="mt-2 text-sm text-green-500">Password updated successfully</p>
+              )}
             </div>
             <Button type="submit">Update Password</Button>
           </form>
