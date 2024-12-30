@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,22 +13,23 @@ export default function ForgotPasswordPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    
+
     try {
       const response = await fetch("/api/reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
-      
+
       const data = await response.json();
-      
+
       if (response.ok) {
         toast({
           title: "Success",
-          description: "Password reset instructions have been sent to your email",
+          description:
+            "Password reset instructions have been sent to your email",
         });
-        setLocation("/login");
+        setLocation("/auth");
       } else {
         setError(data.error);
       }
@@ -39,9 +39,12 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div 
+    <div
       className="min-h-screen flex items-center justify-center bg-cover bg-center"
-      style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1532342342267-77e8db262ebc")' }}
+      style={{
+        backgroundImage:
+          'url("https://images.unsplash.com/photo-1532342342267-77e8db262ebc")',
+      }}
     >
       <div className="w-full max-w-md p-8 space-y-6 bg-background/95 backdrop-blur-sm rounded-lg shadow-xl">
         <h1 className="text-3xl font-bold text-center">Reset Password</h1>
@@ -55,11 +58,7 @@ export default function ForgotPasswordPage() {
               placeholder="Enter your email"
               required
             />
-            {error && (
-              <p className="mt-2 text-sm text-red-500">
-                {error}
-              </p>
-            )}
+            {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
           </div>
           <Button type="submit" className="w-full">
             Reset Password
@@ -67,7 +66,7 @@ export default function ForgotPasswordPage() {
         </form>
         <Button
           variant="link"
-          onClick={() => setLocation("/login")}
+          onClick={() => setLocation("/auth")}
           className="w-full"
         >
           Back to Login
