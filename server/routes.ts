@@ -1330,11 +1330,21 @@ export function registerRoutes(app: Express) {
 
       // Send email with SendGrid
       const { default: sgMail } = await import("@sendgrid/mail");
+      
+      if (!process.env.SENDGRID_API_KEY) {
+        throw new Error("SENDGRID_API_KEY is not configured");
+      }
+      
       sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+      const fromEmail = process.env.SENDGRID_FROM_EMAIL;
+      if (!fromEmail) {
+        throw new Error("SENDGRID_FROM_EMAIL is not configured");
+      }
 
       const msg = {
         to: email,
-        from: process.env.SENDGRID_FROM_EMAIL,
+        from: fromEmail,
         subject: "Your Temporary Password",
         text: `Your temporary password is: ${tempPassword}\nPlease change it after logging in.`,
         html: `<p>Your temporary password is: <strong>${tempPassword}</strong></p><p>Please change it after logging in.</p>`,
