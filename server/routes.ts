@@ -1482,7 +1482,7 @@ export function registerRoutes(app: Express) {
                 </svg>
               </div>
               
-              <h1 style="color: #4CAF50; font-size: 1.8rem; margin-bottom: 1.2rem; font-weight: 800;">Welcome to PodCasterella!</h1>
+              <h1 style="color: #4CAF50; font-size: 1.8rem; margin-bottom: 1.2rem; font-weight: 800;">Welcome to Podify Cloud</h1>
               
               <div style="background-color: rgba(76, 175, 80, 0.05); border: 1px solid rgba(76, 175, 80, 0.2); border-radius: 0.75rem; padding: 1.5rem; margin: 1.5rem 0;">
                 <h2 style="color: #ffffff; font-size: 1.5rem; margin-bottom: 1rem;">Hi ${username}!</h2>
@@ -1520,25 +1520,26 @@ export function registerRoutes(app: Express) {
       };
 
       try {
-        logger.info("\n\nSending welcome email...")
+        logger.info("\n\nSending welcome email...");
         const [response] = await sgMail.send(msg);
         await logger.info([
           "\n\n---------- Welcome Email Status ----------",
           `User: ${username} (${email})`,
           `Status Code: ${response.statusCode}`,
           `Headers: ${JSON.stringify(response.headers)}`,
-          "-----------------------------------------\n"
+          "-----------------------------------------\n",
         ]);
       } catch (emailError) {
-        const errorMessage = emailError instanceof Error ? emailError.message : String(emailError);
+        const errorMessage =
+          emailError instanceof Error ? emailError.message : String(emailError);
         await logger.error([
           "\n\n---------- Welcome Email Error ----------",
           `User: ${username} (${email})`,
           `Error: ${errorMessage}`,
-          "----------------------------------------\n"
+          "----------------------------------------\n",
         ]);
         // Continue with registration even if email fails
-        logger.info("\n==Continue with registration even if email fails")
+        logger.info("\n==Continue with registration even if email fails");
       }
 
       // Start session
@@ -1547,7 +1548,6 @@ export function registerRoutes(app: Express) {
           throw err;
         }
         res.json({ message: "Registration successful" });
-        
       });
     } catch (error) {
       logger.error(
