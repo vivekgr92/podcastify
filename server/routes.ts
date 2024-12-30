@@ -8,6 +8,7 @@ import { promises as fs } from "fs";
 import * as fsSync from "fs";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import { Readable } from "stream";
 import { crypto } from "./auth.js";
 
 const __filename = fileURLToPath(import.meta.url);
