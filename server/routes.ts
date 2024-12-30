@@ -349,8 +349,12 @@ export function registerRoutes(app: Express) {
               .update(users)
               .set({
                 subscriptionType: "free",
-                subscriptionStatus: isCanceled ? "canceled" : updatedSubscription.status,
-                currentPeriodEnd: new Date(updatedSubscription.current_period_end * 1000),
+                subscriptionStatus: isCanceled
+                  ? "canceled"
+                  : updatedSubscription.status,
+                currentPeriodEnd: new Date(
+                  updatedSubscription.current_period_end * 1000,
+                ),
               })
               .where(eq(users.id, userId));
 
@@ -1297,12 +1301,12 @@ export function registerRoutes(app: Express) {
       res.status(500).send("Failed to fetch podcasts");
     }
   });
-  
+
   // Reset password endpoint
   app.post("/api/reset-password", async (req, res) => {
     try {
       const { email } = req.body;
-      
+
       // Find user with provided email
       const [user] = await db
         .select()
@@ -1323,26 +1327,28 @@ export function registerRoutes(app: Express) {
         .update(users)
         .set({ password: hashedPassword })
         .where(eq(users.id, user.id));
-        
+
       // Send email with SendGrid
-      const { default: sgMail } = await import('@sendgrid/mail');
+      const { default: sgMail } = await import("@sendgrid/mail");
       sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
       const msg = {
         to: email,
-        from: process.env.SENDGRID_FROM_EMAIL || 'noreply@example.com',
-        subject: 'Your Temporary Password',
+        from: process.env.SENDGRID_FROM_EMAIL,
+        subject: "Your Temporary Password",
         text: `Your temporary password is: ${tempPassword}\nPlease change it after logging in.`,
         html: `<p>Your temporary password is: <strong>${tempPassword}</strong></p><p>Please change it after logging in.</p>`,
       };
 
       await sgMail.send(msg);
 
-      res.json({ 
-        message: "Password reset email sent successfully", 
+      res.json({
+        message: "Password reset email sent successfully",
       });
     } catch (error) {
-      logger.error(`Password reset error: ${error instanceof Error ? error.message : String(error)}`);
+      logger.error(
+        `Password reset error: ${error instanceof Error ? error.message : String(error)}`,
+      );
       res.status(500).json({ error: "Failed to reset password" });
     }
   });
