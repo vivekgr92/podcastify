@@ -1508,15 +1508,21 @@ export function registerRoutes(app: Express) {
 
       try {
         const [response] = await sgMail.send(msg);
-        await logger.info(
-          `Welcome email sent successfully to ${email}. Status code: ${response.statusCode}`,
-        );
+        await logger.info([
+          "\n\n---------- Welcome Email Status ----------",
+          `User: ${username} (${email})`,
+          `Status Code: ${response.statusCode}`,
+          `Headers: ${JSON.stringify(response.headers)}`,
+          "-----------------------------------------\n"
+        ]);
       } catch (emailError) {
-        const errorMessage =
-          emailError instanceof Error ? emailError.message : String(emailError);
-        await logger.error(
-          `Failed to send welcome email to ${email}: ${errorMessage}`,
-        );
+        const errorMessage = emailError instanceof Error ? emailError.message : String(emailError);
+        await logger.error([
+          "\n\n---------- Welcome Email Error ----------",
+          `User: ${username} (${email})`,
+          `Error: ${errorMessage}`,
+          "----------------------------------------\n"
+        ]);
         // Continue with registration even if email fails
       }
 
