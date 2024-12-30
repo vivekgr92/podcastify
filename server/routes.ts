@@ -769,7 +769,8 @@ export function registerRoutes(app: Express) {
         const audioFileName = `${timestamp}-${sanitizedFileName}.mp3`;
         
         try {
-          const storage = new (await import('@replit/object-storage')).Client();
+          const { Client } = await import('@replit/object-storage');
+          const storage = new Client();
           await storage.put(audioFileName, audioBuffer);
           await logger.info(`Successfully saved audio file to Object Storage: ${audioFileName}`);
         } catch (writeError) {
