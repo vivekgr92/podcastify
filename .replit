@@ -84,6 +84,9 @@ task = "shell.exec"
 args = "cd client && npm run dev"
 waitForPort = 5175
 
+[objectStorage]
+defaultBucketID = "replit-objstore-38912112-08a6-4e06-98ca-2afae8ad1501"
+
 # [[workflows.workflow]]
 # name = "StripeSetup"
 # author = "agent"
