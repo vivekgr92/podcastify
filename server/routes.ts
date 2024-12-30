@@ -335,28 +335,33 @@ export function registerRoutes(app: Express) {
           break;
         case "customer.subscription.updated":
           const updatedSubscription = event.data.object as Stripe.Subscription;
-          if (updatedSubscription.metadata.userId) {
-            const userId = parseInt(updatedSubscription.metadata.userId);
+          const userId = parseInt(updatedSubscription.metadata.userId);
 
-            logger.info(
-              `\n\n=======>Updated subscription status for user ${userId} to ${updatedSubscription.status}`,
-            );
+            if (updatedSubscription.metadata.userId) {
+              
 
-            // Handle canceled or expired subscriptions
-            if (updatedSubscription.status === "canceled") {
+              // Determine the cancellation state
+              const isCanceled =
+                updatedSubscription.status === "canceled" ||
+                updatedSubscription.cancel_at_period_end ||
+                updatedSubscription.ended_at !== null;
+
+              // Update user subscription status
               await db
                 .update(users)
                 .set({
-                  subscriptionStatus: "canceled",
-                  subscriptionType: "free",
-                  currentPeriodEnd: new Date(
-                    updatedSubscription.current_period_end * 1000,
-                  ),
+                  subscriptionType:"free",
+                  subscriptionStatus: isCanceled ? "canceled" : updatedSubscription.status,
+                  currentPeriodEnd: new Date(updatedSubscription.current_period_end * 1000),
                 })
                 .where(eq(users.id, userId));
 
-              logger.info(`Subscription canceled for user ${userId}`);
-            } else {
+              logger.info(
+                `Updated subscription status for user ${userId}: ${
+                  isCanceled ? "canceled" : updatedSubscription.status
+                }`,
+              );
+            }else {
               // Update other statuses
               await db
                 .update(users)
