@@ -1450,6 +1450,61 @@ export function registerRoutes(app: Express) {
         monthYear: currentMonth,
       });
 
+      // Send welcome email
+      const { default: sgMail } = await import("@sendgrid/mail");
+      
+      if (!process.env.SENDGRID_API_KEY) {
+        throw new Error("SENDGRID_API_KEY is not configured");
+      }
+      
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+      const fromEmail = process.env.SENDGRID_FROM_EMAIL;
+      if (!fromEmail) {
+        throw new Error("SENDGRID_FROM_EMAIL is not configured");
+      }
+
+      const msg = {
+        to: email,
+        from: fromEmail,
+        subject: "Welcome to PodCasterella!",
+        text: `Welcome to PodCasterella! We're excited to have you on board.`,
+        html: `
+          <div style="background-color: #09090b; color: #fafafa; padding: 2rem; font-family: system-ui, -apple-system, sans-serif;">
+            <div style="max-width: 600px; margin: 0 auto; text-align: center;">
+              <h1 style="color: #fafafa; font-size: 2rem; margin-bottom: 1.5rem;">Welcome to PodCasterella! 🎉</h1>
+              
+              <div style="background-color: #1c1c1f; border-radius: 0.5rem; padding: 2rem; margin: 1.5rem 0;">
+                <h2 style="color: #fafafa; font-size: 1.5rem; margin-bottom: 1rem;">Hi ${username}!</h2>
+                <p style="color: #a1a1aa; line-height: 1.6; margin-bottom: 1.5rem;">
+                  We're thrilled to have you join our community! With PodCasterella, you can transform your articles into engaging podcasts with just a few clicks.
+                </p>
+                
+                <div style="margin: 2rem 0;">
+                  <p style="color: #a1a1aa; margin-bottom: 1rem;">Here's what you can do now:</p>
+                  <ul style="list-style: none; padding: 0; color: #a1a1aa; text-align: left;">
+                    <li style="margin: 0.5rem 0; padding-left: 1.5rem; position: relative;">✨ Convert articles to podcasts</li>
+                    <li style="margin: 0.5rem 0; padding-left: 1.5rem; position: relative;">📚 Build your podcast library</li>
+                    <li style="margin: 0.5rem 0; padding-left: 1.5rem; position: relative;">🎧 Listen on any device</li>
+                  </ul>
+                </div>
+
+                <a href="https://podcasterella.vivekgopal1.repl.co" 
+                   style="display: inline-block; background-color: #0097FB; color: white; padding: 0.75rem 1.5rem; border-radius: 0.375rem; text-decoration: none; font-weight: 500;">
+                  Start Creating Now
+                </a>
+              </div>
+              
+              <p style="color: #71717a; font-size: 0.875rem; margin-top: 2rem;">
+                Need help? Reply to this email and we'll be happy to assist you.
+              </p>
+            </div>
+          </div>
+        `,
+      };
+
+      await sgMail.send(msg);
+
       // Start session
       req.logIn(user, (err) => {
         if (err) {
