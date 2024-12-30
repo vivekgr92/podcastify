@@ -1322,12 +1322,23 @@ export function registerRoutes(app: Express) {
         .update(users)
         .set({ password: hashedPassword })
         .where(eq(users.id, user.id));
+        
+      // Send email with SendGrid
+      const sgMail = require('@sendgrid/mail');
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-      // In a real application, you would send this via email
-      // For demo purposes, we'll return it in the response
+      const msg = {
+        to: email,
+        from: process.env.SENDGRID_FROM_EMAIL,
+        subject: 'Your Temporary Password',
+        text: `Your temporary password is: ${tempPassword}\nPlease change it after logging in.`,
+        html: `<p>Your temporary password is: <strong>${tempPassword}</strong></p><p>Please change it after logging in.</p>`,
+      };
+
+      await sgMail.send(msg);
+
       res.json({ 
-        message: "Password reset successful", 
-        temporaryPassword: tempPassword 
+        message: "Password reset email sent successfully", 
       });
     } catch (error) {
       logger.error(`Password reset error: ${error instanceof Error ? error.message : String(error)}`);

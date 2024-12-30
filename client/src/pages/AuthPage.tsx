@@ -151,7 +151,7 @@ export default function AuthPage() {
 
                 toast({
                   title: "Success",
-                  description: `Your temporary password is: ${data.temporaryPassword}`,
+                  description: "Password reset instructions have been sent to your email",
                 });
               } catch (error) {
                 toast({
