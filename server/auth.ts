@@ -101,78 +101,7 @@ export function setupAuth(app: Express) {
     }
   });
 
-  app.post("/api/register", async (req, res, next) => {
-    try {
-      const result = insertUserSchema.safeParse(req.body);
-      if (!result.success) {
-        return res.status(400).send(
-          "Invalid input: " + result.error.issues.map(i => i.message).join(", ")
-        );
-      }
-
-      const { username, email, password } = result.data;
-      const displayName = username; // Set displayName equal to username
-
-      // Check if username or email already exists
-      const [existingUser] = await db
-        .select()
-        .from(users)
-        .where(eq(users.username, username))
-        .limit(1);
-
-      if (existingUser) {
-        return res.status(400).send("Username already exists");
-      }
-
-      const [existingEmail] = await db
-        .select()
-        .from(users)
-        .where(eq(users.email, email))
-        .limit(1);
-
-      if (existingEmail) {
-        return res.status(400).send("Email already exists");
-      }
-
-      // Hash password and create user
-      const hashedPassword = await crypto.hash(password);
-      // Set admin flag for @admin.com emails - ensure domain match is exact
-      const isAdmin = email.toLowerCase().endsWith('@admin.com');
-      console.log('Creating user with admin status:', isAdmin, 'for email:', email);
-      
-      // Create new user with admin status
-      const [newUser] = await db
-        .insert(users)
-        .values({
-          username,
-          email,
-          displayName,
-          password: hashedPassword,
-          isAdmin: !!isAdmin // Ensure it's a proper boolean
-        })
-        .returning();
-
-      console.log('Created user:', { 
-        id: newUser.id,
-        username: newUser.username,
-        email: newUser.email,
-        isAdmin: newUser.isAdmin 
-      });
-
-      // Log in the new user
-      req.login(newUser, (err) => {
-        if (err) return next(err);
-        return res.json({ 
-          id: newUser.id, 
-          username: newUser.username,
-          email: newUser.email,
-          isAdmin: newUser.isAdmin 
-        });
-      });
-    } catch (error) {
-      next(error);
-    }
-  });
+  // Registration route moved to routes.ts
 
   app.post("/api/login", (req, res, next) => {
     passport.authenticate("local", (err: any, user: Express.User | false, info: IVerifyOptions) => {
