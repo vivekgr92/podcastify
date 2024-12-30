@@ -17,6 +17,8 @@ import { useUser } from "./hooks/use-user";
 import Sidebar from "./components/Sidebar";
 import { Button } from "@/components/ui/button";
 import { FC, useState } from "react";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage"; // Added import
+
 
 // Extract AppRouter into its own component to properly use hooks
 const AppRouter: FC = () => {
@@ -90,6 +92,9 @@ const AppRouter: FC = () => {
                   </div>
                 </div>
               )}
+            </Route>
+            <Route path="/forgot-password">
+              <ForgotPasswordPage /> {/* Added forgot password route */}
             </Route>
             <Route path="/">
               <HomePage />
