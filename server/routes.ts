@@ -1380,7 +1380,7 @@ export function registerRoutes(app: Express) {
       }
 
       // Hash password
-      const hashedPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = await crypto.hash(password);
 
       // Create new user with default subscription status
       const [user] = await db
