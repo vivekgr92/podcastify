@@ -1470,8 +1470,8 @@ export function registerRoutes(app: Express) {
       const msg = {
         to: email,
         from: fromEmail,
-        subject: "Welcome to PodCasterella!",
-        text: `Welcome to PodCasterella! We're excited to have you on board.`,
+        subject: "Welcome to Podify Cloud",
+        text: `Welcome to Podify Cloud! We're excited to have you on board.`,
         html: `
           <div style="background-color: #09090b; color: #fafafa; padding: 2rem; font-family: system-ui, -apple-system, sans-serif;">
             <div style="max-width: 600px; margin: 0 auto; text-align: center;">
@@ -1492,7 +1492,7 @@ export function registerRoutes(app: Express) {
                   </ul>
                 </div>
 
-                <a href="https://podcasterella.vivekgopal1.repl.co" 
+                <a href="https://podify.cloud" 
                    style="display: inline-block; background-color: #0097FB; color: white; padding: 0.75rem 1.5rem; border-radius: 0.375rem; text-decoration: none; font-weight: 500;">
                   Start Creating Now
                 </a>
