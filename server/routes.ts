@@ -764,16 +764,21 @@ export function registerRoutes(app: Express) {
         // Save the audio file to Object Storage
         const timestamp = Date.now();
         const sanitizedFileName = file.originalname
-          .replace(/\.[^/.]+$/, "") 
+          .replace(/\.[^/.]+$/, "")
           .replace(/[^a-zA-Z0-9]/g, "_");
         const audioFileName = `${timestamp}-${sanitizedFileName}.mp3`;
-        
+
         try {
-          const { Client } = await import('@replit/object-storage');
+          const { Client } = await import("@replit/object-storage");
           const storage = new Client();
-          
-          await storage.uploadFromBytes()
-          await logger.info(`Successfully saved audio file to Object Storage: ${audioFileName}`);
+          // Create a Readable stream from the Buffer
+          const audioStream = new Readable();
+          audioStream.push(audioBuffer);
+          audioStream.push(null);
+          await storage.uploadFromStream(audioFileName, audioStream);
+          await logger.info(
+            `Successfully saved audio file to Object Storage: ${audioFileName}`,
+          );
         } catch (writeError) {
           const errorMessage =
             writeError instanceof Error
