@@ -7,11 +7,13 @@ import { useLocation } from "wouter";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const [, setLocation] = useLocation();
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
     
     try {
       const response = await fetch("/api/reset-password", {
@@ -29,18 +31,10 @@ export default function ForgotPasswordPage() {
         });
         setLocation("/login");
       } else {
-        toast({
-          title: "Error",
-          description: data.error,
-          variant: "destructive",
-        });
+        setError(data.error);
       }
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "An error occurred. Please try again.",
-        variant: "destructive",
-      });
+      setError("An error occurred. Please try again.");
     }
   };
 
@@ -61,6 +55,11 @@ export default function ForgotPasswordPage() {
               placeholder="Enter your email"
               required
             />
+            {error && (
+              <p className="mt-2 text-sm text-red-500">
+                {error}
+              </p>
+            )}
           </div>
           <Button type="submit" className="w-full">
             Reset Password
