@@ -1,6 +1,3 @@
-
-import { useEffect } from "react";
-
 import { Progress } from "./ui/progress";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
@@ -46,7 +43,6 @@ export function UsageProgress({
     data: usage,
     isLoading,
     error,
-    refetch
   } = useQuery<UsageLimits>({
     queryKey: ["usage-limits"],
     queryFn: async () => {
@@ -95,11 +91,6 @@ export function UsageProgress({
   );
 
   const podifyTokensCost = (podifyTokens.used * 0.005).toFixed(2);
-
-  // Refetch when subscription type changes
-  useEffect(() => {
-    refetch();
-  }, [usage?.limits?.articles?.limit, usage?.limits?.tokens?.podifyTokens?.limit]);
 
   const resetDate = usage.currentPeriod?.resetsOn
     ? new Date(usage.currentPeriod.resetsOn).toLocaleDateString("en-US", {
