@@ -1525,7 +1525,7 @@ export function registerRoutes(app: Express) {
           "----------------------------------------\n"
         ]);
         // Continue with registration even if email fails
-        logger.info("\n==Continue with registration even if email fails"")
+        logger.info("\n==Continue with registration even if email fails")
       }
 
       // Start session
