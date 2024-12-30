@@ -1320,7 +1320,7 @@ export function registerRoutes(app: Express) {
 
       // Generate temporary password
       const tempPassword = Math.random().toString(36).slice(-8);
-      const hashedPassword = await bcrypt.hash(tempPassword, 10);
+      const hashedPassword = await crypto.hash(tempPassword);
 
       // Update user's password
       await db
