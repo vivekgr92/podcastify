@@ -5253,3 +5253,6 @@
 [INFO] POST /api/login 200 in 94ms
 [INFO] GET /api/user 304 in 57ms
 [INFO] GET / 200 in 63ms
+[INFO] GET / 200 in 111ms
+[INFO] GET /api/user/usage/check 304 in 166ms
+[INFO] GET / 200 in 58ms
