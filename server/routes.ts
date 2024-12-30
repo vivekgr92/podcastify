@@ -1507,6 +1507,7 @@ export function registerRoutes(app: Express) {
       };
 
       try {
+        logger.info("\n\nSending welcome email...")
         const [response] = await sgMail.send(msg);
         await logger.info([
           "\n\n---------- Welcome Email Status ----------",
@@ -1524,6 +1525,7 @@ export function registerRoutes(app: Express) {
           "----------------------------------------\n"
         ]);
         // Continue with registration even if email fails
+        logger.info("\n==Continue with registration even if email fails"")
       }
 
       // Start session
@@ -1532,6 +1534,7 @@ export function registerRoutes(app: Express) {
           throw err;
         }
         res.json({ message: "Registration successful" });
+        
       });
     } catch (error) {
       logger.error(
