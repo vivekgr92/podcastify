@@ -771,7 +771,7 @@ export function registerRoutes(app: Express) {
         try {
           const { Client } = await import('@replit/object-storage');
           const storage = new Client();
-          await storage.upload(audioFileName, audioBuffer);
+          await storage.putObject(audioFileName, audioBuffer);
           await logger.info(`Successfully saved audio file to Object Storage: ${audioFileName}`);
         } catch (writeError) {
           const errorMessage =
