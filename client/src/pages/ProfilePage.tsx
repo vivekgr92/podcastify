@@ -66,6 +66,56 @@ export default function ProfilePage() {
             </dl>
           </div>
         </div>
+
+          <div className="p-4 rounded-lg bg-muted mt-4">
+            <h2 className="font-semibold mb-4">Update Password</h2>
+            <form onSubmit={async (e) => {
+              e.preventDefault();
+              const formData = new FormData(e.currentTarget);
+              const currentPassword = formData.get('currentPassword') as string;
+              const newPassword = formData.get('newPassword') as string;
+
+              try {
+                const response = await fetch('/api/update-password', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ currentPassword, newPassword })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                  toast({
+                    title: "Success",
+                    description: "Password updated successfully"
+                  });
+                  (e.target as HTMLFormElement).reset();
+                } else {
+                  toast({
+                    title: "Error",
+                    description: data.error,
+                    variant: "destructive"
+                  });
+                }
+              } catch (error) {
+                toast({
+                  title: "Error",
+                  description: "Failed to update password",
+                  variant: "destructive"
+                });
+              }
+            }} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Current Password</label>
+                <Input type="password" name="currentPassword" required />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">New Password</label>
+                <Input type="password" name="newPassword" required />
+              </div>
+              <Button type="submit">Update Password</Button>
+            </form>
+          </div>
+        </div>
       </Card>
     </div>
   );
