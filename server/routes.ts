@@ -336,23 +336,7 @@ export function registerRoutes(app: Express) {
                 subject: "Podify Cloud: Thank You for Your Subscription!",
                 html: `
                   <div style="background-color: #0A0A0A; color: #ffffff; padding: 1.5rem; font-family: system-ui, -apple-system, sans-serif; border: 1px solid #4CAF50;">
-                    <div style="max-width: 600px; margin: 0 auto; text-align: center;">
-                      <div style="margin-bottom: 1.5rem;">
-                        <svg viewBox="0 0 100 100" style="width: 60px; height: 60px; margin: 0 auto;">
-                          <defs>
-                            <linearGradient id="headphoneGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                              <stop offset="0%" style="stop-color: #34D399" />
-                              <stop offset="100%" style="stop-color: #10B981" />
-                            </linearGradient>
-                            <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                              <stop offset="0%" style="stop-color: #FFFFFF" />
-                              <stop offset="100%" style="stop-color: #E5E7EB" />
-                            </linearGradient>
-                          </defs>
-                          <path d="M20,50 C20,30 35,15 50,15 C65,15 80,30 80,50 L80,70 C80,75 75,80 70,80 L65,80 C60,80 55,75 55,70 L55,60 C55,55 60,50 65,50 L80,50 M20,50 L35,50 C40,50 45,55 45,60 L45,70 C45,75 40,80 35,80 L30,80 C25,80 20,75 20,70 L20,50" fill="none" stroke="url(#headphoneGradient)" stroke-width="6" stroke-linecap="round"/>
-                          ${[40, 45, 50, 55, 60].map((x, i) => `<rect x="${x}" y="${50 - (i % 2 === 0 ? 10 : 15)}" width="2" height="${i % 2 === 0 ? 20 : 30}" fill="url(#waveGradient)" opacity="0.9"/>`).join('')}
-                        </svg>
-                      </div>
+                    <div style="max-width: 600px; margin: 0 auto;">
                       <h1 style="color: #4CAF50; font-size: 1.5rem; margin-bottom: 1rem;">Thank You for Subscribing!</h1>
                       
                       <div style="background-color: rgba(76, 175, 80, 0.05); border: 1px solid rgba(76, 175, 80, 0.2); border-radius: 0.5rem; padding: 1rem; margin: 1rem 0;">
@@ -1555,19 +1539,9 @@ export function registerRoutes(app: Express) {
           <div style="background-color: #0A0A0A; color: #ffffff; padding: 1.5rem; font-family: system-ui, -apple-system, sans-serif; border: 1px solid #4CAF50;">
             <div style="max-width: 600px; margin: 0 auto; text-align: center;">
               <div style="margin-bottom: 1.5rem;">
-                <svg viewBox="0 0 100 100" style="width: 60px; height: 60px; margin: 0 auto;">
-                  <defs>
-                    <linearGradient id="headphoneGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" style="stop-color: #34D399" />
-                      <stop offset="100%" style="stop-color: #10B981" />
-                    </linearGradient>
-                    <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" style="stop-color: #FFFFFF" />
-                      <stop offset="100%" style="stop-color: #E5E7EB" />
-                    </linearGradient>
-                  </defs>
-                  <path d="M20,50 C20,30 35,15 50,15 C65,15 80,30 80,50 L80,70 C80,75 75,80 70,80 L65,80 C60,80 55,75 55,70 L55,60 C55,55 60,50 65,50 L80,50 M20,50 L35,50 C40,50 45,55 45,60 L45,70 C45,75 40,80 35,80 L30,80 C25,80 20,75 20,70 L20,50" fill="none" stroke="url(#headphoneGradient)" stroke-width="6" stroke-linecap="round"/>
-                  ${[40, 45, 50, 55, 60].map((x, i) => `<rect x="${x}" y="${50 - (i % 2 === 0 ? 10 : 15)}" width="2" height="${i % 2 === 0 ? 20 : 30}" fill="url(#waveGradient)" opacity="0.9"/>`).join('')}
+                <svg width="48" height="48" viewBox="0 0 24 24" style="margin: 0 auto;">
+                  <rect width="24" height="24" rx="6" fill="#4CAF50"/>
+                  <path d="M16 10a4 4 0 11-8 0 4 4 0 018 0zm-2 4a3 3 0 00-6 0v1h6v-1z" fill="white"/>
                 </svg>
               </div>
               
