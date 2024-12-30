@@ -305,6 +305,59 @@ export function registerRoutes(app: Express) {
             logger.info(
               `Successfully processed payment for subscription ${subscription.id}`,
             );
+
+            // Send subscription confirmation email
+            try {
+              const { default: sgMail } = await import("@sendgrid/mail");
+              
+              if (!process.env.SENDGRID_API_KEY || !process.env.SENDGRID_FROM_EMAIL) {
+                throw new Error("SendGrid configuration missing");
+              }
+
+              sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+              // Get invoice details
+              const invoiceDetails = await stripe.invoices.retrieve(invoice.id, {
+                expand: ['lines.data.price.product']
+              });
+
+              const amount = (invoiceDetails.amount_paid / 100).toFixed(2);
+              const planName = subscriptionType.split(':')[0];
+              
+              const msg = {
+                to: subscription.metadata.customerEmail,
+                from: process.env.SENDGRID_FROM_EMAIL,
+                subject: "Thank You for Your Subscription!",
+                html: `
+                  <div style="background-color: #0A0A0A; color: #ffffff; padding: 1.5rem; font-family: system-ui, -apple-system, sans-serif; border: 1px solid #4CAF50;">
+                    <div style="max-width: 600px; margin: 0 auto;">
+                      <h1 style="color: #4CAF50; font-size: 1.5rem; margin-bottom: 1rem;">Thank You for Subscribing!</h1>
+                      
+                      <div style="background-color: rgba(76, 175, 80, 0.05); border: 1px solid rgba(76, 175, 80, 0.2); border-radius: 0.5rem; padding: 1rem; margin: 1rem 0;">
+                        <h2 style="color: #ffffff; font-size: 1.2rem; margin-bottom: 0.5rem;">Subscription Details</h2>
+                        <p style="margin: 0.5rem 0;">Plan: ${planName}</p>
+                        <p style="margin: 0.5rem 0;">Amount: $${amount}</p>
+                        <p style="margin: 0.5rem 0;">Invoice ID: ${invoiceDetails.number}</p>
+                      </div>
+
+                      <p style="color: #ffffff; line-height: 1.6;">
+                        We're excited to have you as a subscriber! Your account has been upgraded and you can now enjoy all the features of your ${planName}.
+                      </p>
+
+                      <p style="color: #a0a0a0; font-size: 0.875rem; margin-top: 1rem; border-top: 1px solid rgba(76, 175, 80, 0.2); padding-top: 1rem;">
+                        If you have any questions, feel free to reach out to our support team.
+                      </p>
+                    </div>
+                  </div>
+                `
+              };
+
+              const [response] = await sgMail.send(msg);
+              logger.info(`Subscription confirmation email sent. Status: ${response.statusCode}`);
+            } catch (emailError) {
+              logger.error(`Failed to send subscription confirmation email: ${emailError instanceof Error ? emailError.message : String(emailError)}`);
+              // Continue even if email fails
+            }
           } catch (error) {
             logger.error(
               `Failed to process subscription payment: ${error instanceof Error ? error.message : String(error)}`,
