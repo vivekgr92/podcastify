@@ -3408,3 +3408,268 @@
 [INFO] 
 ========Streaming audio file: 1735677566488-article.mp3
 [INFO] HEAD /api/audio/stream/1735677566488-article.mp3 200 in 522ms
+[INFO] GET /src/pages/LibraryPage.tsx 200 in 168ms
+[INFO] GET /src/index.css 200 in 340ms
+[INFO] GET /src/pages/LibraryPage.tsx 200 in 346ms
+[INFO] GET /src/index.css 200 in 398ms
+[INFO] 
+========Streaming audio file: 1735677566488-article.mp3
+[INFO] GET /api/podcasts 304 in 170ms
+[INFO] GET /api/audio/stream/1735677566488-article.mp3 200 in 1208ms
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] GET / 200 in 39ms
+[INFO] GET /@vite/client 304 in 23ms
+[INFO] GET /src/main.tsx 304 in 74ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 1433ms
+[INFO] GET /@react-refresh 304 in 4ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 6ms
+[INFO] GET /src/index.css 304 in 1320ms
+[INFO] GET /src/lib/queryClient.ts 304 in 2ms
+[INFO] GET / 200 in 1912ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 2ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
+[INFO] GET /src/main.tsx 304 in 1ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
+[INFO] GET /src/pages/LibraryPage.tsx 200 in 1ms
+[INFO] GET /@vite/client 304 in 1ms
+[INFO] GET /@react-refresh 304 in 1ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 1ms
+[INFO] GET /src/index.css 304 in 1ms
+[INFO] GET /src/lib/queryClient.ts 304 in 1ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 0ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
+[INFO] GET /src/pages/LibraryPage.tsx 200 in 0ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 0ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 0ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-user.ts 304 in 1ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 0ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-user.ts 304 in 0ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 0ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
+[INFO] GET /src/components/ui/button.tsx 304 in 1ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 3ms
+[INFO] GET /src/components/ui/button.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 0ms
+[INFO] GET /src/components/Logo.tsx 304 in 2ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 3ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
+[INFO] GET /src/components/ui/form.tsx 304 in 1ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
+[INFO] GET /src/components/ui/input.tsx 304 in 1ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 0ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 1ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 1ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 1ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 0ms
+[INFO] GET /src/components/ui/card.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 1ms
+[INFO] GET /src/components/Logo.tsx 304 in 0ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 1ms
+[INFO] GET /src/lib/utils.ts 304 in 0ms
+[INFO] GET /src/components/ui/label.tsx 304 in 1ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 2ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 2ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 0ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 1ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
+[INFO] GET /src/components/ui/select.tsx 304 in 0ms
+[INFO] GET /src/components/ui/input.tsx 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 0ms
+[INFO] GET /src/components/ui/form.tsx 304 in 0ms
+[INFO] GET /src/components/ui/card.tsx 304 in 1ms
+[INFO] GET /api/user 401 in 2ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 1ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 1ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
+[INFO] GET / 200 in 4ms
+[INFO] GET /src/lib/utils.ts 304 in 0ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 1ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 0ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 1ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 0ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
+[INFO] GET /src/components/ui/label.tsx 304 in 1ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 2ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
+[INFO] GET /src/components/ui/select.tsx 304 in 0ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
+[INFO] GET /api/user 401 in 1ms
+[INFO] POST /api/login 200 in 441ms
+[INFO] GET /api/user 304 in 66ms
+[INFO] GET / 200 in 167ms
+[INFO] 
+========Streaming audio file: 1735677566488-article.mp3
+[INFO] GET /api/podcasts 304 in 361ms
+[INFO] GET /api/playlists 304 in 429ms
+[INFO] GET /api/audio/stream/1735677566488-article.mp3 200 in 939ms
+[INFO] 
+========Streaming audio file: 1735659091645-article.mp3
+[INFO] HEAD /api/audio/stream/1735659091645-article.mp3 200 in 475ms
+[INFO] 
+========Streaming audio file: 1735659091645-article.mp3
+[INFO] GET / 200 in 106ms
+[INFO] GET /api/audio/stream/1735659091645-article.mp3 200 in 738ms
+[INFO] 
+========Streaming audio file: 1735677566488-article.mp3
+[INFO] HEAD /api/audio/stream/1735677566488-article.mp3 200 in 430ms
+[INFO] 
+========Streaming audio file: 1735659091645-article.mp3
+[INFO] GET / 204 in 1ms
+[INFO] GET / 200 in 5ms
+[INFO] GET /src/main.tsx 304 in 1ms
+[INFO] GET /src/index.css 200 in 2ms
+[INFO] GET /@react-refresh 304 in 1ms
+[INFO] GET /@vite/client 304 in 1ms
+[INFO] GET /src/pages/LibraryPage.tsx 200 in 1ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 1ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 0ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 0ms
+[INFO] GET /src/lib/queryClient.ts 304 in 1ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 0ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
+[INFO] GET /src/components/ui/button.tsx 304 in 0ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-user.ts 304 in 0ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 0ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 0ms
+[INFO] GET /src/lib/utils.ts 304 in 1ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 1ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 2ms
+[INFO] GET /src/components/AudioPlayer.tsx 200 in 1ms
+[INFO] GET /src/components/ui/input.tsx 304 in 0ms
+[INFO] GET /src/components/ui/form.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 0ms
+[INFO] GET /src/components/Logo.tsx 304 in 0ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 0ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
+[INFO] GET /src/components/ui/card.tsx 304 in 0ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 1ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 1ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 0ms
+[INFO] GET /src/components/ui/label.tsx 304 in 0ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 0ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 0ms
+[INFO] GET /src/components/ui/popover.tsx 200 in 0ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 0ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 0ms
+[INFO] GET /src/components/ui/select.tsx 304 in 0ms
+[INFO] GET /node_modules/.vite/deps/@radix-ui_react-popover.js 200 in 1ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
+[INFO] GET /api/user 401 in 1ms
+[INFO] GET / 200 in 3ms
+[INFO] GET / 200 in 3ms
+[INFO] GET /src/main.tsx 304 in 1ms
+[INFO] GET /@react-refresh 304 in 1ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 0ms
+[INFO] GET /@vite/client 304 in 1ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 0ms
+[INFO] GET /src/lib/queryClient.ts 304 in 1ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 0ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 0ms
+[INFO] GET /src/index.css 304 in 1ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 0ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 0ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-user.ts 304 in 0ms
+[INFO] GET /src/components/ui/form.tsx 304 in 1ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
+[INFO] GET /src/components/ui/button.tsx 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 5ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 0ms
+[INFO] GET /src/components/ui/input.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
+[INFO] GET /src/components/Logo.tsx 304 in 1ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 0ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
+[INFO] GET /src/lib/utils.ts 304 in 1ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 1ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 1ms
+[INFO] GET /src/components/ui/card.tsx 304 in 0ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 1ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 1ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 1ms
+[INFO] GET /src/components/ui/label.tsx 304 in 0ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 0ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 11ms
+[INFO] GET /src/components/ui/select.tsx 304 in 2ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
+[INFO] GET / 200 in 5ms
+[INFO] GET /api/user 401 in 1ms
+[INFO] POST /api/login 200 in 101ms
+[INFO] GET /api/user 200 in 59ms
+[INFO] GET / 200 in 62ms
+[INFO] 
+========Streaming audio file: 1735659091645-article.mp3
+[INFO] 
+========Streaming audio file: 1735659091645-article.mp3
+[INFO] GET /api/playlists 304 in 343ms
+[INFO] GET /api/podcasts 304 in 397ms
+[INFO] 
+========Streaming audio file: 1735659091645-article.mp3
+[INFO] 
+========Streaming audio file: 1735659091645-article.mp3
+[INFO] GET /api/audio/stream/1735659091645-article.mp3 200 in 1481ms
+[INFO] GET /api/audio/stream/1735659091645-article.mp3 200 in 1526ms
+[INFO] 
+========Streaming audio file: 1735677566488-article.mp3
+[INFO] HEAD /api/audio/stream/1735677566488-article.mp3 200 in 526ms
+[INFO] 
+========Streaming audio file: 1735677566488-article.mp3
+[INFO] 
+========Streaming audio file: 1735677566488-article.mp3
+[INFO] GET /api/audio/stream/1735677566488-article.mp3 200 in 737ms
+[INFO] GET /api/audio/stream/1735677566488-article.mp3 200 in 668ms
+[INFO] 
+========Streaming audio file: 1735659091645-article.mp3
+[INFO] 
+========Streaming audio file: 1735659091645-article.mp3
+[INFO] HEAD /api/audio/stream/1735659091645-article.mp3 200 in 554ms
+[INFO] 
+========Streaming audio file: 1735659091645-article.mp3
+[INFO] GET /api/audio/stream/1735659091645-article.mp3 200 in 719ms
+[INFO] 
+========Streaming audio file: 1735659091645-article.mp3
+[INFO] 
+========Streaming audio file: 1735659091645-article.mp3
