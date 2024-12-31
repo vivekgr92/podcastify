@@ -853,26 +853,26 @@ export function registerRoutes(app: Express) {
   // Stream audio from Object Storage
   app.get("/api/audio/stream/:filename", async (req, res) => {
     const filename = req.params.filename;
-    
+    logger.info(`\n========Streaming audio file: ${filename}`);
+
     try {
       const { Client } = await import("@replit/object-storage");
       const storage = new Client();
 
       // Download file from Object Storage
       try {
-
         const audioStream = await storage.downloadAsStream(filename);
-        res.setHeader('Content-Type', 'audio/mpeg');
-        res.setHeader('Accept-Ranges', 'bytes');
-        res.setHeader('Cache-Control', 'no-cache');
-        
+        res.setHeader("Content-Type", "audio/mpeg");
+        res.setHeader("Accept-Ranges", "bytes");
+        res.setHeader("Cache-Control", "no-cache");
+
         // Handle range requests for seeking
         const range = req.headers.range;
         if (range) {
           res.status(206);
-          res.setHeader('Content-Range', `bytes ${range}`);
+          res.setHeader("Content-Range", `bytes ${range}`);
         }
-        
+
         audioStream.pipe(res);
       } catch (error) {
         logger.warn(`File not found in Object Storage: ${filename}`);
