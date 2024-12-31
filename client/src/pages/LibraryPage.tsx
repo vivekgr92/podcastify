@@ -27,7 +27,7 @@ export default function LibraryPage() {
   const [, setLocation] = useLocation();
   const { user } = useUser();
   const queryClient = useQueryClient();
-  const { play, isPlaying, audioData, togglePlay } = useAudio();
+  const { play, isPlaying, audioData, togglePlay, setPlaylist, setCurrentIndex } = useAudio();
   const { toast } = useToast();
 
   const {
