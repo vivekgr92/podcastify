@@ -111,6 +111,21 @@ export default function LibraryPage() {
                       <Play className="h-5 w-5 text-white ml-0.5" />
                     )}
                   </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-2"
+                    onClick={() => {
+                      const link = document.createElement('a');
+                      link.href = podcast.audioUrl;
+                      link.download = `${podcast.title}.mp3`;
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+                    }}
+                  >
+                    Download
+                  </Button>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button
