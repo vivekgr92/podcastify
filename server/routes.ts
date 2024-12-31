@@ -861,9 +861,6 @@ export function registerRoutes(app: Express) {
 
       // Download file from Object Storage
       try {
-        logger.info(
-          `\n\n====Downloading audio file from Object Storage ${filename}`,
-        );
         const audioStream = await storage.downloadAsStream(filename);
 
         if (!audioStream) {
@@ -874,22 +871,14 @@ export function registerRoutes(app: Express) {
           });
         }
 
-        const { fileTypeFromStream } = await import('file-type');
-        const fileType = await fileTypeFromStream(audioStream);
         
-        if (!fileType || fileType.mime !== 'audio/mpeg') {
-          logger.warn(`Invalid file type for ${filename}: ${fileType?.mime || 'unknown'}`);
-          return res.status(400).json({
-            error: "Invalid audio file format",
-            type: "validation",
-          });
-        }
-
-        logger.info(`Audio file downloaded successfully. Type: ${fileType.mime}`);
 
         res.setHeader("Content-Type", "audio/mpeg");
         res.setHeader("Accept-Ranges", "bytes");
+        
         res.setHeader("Cache-Control", "no-cache");
+
+        logger.info(`========Range ${req.headers.range}`);
 
         // Handle range requests for seeking
         const range = req.headers.range;
