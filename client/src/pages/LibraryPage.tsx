@@ -69,7 +69,7 @@ export default function LibraryPage() {
       <main className="max-w-4xl mx-auto px-6 py-8 pb-32">
         <div className="flex flex-col gap-4 mb-8">
           <div className="flex justify-between items-center mt-4 md:mt-0">
-            <h1 className="text-3xl md:text-4xl font-bold pl-14 md:pl-0">Your Library</h1>
+            <h1 className="text-2xl font-bold md:pl-0">Your Library</h1>
             <Button
               onClick={() => setLocation("/")}
               className="bg-[#4CAF50] hover:bg-[#45a049]"

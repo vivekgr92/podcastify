@@ -41,10 +41,10 @@ const AppRouter: FC = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden fixed top-4 left-4 z-50"
+              className="md:hidden fixed top-4 left-4 z-50 p-2 bg-background/95 rounded-lg shadow-lg"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
-              <Menu className="h-6 w-6" />
+              <Menu className="h-7 w-7" />
             </Button>
             <div
               className={`fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
