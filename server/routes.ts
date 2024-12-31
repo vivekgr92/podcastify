@@ -770,15 +770,25 @@ export function registerRoutes(app: Express) {
         const audioFileName = `${timestamp}-${sanitizedFileName}.mp3`;
 
         try {
+          // Check MIME type of the audio buffer
+          const fileType = await import('file-type');
+          const mimeInfo = await fileType.fileTypeFromBuffer(audioBuffer);
+          
+          if (!mimeInfo || mimeInfo.mime !== 'audio/mpeg') {
+            throw new Error(`Invalid audio format. Expected MP3, got ${mimeInfo?.mime || 'unknown'}`);
+          }
+
           const { Client } = await import("@replit/object-storage");
           const storage = new Client();
+          
           // Create a Readable stream from the Buffer
           const audioStream = new Readable();
           audioStream.push(audioBuffer);
           audioStream.push(null);
+          
           await storage.uploadFromStream(audioFileName, audioStream);
           await logger.info(
-            `Successfully saved audio file to Object Storage: ${audioFileName}`,
+            `Successfully saved audio file (${mimeInfo.mime}) to Object Storage: ${audioFileName}`,
           );
         } catch (writeError) {
           const errorMessage =
