@@ -54,8 +54,8 @@ const SPEAKERS: Speaker[] = ["Joe", "Sarah"];
 
 // Voice mapping for different speakers
 const SPEAKER_VOICE_MAP = {
-  Joe: "en-US-Wavenet-D", // Male voice
-  Sarah: "en-US-Wavenet-F", // Female voice
+  Joe: "en-US-Journey-D", // Male voice
+  Sarah: "en-US-Journey-F", // Female voice
 };
 
 // System prompts for different stages of conversation
