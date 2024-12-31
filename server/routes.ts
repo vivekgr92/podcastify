@@ -933,6 +933,10 @@ export function registerRoutes(app: Express) {
       }
 
       const podifyTokensUsed = Number(usage?.podifyTokens || "0");
+      logger.info(
+        "\n\n\nn ======Usage check for user: " + req.user.subscriptionStatus,
+      );
+
       const limits = getLimits(req.user.subscriptionStatus || "free");
       const { articleLimit, podifyTokenLimit } = limits;
 
