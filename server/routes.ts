@@ -871,15 +871,18 @@ export function registerRoutes(app: Express) {
 
       // Download file from Object Storage
       try {
-        const audioStream = await storage.downloadAsStream(filename);
-
-        if (!audioStream) {
+        const file = await storage.get(filename);
+        
+        if (!file) {
           logger.warn(`File not found in Object Storage: ${filename}`);
           return res.status(404).json({
             error: "Audio file not found",
             type: "not_found",
           });
         }
+
+        const fileBuffer = await file.arrayBuffer();
+        const fileSize = fileBuffer.byteLength;
 
         // Set proper headers for audio streaming
         res.setHeader("Content-Type", "audio/mpeg");
@@ -888,16 +891,30 @@ export function registerRoutes(app: Express) {
         res.setHeader("Content-Disposition", `inline; filename="${filename}"`);
         res.setHeader("X-Content-Type-Options", "nosniff");
 
-        logger.info(`========Range ${req.headers.range}`);
-
-        // Handle range requests for seeking
         const range = req.headers.range;
         if (range) {
+          const parts = range.replace(/bytes=/, "").split("-");
+          const start = parseInt(parts[0], 10);
+          const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+          
+          if (start >= fileSize) {
+            res.status(416).send('Requested range not satisfiable');
+            return;
+          }
+          
           res.status(206);
-          res.setHeader("Content-Range", `bytes ${range}`);
+          res.setHeader("Content-Range", `bytes ${start}-${end}/${fileSize}`);
+          res.setHeader("Content-Length", end - start + 1);
+          
+          const buffer = Buffer.from(fileBuffer.slice(start, end + 1));
+          res.write(buffer);
+          res.end();
+        } else {
+          res.setHeader("Content-Length", fileSize);
+          const buffer = Buffer.from(fileBuffer);
+          res.write(buffer);
+          res.end();
         }
-
-        audioStream.pipe(res);
       } catch (error) {
         logger.warn(`File not found in Object Storage: ${filename}`);
         return res.status(404).json({
