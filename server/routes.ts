@@ -796,7 +796,7 @@ export function registerRoutes(app: Express) {
             userId: user.id,
             title: file.originalname.replace(/\.[^/.]+$/, ""),
             description: "Generated from uploaded document using AI voices",
-            audioUrl: `/uploads/${audioFileName}`,
+            audioUrl: `/api/audio/stream/${audioFileName}`,
             duration: duration,
             type: "tts",
           })
@@ -850,8 +850,8 @@ export function registerRoutes(app: Express) {
     }
   });
 
-  // Audio streaming endpoint - when the a audio is played
-  app.get("/uploads/:filename", async (req, res) => {
+  // Stream audio from Object Storage
+  app.get("/api/audio/stream/:filename", async (req, res) => {
     const filename = req.params.filename;
     
     try {
