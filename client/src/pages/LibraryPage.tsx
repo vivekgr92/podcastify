@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import type { Podcast } from "@db/schema";
-import { Share2, Play, Pause, Trash2, AlertCircle } from "lucide-react";
+import { Share2, Play, Pause, Trash2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,7 +27,7 @@ export default function LibraryPage() {
   const [, setLocation] = useLocation();
   const { user } = useUser();
   const queryClient = useQueryClient();
-  const { play, isPlaying, audioData, togglePlay, addToPlaylist, clearPlaylist, setPlaylist } = useAudio();
+  const { play, isPlaying, audioData, togglePlay } = useAudio();
   const { toast } = useToast();
 
   const {
@@ -51,15 +51,7 @@ export default function LibraryPage() {
         if (audioData?.id === podcast.id && isPlaying) {
           await togglePlay();
         } else {
-          clearPlaylist();
-          if (podcasts) {
-            const podcastIndex = podcasts.findIndex(p => p.id === podcast.id);
-            const remainingPodcasts = podcasts.slice(podcastIndex);
-            // Clear playlist and set new one
-            setPlaylist(remainingPodcasts);
-            // Play the selected podcast
-            await play(podcast);
-          }
+          await play(podcast);
         }
       } catch (error) {
         console.error("Error playing podcast:", error);
@@ -70,17 +62,12 @@ export default function LibraryPage() {
         });
       }
     },
-    [play, togglePlay, audioData, isPlaying, toast, addToPlaylist, clearPlaylist, podcasts, setPlaylist],
+    [play, togglePlay, audioData, isPlaying, toast],
   );
-
-  // Rest of your component code remains the same...
-  // (Keep all the existing JSX and other logic)
 
   return (
     <div className="min-h-screen bg-black text-white relative">
       <main className="max-w-4xl mx-auto px-6 py-8 pb-32">
-        {/* Keep your existing JSX here */}
-        {/* The only change was in the handlePlay function above */}
         <div className="flex flex-col gap-4 mb-8">
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold">Your Library</h1>
