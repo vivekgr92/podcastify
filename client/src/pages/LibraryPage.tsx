@@ -50,10 +50,12 @@ export default function LibraryPage() {
       try {
         if (audioData?.id === podcast.id) {
           await togglePlay();
+          setIsPlaying(!isPlaying);
         } else {
-          setPlaylist([podcast]); // Set single podcast as playlist
-          setCurrentIndex(0); // Set as first item
-          await play(podcast); // This will play in the bottom player
+          setPlaylist([podcast]); 
+          setCurrentIndex(0);
+          await play(podcast);
+          setIsPlaying(true);
         }
       } catch (error) {
         console.error("Error playing podcast:", error);
@@ -64,7 +66,7 @@ export default function LibraryPage() {
         });
       }
     },
-    [play, togglePlay, audioData, setPlaylist, setCurrentIndex, toast],
+    [play, togglePlay, audioData, setPlaylist, setCurrentIndex, toast, isPlaying, setIsPlaying],
   );
 
   return (
