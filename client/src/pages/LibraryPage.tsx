@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import type { Podcast } from "@db/schema";
@@ -88,7 +87,7 @@ export default function LibraryPage() {
                   <h3 className="text-lg font-medium mb-2">{podcast.title}</h3>
                   <p className="text-sm text-gray-400">{podcast.description}</p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3"> {/* Added flex-wrap and responsive gap */}
                   <Button
                     variant="default"
                     size="icon"
