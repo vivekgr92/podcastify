@@ -55,8 +55,18 @@ export default function LibraryPage() {
           if (podcasts) {
             const podcastIndex = podcasts.findIndex(p => p.id === podcast.id);
             const remainingPodcasts = podcasts.slice(podcastIndex);
-            remainingPodcasts.forEach(p => addToPlaylist(p));
-            await play(podcast);
+            // Add base URL to podcast audio URLs
+            const baseUrl = window.location.origin;
+            const processedPodcasts = remainingPodcasts.map(p => ({
+              ...p,
+              audioUrl: p.audioUrl.startsWith('http') ? p.audioUrl : `${baseUrl}${p.audioUrl}`
+            }));
+            processedPodcasts.forEach(p => addToPlaylist(p));
+            const processedPodcast = {
+              ...podcast,
+              audioUrl: podcast.audioUrl.startsWith('http') ? podcast.audioUrl : `${baseUrl}${podcast.audioUrl}`
+            };
+            await play(processedPodcast);
           }
         }
       } catch (error) {
