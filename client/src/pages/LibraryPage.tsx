@@ -68,7 +68,7 @@ export default function LibraryPage() {
         });
       }
     },
-    [play, togglePlay, audioData, isPlaying, toast, addToPlaylist, clearPlaylist, podcasts],
+    [play, togglePlay, audioData, isPlaying, toast, addToPlaylist, clearPlaylist, podcasts, setPlaylist],
   );
 
   // Rest of your component code remains the same...
