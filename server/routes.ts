@@ -771,21 +771,23 @@ export function registerRoutes(app: Express) {
 
         try {
           // Check MIME type of the audio buffer
-          const fileType = await import('file-type');
+          const fileType = await import("file-type");
           const mimeInfo = await fileType.fileTypeFromBuffer(audioBuffer);
-          
-          if (!mimeInfo || mimeInfo.mime !== 'audio/mpeg') {
-            throw new Error(`Invalid audio format. Expected MP3, got ${mimeInfo?.mime || 'unknown'}`);
+
+          if (!mimeInfo || mimeInfo.mime !== "audio/mpeg") {
+            throw new Error(
+              `Invalid audio format. Expected MP3, got ${mimeInfo?.mime || "unknown"}`,
+            );
           }
 
           const { Client } = await import("@replit/object-storage");
           const storage = new Client();
-          
+
           // Create a Readable stream from the Buffer
           const audioStream = new Readable();
           audioStream.push(audioBuffer);
           audioStream.push(null);
-          
+
           await storage.uploadFromStream(audioFileName, audioStream);
           await logger.info(
             `Successfully saved audio file (${mimeInfo.mime}) to Object Storage: ${audioFileName}`,
@@ -871,8 +873,8 @@ export function registerRoutes(app: Express) {
 
       // Download file from Object Storage
       try {
-        const fileBuffer = await storage.download(filename);
-        
+        const fileBuffer = await storage.downloadAsStream(filename);
+
         if (!fileBuffer) {
           logger.warn(`File not found in Object Storage: ${filename}`);
           return res.status(404).json({
@@ -894,16 +896,16 @@ export function registerRoutes(app: Express) {
           const parts = range.replace(/bytes=/, "").split("-");
           const start = parseInt(parts[0], 10);
           const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
-          
+
           if (start >= fileSize) {
-            res.status(416).send('Requested range not satisfiable');
+            res.status(416).send("Requested range not satisfiable");
             return;
           }
-          
+
           res.status(206);
           res.setHeader("Content-Range", `bytes ${start}-${end}/${fileSize}`);
           res.setHeader("Content-Length", end - start + 1);
-          
+
           const buffer = Buffer.from(fileBuffer.slice(start, end + 1));
           res.write(buffer);
           res.end();
