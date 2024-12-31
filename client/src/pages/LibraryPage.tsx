@@ -64,7 +64,7 @@ export default function LibraryPage() {
         });
       }
     },
-    [play, togglePlay, audioData, setPlaylist, setCurrentIndex, toast, isPlaying, setIsPlaying],
+    [play, togglePlay, audioData, setPlaylist, setCurrentIndex, toast],
   );
 
   return (
