@@ -51,17 +51,16 @@ export default function LibraryPage() {
         if (audioData?.id === podcast.id && isPlaying) {
           await togglePlay();
         } else {
-          clearPlaylist();
           if (podcasts) {
             const podcastIndex = podcasts.findIndex(p => p.id === podcast.id);
             const remainingPodcasts = podcasts.slice(podcastIndex);
-            // Add base URL to podcast audio URLs
             const baseUrl = window.location.origin;
-            const processedPodcasts = remainingPodcasts.map(p => ({
-              ...p,
-              audioUrl: p.audioUrl.startsWith('http') ? p.audioUrl : `${baseUrl}${p.audioUrl}`
-            }));
-            processedPodcasts.forEach(p => addToPlaylist(p));
+            
+            // Clear playlist and set new one
+            clearPlaylist();
+            setPlaylist(remainingPodcasts);
+            
+            // Process and play the selected podcast
             const processedPodcast = {
               ...podcast,
               audioUrl: podcast.audioUrl.startsWith('http') ? podcast.audioUrl : `${baseUrl}${podcast.audioUrl}`
