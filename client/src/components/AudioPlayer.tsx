@@ -62,10 +62,7 @@ export default function AudioPlayer() {
     return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
-  // Only render if we have a user
-  if (!user) {
-    return null;
-  }
+  return null;
 
   return (
     <div className="w-full h-24 bg-black border-t border-gray-800 fixed bottom-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out">
