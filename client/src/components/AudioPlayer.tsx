@@ -238,29 +238,38 @@ export default function AudioPlayer() {
             <PopoverContent className="w-80 p-0" align="end">
               <ScrollArea className="h-80">
                 <div className="space-y-1 p-2">
-                  {playlist.map((podcast, index) => (
-                    <div
-                      key={podcast.id}
-                      className={`flex items-center gap-2 p-2 rounded-md hover:bg-accent cursor-pointer ${
-                        currentIndex === index ? "bg-accent" : ""
-                      }`}
-                      onClick={() => {
-                        setCurrentIndex(index);
-                        play(podcast);
-                      }}
-                    >
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium truncate">
-                          {podcast.title}
-                        </p>
-                      </div>
-                      {currentIndex === index && (
-                        <div className="w-4 h-4">
-                          <span className="w-2 h-2 bg-green-500 rounded-full block" />
+                  {playlist && playlist.length > 0 ? (
+                    playlist.map((podcast, index) => (
+                      <div
+                        key={podcast.id}
+                        className={`flex items-center gap-2 p-2 rounded-md hover:bg-accent cursor-pointer ${
+                          currentIndex === index ? "bg-accent" : ""
+                        }`}
+                        onClick={() => {
+                          setCurrentIndex(index);
+                          play(podcast);
+                        }}
+                      >
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium truncate">
+                            {podcast.title}
+                          </p>
+                          <p className="text-xs text-muted-foreground truncate">
+                            {podcast.description}
+                          </p>
                         </div>
-                      )}
+                        {currentIndex === index && (
+                          <div className="w-4 h-4">
+                            <span className="w-2 h-2 bg-green-500 rounded-full block" />
+                          </div>
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="p-4 text-sm text-center text-muted-foreground">
+                      No audio in playlist
                     </div>
-                  ))}
+                  )}
                 </div>
               </ScrollArea>
             </PopoverContent>
