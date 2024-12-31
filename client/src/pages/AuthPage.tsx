@@ -65,7 +65,7 @@ export default function AuthPage() {
       className="min-h-screen flex items-center justify-center bg-cover bg-center"
       style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1532342342267-77e8db262ebc")' }}
     >
-      <div className="w-full max-w-md p-8 space-y-6 bg-background/95 backdrop-blur-sm rounded-lg shadow-xl">
+      <div className="w-[90%] max-w-sm p-4 sm:p-6 space-y-4 sm:space-y-6 bg-background/95 backdrop-blur-sm rounded-lg shadow-xl">
         <h1 className="text-3xl font-bold text-center">
           {isLogin ? "Welcome Back" : "Create Account"}
         </h1>
