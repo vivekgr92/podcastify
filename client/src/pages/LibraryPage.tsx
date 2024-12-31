@@ -54,9 +54,9 @@ export default function LibraryPage() {
           clearPlaylist();
           if (podcasts) {
             const podcastIndex = podcasts.findIndex(p => p.id === podcast.id);
-            setPlaylist(podcasts);
+            const remainingPodcasts = podcasts.slice(podcastIndex);
+            remainingPodcasts.forEach(p => addToPlaylist(p));
             await play(podcast);
-            addToPlaylist(podcast);
           }
         }
       } catch (error) {
