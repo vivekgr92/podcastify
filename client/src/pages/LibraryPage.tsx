@@ -51,21 +51,12 @@ export default function LibraryPage() {
         if (audioData?.id === podcast.id && isPlaying) {
           await togglePlay();
         } else {
+          clearPlaylist();
           if (podcasts) {
             const podcastIndex = podcasts.findIndex(p => p.id === podcast.id);
             const remainingPodcasts = podcasts.slice(podcastIndex);
-            const baseUrl = window.location.origin;
-            
-            // Clear playlist and set new one
-            clearPlaylist();
-            setPlaylist(remainingPodcasts);
-            
-            // Process and play the selected podcast
-            const processedPodcast = {
-              ...podcast,
-              audioUrl: podcast.audioUrl.startsWith('http') ? podcast.audioUrl : `${baseUrl}${podcast.audioUrl}`
-            };
-            await play(processedPodcast);
+            remainingPodcasts.forEach(p => addToPlaylist(p));
+            await play(podcast);
           }
         }
       } catch (error) {
@@ -77,7 +68,7 @@ export default function LibraryPage() {
         });
       }
     },
-    [play, togglePlay, audioData, isPlaying, toast, addToPlaylist, clearPlaylist, podcasts, setPlaylist],
+    [play, togglePlay, audioData, isPlaying, toast, addToPlaylist, clearPlaylist, podcasts],
   );
 
   // Rest of your component code remains the same...
