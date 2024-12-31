@@ -861,7 +861,21 @@ export function registerRoutes(app: Express) {
 
       // Download file from Object Storage
       try {
+        logger.info(
+          `\n\n====Downloading audio file from Object Storage ${filename}`,
+        );
         const audioStream = await storage.downloadAsStream(filename);
+
+        if (!audioStream) {
+          logger.warn(`File not found in Object Storage: ${filename}`);
+          return res.status(404).json({
+            error: "Audio file not found",
+            type: "not_found",
+          });
+        }
+
+        logger.info("Audio file downloaded successfully");
+
         res.setHeader("Content-Type", "audio/mpeg");
         res.setHeader("Accept-Ranges", "bytes");
         res.setHeader("Cache-Control", "no-cache");
@@ -933,11 +947,9 @@ export function registerRoutes(app: Express) {
       }
 
       const podifyTokensUsed = Number(usage?.podifyTokens || "0");
-      logger.info(
-        "\n\n\nn ======Usage check for user: " + req.user.subscriptionStatus,
-      );
+      logger.info("Usage check for user: " + req.user.subscriptionStatus);
 
-      const limits = getLimits(req.user.subscriptionStatus || "free");
+      const limits = getLimits(req.user.subscriptionType);
       const { articleLimit, podifyTokenLimit } = limits;
 
       const hasReachedLimit =

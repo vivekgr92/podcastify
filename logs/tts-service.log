@@ -1,53 +1,9 @@
-[INFO] GET / 200 in 5ms
-[INFO] GET /@vite/client 304 in 1ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 1ms
-[INFO] GET /src/main.tsx 304 in 0ms
-[INFO] GET /@react-refresh 304 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
-[INFO] GET /src/lib/queryClient.ts 304 in 1ms
-[INFO] GET /node_modules/.vite/deps/chunk-RPCDYKBN.js 404 in 1ms
-[INFO] GET /src/index.css 304 in 1ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 3ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-user.ts 304 in 1ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 2ms
-[INFO] GET /src/components/ui/button.tsx 304 in 5ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 8ms
-[INFO] GET / 200 in 48ms
-[INFO] GET / 200 in 4ms
-[INFO] GET /@vite/client 304 in 0ms
-[INFO] GET /src/main.tsx 304 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
-[INFO] GET /src/index.css 304 in 1ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 0ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
-[INFO] GET /src/lib/queryClient.ts 304 in 0ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 1ms
-[INFO] GET /@react-refresh 304 in 1ms
-[INFO] GET /node_modules/.vite/deps/chunk-RPCDYKBN.js 404 in 2ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-user.ts 304 in 1ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 0ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/button.tsx 304 in 1ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 0ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 0ms
-[INFO] GET /src/components/Logo.tsx 304 in 0ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 0ms
-[INFO] GET / 200 in 5ms
+[INFO] Stripe initialized successfully
+[INFO] Registering routes...
+[INFO] ***Starting server initialization...
+
+
+[INFO] Setting up Vite for development...
 [INFO] Stripe initialized successfully
 [INFO] ***Starting server initialization...
 
@@ -56,431 +12,53 @@
 [INFO] Setting up Vite for development...
 [INFO] Server started successfully on port 4000
 [INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
-[INFO] GET / 200 in 52ms
-[INFO] GET /@vite/client 304 in 76ms
-[INFO] GET /@react-refresh 304 in 62ms
-[INFO] GET /src/main.tsx 304 in 131ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 0ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 145ms
-[INFO] GET /node_modules/.vite/deps/chunk-RPCDYKBN.js 404 in 8ms
-[INFO] GET /src/lib/queryClient.ts 304 in 977ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 3ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 7ms
-[INFO] GET /src/index.css 304 in 873ms
+[INFO] GET / 200 in 41ms
+[INFO] GET /@vite/client 304 in 51ms
+[INFO] GET /src/main.tsx 304 in 82ms
+[INFO] GET /@react-refresh 304 in 40ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 355ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 149ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 0ms
+[INFO] GET /src/lib/queryClient.ts 304 in 0ms
 [INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/button.tsx 304 in 0ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-user.ts 304 in 1ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 4ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
 [INFO] GET /src/pages/BillingPage.tsx 304 in 2ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 7ms
-[INFO] Stripe initialized successfully
-[INFO] ***Starting server initialization...
-
-
-[INFO] Registering routes...
-[INFO] Setting up Vite for development...
-[INFO] Server started successfully on port 4000
-[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
-[INFO] GET / 200 in 50ms
-[INFO] GET /@react-refresh 304 in 59ms
-[INFO] GET /@vite/client 304 in 79ms
-[INFO] GET /src/main.tsx 304 in 109ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 63ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
-[INFO] GET /src/lib/queryClient.ts 304 in 31ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 2ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 8ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 2ms
-[INFO] GET /node_modules/.vite/deps/chunk-RPCDYKBN.js 404 in 73ms
 [INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
-[INFO] GET /src/index.css 304 in 2074ms
+[INFO] GET /src/index.css 304 in 1515ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
+[INFO] GET /src/components/ui/button.tsx 304 in 1ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
 [INFO] GET /src/hooks/use-user.ts 304 in 0ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/button.tsx 304 in 1ms
-[INFO] GET /src/components/ui/alert-dialog.tsx 200 in 2ms
 [INFO] GET /src/hooks/use-toast.ts 304 in 0ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-audio.ts 200 in 2ms
-[INFO] GET /src/components/AudioPlayer.tsx 200 in 1ms
-[INFO] GET /src/lib/utils.ts 304 in 1ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
-[INFO] GET /src/components/Logo.tsx 304 in 0ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 0ms
-[INFO] GET /src/components/ui/form.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
-[INFO] GET /src/components/ui/input.tsx 304 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 1ms
-[INFO] GET / 200 in 5ms
-[INFO] GET /@vite/client 304 in 1ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 1ms
-[INFO] GET /src/main.tsx 304 in 1ms
-[INFO] GET /@react-refresh 304 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 0ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
-[INFO] GET /src/lib/queryClient.ts 304 in 0ms
-[INFO] GET /src/index.css 304 in 1ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 0ms
-[INFO] GET /node_modules/.vite/deps/chunk-RPCDYKBN.js 404 in 1ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
 [INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 0ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-user.ts 304 in 1ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 0ms
-[INFO] GET /src/components/ui/button.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 0ms
-[INFO] GET /src/components/Logo.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
 [INFO] GET /src/components/ui/toast.tsx 304 in 0ms
-[INFO] GET / 200 in 4ms
-[INFO] GET / 200 in 2ms
-[INFO] GET /@vite/client 304 in 1ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 1ms
-[INFO] GET /src/main.tsx 304 in 0ms
-[INFO] GET /@react-refresh 304 in 0ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 0ms
-[INFO] GET /src/lib/queryClient.ts 304 in 1ms
-[INFO] GET /node_modules/.vite/deps/chunk-RPCDYKBN.js 404 in 1ms
-[INFO] GET /src/index.css 304 in 1ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 0ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 0ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 0ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 0ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 0ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 0ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-user.ts 304 in 1ms
-[INFO] GET /src/components/ui/button.tsx 304 in 1ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 0ms
-[INFO] GET / 200 in 2ms
-[INFO] GET / 200 in 2ms
-[INFO] GET /@vite/client 304 in 1ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 0ms
-[INFO] GET /src/main.tsx 304 in 1ms
-[INFO] GET /@react-refresh 304 in 1ms
-[INFO] GET /src/index.css 304 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 0ms
-[INFO] GET /src/lib/queryClient.ts 304 in 1ms
-[INFO] GET /node_modules/.vite/deps/chunk-RPCDYKBN.js 404 in 3ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 0ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 0ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 0ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-user.ts 304 in 0ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
-[INFO] GET /src/components/ui/button.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 0ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
-[INFO] GET /src/components/Logo.tsx 304 in 1ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
-[INFO] GET / 200 in 4ms
-[INFO] GET / 200 in 3ms
-[INFO] GET /@vite/client 304 in 1ms
-[INFO] GET /@react-refresh 304 in 1ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 1ms
-[INFO] GET /src/main.tsx 304 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 0ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
-[INFO] GET /node_modules/.vite/deps/chunk-RPCDYKBN.js 404 in 1ms
-[INFO] GET /src/index.css 304 in 1ms
-[INFO] GET /src/lib/queryClient.ts 304 in 1ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 0ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 0ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-user.ts 304 in 1ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
-[INFO] GET /src/components/ui/button.tsx 304 in 0ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 0ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 0ms
-[INFO] GET / 200 in 3ms
-[INFO] GET / 200 in 3ms
-[INFO] GET /src/main.tsx 304 in 1ms
-[INFO] GET /@vite/client 304 in 0ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 0ms
-[INFO] GET /@react-refresh 304 in 1ms
-[INFO] GET /src/index.css 304 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
-[INFO] GET /src/lib/queryClient.ts 304 in 0ms
-[INFO] GET /node_modules/.vite/deps/chunk-RPCDYKBN.js 404 in 2ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-user.ts 304 in 1ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 0ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/button.tsx 304 in 0ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 0ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
-[INFO] GET /src/components/Logo.tsx 304 in 0ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
-[INFO] GET / 200 in 3ms
-[INFO] GET / 200 in 3ms
-[INFO] GET /@react-refresh 304 in 1ms
-[INFO] GET /@vite/client 304 in 0ms
-[INFO] GET /src/main.tsx 304 in 0ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 0ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
-[INFO] GET /src/index.css 304 in 1ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 0ms
-[INFO] GET /src/lib/queryClient.ts 304 in 1ms
-[INFO] GET /node_modules/.vite/deps/chunk-RPCDYKBN.js 404 in 2ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 0ms
-[INFO] GET /src/components/ui/button.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-user.ts 304 in 0ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 0ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 0ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 0ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
-[INFO] GET /src/components/Logo.tsx 304 in 1ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 0ms
-[INFO] GET / 200 in 3ms
-[INFO] GET / 200 in 3ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 1ms
-[INFO] GET /@react-refresh 304 in 0ms
-[INFO] GET /@vite/client 304 in 0ms
-[INFO] GET /src/main.tsx 304 in 0ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
-[INFO] GET /src/lib/queryClient.ts 304 in 0ms
-[INFO] GET /node_modules/.vite/deps/chunk-RPCDYKBN.js 404 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
-[INFO] GET /src/index.css 304 in 1ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 0ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-user.ts 304 in 1ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
-[INFO] GET /src/components/ui/button.tsx 304 in 1ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
-[INFO] GET / 200 in 3ms
-[INFO] GET / 200 in 2ms
-[INFO] GET /@vite/client 304 in 1ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 0ms
-[INFO] GET /src/main.tsx 304 in 0ms
-[INFO] GET /@react-refresh 304 in 0ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
-[INFO] GET /src/index.css 304 in 1ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 0ms
-[INFO] GET /src/lib/queryClient.ts 304 in 1ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 0ms
-[INFO] GET /node_modules/.vite/deps/chunk-RPCDYKBN.js 404 in 1ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 0ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 0ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-user.ts 304 in 1ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
-[INFO] GET /src/components/ui/button.tsx 304 in 1ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 0ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 0ms
-[INFO] GET /src/components/Logo.tsx 304 in 1ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 0ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 0ms
-[INFO] GET / 200 in 3ms
-[INFO] GET / 200 in 3ms
-[INFO] GET /@vite/client 304 in 1ms
-[INFO] GET /@react-refresh 304 in 0ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 0ms
-[INFO] GET /src/main.tsx 304 in 1ms
-[INFO] GET /src/lib/queryClient.ts 304 in 1ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 0ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
-[INFO] GET /src/index.css 304 in 0ms
-[INFO] GET /node_modules/.vite/deps/chunk-RPCDYKBN.js 404 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 0ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 0ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-user.ts 304 in 0ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 0ms
-[INFO] GET /src/components/ui/button.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
-[INFO] GET /src/components/Logo.tsx 304 in 1ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
-[INFO] GET / 200 in 3ms
-[INFO] GET / 200 in 1ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 1ms
-[INFO] GET /@react-refresh 304 in 1ms
-[INFO] GET /@vite/client 304 in 0ms
-[INFO] GET /src/main.tsx 304 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
-[INFO] GET /src/lib/queryClient.ts 304 in 1ms
-[INFO] GET /node_modules/.vite/deps/chunk-RPCDYKBN.js 404 in 2ms
-[INFO] GET /src/index.css 304 in 0ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 0ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 0ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 0ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-user.ts 304 in 1ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/button.tsx 304 in 1ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 0ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
-[INFO] GET / 200 in 2ms
-[INFO] GET / 200 in 3ms
-[INFO] GET /@react-refresh 304 in 2ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 1ms
-[INFO] GET /@vite/client 304 in 0ms
-[INFO] GET /src/main.tsx 304 in 1ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
-[INFO] GET /node_modules/.vite/deps/chunk-RPCDYKBN.js 404 in 3ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 0ms
-[INFO] GET /src/index.css 304 in 0ms
-[INFO] GET /src/lib/queryClient.ts 304 in 0ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 0ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 0ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 0ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 0ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-user.ts 304 in 1ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
-[INFO] GET /src/components/ui/button.tsx 304 in 0ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 0ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 0ms
-[INFO] GET / 200 in 2ms
-[INFO] GET / 200 in 4ms
-[INFO] GET /@vite/client 304 in 1ms
-[INFO] GET /src/main.tsx 304 in 1ms
-[INFO] GET /@react-refresh 304 in 1ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 2ms
-[INFO] GET /src/lib/queryClient.ts 304 in 1ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 2ms
-[INFO] GET /src/index.css 304 in 0ms
-[INFO] GET /node_modules/.vite/deps/chunk-RPCDYKBN.js 404 in 1ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 0ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 0ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-user.ts 304 in 1ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
-[INFO] GET /src/components/ui/button.tsx 304 in 0ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
-[INFO] GET /src/components/Logo.tsx 304 in 1ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
-[INFO] GET / 200 in 3ms
-[INFO] GET / 200 in 3ms
-[INFO] GET /src/main.tsx 304 in 3ms
-[INFO] GET /@vite/client 304 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
-[INFO] GET /@react-refresh 304 in 0ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 0ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 0ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 0ms
-[INFO] GET /src/lib/queryClient.ts 304 in 0ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
-[INFO] GET /src/index.css 304 in 1ms
-[INFO] GET /src/components/ui/button.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-user.ts 304 in 0ms
-[INFO] GET /node_modules/.vite/deps/chunk-RPCDYKBN.js 404 in 4ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 3ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 0ms
-[INFO] GET /src/components/Logo.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 2ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
 [INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-audio.ts 304 in 2ms
-[INFO] GET /src/lib/utils.ts 304 in 1ms
-[INFO] GET /src/components/ui/input.tsx 304 in 3ms
-[INFO] GET /src/components/ui/card.tsx 304 in 1ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 0ms
-[INFO] GET /src/components/ui/avatar.tsx 200 in 1ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 0ms
 [INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
+[INFO] GET /src/lib/utils.ts 304 in 1ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 0ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 0ms
+[INFO] GET /src/components/ui/input.tsx 304 in 0ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
 [INFO] GET /src/components/ui/form.tsx 304 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 4ms
-[INFO] GET /node_modules/.vite/deps/chunk-KBTYAULA.js 404 in 8ms
-[INFO] Stripe initialized successfully
-[INFO] ***Starting server initialization...
-
-
-[INFO] Registering routes...
-[INFO] Setting up Vite for development...
-[INFO] Stripe initialized successfully
-[INFO] Registering routes...
-[INFO] ***Starting server initialization...
-
-
-[INFO] Setting up Vite for development...
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 0ms
+[INFO] GET /src/components/Logo.tsx 304 in 0ms
+[INFO] GET /src/components/ui/card.tsx 304 in 0ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 1ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 1ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 1ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 1ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 1ms
+[INFO] GET /src/components/ui/select.tsx 304 in 0ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 0ms
+[INFO] GET /src/components/ui/label.tsx 304 in 0ms
+[INFO] GET /api/user 401 in 2ms
 [INFO] Stripe initialized successfully
 [INFO] ***Starting server initialization...
 
@@ -489,117 +67,581 @@
 [INFO] Setting up Vite for development...
 [INFO] Server started successfully on port 4000
 [INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
-[INFO] GET / 200 in 1041ms
-[INFO] GET /@vite/client 304 in 64ms
-[INFO] GET /@react-refresh 304 in 85ms
-[INFO] GET /src/main.tsx 304 in 142ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 553ms
+[INFO] GET / 200 in 38ms
+[INFO] GET /@vite/client 304 in 32ms
+[INFO] GET /@react-refresh 304 in 50ms
 [INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
-[INFO] GET /src/lib/queryClient.ts 304 in 11ms
+[INFO] GET /src/main.tsx 304 in 66ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 395ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 32ms
 [INFO] GET /src/pages/HomePage.tsx 304 in 1ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 7ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 8ms
-[INFO] GET /node_modules/.vite/deps/chunk-RPCDYKBN.js 404 in 9ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
-[INFO] GET /src/index.css 304 in 1272ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 2ms
-[INFO] GET /src/components/ui/button.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-user.ts 304 in 1ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 2ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 3ms
-[INFO] GET / 200 in 17ms
-[INFO] GET /@vite/client 304 in 2ms
-[INFO] GET /src/main.tsx 304 in 1ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 1ms
-[INFO] GET /@react-refresh 304 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
-[INFO] GET /src/lib/queryClient.ts 304 in 1ms
-[INFO] GET /src/index.css 304 in 0ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
 [INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
+[INFO] GET /src/lib/queryClient.ts 304 in 1ms
 [INFO] GET /src/pages/PricingPage.tsx 304 in 2ms
 [INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
 [INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-user.ts 304 in 0ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
+[INFO] GET /src/index.css 304 in 1730ms
 [INFO] GET /src/components/Sidebar.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
+[INFO] GET /src/hooks/use-user.ts 304 in 1ms
 [INFO] GET /src/components/ui/button.tsx 304 in 1ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
-[INFO] GET /node_modules/.vite/deps/chunk-RPCDYKBN.js 404 in 6ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 2ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 0ms
 [INFO] GET /src/components/ui/toast.tsx 304 in 1ms
 [INFO] GET /src/hooks/use-tts.ts 304 in 1ms
 [INFO] GET /src/components/Logo.tsx 304 in 1ms
 [INFO] GET /src/components/UsageProgress.tsx 304 in 0ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 0ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 2ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
+[INFO] GET /src/lib/utils.ts 304 in 1ms
+[INFO] GET /src/components/ui/card.tsx 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 1ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 0ms
+[INFO] GET /src/components/ui/form.tsx 304 in 1ms
+[INFO] GET /src/components/ui/input.tsx 304 in 1ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 1ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 1ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 1ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
+[INFO] GET /src/components/ui/select.tsx 304 in 1ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 0ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 1ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
+[INFO] GET /src/components/ui/label.tsx 304 in 1ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 2ms
+[INFO] GET /api/user 401 in 2ms
+[INFO] ***Starting server initialization...
+
+
+[INFO] Stripe initialized successfully
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] GET / 200 in 38ms
+[INFO] GET /@vite/client 304 in 20ms
+[INFO] GET / 200 in 27ms
+[INFO] GET /src/main.tsx 304 in 73ms
+[INFO] GET /@vite/client 304 in 1ms
+[INFO] GET /src/main.tsx 304 in 1ms
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] GET / 200 in 32ms
+[INFO] GET /@vite/client 304 in 17ms
+[INFO] GET /src/main.tsx 304 in 62ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 200 in 3ms
+[INFO] GET /@react-refresh 304 in 6ms
+[INFO] GET /src/lib/queryClient.ts 304 in 584ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 18ms
+[INFO] GET /@vite-plugin-checker-runtime 200 in 963ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
+[INFO] GET /src/index.css 304 in 1267ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-user.ts 304 in 1ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
+[INFO] GET /src/components/ui/button.tsx 304 in 1ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 0ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
+[INFO] GET /src/components/Logo.tsx 304 in 1ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 1ms
+[INFO] GET /src/lib/utils.ts 304 in 1ms
+[INFO] GET /src/components/ui/input.tsx 304 in 0ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 0ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 0ms
+[INFO] GET /src/components/ui/form.tsx 304 in 1ms
+[INFO] GET /src/components/ui/card.tsx 304 in 1ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 4ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 1ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 1ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 1ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 1ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
+[INFO] GET /src/components/ui/select.tsx 304 in 1ms
+[INFO] GET /src/components/ui/label.tsx 304 in 1ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
+[INFO] GET /api/user 401 in 3ms
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] GET / 200 in 45ms
+[INFO] GET /@vite/client 304 in 28ms
+[INFO] GET /src/main.tsx 304 in 44ms
+[INFO] GET /@react-refresh 304 in 1ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 396ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
+[INFO] GET / 200 in 378ms
+[INFO] GET /src/index.css 304 in 888ms
+[INFO] GET /src/lib/queryClient.ts 304 in 1ms
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] GET / 200 in 41ms
+[INFO] GET /@vite/client 304 in 20ms
+[INFO] GET /src/main.tsx 304 in 21ms
+[INFO] GET /@react-refresh 304 in 0ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 742ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
+[INFO] GET /src/lib/queryClient.ts 304 in 2ms
+[INFO] GET /src/index.css 304 in 2ms
+[INFO] GET /src/components/ui/toaster.tsx 200 in 2ms
+[INFO] GET /src/pages/HomePage.tsx 200 in 1ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 3ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 0ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-user.ts 304 in 0ms
+[INFO] GET /src/components/ui/button.tsx 304 in 1ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 1ms
+[INFO] GET /src/components/ui/input.tsx 304 in 2ms
+[INFO] GET /src/components/ui/form.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
+[INFO] GET /src/components/Logo.tsx 304 in 1ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
 [INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 1ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
+[INFO] GET /src/lib/utils.ts 304 in 1ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 1ms
+[INFO] GET /src/components/ui/card.tsx 304 in 1ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 1ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 0ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 0ms
+[INFO] GET /src/components/ui/label.tsx 304 in 1ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 1ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 0ms
+[INFO] GET /src/components/ui/select.tsx 304 in 1ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
+[INFO] GET /api/user 401 in 3ms
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] GET / 200 in 44ms
+[INFO] GET /@vite/client 304 in 16ms
+[INFO] GET /src/main.tsx 304 in 67ms
+[INFO] GET /@react-refresh 304 in 4ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 350ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 96ms
+[INFO] GET /src/lib/queryClient.ts 304 in 2ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 0ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 0ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
+[INFO] GET /src/index.css 304 in 1550ms
+[INFO] GET /src/hooks/use-user.ts 304 in 1ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 0ms
+[INFO] GET /src/components/ui/button.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 1ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
+[INFO] GET /src/components/Logo.tsx 304 in 0ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 0ms
+[INFO] GET /src/lib/utils.ts 304 in 1ms
+[INFO] GET /src/components/ui/card.tsx 304 in 0ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 0ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 1ms
+[INFO] GET /src/components/ui/form.tsx 304 in 1ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 0ms
+[INFO] GET /src/components/ui/input.tsx 304 in 1ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 1ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 0ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 1ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
+[INFO] GET /src/components/ui/select.tsx 304 in 0ms
+[INFO] GET /src/components/ui/label.tsx 304 in 1ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 0ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
+[INFO] GET /api/user 401 in 2ms
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] GET / 200 in 43ms
+[INFO] GET /@vite/client 304 in 43ms
+[INFO] GET /@react-refresh 304 in 26ms
+[INFO] GET /src/main.tsx 304 in 78ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 78ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 667ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
+[INFO] GET /src/lib/queryClient.ts 304 in 1ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
+[INFO] GET /src/index.css 304 in 662ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 0ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 0ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-user.ts 304 in 2ms
+[INFO] GET /src/components/ui/button.tsx 304 in 0ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
+[INFO] GET /src/components/Logo.tsx 304 in 0ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 0ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
+[INFO] GET /src/lib/utils.ts 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 0ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 0ms
+[INFO] GET /src/components/ui/form.tsx 304 in 0ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 0ms
+[INFO] GET /src/components/ui/input.tsx 304 in 0ms
+[INFO] GET /src/components/ui/card.tsx 304 in 1ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 0ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 1ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 1ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
+[INFO] GET /src/components/ui/label.tsx 304 in 1ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 0ms
+[INFO] GET /src/components/ui/select.tsx 304 in 0ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 0ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 0ms
+[INFO] GET /api/user 401 in 13ms
+[INFO] GET / 200 in 6ms
+[INFO] GET /@vite/client 200 in 10ms
+[INFO] GET /@vite-plugin-checker-runtime 200 in 8ms
+[INFO] GET /src/main.tsx 200 in 1ms
+[INFO] GET /@react-refresh 200 in 1ms
+[INFO] GET /src/index.css 200 in 1ms
+[INFO] GET /src/lib/queryClient.ts 200 in 1ms
+[INFO] GET /src/components/ui/toaster.tsx 200 in 1ms
+[INFO] GET /src/pages/HomePage.tsx 200 in 1ms
+[INFO] GET /src/pages/LibraryPage.tsx 200 in 1ms
+[INFO] GET /src/pages/AuthPage.tsx 200 in 1ms
+[INFO] GET /src/pages/PricingPage.tsx 200 in 1ms
+[INFO] GET /src/pages/AdminPage.tsx 200 in 0ms
+[INFO] GET /src/pages/ProfilePage.tsx 200 in 0ms
+[INFO] GET /src/pages/BillingPage.tsx 200 in 1ms
+[INFO] GET /src/hooks/use-user.ts 200 in 1ms
+[INFO] GET /src/components/Sidebar.tsx 200 in 1ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 200 in 1ms
+[INFO] GET /src/components/ui/button.tsx 200 in 0ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 200 in 1ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 0ms
+[INFO] GET /src/components/ui/input.tsx 304 in 0ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
+[INFO] GET /src/components/ui/form.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 0ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
+[INFO] GET /src/lib/utils.ts 304 in 0ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 0ms
+[INFO] GET /src/components/Logo.tsx 304 in 1ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 0ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 1ms
+[INFO] GET /src/components/ui/card.tsx 304 in 0ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 0ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 0ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 0ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 1ms
+[INFO] GET /src/components/ui/label.tsx 304 in 0ms
+[INFO] GET /src/components/ui/select.tsx 304 in 1ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 0ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 0ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 0ms
+[INFO] GET /api/user 401 in 1ms
+[INFO] GET / 200 in 3ms
+[INFO] POST /api/login 200 in 378ms
+[INFO] GET /api/user 304 in 61ms
+[INFO] GET / 200 in 62ms
+[INFO] GET / 200 in 139ms
+[INFO] GET /api/podcasts 304 in 290ms
+[INFO] GET /api/playlists 304 in 296ms
+[INFO] GET / 200 in 60ms
+[INFO] GET / 200 in 120ms
+[INFO] Usage check for user: active
+[INFO] GET /api/user/usage/check 304 in 175ms
+[INFO] Usage check for user: active
+[INFO] GET /api/user/usage/check 304 in 118ms
+[INFO] GET / 200 in 61ms
+[INFO] GET / 200 in 104ms
+[INFO] GET / 200 in 63ms
+[INFO] 
+========Streaming audio file: 1735651217703-article.mp3
+[INFO] 
+
+====Downloading audio file from Object Storage 1735651217703-article.mp3
+[INFO] Audio file downloaded successfully
+[INFO] HEAD /api/audio/stream/1735651217703-article.mp3 200 in 908ms
+[INFO] 
+========Streaming audio file: 1735651217703-article.mp3
+[INFO] 
+
+====Downloading audio file from Object Storage 1735651217703-article.mp3
+[INFO] Audio file downloaded successfully
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] GET / 200 in 65ms
+[INFO] GET /@vite/client 304 in 16ms
+[INFO] GET /src/main.tsx 304 in 67ms
+[INFO] GET /@react-refresh 304 in 2ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 599ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
+[INFO] GET /src/index.css 304 in 881ms
+[INFO] GET /src/lib/queryClient.ts 304 in 6ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 5ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 2ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-user.ts 304 in 2ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
+[INFO] GET /src/components/ui/button.tsx 304 in 3ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 2ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 0ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 0ms
+[INFO] GET /src/components/Logo.tsx 304 in 0ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 0ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 1ms
+[INFO] GET /src/components/ui/input.tsx 304 in 1ms
+[INFO] GET /src/components/ui/form.tsx 304 in 2ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 1ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
+[INFO] GET /src/lib/utils.ts 304 in 1ms
+[INFO] GET /src/components/ui/card.tsx 304 in 1ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 4ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 1ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 2ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 9ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 6ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 0ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
+[INFO] GET /src/components/ui/label.tsx 304 in 0ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 1ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
+[INFO] GET /src/components/ui/select.tsx 304 in 1ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
+[INFO] GET /api/user 401 in 3ms
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] GET / 200 in 45ms
+[INFO] GET /@vite/client 304 in 69ms
+[INFO] GET /@react-refresh 304 in 96ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 10ms
+[INFO] GET /src/main.tsx 304 in 144ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 123ms
+[INFO] Stripe initialized successfully
+[INFO] Registering routes...
+[INFO] ***Starting server initialization...
+
+
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] GET / 200 in 48ms
+[INFO] GET /@vite/client 304 in 42ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
+[INFO] GET /@react-refresh 304 in 72ms
+[INFO] GET /src/main.tsx 304 in 130ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 494ms
+[INFO] GET /src/lib/queryClient.ts 200 in 769ms
+[INFO] GET /src/components/ui/toaster.tsx 200 in 818ms
+[INFO] GET /src/pages/LibraryPage.tsx 200 in 1ms
+[INFO] GET /src/pages/PricingPage.tsx 200 in 1ms
+[INFO] GET /src/pages/AdminPage.tsx 200 in 1ms
+[INFO] GET /src/pages/AuthPage.tsx 200 in 3ms
+[INFO] GET /src/pages/HomePage.tsx 200 in 2ms
+[INFO] GET /src/index.css 200 in 1034ms
+[INFO] GET /src/pages/ProfilePage.tsx 200 in 1ms
+[INFO] GET /src/pages/BillingPage.tsx 200 in 2ms
+[INFO] GET /src/hooks/use-user.ts 200 in 1ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 200 in 2ms
+[INFO] GET /src/components/Sidebar.tsx 200 in 1ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
+[INFO] GET /src/components/ui/button.tsx 200 in 2ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 6ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 0ms
+[INFO] GET /src/components/ui/card.tsx 304 in 0ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
+[INFO] GET /src/components/ui/form.tsx 304 in 1ms
+[INFO] GET /src/lib/utils.ts 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 1ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
+[INFO] GET /src/components/ui/input.tsx 304 in 1ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
+[INFO] GET /src/components/Logo.tsx 304 in 1ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 1ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 0ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 0ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 1ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 0ms
+[INFO] GET /src/components/ui/select.tsx 304 in 1ms
+[INFO] GET /src/components/ui/label.tsx 304 in 0ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 0ms
+[INFO] GET /api/user 401 in 3ms
+[INFO] GET / 200 in 7ms
+[INFO] GET /src/main.tsx 304 in 1ms
+[INFO] GET /@vite/client 304 in 4ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 0ms
+[INFO] GET /@react-refresh 304 in 1ms
+[INFO] GET /src/index.css 304 in 2ms
+[INFO] GET /src/lib/queryClient.ts 304 in 1ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-user.ts 304 in 1ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
+[INFO] GET /src/components/ui/button.tsx 304 in 1ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 0ms
+[INFO] GET /src/components/Logo.tsx 304 in 1ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 0ms
 [INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 1ms
 [INFO] GET /src/components/ui/input.tsx 304 in 1ms
 [INFO] GET /src/components/ui/form.tsx 304 in 1ms
 [INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
 [INFO] GET /src/hooks/use-audio.ts 304 in 1ms
 [INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
-[INFO] GET /src/lib/utils.ts 304 in 1ms
-[INFO] GET /src/components/ui/card.tsx 304 in 1ms
-[INFO] GET /src/components/ui/tabs.tsx 304 in 1ms
-[INFO] GET /src/components/ui/avatar.tsx 304 in 1ms
-[INFO] GET /src/components/PaymentModal.tsx 304 in 0ms
+[INFO] GET /src/lib/utils.ts 304 in 4ms
+[INFO] GET /src/components/ui/card.tsx 304 in 2ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 2ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 3ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 2ms
 [INFO] GET /src/components/LoadingScreen.tsx 304 in 1ms
-[INFO] GET /src/components/ui/separator.tsx 304 in 1ms
-[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
-[INFO] GET / 200 in 4ms
-[INFO] Stripe initialized successfully
-[INFO] ***Starting server initialization...
-
-
-[INFO] Registering routes...
-[INFO] Setting up Vite for development...
-[INFO] Server started successfully on port 4000
-[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
-[INFO] GET / 200 in 117ms
-[INFO] GET /@vite/client 304 in 84ms
-[INFO] GET /@react-refresh 304 in 96ms
-[INFO] GET /src/main.tsx 304 in 191ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 863ms
-[INFO] GET /node_modules/.vite/deps/chunk-RPCDYKBN.js 404 in 63ms
-[INFO] GET /src/lib/queryClient.ts 304 in 2ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 9ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 5ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 2ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 4ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-user.ts 304 in 1ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 3ms
-[INFO] GET /src/index.css 304 in 3889ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/button.tsx 304 in 18ms
-[INFO] GET / 200 in 5ms
-[INFO] GET /@vite/client 304 in 2ms
-[INFO] GET /src/main.tsx 304 in 0ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
-[INFO] GET /src/lib/queryClient.ts 304 in 1ms
-[INFO] GET /src/index.css 304 in 1ms
-[INFO] GET /node_modules/.vite/deps/chunk-RPCDYKBN.js 404 in 2ms
-[INFO] GET /@react-refresh 304 in 0ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 0ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 0ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 0ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-user.ts 304 in 1ms
-[INFO] GET /src/components/ui/button.tsx 304 in 1ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
-[INFO] GET / 200 in 5ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 3ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 8ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 2ms
+[INFO] GET /src/components/ui/label.tsx 304 in 2ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 2ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
+[INFO] GET /src/components/ui/select.tsx 304 in 1ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
+[INFO] GET /api/user 401 in 1ms
+[INFO] GET / 200 in 3ms
