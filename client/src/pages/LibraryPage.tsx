@@ -55,7 +55,9 @@ export default function LibraryPage() {
           if (podcasts) {
             const podcastIndex = podcasts.findIndex(p => p.id === podcast.id);
             const remainingPodcasts = podcasts.slice(podcastIndex);
-            remainingPodcasts.forEach(p => addToPlaylist(p));
+            // Clear playlist and set new one
+            setPlaylist(remainingPodcasts);
+            // Play the selected podcast
             await play(podcast);
           }
         }
