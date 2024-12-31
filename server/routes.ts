@@ -853,62 +853,22 @@ export function registerRoutes(app: Express) {
   // Audio streaming endpoint
   app.get("/uploads/:filename", async (req, res) => {
     const filename = req.params.filename;
-    const filePath = path.join(__dirname, "..", "uploads", filename);
-
+    
     try {
-      // Check if file exists first
-      const fileExists = await fs
-        .access(filePath)
-        .then(() => true)
-        .catch(() => false);
+      const { Client } = await import("@replit/object-storage");
+      const storage = new Client();
 
-      if (!fileExists) {
-        logger.warn(`File not found: ${filePath}`);
+      // Download file from Object Storage
+      try {
+        const audioStream = await storage.download(filename);
+        res.setHeader('Content-Type', 'audio/mpeg');
+        audioStream.pipe(res);
+      } catch (error) {
+        logger.warn(`File not found in Object Storage: ${filename}`);
         return res.status(404).json({
           error: "Audio file not found",
           type: "not_found",
         });
-      }
-
-      const stat = await fs.stat(filePath);
-      const fileSize = stat.size;
-      const range = req.headers.range;
-
-      if (range) {
-        const parts = range.replace(/bytes=/, "").split("-");
-        const start = parseInt(parts[0], 10);
-        let end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
-
-        if (
-          isNaN(start) ||
-          isNaN(end) ||
-          start >= fileSize ||
-          start > end ||
-          end >= fileSize
-        ) {
-          return res.status(416).json({
-            error: "Requested range not satisfiable",
-            type: "validation",
-          });
-        }
-
-        const chunksize = end - start + 1;
-        const file = fsSync.createReadStream(filePath, { start, end });
-        const head = {
-          "Content-Range": `bytes ${start}-${end}/${fileSize}`,
-          "Accept-Ranges": "bytes",
-          "Content-Length": chunksize,
-          "Content-Type": "audio/mpeg",
-        };
-        res.writeHead(206, head);
-        file.pipe(res);
-      } else {
-        const head = {
-          "Content-Length": fileSize,
-          "Content-Type": "audio/mpeg",
-        };
-        res.writeHead(200, head);
-        fsSync.createReadStream(filePath).pipe(res);
       }
     } catch (error) {
       await logger.error(
