@@ -860,6 +860,7 @@ export function registerRoutes(app: Express) {
 
       // Download file from Object Storage
       try {
+
         const audioStream = await storage.downloadFromStream(filename);
         res.setHeader('Content-Type', 'audio/mpeg');
         audioStream.pipe(res);
