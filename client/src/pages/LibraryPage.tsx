@@ -26,7 +26,7 @@ export default function LibraryPage() {
   const [, setLocation] = useLocation();
   const { user } = useUser();
   const queryClient = useQueryClient();
-  const { play, isPlaying, audioData, togglePlay } = useAudio();
+  const { play, isPlaying, audioData, togglePlay, addToPlaylist, clearPlaylist } = useAudio();
   const { toast } = useToast();
 
   const {
@@ -55,7 +55,12 @@ export default function LibraryPage() {
           // If this podcast is currently playing, pause it
           await togglePlay();
         } else {
-          // Load and play a new podcast
+          // Add to playlist if not already playing
+          if (audioData?.id !== podcast.id) {
+            clearPlaylist();
+            addToPlaylist(podcast);
+          }
+          // Play the podcast
           await play(podcast);
         }
       } catch (error) {
@@ -68,7 +73,7 @@ export default function LibraryPage() {
         });
       }
     },
-    [play, togglePlay, audioData, isPlaying, toast],
+    [play, togglePlay, audioData, isPlaying, toast, addToPlaylist, clearPlaylist],
   );
 
   // Ensure AudioPlayer is rendered only when we have audio data
