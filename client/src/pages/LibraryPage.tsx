@@ -27,7 +27,7 @@ export default function LibraryPage() {
   const [, setLocation] = useLocation();
   const { user } = useUser();
   const queryClient = useQueryClient();
-  const { play, isPlaying, audioData, togglePlay, setPlaylist } = useAudio();
+  const { play, isPlaying, audioData, togglePlay } = useAudio();
   const { toast } = useToast();
 
   const {
@@ -51,7 +51,6 @@ export default function LibraryPage() {
         if (audioData?.id === podcast.id) {
           await togglePlay();
         } else {
-          setPlaylist([podcast]);
           await play(podcast);
         }
       } catch (error) {
@@ -90,16 +89,28 @@ export default function LibraryPage() {
                   <p className="text-sm text-gray-400">{podcast.description}</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <input
-                    type="radio"
-                    name="selectedPodcast"
-                    checked={audioData?.id === podcast.id}
-                    className="w-5 h-5 accent-[#4CAF50] cursor-pointer"
-                    onChange={() => {
-                      setPlaylist([podcast]);
-                      play(podcast);
-                    }}
-                  />
+                  <Button
+                    variant="default"
+                    size="icon"
+                    className={cn(
+                      "rounded-full h-10 w-10 p-0 flex items-center justify-center",
+                      audioData?.id === podcast.id
+                        ? "bg-[#45a049] hover:bg-[#3d8b3f]"
+                        : "bg-[#4CAF50] hover:bg-[#45a049]",
+                    )}
+                    onClick={() => handlePlay(podcast)}
+                    title={
+                      audioData?.id === podcast.id && isPlaying
+                        ? "Pause"
+                        : "Play"
+                    }
+                  >
+                    {audioData?.id === podcast.id && isPlaying ? (
+                      <Pause className="h-5 w-5 text-white" />
+                    ) : (
+                      <Play className="h-5 w-5 text-white ml-0.5" />
+                    )}
+                  </Button>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button
