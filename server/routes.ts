@@ -850,7 +850,7 @@ export function registerRoutes(app: Express) {
     }
   });
 
-  // Audio streaming endpoint
+  // Audio streaming endpoint - when the a audio is played
   app.get("/uploads/:filename", async (req, res) => {
     const filename = req.params.filename;
     
