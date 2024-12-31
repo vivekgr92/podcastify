@@ -43,11 +43,7 @@ export default function AuthPage() {
           variant: "destructive",
         });
       } else {
-        toast({
-          title: "Success",
-          description: isLogin ? "Logged in successfully" : "Account created successfully",
-        });
-        // Use setLocation for client-side routing
+        // Just redirect on successful login
         setLocation("/library");
       }
     } catch (error) {
