@@ -27,7 +27,7 @@ export default function LibraryPage() {
   const [, setLocation] = useLocation();
   const { user } = useUser();
   const queryClient = useQueryClient();
-  const { play, isPlaying, audioData, togglePlay } = useAudio();
+  const { play, isPlaying, audioData, togglePlay, setPlaylist } = useAudio();
   const { toast } = useToast();
 
   const {
@@ -51,6 +51,7 @@ export default function LibraryPage() {
         if (audioData?.id === podcast.id) {
           await togglePlay();
         } else {
+          setPlaylist([podcast]);
           await play(podcast);
         }
       } catch (error) {
