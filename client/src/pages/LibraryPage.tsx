@@ -48,10 +48,12 @@ export default function LibraryPage() {
   const handlePlay = useCallback(
     async (podcast: Podcast) => {
       try {
-        if (audioData?.id === podcast.id && isPlaying) {
+        if (audioData?.id === podcast.id) {
           await togglePlay();
         } else {
-          await play(podcast);
+          setPlaylist([podcast]); // Set single podcast as playlist
+          setCurrentIndex(0); // Set as first item
+          await play(podcast); // This will play in the bottom player
         }
       } catch (error) {
         console.error("Error playing podcast:", error);
@@ -62,7 +64,7 @@ export default function LibraryPage() {
         });
       }
     },
-    [play, togglePlay, audioData, isPlaying, toast],
+    [play, togglePlay, audioData, setPlaylist, setCurrentIndex, toast],
   );
 
   return (
