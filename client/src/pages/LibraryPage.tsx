@@ -97,7 +97,7 @@ export default function LibraryPage() {
                     className="w-5 h-5 accent-[#4CAF50] cursor-pointer"
                     onChange={() => {
                       setPlaylist([podcast]);
-                      play(podcast);
+                      setAudioData(podcast);
                     }}
                   />
                   <AlertDialog>
