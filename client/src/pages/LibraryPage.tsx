@@ -27,7 +27,7 @@ export default function LibraryPage() {
   const [, setLocation] = useLocation();
   const { user } = useUser();
   const queryClient = useQueryClient();
-  const { play, isPlaying, audioData, togglePlay, setPlaylist, setCurrentIndex } = useAudio();
+  const { play, isPlaying, audioData, togglePlay } = useAudio();
   const { toast } = useToast();
 
   const {
@@ -51,8 +51,6 @@ export default function LibraryPage() {
         if (audioData?.id === podcast.id) {
           await togglePlay();
         } else {
-          setPlaylist([podcast]); 
-          setCurrentIndex(0);
           await play(podcast);
         }
       } catch (error) {
@@ -64,7 +62,7 @@ export default function LibraryPage() {
         });
       }
     },
-    [play, togglePlay, audioData, setPlaylist, setCurrentIndex, toast],
+    [play, togglePlay, audioData, toast],
   );
 
   return (
