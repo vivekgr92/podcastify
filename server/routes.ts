@@ -863,6 +863,16 @@ export function registerRoutes(app: Express) {
 
         const audioStream = await storage.downloadAsStream(filename);
         res.setHeader('Content-Type', 'audio/mpeg');
+        res.setHeader('Accept-Ranges', 'bytes');
+        res.setHeader('Cache-Control', 'no-cache');
+        
+        // Handle range requests for seeking
+        const range = req.headers.range;
+        if (range) {
+          res.status(206);
+          res.setHeader('Content-Range', `bytes ${range}`);
+        }
+        
         audioStream.pipe(res);
       } catch (error) {
         logger.warn(`File not found in Object Storage: ${filename}`);
