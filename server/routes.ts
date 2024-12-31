@@ -871,12 +871,12 @@ export function registerRoutes(app: Express) {
           });
         }
 
-        
-
+        // Set proper headers for audio streaming
         res.setHeader("Content-Type", "audio/mpeg");
         res.setHeader("Accept-Ranges", "bytes");
-        
         res.setHeader("Cache-Control", "no-cache");
+        res.setHeader("Content-Disposition", `inline; filename="${filename}"`);
+        res.setHeader("X-Content-Type-Options", "nosniff");
 
         logger.info(`========Range ${req.headers.range}`);
 
