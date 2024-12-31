@@ -874,7 +874,18 @@ export function registerRoutes(app: Express) {
           });
         }
 
-        logger.info("Audio file downloaded successfully");
+        const { fileTypeFromStream } = await import('file-type');
+        const fileType = await fileTypeFromStream(audioStream);
+        
+        if (!fileType || fileType.mime !== 'audio/mpeg') {
+          logger.warn(`Invalid file type for ${filename}: ${fileType?.mime || 'unknown'}`);
+          return res.status(400).json({
+            error: "Invalid audio file format",
+            type: "validation",
+          });
+        }
+
+        logger.info(`Audio file downloaded successfully. Type: ${fileType.mime}`);
 
         res.setHeader("Content-Type", "audio/mpeg");
         res.setHeader("Accept-Ranges", "bytes");
