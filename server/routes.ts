@@ -871,17 +871,15 @@ export function registerRoutes(app: Express) {
 
       // Download file from Object Storage
       try {
-        const file = await storage.get(filename);
+        const fileBuffer = await storage.download(filename);
         
-        if (!file) {
+        if (!fileBuffer) {
           logger.warn(`File not found in Object Storage: ${filename}`);
           return res.status(404).json({
             error: "Audio file not found",
             type: "not_found",
           });
         }
-
-        const fileBuffer = await file.arrayBuffer();
         const fileSize = fileBuffer.byteLength;
 
         // Set proper headers for audio streaming
