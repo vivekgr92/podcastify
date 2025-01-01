@@ -15,6 +15,8 @@ export const users = pgTable("users", {
   subscriptionType: text("subscription_type").default('free'),
   subscriptionId: text("subscription_id"),
   currentPeriodEnd: timestamp("current_period_end"),
+  feedback: text("feedback"),
+  feedbackSubmittedAt: timestamp("feedback_submitted_at"),
 });
 
 export const podcasts = pgTable("podcasts", {
