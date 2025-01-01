@@ -708,8 +708,23 @@ export function registerRoutes(app: Express) {
       }
       // Generate audio only if usage limits allow
       await logger.info("Starting audio generation process");
-      const { audioBuffer, duration, usage } =
-        await ttsService.generateConversation(fileContent);
+      
+      let audioResponse;
+      if (file.mimetype === "application/pdf") {
+        const pdfData = await pdfParse(fileBuffer);
+        const numPages = pdfData.numpages;
+        await logger.info(`PDF has ${numPages} pages`);
+        
+        if (numPages > 3) {
+          audioResponse = await ttsService.generateConversationPages(fileContent);
+        } else {
+          audioResponse = await ttsService.generateConversation(fileContent);
+        }
+      } else {
+        audioResponse = await ttsService.generateConversation(fileContent);
+      }
+
+      const { audioBuffer, duration, usage } = audioResponse;
 
       if (!audioBuffer || !duration || !usage) {
         throw new Error(
