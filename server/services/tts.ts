@@ -141,6 +141,14 @@ export class TTSService {
     });
   }
 
+  private splitTextIntoPages(text: string): string[] {
+    // Split by common page break indicators
+    const pageBreaks = text.split(/\f|\[page\]|\n{4,}/);
+    return pageBreaks
+      .map(page => page.trim())
+      .filter(page => page.length > 0);
+  }
+
   private splitTextIntoChunks(text: string, maxChars: number = 4000): string[] {
     const sentences = text.split(". ");
     const chunks: string[] = [];
@@ -672,7 +680,8 @@ export class TTSService {
         model: "gemini-1.5-flash-002",
       }) as GenerativeModel;
 
-      const chunks = this.splitTextIntoChunks(text);
+      const pages = this.splitTextIntoPages(text);
+      const chunks = pages.map(page => this.splitTextIntoChunks(page)).flat();
       let responseTexts: string[] = []; // Moved initialization here
 
       // Process each chunk and generate conversation
@@ -855,7 +864,8 @@ export class TTSService {
         model: "gemini-1.5-flash-002",
       }) as GenerativeModel;
 
-      const chunks = this.splitTextIntoChunks(text);
+      const pages = this.splitTextIntoPages(text);
+      const chunks = pages.map(page => this.splitTextIntoChunks(page)).flat();
       let responseTexts: string[] = []; // Moved initialization here
 
       // Process each chunk and generate conversation
