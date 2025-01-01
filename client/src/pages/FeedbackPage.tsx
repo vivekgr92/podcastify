@@ -10,7 +10,7 @@ export default function FeedbackPage() {
   const [feedback, setFeedback] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
-  const { user, refresh } = useUser();
+  const { user, mutate } = useUser();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +33,7 @@ export default function FeedbackPage() {
       });
 
       setFeedback("");
-      refresh(); // Refresh user data
+      mutate(); // Refresh user data
     } catch (error) {
       toast({
         title: "Error",
