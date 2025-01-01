@@ -141,6 +141,14 @@ export class TTSService {
     });
   }
 
+  private splitTextIntoPages(text: string): string[] {
+    // Split by common page break indicators
+    const pageBreaks = text.split(/\f|\[page\]|\n{4,}/);
+    return pageBreaks
+      .map(page => page.trim())
+      .filter(page => page.length > 0);
+  }
+
   private splitTextIntoChunks(text: string, maxChars: number = 4000): string[] {
     const sentences = text.split(". ");
     const chunks: string[] = [];
@@ -855,12 +863,12 @@ export class TTSService {
         model: "gemini-1.5-flash-002",
       }) as GenerativeModel;
 
-      const chunks = this.splitTextIntoChunks(text);
+      const pages = this.splitTextIntoPages(text);
       let responseTexts: string[] = []; // Moved initialization here
 
       // Process each chunk and generate conversation
-      for (let index = 0; index < chunks.length; index++) {
-        const chunk = chunks[index];
+      for (let index = 0; index < pages.length; index++) {
+        const page = pages[index];
         const currentSpeaker = SPEAKERS[speakerIndex];
 
         try {
@@ -868,20 +876,20 @@ export class TTSService {
           let prompt: string;
 
           if (index === 0) {
-            prompt = `${SYSTEM_PROMPTS.WELCOME}\n\n${SYSTEM_PROMPTS.MAIN}\n\nJoe: ${chunk}\n\nSarah:`;
+            prompt = `${SYSTEM_PROMPTS.WELCOME}\n\n${SYSTEM_PROMPTS.MAIN}\n\nJoe: ${page}\n\nSarah:`;
             speakerIndex = 0;
-          } else if (index === chunks.length - 1) {
+          } else if (index === pages.length - 1) {
             await logger.info([
               "\n\n ==================Last Chunk===================\n",
             ]);
 
             prompt = `${SYSTEM_PROMPTS.MAIN}\n\n${
               lastResponse ? `**Previous Context**:\n${lastResponse}\n\n` : ""
-            }${currentSpeaker}: ${chunk}\n\n${SYSTEM_PROMPTS.FAREWELL}`;
+            }${currentSpeaker}: ${page}\n\n${SYSTEM_PROMPTS.FAREWELL}`;
           } else {
             prompt = `${SYSTEM_PROMPTS.MAIN}\n\n${
               lastResponse ? `**Previous Context**:\n${lastResponse}\n\n` : ""
-            }${currentSpeaker}: ${chunk}`;
+            }${currentSpeaker}: ${page}`;
           }
 
           await logger.info([
@@ -926,7 +934,7 @@ export class TTSService {
           }
 
           // Update progress for conversation generation (0-50%)
-          this.emitProgress(((index + 1) / chunks.length) * 50);
+          this.emitProgress(((index + 1) / pages.length) * 50);
         } catch (error) {
           await logger.error(
             `Error processing chunk ${index + 1}: ${error instanceof Error ? error.message : String(error)}`,
