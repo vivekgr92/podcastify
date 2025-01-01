@@ -1649,5 +1649,34 @@ export function registerRoutes(app: Express) {
     }
   });
 
+  // Add feedback endpoint
+  app.post("/api/feedback", async (req, res) => {
+    try {
+      if (!req.user?.id) {
+        return res.status(401).json({ error: "Not authenticated" });
+      }
+
+      const { feedback } = req.body;
+      if (!feedback) {
+        return res.status(400).json({ error: "Feedback is required" });
+      }
+
+      await db
+        .update(users)
+        .set({
+          feedback,
+          feedbackSubmittedAt: new Date(),
+        })
+        .where(eq(users.id, req.user.id));
+
+      res.json({ message: "Feedback submitted successfully" });
+    } catch (error) {
+      logger.error(
+        `Feedback submission error: ${error instanceof Error ? error.message : String(error)}`,
+      );
+      res.status(500).json({ error: "Failed to submit feedback" });
+    }
+  });
+
   return app;
 }
