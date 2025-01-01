@@ -73,13 +73,13 @@ export default function AudioPlayer() {
             <>
               <div
                 className={`w-12 h-12 rounded-lg flex items-center justify-center ${
-                  audioData.coverImage ? "" : "bg-[#4CAF50]/20"
+                  audioData?.coverImage ? "" : "bg-[#4CAF50]/20"
                 }`}
               >
-                {audioData.coverImage ? (
+                {audioData?.coverImage ? (
                   <img
                     src={audioData.coverImage}
-                    alt={audioData.title}
+                    alt={audioData.title || ""}
                     className="w-full h-full rounded-lg object-cover"
                   />
                 ) : (
@@ -88,10 +88,10 @@ export default function AudioPlayer() {
               </div>
               <div className="flex-1 min-w-0">
                 <h3 className="font-medium truncate text-white">
-                  {audioData.title}
+                  {audioData?.title}
                 </h3>
                 <p className="text-sm text-gray-400 truncate">
-                  {audioData.description}
+                  {audioData?.description}
                 </p>
               </div>
             </>
