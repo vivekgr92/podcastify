@@ -745,10 +745,31 @@ export class TTSService {
           ]);
 
           if (conversationParts.length > 0) {
-            allConversations.push(...conversationParts);
-            lastResponse = conversationParts[conversationParts.length - 1].text;
-            speakerIndex = (speakerIndex + 1) % 2;
-          }
+              allConversations.push(...conversationParts);
+              
+              // Generate summary of conversation so far
+              const conversationText = allConversations
+                .map(part => `${part.speaker}: ${part.text}`)
+                .join("\n");
+              
+              const summaryResult = await model.generateContent({
+                contents: [{
+                  role: "user", 
+                  parts: [{ 
+                    text: `Summarize this conversation in 2-3 sentences:\n${conversationText}` 
+                  }]
+                }],
+                generationConfig: {
+                  maxOutputTokens: 200,
+                  temperature: 0.3
+                }
+              });
+
+              lastResponse = summaryResult.response.candidates?.[0]?.content?.parts?.[0]?.text || 
+                           conversationParts[conversationParts.length - 1].text;
+              
+              speakerIndex = (speakerIndex + 1) % 2;
+            }
 
           // Update progress for conversation generation (0-50%)
           this.emitProgress(((index + 1) / chunks.length) * 50);
@@ -928,10 +949,31 @@ export class TTSService {
           ]);
 
           if (conversationParts.length > 0) {
-            allConversations.push(...conversationParts);
-            lastResponse = conversationParts[conversationParts.length - 1].text;
-            speakerIndex = (speakerIndex + 1) % 2;
-          }
+              allConversations.push(...conversationParts);
+              
+              // Generate summary of conversation so far
+              const conversationText = allConversations
+                .map(part => `${part.speaker}: ${part.text}`)
+                .join("\n");
+              
+              const summaryResult = await model.generateContent({
+                contents: [{
+                  role: "user", 
+                  parts: [{ 
+                    text: `Summarize this conversation in 2-3 sentences:\n${conversationText}` 
+                  }]
+                }],
+                generationConfig: {
+                  maxOutputTokens: 200,
+                  temperature: 0.3
+                }
+              });
+
+              lastResponse = summaryResult.response.candidates?.[0]?.content?.parts?.[0]?.text || 
+                           conversationParts[conversationParts.length - 1].text;
+              
+              speakerIndex = (speakerIndex + 1) % 2;
+            }
 
           // Update progress for conversation generation (0-50%)
           this.emitProgress(((index + 1) / pages.length) * 50);
