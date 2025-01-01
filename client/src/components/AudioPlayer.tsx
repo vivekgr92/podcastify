@@ -78,8 +78,8 @@ export default function AudioPlayer() {
               >
                 {audioData?.coverImage ? (
                   <img
-                    src={audioData.coverImage}
-                    alt={audioData.title || ""}
+                    src={audioData?.coverImage || ''}
+                    alt={audioData?.title || ""}
                     className="w-full h-full rounded-lg object-cover"
                   />
                 ) : (
