@@ -23,7 +23,7 @@ import {
   users,
 } from "../db/schema.js";
 import { logger } from "./services/logging.js";
-import { ttsService } from "./services/tts.js";
+import { PricingDetails, ttsService } from "./services/tts.js";
 import { eq, and, sql, desc } from "drizzle-orm";
 import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import Stripe from "stripe";
@@ -556,6 +556,7 @@ export function registerRoutes(app: Express) {
   // Main ---Text-to-speech conversion endpoint
   app.post("/api/podcast", upload.single("file"), async (req, res) => {
     const file = req.file;
+
     try {
       const user = req.user;
       if (!user?.id) {
@@ -574,12 +575,28 @@ export function registerRoutes(app: Express) {
 
       // Process the uploaded file
       let fileContent: string;
+      let numPages = 0;
+
       try {
         const fileBuffer = await fs.readFile(file.path);
 
         if (file.mimetype === "application/pdf") {
           const pdfData = await pdfParse(fileBuffer);
-          fileContent = pdfData.text;
+          numPages = pdfData.numpages;
+          await logger.info(`\n\n PDF has ${numPages} pages`);
+
+          // Process only the first 3 pages
+          if (numPages > 3) {
+            await logger.info(`Processing only the first 3 pages of the PDF`);
+            const firstThreePages = pdfData.text
+              .split(/\f/) // Assuming page breaks are represented by form-feed characters
+              .slice(0, 3) // Get the first 3 pages
+              .join("\n"); // Combine them back into a single string
+
+            fileContent = firstThreePages;
+          } else {
+            fileContent = pdfData.text;
+          }
         } else if (file.mimetype === "text/plain") {
           fileContent = fileBuffer.toString("utf-8");
         } else {
@@ -708,8 +725,22 @@ export function registerRoutes(app: Express) {
       }
       // Generate audio only if usage limits allow
       await logger.info("Starting audio generation process");
+      // let audioBuffer: Buffer;
+      // let duration: number;
+      // let usage: PricingDetails;
+
+      // if (numPages > 3) {
+      //   await logger.info("generateConversationPages is called");
+      //   ({ audioBuffer, duration, usage } =
+      //     await ttsService.generateConversationPages(fileContent));
+      // } else {
+      //   await logger.info("generateConversation is called ");
+      //   ({ audioBuffer, duration, usage } =
+      //     await ttsService.generateConversation(fileContent));
+      // }
+
       const { audioBuffer, duration, usage } =
-        await ttsService.generateConversation(fileContent);
+        await ttsService.generateConversationPages(fileContent);
 
       if (!audioBuffer || !duration || !usage) {
         throw new Error(
