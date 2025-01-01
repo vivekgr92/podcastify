@@ -145,8 +145,8 @@ export class TTSService {
     // Split by common page break indicators
     const pageBreaks = text.split(/\f|\[page\]|\n{4,}/);
     return pageBreaks
-      .map(page => page.trim())
-      .filter(page => page.length > 0);
+      .map((page) => page.trim())
+      .filter((page) => page.length > 0);
   }
 
   private splitTextIntoChunks(text: string, maxChars: number = 4000): string[] {
@@ -929,7 +929,33 @@ export class TTSService {
 
           if (conversationParts.length > 0) {
             allConversations.push(...conversationParts);
-            lastResponse = conversationParts[conversationParts.length - 1].text;
+
+            // Generate summary of conversation so far
+            const conversationText = allConversations
+              .map((part) => `${part.speaker}: ${part.text}`)
+              .join("\n");
+
+            const summaryResult = await model.generateContent({
+              contents: [
+                {
+                  role: "user",
+                  parts: [
+                    {
+                      text: `Summarize this conversation in 3-4 sentences:\n${conversationText}`,
+                    },
+                  ],
+                },
+              ],
+              generationConfig: {
+                maxOutputTokens: 200,
+                temperature: 0.3,
+              },
+            });
+
+            lastResponse =
+              summaryResult.response.candidates?.[0]?.content?.parts?.[0]
+                ?.text || conversationParts[conversationParts.length - 1].text;
+
             speakerIndex = (speakerIndex + 1) % 2;
           }
 
