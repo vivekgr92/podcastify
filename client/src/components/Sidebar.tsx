@@ -11,6 +11,7 @@ import {
   Users,
   Menu,
   X,
+  MessageSquare,
 } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
@@ -27,7 +28,7 @@ interface SidebarProps {
 export default function Sidebar({ isMobileMenuOpen = false, setIsMobileMenuOpen }: SidebarProps) {
   const [location] = useLocation();
   const { logout, user } = useUser();
-  
+
   const { data: userStats } = useQuery({
     queryKey: ["user-stats"],
     queryFn: async () => {
@@ -65,7 +66,7 @@ export default function Sidebar({ isMobileMenuOpen = false, setIsMobileMenuOpen 
               <X className="h-6 w-6" />
             </Button>
           </div>
-          
+
           {user && (
             <div className="mb-6 flex flex-col gap-2">
               <div className="flex items-center gap-3 p-2 rounded-lg bg-muted/50">
@@ -80,7 +81,7 @@ export default function Sidebar({ isMobileMenuOpen = false, setIsMobileMenuOpen 
             </div>
           )}
         </div>
-        
+
         <ScrollArea className="flex-1 px-6">
           <nav className="space-y-2">
             <Button
@@ -93,7 +94,7 @@ export default function Sidebar({ isMobileMenuOpen = false, setIsMobileMenuOpen 
                 Home
               </Link>
             </Button>
-            
+
             <Button
               variant={location === "/profile" ? "secondary" : "ghost"}
               className="w-full justify-start gap-2"
@@ -104,7 +105,7 @@ export default function Sidebar({ isMobileMenuOpen = false, setIsMobileMenuOpen 
                 Profile
               </Link>
             </Button>
-            
+
             <Button
               variant={location === "/billing" ? "secondary" : "ghost"}
               className="w-full justify-start gap-2"
@@ -120,7 +121,18 @@ export default function Sidebar({ isMobileMenuOpen = false, setIsMobileMenuOpen 
                 )}
               </Link>
             </Button>
-            
+
+            <Button
+              variant={location === "/feedback" ? "secondary" : "ghost"}
+              className="w-full justify-start gap-2"
+              asChild
+            >
+              <Link href="/feedback">
+                <MessageSquare size={20} />
+                Feedback
+              </Link>
+            </Button>
+
             {user?.isAdmin && (
               <Button
                 variant={location === "/admin" ? "secondary" : "ghost"}
@@ -133,7 +145,7 @@ export default function Sidebar({ isMobileMenuOpen = false, setIsMobileMenuOpen 
                 </Link>
               </Button>
             )}
-            
+
             <Button
               variant={location === "/library" ? "secondary" : "ghost"}
               className="w-full justify-start gap-2"

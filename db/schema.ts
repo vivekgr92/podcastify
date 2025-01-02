@@ -91,3 +91,18 @@ export const insertUserUsageSchema = createInsertSchema(userUsage);
 export const selectUserUsageSchema = createSelectSchema(userUsage);
 export type InsertUserUsage = z.infer<typeof insertUserUsageSchema>;
 export type UserUsage = z.infer<typeof selectUserUsageSchema>;
+
+export const feedback = pgTable("feedback", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  userId: integer("user_id").references(() => users.id),
+  content: text("content").notNull(),
+  rating: integer("rating"),
+  createdAt: timestamp("created_at").defaultNow(),
+  status: text("status").default("pending"),
+});
+
+// Add Zod schemas for feedback
+export const insertFeedbackSchema = createInsertSchema(feedback);
+export const selectFeedbackSchema = createSelectSchema(feedback);
+export type InsertFeedback = z.infer<typeof insertFeedbackSchema>;
+export type Feedback = z.infer<typeof selectFeedbackSchema>;
