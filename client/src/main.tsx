@@ -12,6 +12,7 @@ import PricingPage from "./pages/PricingPage";
 import AdminPage from "./pages/AdminPage";
 import ProfilePage from "./pages/ProfilePage";
 import BillingPage from "./pages/BillingPage";
+import FeedbackPage from "./pages/FeedbackPage"; // Added import
 import { Loader2, Menu } from "lucide-react";
 import { useUser } from "./hooks/use-user";
 import Sidebar from "./components/Sidebar";
@@ -20,7 +21,6 @@ import { FC, useState } from "react";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage"; // Added import
 
 
-// Extract AppRouter into its own component to properly use hooks
 const AppRouter: FC = () => {
   const { user, isLoading } = useUser();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -77,6 +77,9 @@ const AppRouter: FC = () => {
             </Route>
             <Route path="/billing">
               {!user ? <AuthPage /> : <BillingPage />}
+            </Route>
+            <Route path="/feedback">
+              {!user ? <AuthPage /> : <FeedbackPage />}
             </Route>
             <Route path="/admin">
               {!user ? (

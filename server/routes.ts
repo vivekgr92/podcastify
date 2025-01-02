@@ -10,10 +10,6 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import { Readable } from "stream";
 import { crypto } from "./auth.js";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
 import {
   podcasts,
   playlists,
@@ -27,6 +23,7 @@ import { PricingDetails, ttsService } from "./services/tts.js";
 import { eq, and, sql, desc } from "drizzle-orm";
 import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import Stripe from "stripe";
+import { feedback, insertFeedbackSchema } from "../db/schema.js";
 
 // Constants for usage limits
 const PODIFY_TOKEN_RATE = 0.005;
@@ -346,11 +343,11 @@ export function registerRoutes(app: Express) {
                         <p style="margin: 0.5rem 0;">Amount: $${amount}</p>
                         <p style="margin: 0.5rem 0;">Invoice ID: ${invoiceDetails.number}</p>
                       </div>
-
+                    
                       <p style="color: #ffffff; line-height: 1.6;">
                         We're excited to have you as a subscriber! Your account has been upgraded and you can now enjoy all the features of your ${planName}.
                       </p>
-
+                    
                       <p style="color: #a0a0a0; font-size: 0.875rem; margin-top: 1rem; border-top: 1px solid rgba(76, 175, 80, 0.2); padding-top: 1rem;">
                         If you have any questions, feel free to reach out to our support team.
                       </p>
@@ -725,20 +722,6 @@ export function registerRoutes(app: Express) {
       }
       // Generate audio only if usage limits allow
       await logger.info("Starting audio generation process");
-      // let audioBuffer: Buffer;
-      // let duration: number;
-      // let usage: PricingDetails;
-
-      // if (numPages > 3) {
-      //   await logger.info("generateConversationPages is called");
-      //   ({ audioBuffer, duration, usage } =
-      //     await ttsService.generateConversationPages(fileContent));
-      // } else {
-      //   await logger.info("generateConversation is called ");
-      //   ({ audioBuffer, duration, usage } =
-      //     await ttsService.generateConversation(fileContent));
-      // }
-
       const { audioBuffer, duration, usage } =
         await ttsService.generateConversationPages(fileContent);
 
@@ -952,8 +935,7 @@ export function registerRoutes(app: Express) {
         .select({
           articlesConverted: userUsage.articlesConverted,
           tokensUsed: userUsage.tokensUsed,
-          podifyTokens: userUsage.podifyTokens,
-          lastConversion: userUsage.lastConversion,
+          podifyTokens: userUsage.podifyTokens,          lastConversion: userUsage.lastConversion,
           monthYear: userUsage.monthYear,
         })
         .from(userUsage)
@@ -1596,7 +1578,7 @@ export function registerRoutes(app: Express) {
                     </li>
                   </ul>
                 </div>
-
+              
                 <a href="https://podify.cloud" 
                    style="display: inline-block; background-color: #4CAF50; color: white; padding: 0.75rem 1.5rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; font-size: 1rem; margin-top: 1rem; border: none;">
                   Start Creating Now
@@ -1646,6 +1628,78 @@ export function registerRoutes(app: Express) {
         `Registration error: ${error instanceof Error ? error.message : String(error)}`,
       );
       res.status(500).send("Registration failed");
+    }
+  });
+
+  // Add feedback endpoint
+  app.post("/api/feedback", async (req, res) => {
+    try {
+      if (!req.user?.id) {
+        return res.status(401).json({ error: "Not authenticated" });
+      }
+
+      const validation = insertFeedbackSchema.safeParse({
+        ...req.body,
+        userId: req.user.id
+      });
+
+      if (!validation.success) {
+        return res.status(400).json({
+          error: "Invalid feedback data",
+          details: validation.error.errors
+        });
+      }
+
+      const [newFeedback] = await db
+        .insert(feedback)
+        .values({
+          userId: req.user.id,
+          content: validation.data.content,
+          rating: validation.data.rating,
+          status: "pending",
+          createdAt: new Date()
+        })
+        .returning();
+
+      res.json({
+        message: "Feedback submitted successfully",
+        feedback: newFeedback
+      });
+
+    } catch (error) {
+      logger.error(
+        `Error submitting feedback: ${error instanceof Error ? error.message : String(error)}`
+      );
+      res.status(500).json({
+        error: "Failed to submit feedback",
+        message: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Get user's feedback history
+  app.get("/api/feedback", async (req, res) => {
+    try {
+      if (!req.user?.id) {
+        return res.status(401).json({ error: "Not authenticated" });
+      }
+
+      const userFeedback = await db
+        .select()
+        .from(feedback)
+        .where(eq(feedback.userId, req.user.id))
+        .orderBy(desc(feedback.createdAt));
+
+      res.json(userFeedback);
+
+    } catch (error) {
+      logger.error(
+        `Error fetching feedback: ${error instanceof Error ? error.message : String(error)}`
+      );
+      res.status(500).json({
+        error: "Failed to fetch feedback",
+        message: error instanceof Error ? error.message : "Unknown error"
+      });
     }
   });
 
