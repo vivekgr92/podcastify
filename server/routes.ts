@@ -8,7 +8,8 @@ import { promises as fs } from "fs";
 import * as fsSync from "fs";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
-import bcrypt from "bcrypt"; // Import bcrypt
+import { Readable } from "stream";
+import { crypto } from "./auth.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -22,7 +23,7 @@ import {
   users,
 } from "../db/schema.js";
 import { logger } from "./services/logging.js";
-import { ttsService } from "./services/tts.js";
+import { PricingDetails, ttsService } from "./services/tts.js";
 import { eq, and, sql, desc } from "drizzle-orm";
 import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import Stripe from "stripe";
@@ -213,9 +214,6 @@ export function registerRoutes(app: Express) {
         return res.status(500).json({ error: "Webhook secret not configured" });
       }
 
-      logger.info(`\nStripe Signature: ${sig}`);
-      logger.info(`\nWebhook signature: ${process.env.STRIPE_WEBHOOK_SECRET}`);
-
       try {
         event = stripe.webhooks.constructEvent(
           req.body,
@@ -272,7 +270,8 @@ export function registerRoutes(app: Express) {
             const [updatedUser] = await db
               .update(users)
               .set({
-                subscriptionStatus: subscriptionType,
+                subscriptionStatus: "active",
+                subscriptionType: subscriptionType,
                 subscriptionId: subscription.id,
                 currentPeriodEnd: new Date(
                   subscription.current_period_end * 1000,
@@ -307,6 +306,69 @@ export function registerRoutes(app: Express) {
             logger.info(
               `Successfully processed payment for subscription ${subscription.id}`,
             );
+
+            // Send subscription confirmation email
+            try {
+              const { default: sgMail } = await import("@sendgrid/mail");
+
+              if (
+                !process.env.SENDGRID_API_KEY ||
+                !process.env.SENDGRID_FROM_EMAIL
+              ) {
+                throw new Error("SendGrid configuration missing");
+              }
+
+              sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+              // Get invoice details
+              const invoiceDetails = await stripe.invoices.retrieve(
+                invoice.id,
+                {
+                  expand: ["lines.data.price.product"],
+                },
+              );
+
+              const amount = (invoiceDetails.amount_paid / 100).toFixed(2);
+              const planName = subscriptionType.split(":")[0];
+
+              const msg = {
+                to: subscription.metadata.customerEmail,
+                from: process.env.SENDGRID_FROM_EMAIL,
+                subject: "Podify Cloud: Thank You for Your Subscription!",
+                html: `
+                  <div style="background-color: #0A0A0A; color: #ffffff; padding: 1.5rem; font-family: system-ui, -apple-system, sans-serif; border: 1px solid #4CAF50;">
+                    <div style="max-width: 600px; margin: 0 auto;">
+                      <h1 style="color: #4CAF50; font-size: 1.5rem; margin-bottom: 1rem;">Thank You for Subscribing!</h1>
+                      
+                      <div style="background-color: rgba(76, 175, 80, 0.05); border: 1px solid rgba(76, 175, 80, 0.2); border-radius: 0.5rem; padding: 1rem; margin: 1rem 0;">
+                        <h2 style="color: #ffffff; font-size: 1.2rem; margin-bottom: 0.5rem;">Subscription Details</h2>
+                        <p style="margin: 0.5rem 0;">Plan: ${planName}</p>
+                        <p style="margin: 0.5rem 0;">Amount: $${amount}</p>
+                        <p style="margin: 0.5rem 0;">Invoice ID: ${invoiceDetails.number}</p>
+                      </div>
+
+                      <p style="color: #ffffff; line-height: 1.6;">
+                        We're excited to have you as a subscriber! Your account has been upgraded and you can now enjoy all the features of your ${planName}.
+                      </p>
+
+                      <p style="color: #a0a0a0; font-size: 0.875rem; margin-top: 1rem; border-top: 1px solid rgba(76, 175, 80, 0.2); padding-top: 1rem;">
+                        If you have any questions, feel free to reach out to our support team.
+                      </p>
+                    </div>
+                  </div>
+                `,
+              };
+
+              const [response] = await sgMail.send(msg);
+              logger.info(
+                `Subscription confirmation email sent. Status: ${response.statusCode}`,
+              );
+            } catch (emailError) {
+              logger.error(
+                `Failed to send subscription confirmation email: ${emailError instanceof Error ? emailError.message : String(emailError)}`,
+              );
+              // Continue even if email fails
+            }
           } catch (error) {
             logger.error(
               `Failed to process subscription payment: ${error instanceof Error ? error.message : String(error)}`,
@@ -337,7 +399,36 @@ export function registerRoutes(app: Express) {
           break;
         case "customer.subscription.updated":
           const updatedSubscription = event.data.object as Stripe.Subscription;
+          const userId = parseInt(updatedSubscription.metadata.userId);
+
           if (updatedSubscription.metadata.userId) {
+            // Determine the cancellation state
+            const isCanceled =
+              updatedSubscription.status === "canceled" ||
+              updatedSubscription.cancel_at_period_end ||
+              updatedSubscription.ended_at !== null;
+
+            // Update user subscription status
+            await db
+              .update(users)
+              .set({
+                subscriptionType: "free",
+                subscriptionStatus: isCanceled
+                  ? "canceled"
+                  : updatedSubscription.status,
+                currentPeriodEnd: new Date(
+                  updatedSubscription.current_period_end * 1000,
+                ),
+              })
+              .where(eq(users.id, userId));
+
+            logger.info(
+              `Updated subscription status for user ${userId}: ${
+                isCanceled ? "canceled" : updatedSubscription.status
+              }`,
+            );
+          } else {
+            // Update other statuses
             await db
               .update(users)
               .set({
@@ -346,12 +437,10 @@ export function registerRoutes(app: Express) {
                   updatedSubscription.current_period_end * 1000,
                 ),
               })
-              .where(
-                eq(users.id, parseInt(updatedSubscription.metadata.userId)),
-              );
+              .where(eq(users.id, userId));
 
             logger.info(
-              `Updated subscription status for user ${updatedSubscription.metadata.userId}`,
+              `Updated subscription status for user ${userId}: ${updatedSubscription.status}`,
             );
           }
           break;
@@ -467,6 +556,7 @@ export function registerRoutes(app: Express) {
   // Main ---Text-to-speech conversion endpoint
   app.post("/api/podcast", upload.single("file"), async (req, res) => {
     const file = req.file;
+
     try {
       const user = req.user;
       if (!user?.id) {
@@ -485,12 +575,28 @@ export function registerRoutes(app: Express) {
 
       // Process the uploaded file
       let fileContent: string;
+      let numPages = 0;
+
       try {
         const fileBuffer = await fs.readFile(file.path);
 
         if (file.mimetype === "application/pdf") {
           const pdfData = await pdfParse(fileBuffer);
-          fileContent = pdfData.text;
+          numPages = pdfData.numpages;
+          await logger.info(`\n\n PDF has ${numPages} pages`);
+
+          // Process only the first 3 pages
+          if (numPages > 3) {
+            await logger.info(`Processing only the first 3 pages of the PDF`);
+            const firstThreePages = pdfData.text
+              .split(/\f/) // Assuming page breaks are represented by form-feed characters
+              .slice(0, 3) // Get the first 3 pages
+              .join("\n"); // Combine them back into a single string
+
+            fileContent = firstThreePages;
+          } else {
+            fileContent = pdfData.text;
+          }
         } else if (file.mimetype === "text/plain") {
           fileContent = fileBuffer.toString("utf-8");
         } else {
@@ -619,8 +725,22 @@ export function registerRoutes(app: Express) {
       }
       // Generate audio only if usage limits allow
       await logger.info("Starting audio generation process");
+      // let audioBuffer: Buffer;
+      // let duration: number;
+      // let usage: PricingDetails;
+
+      // if (numPages > 3) {
+      //   await logger.info("generateConversationPages is called");
+      //   ({ audioBuffer, duration, usage } =
+      //     await ttsService.generateConversationPages(fileContent));
+      // } else {
+      //   await logger.info("generateConversation is called ");
+      //   ({ audioBuffer, duration, usage } =
+      //     await ttsService.generateConversation(fileContent));
+      // }
+
       const { audioBuffer, duration, usage } =
-        await ttsService.generateConversation(fileContent);
+        await ttsService.generateConversationPages(fileContent);
 
       if (!audioBuffer || !duration || !usage) {
         throw new Error(
@@ -673,18 +793,36 @@ export function registerRoutes(app: Express) {
           `Podify Tokens: ${updatedUsage.podifyTokens}/${currentLimits.podifyTokenLimit}`,
         ]);
 
-        // Save the audio file
+        // Save the audio file to Object Storage
         const timestamp = Date.now();
         const sanitizedFileName = file.originalname
-          .replace(/\.[^/.]+$/, "") // Remove extension
-          .replace(/[^a-zA-Z0-9]/g, "_"); // Replace invalid chars
+          .replace(/\.[^/.]+$/, "")
+          .replace(/[^a-zA-Z0-9]/g, "_");
         const audioFileName = `${timestamp}-${sanitizedFileName}.mp3`;
-        const audioPath = path.join("./uploads", audioFileName);
 
         try {
-          await fs.mkdir("./uploads", { recursive: true });
-          await fs.writeFile(audioPath, audioBuffer);
-          await logger.info(`Successfully saved audio file: ${audioFileName}`);
+          // Check MIME type of the audio buffer
+          const fileType = await import("file-type");
+          const mimeInfo = await fileType.fileTypeFromBuffer(audioBuffer);
+
+          if (!mimeInfo || mimeInfo.mime !== "audio/mpeg") {
+            throw new Error(
+              `Invalid audio format. Expected MP3, got ${mimeInfo?.mime || "unknown"}`,
+            );
+          }
+
+          const { Client } = await import("@replit/object-storage");
+          const storage = new Client();
+
+          // Create a Readable stream from the Buffer
+          const audioStream = new Readable();
+          audioStream.push(audioBuffer);
+          audioStream.push(null);
+
+          await storage.uploadFromStream(audioFileName, audioStream);
+          await logger.info(
+            `Successfully saved audio file (${mimeInfo.mime}) to Object Storage: ${audioFileName}`,
+          );
         } catch (writeError) {
           const errorMessage =
             writeError instanceof Error
@@ -701,7 +839,7 @@ export function registerRoutes(app: Express) {
             userId: user.id,
             title: file.originalname.replace(/\.[^/.]+$/, ""),
             description: "Generated from uploaded document using AI voices",
-            audioUrl: `/uploads/${audioFileName}`,
+            audioUrl: `/api/audio/stream/${audioFileName}`,
             duration: duration,
             type: "tts",
           })
@@ -755,65 +893,42 @@ export function registerRoutes(app: Express) {
     }
   });
 
-  // Audio streaming endpoint
-  app.get("/uploads/:filename", async (req, res) => {
+  // Stream audio from Object Storage
+  app.get("/api/audio/stream/:filename", async (req, res) => {
     const filename = req.params.filename;
-    const filePath = path.join(__dirname, "..", "uploads", filename);
+    logger.info(`\n========Streaming audio file: ${filename}`);
 
     try {
-      // Check if file exists first
-      const fileExists = await fs
-        .access(filePath)
-        .then(() => true)
-        .catch(() => false);
+      const { Client } = await import("@replit/object-storage");
+      const storage = new Client();
 
-      if (!fileExists) {
-        logger.warn(`File not found: ${filePath}`);
+      // Download file from Object Storage
+      try {
+        const audioStream = await storage.downloadAsStream(filename);
+
+        if (!audioStream) {
+          logger.warn(`File not found in Object Storage: ${filename}`);
+          return res.status(404).json({
+            error: "Audio file not found",
+            type: "not_found",
+          });
+        }
+
+        // Set proper headers for audio streaming
+        res.setHeader("Content-Type", "audio/mpeg");
+        res.setHeader("Accept-Ranges", "bytes");
+        res.setHeader("Cache-Control", "no-cache");
+        res.setHeader("Content-Disposition", `inline; filename="${filename}"`);
+        res.setHeader("X-Content-Type-Options", "nosniff");
+
+        // Stream the audio directly to the response
+        audioStream.pipe(res);
+      } catch (error) {
+        logger.warn(`File not found in Object Storage: ${filename}`);
         return res.status(404).json({
           error: "Audio file not found",
           type: "not_found",
         });
-      }
-
-      const stat = await fs.stat(filePath);
-      const fileSize = stat.size;
-      const range = req.headers.range;
-
-      if (range) {
-        const parts = range.replace(/bytes=/, "").split("-");
-        const start = parseInt(parts[0], 10);
-        let end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
-
-        if (
-          isNaN(start) ||
-          isNaN(end) ||
-          start >= fileSize ||
-          start > end ||
-          end >= fileSize
-        ) {
-          return res.status(416).json({
-            error: "Requested range not satisfiable",
-            type: "validation",
-          });
-        }
-
-        const chunksize = end - start + 1;
-        const file = fsSync.createReadStream(filePath, { start, end });
-        const head = {
-          "Content-Range": `bytes ${start}-${end}/${fileSize}`,
-          "Accept-Ranges": "bytes",
-          "Content-Length": chunksize,
-          "Content-Type": "audio/mpeg",
-        };
-        res.writeHead(206, head);
-        file.pipe(res);
-      } else {
-        const head = {
-          "Content-Length": fileSize,
-          "Content-Type": "audio/mpeg",
-        };
-        res.writeHead(200, head);
-        fsSync.createReadStream(filePath).pipe(res);
       }
     } catch (error) {
       await logger.error(
@@ -867,7 +982,9 @@ export function registerRoutes(app: Express) {
       }
 
       const podifyTokensUsed = Number(usage?.podifyTokens || "0");
-      const limits = getLimits(req.user.subscriptionStatus || "free");
+      logger.info("Usage check for user: " + req.user.subscriptionStatus);
+
+      const limits = getLimits(req.user.subscriptionType);
       const { articleLimit, podifyTokenLimit } = limits;
 
       const hasReachedLimit =
@@ -1276,6 +1393,111 @@ export function registerRoutes(app: Express) {
       res.status(500).send("Failed to fetch podcasts");
     }
   });
+
+  // Update password endpoint
+  app.post("/api/update-password", async (req, res) => {
+    try {
+      if (!req.user?.id) {
+        return res.status(401).json({ error: "Not authenticated" });
+      }
+
+      const { currentPassword, newPassword } = req.body;
+      if (!currentPassword || !newPassword) {
+        return res
+          .status(400)
+          .json({ error: "Both current and new passwords are required" });
+      }
+
+      // Get user's current password
+      const [user] = await db
+        .select()
+        .from(users)
+        .where(eq(users.id, req.user.id))
+        .limit(1);
+
+      // Verify current password
+      const isValid = await crypto.compare(currentPassword, user.password);
+      if (!isValid) {
+        return res.status(400).json({ error: "Current password is incorrect" });
+      }
+
+      // Hash and update new password
+      const hashedPassword = await crypto.hash(newPassword);
+      await db
+        .update(users)
+        .set({ password: hashedPassword })
+        .where(eq(users.id, req.user.id));
+
+      res.json({ message: "Password updated successfully" });
+    } catch (error) {
+      logger.error(
+        `Password update error: ${error instanceof Error ? error.message : String(error)}`,
+      );
+      res.status(500).json({ error: "Failed to update password" });
+    }
+  });
+
+  // Reset password endpoint
+  app.post("/api/reset-password", async (req, res) => {
+    try {
+      const { email } = req.body;
+
+      // Find user with provided email
+      const [user] = await db
+        .select()
+        .from(users)
+        .where(eq(users.email, email))
+        .limit(1);
+
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      // Generate temporary password
+      const tempPassword = Math.random().toString(36).slice(-8);
+      const hashedPassword = await crypto.hash(tempPassword);
+
+      // Update user's password
+      await db
+        .update(users)
+        .set({ password: hashedPassword })
+        .where(eq(users.id, user.id));
+
+      // Send email with SendGrid
+      const { default: sgMail } = await import("@sendgrid/mail");
+
+      if (!process.env.SENDGRID_API_KEY) {
+        throw new Error("SENDGRID_API_KEY is not configured");
+      }
+
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+      const fromEmail = process.env.SENDGRID_FROM_EMAIL;
+      if (!fromEmail) {
+        throw new Error("SENDGRID_FROM_EMAIL is not configured");
+      }
+
+      const msg = {
+        to: email,
+        from: fromEmail,
+        subject: "Your Temporary Password",
+        text: `Your temporary password is: ${tempPassword}\nPlease change it after logging in.`,
+        html: `<p>Your temporary password is: <strong>${tempPassword}</strong></p><p>Please change it after logging in.</p>`,
+      };
+
+      await sgMail.send(msg);
+
+      res.json({
+        message: "Password reset email sent successfully",
+      });
+    } catch (error) {
+      logger.error(
+        `Password reset error: ${error instanceof Error ? error.message : String(error)}`,
+      );
+      res.status(500).json({ error: "Failed to reset password" });
+    }
+  });
+
   // Registration route update
   app.post("/api/register", async (req, res) => {
     try {
@@ -1293,7 +1515,7 @@ export function registerRoutes(app: Express) {
       }
 
       // Hash password
-      const hashedPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = await crypto.hash(password);
 
       // Create new user with default subscription status
       const [user] = await db
@@ -1322,6 +1544,95 @@ export function registerRoutes(app: Express) {
         podifyTokens: "0",
         monthYear: currentMonth,
       });
+
+      // Send welcome email
+      const { default: sgMail } = await import("@sendgrid/mail");
+
+      if (!process.env.SENDGRID_API_KEY) {
+        throw new Error("SENDGRID_API_KEY is not configured");
+      }
+
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+      const fromEmail = process.env.SENDGRID_FROM_EMAIL;
+      if (!fromEmail) {
+        throw new Error("SENDGRID_FROM_EMAIL is not configured");
+      }
+
+      const msg = {
+        to: email,
+        from: fromEmail,
+        subject: "Welcome to Podify Cloud",
+        text: `Welcome to Podify Cloud! We're excited to have you on board.`,
+        html: `
+          <div style="background-color: #0A0A0A; color: #ffffff; padding: 1.5rem; font-family: system-ui, -apple-system, sans-serif; border: 1px solid #4CAF50;">
+            <div style="max-width: 600px; margin: 0 auto; text-align: center;">
+              <div style="margin-bottom: 1.5rem;">
+                <svg width="48" height="48" viewBox="0 0 24 24" style="margin: 0 auto;">
+                  <rect width="24" height="24" rx="6" fill="#4CAF50"/>
+                  <path d="M16 10a4 4 0 11-8 0 4 4 0 018 0zm-2 4a3 3 0 00-6 0v1h6v-1z" fill="white"/>
+                </svg>
+              </div>
+              
+              <h1 style="color: #4CAF50; font-size: 1.8rem; margin-bottom: 1.2rem; font-weight: 800;">Welcome to Podify Cloud</h1>
+              
+              <div style="background-color: rgba(76, 175, 80, 0.05); border: 1px solid rgba(76, 175, 80, 0.2); border-radius: 0.75rem; padding: 1.5rem; margin: 1.5rem 0;">
+                <h2 style="color: #ffffff; font-size: 1.5rem; margin-bottom: 1rem;">Hi ${username}!</h2>
+                <p style="color: #ffffff; line-height: 1.6; margin-bottom: 1.5rem; font-size: 1rem;">
+                  We're thrilled to have you join our community! Transform your articles into engaging podcasts with just a few clicks.
+                </p>
+                
+                <div style="margin: 1.5rem 0; text-align: left;">
+                  <p style="color: #4CAF50; margin-bottom: 0.75rem; font-weight: 600; font-size: 1.1rem;">Here's what you can do now:</p>
+                  <ul style="list-style: none; padding: 0; color: #ffffff;">
+                    <li style="margin: 0.75rem 0; padding-left: 1.5rem; position: relative;">
+                      <span style="color: #4CAF50; position: absolute; left: 0;">→</span> Convert articles to podcasts
+                    </li>
+                    <li style="margin: 0.75rem 0; padding-left: 1.5rem; position: relative;">
+                      <span style="color: #4CAF50; position: absolute; left: 0;">→</span> Build your podcast library
+                    </li>
+                    <li style="margin: 0.75rem 0; padding-left: 1.5rem; position: relative;">
+                      <span style="color: #4CAF50; position: absolute; left: 0;">→</span> Listen on any device
+                    </li>
+                  </ul>
+                </div>
+
+                <a href="https://podify.cloud" 
+                   style="display: inline-block; background-color: #4CAF50; color: white; padding: 0.75rem 1.5rem; border-radius: 0.5rem; text-decoration: none; font-weight: 600; font-size: 1rem; margin-top: 1rem; border: none;">
+                  Start Creating Now
+                </a>
+              </div>
+              
+              <p style="color: #a0a0a0; font-size: 0.875rem; margin-top: 1.5rem; border-top: 1px solid rgba(76, 175, 80, 0.2); padding-top: 1.5rem;">
+                Need help? Reply to this email and we'll be happy to assist you.
+              </p>
+            </div>
+          </div>
+        `,
+      };
+
+      try {
+        logger.info("\n\nSending welcome email...");
+        const [response] = await sgMail.send(msg);
+        await logger.info([
+          "\n\n---------- Welcome Email Status ----------",
+          `User: ${username} (${email})`,
+          `Status Code: ${response.statusCode}`,
+          `Headers: ${JSON.stringify(response.headers)}`,
+          "-----------------------------------------\n",
+        ]);
+      } catch (emailError) {
+        const errorMessage =
+          emailError instanceof Error ? emailError.message : String(emailError);
+        await logger.error([
+          "\n\n---------- Welcome Email Error ----------",
+          `User: ${username} (${email})`,
+          `Error: ${errorMessage}`,
+          "----------------------------------------\n",
+        ]);
+        // Continue with registration even if email fails
+        logger.info("\n==Continue with registration even if email fails");
+      }
 
       // Start session
       req.logIn(user, (err) => {

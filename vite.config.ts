@@ -1,3 +1,4 @@
+
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import themePlugin from "@replit/vite-plugin-shadcn-theme-json";
@@ -8,6 +9,7 @@ import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
 export default defineConfig({
   plugins: [
     react(),
@@ -20,6 +22,9 @@ export default defineConfig({
       "@": path.resolve(__dirname, "client", "src"),
       "@db": path.resolve(__dirname, "db"),
     },
+  },
+  optimizeDeps: {
+    exclude: ['@tanstack/react-query'],
   },
   root: path.resolve(__dirname, "client"),
   build: {

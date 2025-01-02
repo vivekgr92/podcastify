@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+
+import * as React from "react";
+import { useState, useEffect } from "react";
 import { useUser } from "../hooks/use-user";
 import { Button } from "../components/ui/button";
 import { Check, Loader2 } from "lucide-react";
@@ -135,7 +137,6 @@ const BillingPage: React.FC = () => {
     setIsPaymentModalOpen(true);
   };
 
-  // Check if user has an active subscription
   const hasActiveSubscription = user.subscriptionStatus && 
                               user.subscriptionStatus !== "inactive" && 
                               user.subscriptionStatus !== "canceled" &&
@@ -257,7 +258,7 @@ const BillingPage: React.FC = () => {
                     }`}
                     variant={plan.popular ? "default" : "outline"}
                     onClick={() => handlePlanSelect(plan)}
-                    disabled={hasActiveSubscription && !isCurrentPlan}
+                    disabled={Boolean(hasActiveSubscription) && !isCurrentPlan}
                   >
                     {isCurrentPlan 
                       ? "Current Plan"

@@ -1,3 +1,4 @@
+
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
@@ -13,23 +14,18 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 5175,
-    strictPort: true,
+    hmr: {
+      clientPort: 443,
+      protocol: 'wss'
+    },
     proxy: {
       '/api': {
-        target: 'http://localhost:4000',
-        secure: false,
+        target: 'http://0.0.0.0:4000',
         changeOrigin: true
       }
     }
   },
   optimizeDeps: {
-    exclude: ['@stripe/stripe-js']
-  },
-  build: {
-    outDir: path.resolve(__dirname, '../dist/public'),
-    emptyOutDir: true
-  },
-  define: {
-    'import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY': JSON.stringify(process.env.STRIPE_PUBLISHABLE_KEY)
+    exclude: ['@tanstack/react-query']
   }
 });

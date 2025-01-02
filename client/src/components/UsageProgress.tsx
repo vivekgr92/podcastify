@@ -83,11 +83,11 @@ export function UsageProgress({
 
   const articlesPercentage = Math.min(
     (articles.used / articles.limit) * 100,
-    100
+    100,
   );
   const podifyTokensPercentage = Math.min(
     (podifyTokens.used / podifyTokens.limit) * 100,
-    100
+    100,
   );
 
   const podifyTokensCost = (podifyTokens.used * 0.005).toFixed(2);

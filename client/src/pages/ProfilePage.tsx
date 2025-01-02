@@ -1,13 +1,18 @@
+
 import { useUser } from "../hooks/use-user";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Camera, Loader2 } from "lucide-react";
+import { Input } from "@/components/ui/input"; 
+import { Camera } from "lucide-react";
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function ProfilePage() {
   const { user } = useUser();
   const [isUploading, setIsUploading] = useState(false);
+  const [updateError, setUpdateError] = useState<string | null>(null);
+  const [updateSuccess, setUpdateSuccess] = useState(false);
 
   if (!user) return null;
 
@@ -65,6 +70,54 @@ export default function ProfilePage() {
               </div>
             </dl>
           </div>
+        </div>
+
+        <div className="p-4 rounded-lg bg-muted mt-4">
+          <h2 className="font-semibold mb-4">Update Password</h2>
+          <form onSubmit={async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.currentTarget);
+            const currentPassword = formData.get('currentPassword') as string;
+            const newPassword = formData.get('newPassword') as string;
+
+            try {
+              const response = await fetch('/api/update-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ currentPassword, newPassword })
+              });
+
+              const data = await response.json();
+              if (response.ok) {
+                setUpdateError(null);
+                setUpdateSuccess(true);
+                (e.target as HTMLFormElement).reset();
+                setTimeout(() => setUpdateSuccess(false), 3000);
+              } else {
+                setUpdateError(data.error);
+                setUpdateSuccess(false);
+              }
+            } catch (error) {
+              setUpdateError("Failed to update password");
+              setUpdateSuccess(false);
+            }
+          }} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-2">Current Password</label>
+              <Input type="password" name="currentPassword" required />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">New Password</label>
+              <Input type="password" name="newPassword" required />
+              {updateError && (
+                <p className="mt-2 text-sm text-red-500">{updateError}</p>
+              )}
+              {updateSuccess && (
+                <p className="mt-2 text-sm text-green-500">Password updated successfully</p>
+              )}
+            </div>
+            <Button type="submit">Update Password</Button>
+          </form>
         </div>
       </Card>
     </div>
