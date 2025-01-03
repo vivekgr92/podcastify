@@ -2,6 +2,7 @@ import { useCallback, useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Button } from "../components/ui/button";
 import { useToast } from "../hooks/use-toast";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import { useTTS } from "../hooks/use-tts";
 import { FileText, Upload, Headphones, Plus, Menu, ChevronDown, ChevronUp } from "lucide-react";
 import { Logo } from "../components/Logo";
