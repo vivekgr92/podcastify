@@ -142,6 +142,11 @@ export default function HomePage() {
 
   const faqItems = [
     {
+      id: "multipage",
+      question: "Does it work with long documents?",
+      answer: "Yes! Our service is optimized for documents of any length, including multi-page articles. The AI adapts the conversation naturally across all pages while maintaining context.",
+    },
+    {
       id: "formats",
       question: "What file formats are supported?",
       answer: "We currently support PDF, DOC, DOCX, and TXT files for conversion. All files are processed securely and confidentially.",
