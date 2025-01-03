@@ -557,7 +557,7 @@ export function registerRoutes(app: Express) {
       let numPages = 0;
 
       try {
-        const fileBuffer = await fs.readFile(file.path);
+        const fileBuffer = file.buffer;  // Use buffer directly from memory storage
 
         if (file.mimetype === "application/pdf") {
           const pdfData = await pdfParse(fileBuffer);
