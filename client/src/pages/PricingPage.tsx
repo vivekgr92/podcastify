@@ -12,14 +12,14 @@ const plans = [
       "Basic voice selection",
       "Standard quality audio",
       "Email support",
-      "Basic analytics"
+      "Basic analytics",
     ],
     buttonText: "Start Free Trial",
-    popular: false
+    popular: false,
   },
   {
     name: "Creator Plan",
-    price: "$24.99",
+    price: "$16.99",
     period: "per month",
     features: [
       "Convert up to 50 articles/month",
@@ -27,10 +27,10 @@ const plans = [
       "High quality audio",
       "Priority support",
       "Advanced analytics",
-      "Custom intro/outro"
+      "Custom intro/outro",
     ],
     buttonText: "Get Started",
-    popular: true
+    popular: true,
   },
   {
     name: "Enterprise Plan",
@@ -43,11 +43,11 @@ const plans = [
       "24/7 dedicated support",
       "Custom analytics dashboard",
       "API access",
-      "Custom branding"
+      "Custom branding",
     ],
     buttonText: "Contact Sales",
-    popular: false
-  }
+    popular: false,
+  },
 ];
 
 export default function PricingPage() {
@@ -57,9 +57,12 @@ export default function PricingPage() {
     <div className="min-h-screen bg-black text-white">
       <main className="max-w-7xl mx-auto px-6 py-24">
         <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold mb-4">Simple, Transparent Pricing</h1>
+          <h1 className="text-4xl font-bold mb-4">
+            Simple, Transparent Pricing
+          </h1>
           <p className="text-gray-400 max-w-2xl mx-auto">
-            Choose the perfect plan for your needs. All plans include a 14-day free trial.
+            Choose the perfect plan for your needs. All plans include a 14-day
+            free trial.
           </p>
         </div>
 
@@ -102,7 +105,7 @@ export default function PricingPage() {
                     plan.popular ? "bg-[#4CAF50] hover:bg-[#45a049]" : ""
                   }`}
                   variant={plan.popular ? "default" : "outline"}
-                  onClick={() => setLocation('/auth/signup')}
+                  onClick={() => setLocation("/auth/signup")}
                 >
                   {plan.buttonText}
                 </Button>
