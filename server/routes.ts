@@ -555,9 +555,9 @@ export function registerRoutes(app: Express) {
       // Process the uploaded file
       let fileContent: string;
       let numPages = 0;
+      const timestamp = Date.now(); // Define timestamp first
 
       try {
-        const timestamp = Date.now(); // Define timestamp first
         const fileBuffer = file.buffer;
         
         // Store original PDF in Object Storage
