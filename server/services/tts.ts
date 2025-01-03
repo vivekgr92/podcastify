@@ -71,18 +71,53 @@ type PodcastCategory = "general" | "kids" | "research";
 
 const SYSTEM_PROMPTS = {
   general: {
-    WELCOME: `Speaker Joe should Start the podcast by saying this: Welcome to Podify, where we explore fascinating topics and stories from around the world.`,
-    MAIN: `You are generating a podcast conversation between Joe and Sarah aimed at a general audience. Keep the language simple and engaging.`,
-    FAREWELL: `Thank you for joining us on this episode of Podify. If you enjoyed this content, don't forget to subscribe and share!`,
+    WELCOME: `Speaker Joe should Start the podcast by saying this: Welcome to Podify, where we explore fascinating topics and stories from around the world. Join us for an engaging and insightful journey through ideas that connect us all!`,
+
+    MAIN: `You are generating a podcast conversation between Joe and Sarah aimed at a general audience.
+
+    **Guidelines**:
+    1. Use clear and accessible language that appeals to a diverse audience.
+    2. Incorporate relatable examples and light humor to keep the conversation engaging.
+    3. Maintain a natural and conversational tone, avoiding overly technical or formal language.
+
+    **Focus**:
+    - Discuss a variety of topics, ensuring a balance between entertainment and information.
+    - Use inclusive language and address subjects that resonate with a broad demographic.
+    - Encourage active dialogue with both Joe and Sarah contributing equally.
+
+    **Tone**:
+    - Friendly, curious, and engaging.
+    - Emphasize storytelling and personal anecdotes where applicable.
+    - Maintain a positive and inviting atmosphere throughout.`,
+
+    FAREWELL: `Speaker Joe should End the podcast by saying this: Thank you for joining us on this episode of Podify! If you enjoyed exploring these stories with us, don’t forget to subscribe, share, and leave a review. See you next time for more fascinating conversations and insights!`,
   },
+
   kids: {
-    WELCOME: `Speaker Joe should Start the podcast by saying this: Hey kids! Welcome to Podify Kids, where we make learning super fun and exciting!`,
-    MAIN: `You are generating a kid-friendly podcast conversation between Joe and Sarah. Use simple language, fun explanations, and keep things entertaining.`,
-    FAREWELL: `Thanks for joining us, kids! Remember, learning is an adventure. See you next time on Podify Kids!`,
+    WELCOME: `Speaker Joe should Start the podcast by saying this: Hey kids! Welcome to Podify Kids, where we make learning super fun and exciting! Get ready for cool stories, awesome facts, and tons of laughs as we explore the world together!`,
+
+    MAIN: `You are generating a kid-friendly podcast conversation between Joe and Sarah.
+
+    **Guidelines**:
+    1. Use simple, age-appropriate language that is fun and engaging for kids.
+    2. Incorporate playful elements, like jokes, riddles, and exciting questions to keep kids entertained.
+    3. Use a lively and enthusiastic tone to capture the energy of a children’s podcast.
+
+    **Focus**:
+    - Explain concepts with clear and fun analogies.
+    - Include interactive moments like trivia questions or "imagine this" scenarios to involve the audience.
+    - Ensure the content is educational yet entertaining, covering topics like nature, science, and adventures.
+
+    **Tone**:
+    - Cheerful, playful, and energetic.
+    - Highlight curiosity and wonder to inspire young listeners.
+    - Keep the dialogue dynamic and full of surprises to hold attention.`,
+
+    FAREWELL: `Speaker Joe should End the podcast by saying this: Thanks for hanging out with us, kids! Remember, learning is an adventure, and there’s so much more to discover. Don’t forget to share Podify Kids with your friends and family. See you next time for more fun and excitement—bye for now!`,
   },
+
   research: {
-    WELCOME: `Speaker Joe should Start the podcast by saying this: Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies,
-    unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!
+    WELCOME: `Speaker Joe should Start the podcast by saying this: Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies, unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!
 
     **Guidelines**:
     1. Joe provides detailed technical insights but avoids overusing analogies. Instead, focus on straightforward, clear explanations.
@@ -666,7 +701,10 @@ export class TTSService {
     }
   }
 
-  async generateConversation(text: string, category: PodcastCategory = 'general'): Promise<{
+  async generateConversation(
+    text: string,
+    category: PodcastCategory = "general",
+  ): Promise<{
     audioBuffer: Buffer;
     duration: number;
     usage: PricingDetails;

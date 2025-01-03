@@ -685,3 +685,227 @@ Thank you for joining us on this episode of Podify. If you enjoyed this content,
 [INFO] GET /api/user/usage/check 304 in 114ms
 [INFO] Usage check for user: inactive
 [INFO] GET /api/user/usage/check 304 in 112ms
+[INFO] GET /src/pages/HomePage.tsx 200 in 213ms
+[INFO] GET /src/index.css 200 in 320ms
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] GET / 200 in 33ms
+[INFO] GET /@vite/client 304 in 41ms
+[INFO] GET /@react-refresh 304 in 49ms
+[INFO] GET /src/main.tsx 304 in 81ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 107ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
+[INFO] GET /src/lib/queryClient.ts 304 in 16ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
+[INFO] GET /src/index.css 304 in 689ms
+[INFO] GET /src/pages/HomePage.tsx 200 in 3ms
+[INFO] GET /src/pages/FeedbackPage.tsx 304 in 1ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-user.ts 304 in 1ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
+[INFO] GET /src/components/ui/button.tsx 304 in 1ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
+[INFO] GET /src/components/ui/card.tsx 304 in 1ms
+[INFO] GET /src/components/ui/input.tsx 304 in 0ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 1ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 0ms
+[INFO] GET /src/components/ui/form.tsx 304 in 1ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
+[INFO] GET /src/components/Logo.tsx 304 in 1ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 0ms
+[INFO] GET /src/components/ui/select.tsx 304 in 0ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
+[INFO] GET /src/components/ui/textarea.tsx 304 in 1ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 0ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 0ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 0ms
+[INFO] GET /src/lib/utils.ts 304 in 0ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 0ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 0ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 0ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 0ms
+[INFO] GET /src/components/ui/label.tsx 304 in 1ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 0ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 0ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 0ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
+[INFO] GET /api/user 401 in 3ms
+[INFO] GET / 200 in 9ms
+[INFO] GET / 200 in 4ms
+[INFO] POST /api/login 200 in 346ms
+[INFO] GET /api/user 304 in 63ms
+[INFO] GET / 200 in 111ms
+[INFO] GET / 200 in 60ms
+[INFO] GET /api/podcasts 304 in 199ms
+[INFO] GET /api/playlists 304 in 253ms
+[INFO] GET / 200 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 172ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 114ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 124ms
+[INFO] POST /api/set-category 200 in 57ms
+[INFO] 
+
+ PDF has 1 pages
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 289ms
+[INFO] Calculating estimated pricing and checking usage limits
+[INFO] 
+======= Starting Pricing Calculation ======
+ -Input text length: 752
+ -Number of Vertex AI responses: 0
+
+[INFO] 
+        Input text length: 752
+        Input token count: 175
+        System prompt length: 47
+        System token count: 14
+        Total input tokens: 189
+      
+[INFO] 
+---***** Estimated Calculation Summary **** ---
+Total Input Tokens: 189
+Total Output Tokens: 284
+Total Tokens: 473
+Total TTS Characters: 1136
+Vertex AI Input Cost: $0.000000
+Vertex AI Output Cost: $0.000000
+TTS Cost: $0.018176
+Total Cost: $0.018176
+[INFO] Estimated Podify Tokens: 10 
+
+Usage limits check for user 26:
+ Current articles: 0/3
+ Current Podify tokens: 0/10000
+ Would exceed article limit: false
+ Would exceed token limit: false
+[INFO] Starting audio generation process
+[INFO] 
+
+Category: general
+[INFO] 
+--- Starting Conversation Generation ---
+
+[INFO] 
+
+ ------------PROMPT to VERTEX AI-----------------
+ Speaker Joe should Start the podcast by saying this: Welcome to Podify, where we explore fascinating topics and stories from around the world.
+
+You are generating a podcast conversation between Joe and Sarah aimed at a general audience. Keep the language simple and engaging.
+
+Joe: Boston,thecapitalofMassachusettsandoneoftheoldestcitiesintheUnitedStates,isa vibrantblendofhistoricalsignificanceandmoderninnovation.Knownasthe"CradleofLiberty," BostonplayedapivotalroleintheAmericanRevolution,withiconicsitesliketheFreedomTrail, BostonTeaPartyShipsandMuseum,andPaulRevere'sHousedrawingmillionsofvisitors annually.Thecityisalsoahubforhighereducation,boastingworld-renownedinstitutionssuch asHarvardUniversityandMITinnearbyCambridge.Beyonditshistoricalandacademic reputation,Bostoniscelebratedforitsthrivingartsscene,diverseculinaryofferings,passionate sportsculture,andpicturesqueneighborhoodslikeBeaconHillandBackBay.Whether exploringitscobblestonestreetsorwaterfront,Bostonoffersarichanddynamicexperiencefor residentsandvisitorsalike..
+
+Sarah: 
+
+ ------------END-----------------
+
+[INFO] 
+
+ -------RESPONSE FROM VERTEX AI---------
+ Welcome to Podify, where we explore fascinating topics and stories from around the world.
+
+Joe: Boston, the capital of Massachusetts and one of the oldest cities in the United States, is a vibrant blend of historical significance and modern innovation. Known as the "Cradle of Liberty," Boston played a pivotal role in the American Revolution, with iconic sites like the Freedom Trail, Boston Tea Party Ships and Museum, and Paul Revere's House drawing millions of visitors annually. The city is also a hub for higher education, boasting world-renowned institutions such as Harvard University and MIT in nearby Cambridge. Beyond its historical and academic reputation, Boston is celebrated for its thriving arts scene, diverse culinary offerings, passionate sports culture, and picturesque neighborhoods like Beacon Hill and Back Bay. Whether exploring its cobblestone streets or waterfront, Boston offers a rich and dynamic experience for residents and visitors alike.
+
+Sarah: Wow, Joe, that's quite a description!  It sounds like Boston really has it all.  I've always wanted to visit, especially to walk the Freedom Trail.  What's that actually like? Is it easy to navigate, and what are some of the highlights you'd recommend for a first-timer?
+ 
+
+ ------------END-----------------
+
+[INFO] Processing 3 lines of text
+[INFO] No speaker pattern match found at line 1: "Welcome to Podify, where we explore fascinating to..."
+[INFO] Successfully extracted 2 conversation parts
+[INFO] Cleaned Text (Chunk 1): [
+  {
+    "speaker": "Joe",
+    "text": "Boston, the capital of Massachusetts and one of the oldest cities in the United States, is a vibrant blend of historical significance and modern innovation. Known as the \"Cradle of Liberty,\" Boston played a pivotal role in the American Revolution, with iconic sites like the Freedom Trail, Boston Tea Party Ships and Museum, and Paul Revere's House drawing millions of visitors annually. The city is also a hub for higher education, boasting world-renowned institutions such as Harvard University and MIT in nearby Cambridge. Beyond its historical and academic reputation, Boston is celebrated for its thriving arts scene, diverse culinary offerings, passionate sports culture, and picturesque neighborhoods like Beacon Hill and Back Bay. Whether exploring its cobblestone streets or waterfront, Boston offers a rich and dynamic experience for residents and visitors alike."
+  },
+  {
+    "speaker": "Sarah",
+    "text": "Wow, Joe, that's quite a description!  It sounds like Boston really has it all.  I've always wanted to visit, especially to walk the Freedom Trail.  What's that actually like? Is it easy to navigate, and what are some of the highlights you'd recommend for a first-timer?"
+  }
+]
+[INFO] 
+--- Full Generated Conversation ---
+[INFO] Joe: Boston, the capital of Massachusetts and one of the oldest cities in the United States, is a vibrant blend of historical significance and modern innovation. Known as the "Cradle of Liberty," Boston played a pivotal role in the American Revolution, with iconic sites like the Freedom Trail, Boston Tea Party Ships and Museum, and Paul Revere's House drawing millions of visitors annually. The city is also a hub for higher education, boasting world-renowned institutions such as Harvard University and MIT in nearby Cambridge. Beyond its historical and academic reputation, Boston is celebrated for its thriving arts scene, diverse culinary offerings, passionate sports culture, and picturesque neighborhoods like Beacon Hill and Back Bay. Whether exploring its cobblestone streets or waterfront, Boston offers a rich and dynamic experience for residents and visitors alike.
+[INFO] Sarah: Wow, Joe, that's quite a description!  It sounds like Boston really has it all.  I've always wanted to visit, especially to walk the Freedom Trail.  What's that actually like? Is it easy to navigate, and what are some of the highlights you'd recommend for a first-timer?
+[INFO] --- End of Conversation ---
+
+[INFO] 
+======= Starting Pricing Calculation ======
+ -Input text length: 752
+ -Number of Vertex AI responses: 1
+
+[INFO] 
+        Input text length: 752
+        Input token count: 175
+        System prompt length: 47
+        System token count: 14
+        Total input tokens: 189
+      
+[INFO] Response 1 details:
+- Length: 1249 characters
+- Output tokens: 247
+[INFO] Total TTS characters calculated: 1155
+[INFO] 
+---***** Final Pricing Calculation Summary **** ---
+Total Input Tokens: 189
+Total Output Tokens: 247
+Total Tokens: 436
+Total TTS Characters: 1155
+Vertex AI Input Cost: $0.000000
+Vertex AI Output Cost: $0.000000
+TTS Cost: $0.018480
+Total Cost: $0.018480
+[INFO] Generating audio files...
+[INFO] Audio content written to file "audio-files/0.mp3"
+[INFO] Audio content written to file "audio-files/1.mp3"
+[INFO] Copied intro file podcast.mp3 to audio folder
+[INFO] Merging the following files in order:
+[INFO] 0.mp3
+[INFO] 1.mp3
+[INFO] Successfully merged audio saved as audio-files/final_output.mp3
+[INFO] Cleaned up audio-files directory after successful generation
+[INFO] Audio generation completed: Duration: 58s Actual tokens used: 436 Actual cost: 0.018480218
+[INFO] 
+
+---------- Updated Usage ----------
+ Updated usage for user 26:
+ Articles: 1/3
+ Podify Tokens: 10/10000
+[INFO] Successfully saved audio file (audio/mpeg) to Object Storage: 1735940055373-Untitled_document.mp3
+[INFO] Successfully created podcast entry with ID: 44
+[INFO] POST /api/podcast 200 in 14389ms
+[INFO] GET / 200 in 112ms
+[INFO] GET /api/podcasts 200 in 169ms
+[INFO] 
+========Streaming audio file: 1735940055373-Untitled_document.mp3
+[INFO] HEAD /api/audio/stream/1735940055373-Untitled_document.mp3 200 in 325ms
+[INFO] 
+========Streaming audio file: 1735940055373-Untitled_document.mp3
+[INFO] GET /api/audio/stream/1735940055373-Untitled_document.mp3 200 in 289ms
+[INFO] GET / 200 in 58ms
+[INFO] GET / 200 in 114ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 200 in 170ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 115ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 114ms
