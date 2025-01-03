@@ -170,6 +170,7 @@ export default function HomePage() {
               in seconds
             </p>
           </div>
+          </div>
 
           {user && (
             <div className="mb-8">
