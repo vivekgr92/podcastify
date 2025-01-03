@@ -488,7 +488,25 @@ export function registerRoutes(app: Express) {
   }
 
   // Configure multer for file uploads
-  const storage = multer.memoryStorage();
+  const storage = multer.diskStorage({
+    destination: async (req, file, cb) => {
+      const dir = "./uploads";
+      try {
+        await fs.mkdir(dir, { recursive: true });
+        cb(null, dir);
+      } catch (err) {
+        cb(err as Error, dir);
+      }
+    },
+    filename: (req, file, cb) => {
+      const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+      cb(
+        null,
+        file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname),
+      );
+    },
+  });
+
   const upload = multer({ storage });
 
   // Create Setup Intent endpoint
@@ -917,7 +935,8 @@ export function registerRoutes(app: Express) {
         .select({
           articlesConverted: userUsage.articlesConverted,
           tokensUsed: userUsage.tokensUsed,
-          podifyTokens: userUsage.podifyTokens,          lastConversion: userUsage.lastConversion,
+          podifyTokens: userUsage.podifyTokens,
+          lastConversion: userUsage.lastConversion,
           monthYear: userUsage.monthYear,
         })
         .from(userUsage)
@@ -1622,13 +1641,13 @@ export function registerRoutes(app: Express) {
 
       const validation = insertFeedbackSchema.safeParse({
         ...req.body,
-        userId: req.user.id
+        userId: req.user.id,
       });
 
       if (!validation.success) {
         return res.status(400).json({
           error: "Invalid feedback data",
-          details: validation.error.errors
+          details: validation.error.errors,
         });
       }
 
@@ -1639,22 +1658,21 @@ export function registerRoutes(app: Express) {
           content: validation.data.content,
           rating: validation.data.rating,
           status: "pending",
-          createdAt: new Date()
+          createdAt: new Date(),
         })
         .returning();
 
       res.json({
         message: "Feedback submitted successfully",
-        feedback: newFeedback
+        feedback: newFeedback,
       });
-
     } catch (error) {
       logger.error(
-        `Error submitting feedback: ${error instanceof Error ? error.message : String(error)}`
+        `Error submitting feedback: ${error instanceof Error ? error.message : String(error)}`,
       );
       res.status(500).json({
         error: "Failed to submit feedback",
-        message: error instanceof Error ? error.message : "Unknown error"
+        message: error instanceof Error ? error.message : "Unknown error",
       });
     }
   });
@@ -1673,14 +1691,13 @@ export function registerRoutes(app: Express) {
         .orderBy(desc(feedback.createdAt));
 
       res.json(userFeedback);
-
     } catch (error) {
       logger.error(
-        `Error fetching feedback: ${error instanceof Error ? error.message : String(error)}`
+        `Error fetching feedback: ${error instanceof Error ? error.message : String(error)}`,
       );
       res.status(500).json({
         error: "Failed to fetch feedback",
-        message: error instanceof Error ? error.message : "Unknown error"
+        message: error instanceof Error ? error.message : "Unknown error",
       });
     }
   });
