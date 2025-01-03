@@ -164,10 +164,33 @@ export default function HomePage() {
             <h1 className="text-4xl font-bold mb-4">
               Transform Your Articles Into Podcasts
             </h1>
-            <p className="text-gray-400">
+            <p className="text-gray-400 mb-4">
               Upload any article and convert it into a natural-sounding podcast
               in seconds
             </p>
+            <div className="max-w-xs mx-auto">
+              <Select 
+                required
+                onValueChange={(value) => {
+                  const formData = new FormData();
+                  formData.append('category', value);
+                  fetch('/api/set-category', {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'include'
+                  });
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select podcast category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="general">General</SelectItem>
+                  <SelectItem value="kids">Kids</SelectItem>
+                  <SelectItem value="research">Research</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {user && (

@@ -67,6 +67,24 @@ const GENERATION_CONFIG = {
 };
 
 // System prompts exactly matching Python implementation
+type PodcastCategory = 'general' | 'kids' | 'research';
+
+const CATEGORY_PROMPTS = {
+  general: {
+    WELCOME: `Speaker Joe should Start the podcast by saying this: Welcome to Podify, where we explore fascinating topics and stories from around the world.`,
+    MAIN: `You are generating a podcast conversation between Joe and Sarah aimed at a general audience. Keep the language simple and engaging.`,
+    FAREWELL: `Thank you for joining us on this episode of Podify. If you enjoyed this content, don't forget to subscribe and share!`
+  },
+  kids: {
+    WELCOME: `Speaker Joe should Start the podcast by saying this: Hey kids! Welcome to Podify Kids, where we make learning super fun and exciting!`,
+    MAIN: `You are generating a kid-friendly podcast conversation between Joe and Sarah. Use simple language, fun explanations, and keep things entertaining.`,
+    FAREWELL: `Thanks for joining us, kids! Remember, learning is an adventure. See you next time on Podify Kids!`
+  },
+  research: {
+    WELCOME: `Speaker Joe should Start the podcast by saying this: Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies,`
+  }
+};
+
 const SYSTEM_PROMPTS = {
   WELCOME: `Speaker Joe should Start the podcast by saying this: Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies,
 unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!

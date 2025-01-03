@@ -849,6 +849,15 @@ export function registerRoutes(app: Express) {
     }
   });
 
+  // Set podcast category
+  app.post("/api/set-category", (req, res) => {
+    if (!req.session) {
+      req.session = {};
+    }
+    req.session.podcastCategory = req.body.get('category') || 'general';
+    res.json({ success: true });
+  });
+
   // Stream audio from Object Storage
   app.get("/api/audio/stream/:filename", async (req, res) => {
     const filename = req.params.filename;
