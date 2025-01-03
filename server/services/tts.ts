@@ -709,11 +709,11 @@ export class TTSService {
             }${currentSpeaker}: ${chunk}`;
           }
 
-          // await logger.info([
-          //   "\n\n ------------PROMPT to VERTEX AI-----------------\n",
-          //   prompt,
-          //   "\n\n ------------END-----------------\n",
-          // ]);
+          await logger.info([
+            "\n\n ------------PROMPT to VERTEX AI-----------------\n",
+            prompt,
+            "\n\n ------------END-----------------\n",
+          ]);
 
           // Generate content using Vertex AI
           const result = (await model.generateContent({
@@ -728,21 +728,21 @@ export class TTSService {
             throw new Error("Invalid response from Vertex AI");
           }
 
-          // await logger.info([
-          //   "\n\n -------RESPONSE FROM VERTEX AI---------\n",
-          //   rawText,
-          //   "\n\n ------------END-----------------\n",
-          // ]);
+          await logger.info([
+            "\n\n -------RESPONSE FROM VERTEX AI---------\n",
+            rawText,
+            "\n\n ------------END-----------------\n",
+          ]);
 
           // add the response to the array
           responseTexts.push(rawText);
 
           // Process conversation parts
           const conversationParts = await this.cleanGeneratedText(rawText);
-          // await logger.info([
-          //   `Cleaned Text (Chunk ${index + 1}):`,
-          //   JSON.stringify(conversationParts, null, 2),
-          // ]);
+          await logger.info([
+            `Cleaned Text (Chunk ${index + 1}):`,
+            JSON.stringify(conversationParts, null, 2),
+          ]);
 
           if (conversationParts.length > 0) {
             allConversations.push(...conversationParts);
@@ -760,12 +760,12 @@ export class TTSService {
         }
       }
 
-      // // Print full conversation for debugging
-      // await logger.log("\n--- Full Generated Conversation ---");
-      // allConversations.forEach((part) => {
-      //   logger.log(`${part.speaker}: ${part.text}`);
-      // });
-      // await logger.log("--- End of Conversation ---\n");
+      // Print full conversation for debugging
+      await logger.log("\n--- Full Generated Conversation ---");
+      allConversations.forEach((part) => {
+        logger.log(`${part.speaker}: ${part.text}`);
+      });
+      await logger.log("--- End of Conversation ---\n");
 
       // Calculate pricing using all generated responses
       const usage = await this.calculatePricing(

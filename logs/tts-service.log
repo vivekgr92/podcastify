@@ -1,1284 +1,734 @@
+[INFO] GET / 200 in 5ms
+[INFO] GET /@vite/client 304 in 0ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 0ms
+[INFO] GET /@react-refresh 304 in 0ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 0ms
+[INFO] GET /src/main.tsx 304 in 1ms
+[INFO] GET /src/lib/queryClient.ts 304 in 1ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
+[INFO] GET /src/index.css 304 in 1ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 0ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 0ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-user.ts 304 in 0ms
+[INFO] GET /src/pages/FeedbackPage.tsx 304 in 0ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 0ms
+[INFO] GET /src/components/ui/button.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 0ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 0ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 0ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
+[INFO] GET /src/components/Logo.tsx 304 in 0ms
+[INFO] GET /src/components/ui/form.tsx 304 in 0ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 0ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
+[INFO] GET /src/components/ui/input.tsx 304 in 1ms
+[INFO] GET /src/components/ui/card.tsx 304 in 0ms
+[INFO] GET /src/lib/utils.ts 304 in 0ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 0ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 0ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 0ms
+[INFO] GET /src/components/ui/textarea.tsx 304 in 1ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 1ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 1ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
+[INFO] GET /src/components/ui/label.tsx 304 in 0ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 1ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 0ms
+[INFO] GET /src/components/ui/select.tsx 304 in 0ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 0ms
+[INFO] GET /api/user 401 in 1ms
+[INFO] GET / 200 in 3ms
+[INFO] POST /api/login 200 in 375ms
+[INFO] GET /api/user 304 in 60ms
+[INFO] GET / 200 in 171ms
+[INFO] GET /api/playlists 304 in 228ms
+[INFO] GET /api/podcasts 304 in 283ms
+[INFO] GET / 200 in 116ms
 [INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 111ms
+[INFO] GET /api/user/usage/check 200 in 172ms
 [INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 112ms
-[INFO] GET / 200 in 61ms
-[INFO] GET /@vite/client 304 in 56ms
-[INFO] GET /src/main.tsx 304 in 97ms
-[INFO] GET /@react-refresh 304 in 156ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 211ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 155ms
-[INFO] GET /src/index.css 304 in 162ms
-[INFO] GET /src/lib/queryClient.ts 304 in 201ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 253ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 263ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 250ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 289ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 289ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 291ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 290ms
-[INFO] GET /src/pages/FeedbackPage.tsx 304 in 291ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 289ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 291ms
-[INFO] GET /src/components/ui/button.tsx 304 in 289ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 293ms
-[INFO] GET /src/hooks/use-user.ts 304 in 286ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 291ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 288ms
-[INFO] GET /src/components/Logo.tsx 304 in 290ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 289ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 293ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 291ms
-[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 290ms
-[INFO] GET /src/components/ui/input.tsx 304 in 293ms
-[INFO] GET /src/components/ui/form.tsx 304 in 294ms
-[INFO] GET /src/components/ui/card.tsx 304 in 293ms
-[INFO] GET /src/components/ui/tabs.tsx 304 in 297ms
-[INFO] GET /src/components/ui/avatar.tsx 304 in 295ms
-[INFO] GET /src/components/ui/separator.tsx 304 in 294ms
-[INFO] GET /src/components/PaymentModal.tsx 304 in 291ms
-[INFO] GET /src/components/LoadingScreen.tsx 304 in 296ms
-[INFO] GET /src/components/ui/textarea.tsx 304 in 283ms
-[INFO] GET /src/components/ui/scroll-area.tsx 304 in 290ms
-[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 287ms
-[INFO] GET /src/hooks/use-audio.ts 304 in 282ms
-[INFO] GET /src/lib/utils.ts 304 in 288ms
-[INFO] GET /src/components/AudioPlayer.tsx 304 in 290ms
-[INFO] GET /src/components/ui/progress.tsx 304 in 288ms
-[INFO] GET /src/components/ui/label.tsx 304 in 288ms
-[INFO] GET /src/components/ui/dialog.tsx 304 in 286ms
-[INFO] GET /src/components/ui/popover.tsx 304 in 58ms
-[INFO] GET /src/components/ui/select.tsx 304 in 113ms
-[INFO] GET /src/components/ui/slider.tsx 304 in 123ms
-[INFO] GET /api/user 304 in 57ms
-[INFO] GET / 200 in 59ms
-[INFO] GET / 200 in 176ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 278ms
-[INFO] GET /api/playlists 304 in 303ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 111ms
+[INFO] GET /api/user/usage/check 304 in 115ms
 [INFO] 
 
- PDF has 3 pages
+ PDF has 1 pages
 [INFO] Calculating estimated pricing and checking usage limits
 [INFO] 
 ======= Starting Pricing Calculation ======
- -Input text length: 16704
+ -Input text length: 752
  -Number of Vertex AI responses: 0
 
 [INFO] 
-        Input text length: 16704
-        Input token count: 3419
+        Input text length: 752
+        Input token count: 175
         System prompt length: 2718
         System token count: 525
-        Total input tokens: 3944
+        Total input tokens: 700
       
 [INFO] 
 ---***** Estimated Calculation Summary **** ---
-Total Input Tokens: 3944
-Total Output Tokens: 5916
-Total Tokens: 9860
-Total TTS Characters: 23664
-Vertex AI Input Cost: $0.000002
-Vertex AI Output Cost: $0.000003
-TTS Cost: $0.378624
-Total Cost: $0.378629
-[INFO] Estimated Podify Tokens: 190 
+Total Input Tokens: 700
+Total Output Tokens: 1050
+Total Tokens: 1750
+Total TTS Characters: 4200
+Vertex AI Input Cost: $0.000000
+Vertex AI Output Cost: $0.000001
+TTS Cost: $0.067200
+Total Cost: $0.067201
+[INFO] Estimated Podify Tokens: 34 
 
 Usage limits check for user 26:
- Current articles: 0/3
- Current Podify tokens: 0/10000
+ Current articles: 2/3
+ Current Podify tokens: 153/10000
  Would exceed article limit: false
  Would exceed token limit: false
 [INFO] Starting audio generation process
 [INFO] 
 --- Starting Conversation Generation ---
+
+[INFO] 
+
+ ------------PROMPT to VERTEX AI-----------------
+ Speaker Joe should Start the podcast by saying this: Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies,
+unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!
+
+**Guidelines**:
+1. Joe provides detailed technical insights but avoids overusing analogies. Instead, focus on straightforward, clear explanations.
+2. Sarah asks probing, thoughtful questions, occasionally offers her own insights, and challenges Joe to explain concepts simply and conversationally.
+3. Both speakers use natural human speech patterns, including filler words like "um," "ah," "you know," and short pauses.
+
+**Focus**:
+- Avoid excessive use of analogies. Use one or two if necessary for clarity but prioritize clear, direct explanations.
+- Include natural conversational flow with interruptions, backtracking, and filler words to make the dialogue feel authentic.
+- Encourage a natural dialogue with varied contributions from both speakers.
+
+**Tone**:
+- Engaging, relatable, and spontaneous.
+- Emphasize human-like emotions, with occasional humor or lighthearted moments.
+- Balance technical depth with conversational relatability, avoiding overly formal language.
+
+You are generating a podcast conversation between Joe and Sarah.
+
+**Guidelines**:
+1. Joe provides detailed technical insights but avoids overusing analogies. Instead, focus on straightforward, clear explanations.
+2. Sarah asks probing, thoughtful questions, occasionally offers her own insights, and challenges Joe to explain concepts simply and conversationally.
+3. Both speakers use natural human speech patterns, including filler words like "you know," and short pauses.
+4. Don't include any sound effects or background music.
+
+**Focus**:
+- Avoid excessive use of analogies. Use one or two if necessary for clarity but prioritize clear, direct explanations.
+- Include natural conversational flow with interruptions, backtracking, and filler words to make the dialogue feel authentic.
+- Encourage a natural dialogue with varied contributions from both speakers.
+
+**Tone**:
+- Engaging, relatable, and spontaneous.
+- Emphasize human-like emotions, with occasional humor or lighthearted moments.
+- Balance technical depth with conversational relatability, avoiding overly formal language.
+
+Joe: Boston,thecapitalofMassachusettsandoneoftheoldestcitiesintheUnitedStates,isa vibrantblendofhistoricalsignificanceandmoderninnovation.Knownasthe"CradleofLiberty," BostonplayedapivotalroleintheAmericanRevolution,withiconicsitesliketheFreedomTrail, BostonTeaPartyShipsandMuseum,andPaulRevere'sHousedrawingmillionsofvisitors annually.Thecityisalsoahubforhighereducation,boastingworld-renownedinstitutionssuch asHarvardUniversityandMITinnearbyCambridge.Beyonditshistoricalandacademic reputation,Bostoniscelebratedforitsthrivingartsscene,diverseculinaryofferings,passionate sportsculture,andpicturesqueneighborhoodslikeBeaconHillandBackBay.Whether exploringitscobblestonestreetsorwaterfront,Bostonoffersarichanddynamicexperiencefor residentsandvisitorsalike..
+
+Sarah: 
+
+ ------------END-----------------
+
+[INFO] 
+
+ -------RESPONSE FROM VERTEX AI---------
+ Joe: Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies, unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!  Today, Sarah, we're diving into a fascinating paper on… uh… the effects of microplastics on marine ecosystems.
+
+Sarah: Microplastics, huh?  That sounds… grim.  I mean, we hear about it all the time, but I'm not sure I really understand the *scale* of the problem, or, you know, exactly what the effects are.  Can you break it down for us?
+
+Joe:  Sure. So, the paper we're looking at focuses on the… um… the ingestion of microplastics by zooplankton.  Zooplankton are tiny organisms, crucial to the base of the marine food web.  Think of them as… well, not exactly the *bottom*, but a very, very important early link.  And what this research shows is that…  well,  a significant portion of zooplankton populations are ingesting these microplastics.
+
+Sarah:  Significant portion… meaning what exactly?  Like, a majority?  A small percentage?  This is where I get lost in scientific jargon, I think.
+
+Joe:  Yeah, it varies depending on location, of course. But the study found, um,  levels ranging from, say, 10% to, in some heavily polluted areas, close to 80% of zooplankton samples contained microplastics in their digestive tracts.  It's… it's pretty alarming, actually.
+
+Sarah: Wow. Eighty percent… That's… I mean, that’s devastating. So,  what are the consequences?  Are the zooplankton just… dying?
+
+Joe:  It's not that simple.  It's not always a direct kill.  The effects are… more insidious, I'd say.  Ingestion can lead to reduced feeding efficiency,  impaired growth and reproduction, and increased susceptibility to disease.  And that's just the zooplankton.  Because remember, they're at the bottom of the food chain.  So,  the consequences ripple up.  Larger organisms that eat zooplankton are then ingesting the plastics indirectly, and so on.
+
+Sarah:  So it's a bioaccumulation thing, right?  The toxins build up as you move up the food chain?
+
+Joe:  Exactly.  And it's not just the physical blockage or the reduction in food intake.  Some microplastics leach chemicals, and those chemicals can be toxic.  The long-term effects are… still being researched, of course, but the early findings are… concerning, to say the least.
+
+Sarah:  So,  what can be done?  This sounds incredibly depressing.
+
+Joe:  It is.  But there's still hope.  The research also highlights the need for stricter regulations on plastic production and waste management.  We need to reduce the amount of plastic entering our oceans in the first place.  That's the most crucial step.  But also… more research, more monitoring.  We need a better understanding of the long-term impacts to develop effective solutions.
+
+Sarah:  So it's a huge problem, with no easy answers, but we need to start somewhere.  Thanks for breaking that down for us, Joe.  That was… sobering, but also really informative.
+
+Joe:  My pleasure, Sarah.  And that's all the time we have for today’s episode of Science Odyssey.  Join us next time as we explore…
+ 
+
+ ------------END-----------------
 
 [INFO] Processing 13 lines of text
 [INFO] Successfully extracted 13 conversation parts
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 112ms
-[INFO] Processing 9 lines of text
-[INFO] Successfully extracted 9 conversation parts
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 112ms
-[INFO] Processing 9 lines of text
-[INFO] Successfully extracted 9 conversation parts
-[INFO] Processing 9 lines of text
-[INFO] Successfully extracted 9 conversation parts
+[INFO] Cleaned Text (Chunk 1): [
+  {
+    "speaker": "Joe",
+    "text": "Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies, unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!  Today, Sarah, we're diving into a fascinating paper on… uh… the effects of microplastics on marine ecosystems."
+  },
+  {
+    "speaker": "Sarah",
+    "text": "Microplastics, huh?  That sounds… grim.  I mean, we hear about it all the time, but I'm not sure I really understand the *scale* of the problem, or, you know, exactly what the effects are.  Can you break it down for us?"
+  },
+  {
+    "speaker": "Joe",
+    "text": "Sure. So, the paper we're looking at focuses on the… um… the ingestion of microplastics by zooplankton.  Zooplankton are tiny organisms, crucial to the base of the marine food web.  Think of them as… well, not exactly the *bottom*, but a very, very important early link.  And what this research shows is that…  well,  a significant portion of zooplankton populations are ingesting these microplastics."
+  },
+  {
+    "speaker": "Sarah",
+    "text": "Significant portion… meaning what exactly?  Like, a majority?  A small percentage?  This is where I get lost in scientific jargon, I think."
+  },
+  {
+    "speaker": "Joe",
+    "text": "Yeah, it varies depending on location, of course. But the study found, um,  levels ranging from, say, 10% to, in some heavily polluted areas, close to 80% of zooplankton samples contained microplastics in their digestive tracts.  It's… it's pretty alarming, actually."
+  },
+  {
+    "speaker": "Sarah",
+    "text": "Wow. Eighty percent… That's… I mean, that’s devastating. So,  what are the consequences?  Are the zooplankton just… dying?"
+  },
+  {
+    "speaker": "Joe",
+    "text": "It's not that simple.  It's not always a direct kill.  The effects are… more insidious, I'd say.  Ingestion can lead to reduced feeding efficiency,  impaired growth and reproduction, and increased susceptibility to disease.  And that's just the zooplankton.  Because remember, they're at the bottom of the food chain.  So,  the consequences ripple up.  Larger organisms that eat zooplankton are then ingesting the plastics indirectly, and so on."
+  },
+  {
+    "speaker": "Sarah",
+    "text": "So it's a bioaccumulation thing, right?  The toxins build up as you move up the food chain?"
+  },
+  {
+    "speaker": "Joe",
+    "text": "Exactly.  And it's not just the physical blockage or the reduction in food intake.  Some microplastics leach chemicals, and those chemicals can be toxic.  The long-term effects are… still being researched, of course, but the early findings are… concerning, to say the least."
+  },
+  {
+    "speaker": "Sarah",
+    "text": "So,  what can be done?  This sounds incredibly depressing."
+  },
+  {
+    "speaker": "Joe",
+    "text": "It is.  But there's still hope.  The research also highlights the need for stricter regulations on plastic production and waste management.  We need to reduce the amount of plastic entering our oceans in the first place.  That's the most crucial step.  But also… more research, more monitoring.  We need a better understanding of the long-term impacts to develop effective solutions."
+  },
+  {
+    "speaker": "Sarah",
+    "text": "So it's a huge problem, with no easy answers, but we need to start somewhere.  Thanks for breaking that down for us, Joe.  That was… sobering, but also really informative."
+  },
+  {
+    "speaker": "Joe",
+    "text": "My pleasure, Sarah.  And that's all the time we have for today’s episode of Science Odyssey.  Join us next time as we explore…"
+  }
+]
 [INFO] 
+--- Full Generated Conversation ---
+[INFO] Joe: Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies, unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!  Today, Sarah, we're diving into a fascinating paper on… uh… the effects of microplastics on marine ecosystems.
+[INFO] Sarah: Microplastics, huh?  That sounds… grim.  I mean, we hear about it all the time, but I'm not sure I really understand the *scale* of the problem, or, you know, exactly what the effects are.  Can you break it down for us?
+[INFO] Joe: Sure. So, the paper we're looking at focuses on the… um… the ingestion of microplastics by zooplankton.  Zooplankton are tiny organisms, crucial to the base of the marine food web.  Think of them as… well, not exactly the *bottom*, but a very, very important early link.  And what this research shows is that…  well,  a significant portion of zooplankton populations are ingesting these microplastics.
+[INFO] Sarah: Significant portion… meaning what exactly?  Like, a majority?  A small percentage?  This is where I get lost in scientific jargon, I think.
+[INFO] Joe: Yeah, it varies depending on location, of course. But the study found, um,  levels ranging from, say, 10% to, in some heavily polluted areas, close to 80% of zooplankton samples contained microplastics in their digestive tracts.  It's… it's pretty alarming, actually.
+[INFO] Sarah: Wow. Eighty percent… That's… I mean, that’s devastating. So,  what are the consequences?  Are the zooplankton just… dying?
+[INFO] Joe: It's not that simple.  It's not always a direct kill.  The effects are… more insidious, I'd say.  Ingestion can lead to reduced feeding efficiency,  impaired growth and reproduction, and increased susceptibility to disease.  And that's just the zooplankton.  Because remember, they're at the bottom of the food chain.  So,  the consequences ripple up.  Larger organisms that eat zooplankton are then ingesting the plastics indirectly, and so on.
+[INFO] Sarah: So it's a bioaccumulation thing, right?  The toxins build up as you move up the food chain?
+[INFO] Joe: Exactly.  And it's not just the physical blockage or the reduction in food intake.  Some microplastics leach chemicals, and those chemicals can be toxic.  The long-term effects are… still being researched, of course, but the early findings are… concerning, to say the least.
+[INFO] Sarah: So,  what can be done?  This sounds incredibly depressing.
+[INFO] Joe: It is.  But there's still hope.  The research also highlights the need for stricter regulations on plastic production and waste management.  We need to reduce the amount of plastic entering our oceans in the first place.  That's the most crucial step.  But also… more research, more monitoring.  We need a better understanding of the long-term impacts to develop effective solutions.
+[INFO] Sarah: So it's a huge problem, with no easy answers, but we need to start somewhere.  Thanks for breaking that down for us, Joe.  That was… sobering, but also really informative.
+[INFO] Joe: My pleasure, Sarah.  And that's all the time we have for today’s episode of Science Odyssey.  Join us next time as we explore…
+[INFO] --- End of Conversation ---
 
- ==================Last Chunk===================
-
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 113ms
-[INFO] Processing 19 lines of text
-[INFO] No speaker pattern match found at line 1: "(Sound of a gentle microphone adjustment)..."
-[INFO] No speaker pattern match found at line 18: "(Slight pause)..."
-[INFO] Successfully extracted 17 conversation parts
 [INFO] 
 ======= Starting Pricing Calculation ======
- -Input text length: 16704
- -Number of Vertex AI responses: 5
+ -Input text length: 752
+ -Number of Vertex AI responses: 1
 
 [INFO] 
-        Input text length: 16704
-        Input token count: 3419
+        Input text length: 752
+        Input token count: 175
         System prompt length: 2718
         System token count: 525
-        Total input tokens: 3944
+        Total input tokens: 700
       
 [INFO] Response 1 details:
-- Length: 3629 characters
-- Output tokens: 791
-[INFO] Response 2 details:
-- Length: 3457 characters
-- Output tokens: 747
-[INFO] Response 3 details:
-- Length: 2972 characters
-- Output tokens: 680
-[INFO] Response 4 details:
-- Length: 2740 characters
-- Output tokens: 581
-[INFO] Response 5 details:
-- Length: 3472 characters
-- Output tokens: 789
-[INFO] Total TTS characters calculated: 16065
+- Length: 3109 characters
+- Output tokens: 762
+[INFO] Total TTS characters calculated: 3074
 [INFO] 
 ---***** Final Pricing Calculation Summary **** ---
-Total Input Tokens: 3944
-Total Output Tokens: 3588
-Total Tokens: 7532
-Total TTS Characters: 16065
-Vertex AI Input Cost: $0.000002
-Vertex AI Output Cost: $0.000002
-TTS Cost: $0.257040
-Total Cost: $0.257044
+Total Input Tokens: 700
+Total Output Tokens: 762
+Total Tokens: 1462
+Total TTS Characters: 3074
+Vertex AI Input Cost: $0.000000
+Vertex AI Output Cost: $0.000000
+TTS Cost: $0.049184
+Total Cost: $0.049185
 [INFO] Generating audio files...
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 128ms
 [INFO] Audio content written to file "audio-files/0.mp3"
 [INFO] Audio content written to file "audio-files/1.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 116ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 114ms
 [INFO] Audio content written to file "audio-files/2.mp3"
 [INFO] Audio content written to file "audio-files/3.mp3"
 [INFO] Audio content written to file "audio-files/4.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 114ms
 [INFO] Audio content written to file "audio-files/5.mp3"
 [INFO] Audio content written to file "audio-files/6.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 112ms
 [INFO] Audio content written to file "audio-files/7.mp3"
 [INFO] Audio content written to file "audio-files/8.mp3"
 [INFO] Audio content written to file "audio-files/9.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 111ms
 [INFO] Audio content written to file "audio-files/10.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 110ms
 [INFO] Audio content written to file "audio-files/11.mp3"
 [INFO] Audio content written to file "audio-files/12.mp3"
+[INFO] Copied intro file podcast.mp3 to audio folder
+[INFO] Merging the following files in order:
+[INFO] 0.mp3
+[INFO] 1.mp3
+[INFO] 2.mp3
+[INFO] 3.mp3
+[INFO] 4.mp3
+[INFO] 5.mp3
+[INFO] 6.mp3
+[INFO] 7.mp3
+[INFO] 8.mp3
+[INFO] 9.mp3
+[INFO] 10.mp3
+[INFO] 11.mp3
+[INFO] 12.mp3
+[INFO] Successfully merged audio saved as audio-files/final_output.mp3
+[INFO] Cleaned up audio-files directory after successful generation
+[INFO] Audio generation completed: Duration: 150s Actual tokens used: 1462 Actual cost: 0.049184730999999995
+[INFO] 
+
+---------- Updated Usage ----------
+ Updated usage for user 26:
+ Articles: 3/3
+ Podify Tokens: 178/10000
+[INFO] Successfully saved audio file (audio/mpeg) to Object Storage: 1735936613408-Untitled_document.mp3
+[INFO] Successfully created podcast entry with ID: 43
+[INFO] POST /api/podcast 200 in 39283ms
+[INFO] GET / 200 in 110ms
+[INFO] GET /api/podcasts 200 in 170ms
+[INFO] GET / 204 in 58ms
+[INFO] GET / 204 in 59ms
+[INFO] GET / 200 in 106ms
+[INFO] GET / 200 in 69ms
+[INFO] GET /@vite/client 304 in 64ms
+[INFO] GET /src/main.tsx 304 in 57ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 66ms
+[INFO] GET / 200 in 81ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 124ms
+[INFO] GET /@react-refresh 304 in 137ms
+[INFO] GET /src/index.css 304 in 178ms
+[INFO] GET /@vite/client 200 in 187ms
+[INFO] GET /src/main.tsx 200 in 242ms
+[INFO] GET /src/lib/queryClient.ts 304 in 258ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 258ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 254ms
+[INFO] GET /@react-refresh 304 in 235ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 297ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 276ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 340ms
+[INFO] GET /src/pages/FeedbackPage.tsx 304 in 388ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 443ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 499ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 514ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 511ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 500ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 487ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 480ms
+[INFO] GET /src/lib/queryClient.ts 304 in 467ms
+[INFO] GET /src/index.css 304 in 469ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 449ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 467ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 466ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 468ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 473ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 471ms
+[INFO] GET /src/pages/FeedbackPage.tsx 304 in 466ms
+[INFO] GET /src/hooks/use-user.ts 304 in 453ms
+[INFO] GET /src/components/ui/button.tsx 304 in 466ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 466ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 463ms
+[INFO] GET /src/hooks/use-user.ts 304 in 464ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 463ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 463ms
+[INFO] GET /src/components/Logo.tsx 304 in 464ms
+[INFO] GET /src/components/ui/button.tsx 304 in 458ms
+[INFO] GET /src/components/ui/card.tsx 304 in 462ms
+[INFO] GET /src/components/ui/textarea.tsx 304 in 463ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 463ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 464ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 458ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 462ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 463ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 463ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 464ms
+[INFO] GET /src/components/ui/form.tsx 304 in 463ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 463ms
+[INFO] GET /src/components/ui/input.tsx 304 in 463ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 464ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 463ms
+[INFO] GET /src/components/Logo.tsx 304 in 464ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 464ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 465ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 460ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 464ms
+[INFO] GET /src/lib/utils.ts 304 in 464ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 465ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 430ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 460ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 461ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 466ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 466ms
+[INFO] GET /src/components/ui/input.tsx 304 in 462ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 461ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 423ms
+[INFO] GET /src/components/ui/label.tsx 304 in 463ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 464ms
+[INFO] GET /src/components/ui/form.tsx 304 in 464ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 452ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 512ms
+[INFO] GET /src/components/ui/select.tsx 304 in 513ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 512ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 513ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 309ms
+[INFO] GET /src/lib/utils.ts 304 in 341ms
+[INFO] GET /src/components/ui/card.tsx 304 in 171ms
+[INFO] GET /api/user 304 in 150ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 180ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 185ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 185ms
+[INFO] GET / 200 in 232ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 299ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 296ms
+[INFO] GET /src/components/ui/textarea.tsx 304 in 296ms
+[INFO] GET /api/playlists 304 in 512ms
 [INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 111ms
-[INFO] Audio content written to file "audio-files/13.mp3"
-[INFO] Audio content written to file "audio-files/14.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 116ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 110ms
-[INFO] Audio content written to file "audio-files/15.mp3"
-[INFO] Audio content written to file "audio-files/16.mp3"
+[INFO] GET /api/user/usage/check 200 in 567ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 218ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 233ms
+[INFO] GET /src/components/ui/label.tsx 304 in 172ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 113ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 125ms
+[INFO] GET /src/components/ui/select.tsx 304 in 125ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 124ms
+[INFO] GET /api/user 304 in 57ms
+[INFO] GET / 200 in 58ms
+[INFO] GET / 200 in 91ms
+[INFO] GET /api/podcasts 304 in 228ms
+[INFO] GET /api/playlists 304 in 242ms
 [INFO] Usage check for user: inactive
 [INFO] GET /api/user/usage/check 304 in 113ms
-[INFO] Audio content written to file "audio-files/17.mp3"
-[INFO] Audio content written to file "audio-files/18.mp3"
 [INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 111ms
-[INFO] Audio content written to file "audio-files/19.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 112ms
-[INFO] Audio content written to file "audio-files/20.mp3"
-[INFO] Audio content written to file "audio-files/21.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 112ms
-[INFO] Audio content written to file "audio-files/22.mp3"
+[INFO] GET /api/user/usage/check 304 in 114ms
 [INFO] Usage check for user: inactive
 [INFO] GET /api/user/usage/check 304 in 113ms
-[INFO] Audio content written to file "audio-files/23.mp3"
-[INFO] Audio content written to file "audio-files/24.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 111ms
-[INFO] Audio content written to file "audio-files/25.mp3"
 [INFO] Usage check for user: inactive
 [INFO] GET /api/user/usage/check 304 in 113ms
-[INFO] Audio content written to file "audio-files/26.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 111ms
-[INFO] Audio content written to file "audio-files/27.mp3"
-[INFO] Audio content written to file "audio-files/28.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 112ms
-[INFO] Audio content written to file "audio-files/29.mp3"
-[INFO] Audio content written to file "audio-files/30.mp3"
-[INFO] Audio content written to file "audio-files/31.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 112ms
-[INFO] Audio content written to file "audio-files/32.mp3"
-[INFO] Audio content written to file "audio-files/33.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 111ms
-[INFO] Audio content written to file "audio-files/34.mp3"
-[INFO] Audio content written to file "audio-files/35.mp3"
 [INFO] Usage check for user: inactive
 [INFO] GET /api/user/usage/check 304 in 113ms
-[INFO] Audio content written to file "audio-files/36.mp3"
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 114ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 115ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 114ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 114ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 114ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 114ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 112ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 114ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 112ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 115ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 119ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 112ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 114ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 117ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 112ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 114ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 115ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 112ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 112ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 114ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 114ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 112ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 114ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 114ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 115ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 112ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 112ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 114ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 114ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 117ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 114ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 112ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 115ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 114ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 112ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 114ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 112ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 112ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 112ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 114ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 145ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 114ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 115ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 115ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] GET / 204 in 57ms
+[INFO] GET / 204 in 112ms
+[INFO] GET / 200 in 70ms
+[INFO] GET / 200 in 68ms
+[INFO] GET /@vite/client 304 in 62ms
+[INFO] GET /src/main.tsx 304 in 102ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 70ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 69ms
+[INFO] GET /@react-refresh 304 in 84ms
+[INFO] GET / 200 in 132ms
+[INFO] GET /src/index.css 304 in 175ms
+[INFO] GET /src/lib/queryClient.ts 304 in 185ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 184ms
+[INFO] GET /src/main.tsx 200 in 180ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 172ms
+[INFO] GET /@vite/client 200 in 227ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 257ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 265ms
+[INFO] GET /@react-refresh 304 in 234ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 289ms
+[INFO] GET /src/pages/FeedbackPage.tsx 304 in 358ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 424ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 476ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 532ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 460ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 456ms
+[INFO] GET /src/lib/queryClient.ts 304 in 485ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 498ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 497ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 484ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 469ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 469ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 472ms
+[INFO] GET /src/pages/FeedbackPage.tsx 304 in 469ms
+[INFO] GET /src/hooks/use-user.ts 304 in 465ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 465ms
+[INFO] GET /src/components/ui/button.tsx 304 in 461ms
+[INFO] GET /src/index.css 304 in 471ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 472ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 465ms
+[INFO] GET /src/hooks/use-user.ts 304 in 472ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 467ms
+[INFO] GET /src/components/ui/button.tsx 304 in 468ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 468ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 467ms
+[INFO] GET /src/components/ui/card.tsx 304 in 469ms
+[INFO] GET /src/components/ui/textarea.tsx 304 in 466ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 461ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 461ms
+[INFO] GET /src/components/ui/input.tsx 304 in 467ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 466ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 464ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 464ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 464ms
+[INFO] GET /src/components/Logo.tsx 304 in 465ms
+[INFO] GET /src/lib/utils.ts 304 in 469ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 467ms
+[INFO] GET /src/components/Logo.tsx 304 in 459ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 460ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 469ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 466ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 467ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 467ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 467ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 469ms
+[INFO] GET /src/components/ui/form.tsx 304 in 468ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 466ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 471ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 462ms
+[INFO] GET /src/components/ui/input.tsx 304 in 463ms
+[INFO] GET /src/components/ui/form.tsx 304 in 460ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 465ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 462ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 466ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 463ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 466ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 466ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 465ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 463ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 463ms
+[INFO] GET /src/components/ui/select.tsx 304 in 462ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 462ms
+[INFO] GET /src/components/ui/label.tsx 304 in 463ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 464ms
+[INFO] GET /src/lib/utils.ts 304 in 459ms
+[INFO] GET /src/components/ui/card.tsx 304 in 347ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 339ms
+[INFO] GET /api/user 304 in 166ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 184ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 188ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 159ms
+[INFO] GET / 200 in 175ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 295ms
+[INFO] GET /src/components/ui/textarea.tsx 304 in 296ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 297ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 509ms
+[INFO] GET /api/playlists 304 in 566ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 175ms
+[INFO] GET /src/components/ui/label.tsx 304 in 204ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 196ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 127ms
+[INFO] GET /src/components/ui/select.tsx 304 in 123ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 122ms
+[INFO] GET /api/user 304 in 57ms
+[INFO] GET / 200 in 58ms
+[INFO] GET / 200 in 93ms
+[INFO] GET /api/podcasts 304 in 211ms
+[INFO] GET /api/playlists 304 in 250ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 115ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
 [INFO] Usage check for user: inactive
 [INFO] GET /api/user/usage/check 304 in 121ms
-[INFO] Audio content written to file "audio-files/37.mp3"
-[INFO] Audio content written to file "audio-files/38.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 112ms
-[INFO] Audio content written to file "audio-files/39.mp3"
-[INFO] Audio content written to file "audio-files/40.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 112ms
-[INFO] Audio content written to file "audio-files/41.mp3"
-[INFO] Audio content written to file "audio-files/42.mp3"
-[INFO] Audio content written to file "audio-files/43.mp3"
-[INFO] Audio content written to file "audio-files/44.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 113ms
-[INFO] Audio content written to file "audio-files/45.mp3"
-[INFO] Audio content written to file "audio-files/46.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 112ms
-[INFO] Audio content written to file "audio-files/47.mp3"
-[INFO] Audio content written to file "audio-files/48.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 111ms
-[INFO] Audio content written to file "audio-files/49.mp3"
-[INFO] Audio content written to file "audio-files/50.mp3"
-[INFO] Audio content written to file "audio-files/51.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 111ms
-[INFO] Audio content written to file "audio-files/52.mp3"
-[INFO] Audio content written to file "audio-files/53.mp3"
-[INFO] Audio content written to file "audio-files/54.mp3"
-[INFO] Audio content written to file "audio-files/55.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 111ms
-[INFO] Audio content written to file "audio-files/56.mp3"
-[INFO] Copied intro file podcast.mp3 to audio folder
-[INFO] Merging the following files in order:
-[INFO] 0.mp3
-[INFO] 1.mp3
-[INFO] 4.mp3
-[INFO] 5.mp3
-[INFO] 6.mp3
-[INFO] 7.mp3
-[INFO] 8.mp3
-[INFO] 9.mp3
-[INFO] 10.mp3
-[INFO] 11.mp3
-[INFO] 12.mp3
-[INFO] 13.mp3
-[INFO] 14.mp3
-[INFO] 15.mp3
-[INFO] 16.mp3
-[INFO] 17.mp3
-[INFO] 18.mp3
-[INFO] 19.mp3
-[INFO] 20.mp3
-[INFO] 21.mp3
-[INFO] 22.mp3
-[INFO] 23.mp3
-[INFO] 24.mp3
-[INFO] 25.mp3
-[INFO] 26.mp3
-[INFO] 27.mp3
-[INFO] 28.mp3
-[INFO] 29.mp3
-[INFO] 30.mp3
-[INFO] 31.mp3
-[INFO] 32.mp3
-[INFO] 33.mp3
-[INFO] 34.mp3
-[INFO] 35.mp3
-[INFO] 36.mp3
-[INFO] 37.mp3
-[INFO] 38.mp3
-[INFO] 39.mp3
-[INFO] 40.mp3
-[INFO] 41.mp3
-[INFO] 42.mp3
-[INFO] 43.mp3
-[INFO] 44.mp3
-[INFO] 45.mp3
-[INFO] 46.mp3
-[INFO] 47.mp3
-[INFO] 48.mp3
-[INFO] 49.mp3
-[INFO] 2.mp3
-[INFO] 50.mp3
-[INFO] 51.mp3
-[INFO] 52.mp3
-[INFO] 53.mp3
-[INFO] 54.mp3
-[INFO] 55.mp3
-[INFO] 56.mp3
-[INFO] 3.mp3
-[INFO] Successfully merged audio saved as audio-files/final_output.mp3
-[INFO] Cleaned up audio-files directory after successful generation
-[INFO] Audio generation completed: Duration: 787s Actual tokens used: 7532 Actual cost: 0.257043766
-[INFO] 
-
----------- Updated Usage ----------
- Updated usage for user 26:
- Articles: 1/3
- Podify Tokens: 129/10000
-[ERROR] Error processing podcast: timestamp is not defined
-[INFO] POST /api/podcast 500 in 188684ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 225ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 111ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 111ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 112ms
 [INFO] Usage check for user: inactive
 [INFO] GET /api/user/usage/check 304 in 112ms
 [INFO] Usage check for user: inactive
 [INFO] GET /api/user/usage/check 304 in 113ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 111ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 111ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 111ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 112ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 111ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 113ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 144ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 112ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 110ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 112ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 111ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 110ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 111ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 112ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 112ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 111ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 110ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 112ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 112ms
-[INFO] GET / 204 in 57ms
-[INFO] GET / 204 in 103ms
-[INFO] GET / 200 in 59ms
-[INFO] GET / 200 in 106ms
-[INFO] GET /@vite/client 304 in 58ms
-[INFO] GET /src/main.tsx 304 in 58ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 84ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 96ms
-[INFO] GET /src/index.css 304 in 122ms
-[INFO] GET /@react-refresh 304 in 158ms
-[INFO] GET /src/lib/queryClient.ts 304 in 179ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 221ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 235ms
-[INFO] GET /src/main.tsx 304 in 278ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 317ms
-[INFO] GET /@vite/client 304 in 358ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 401ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 403ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 404ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 400ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 402ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 396ms
-[INFO] GET /src/pages/FeedbackPage.tsx 304 in 399ms
-[INFO] GET /@react-refresh 304 in 395ms
-[INFO] GET /src/hooks/use-user.ts 304 in 398ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 396ms
-[INFO] GET /src/components/ui/button.tsx 304 in 399ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 362ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 396ms
-[INFO] GET /src/index.css 304 in 396ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 395ms
-[INFO] GET /src/lib/queryClient.ts 304 in 394ms
-[INFO] GET /src/components/Logo.tsx 304 in 401ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 400ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 396ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 398ms
-[INFO] GET /src/components/ui/input.tsx 304 in 400ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 396ms
-[INFO] GET /src/components/ui/form.tsx 304 in 399ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 399ms
-[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 402ms
-[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 401ms
-[INFO] GET /src/lib/utils.ts 304 in 404ms
-[INFO] GET /src/components/AudioPlayer.tsx 304 in 401ms
-[INFO] GET /src/hooks/use-audio.ts 304 in 399ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 399ms
-[INFO] GET /src/components/ui/card.tsx 304 in 385ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 391ms
-[INFO] GET /src/components/ui/tabs.tsx 304 in 399ms
-[INFO] GET /src/components/ui/avatar.tsx 304 in 398ms
-[INFO] GET /src/components/PaymentModal.tsx 304 in 399ms
-[INFO] GET /src/components/LoadingScreen.tsx 304 in 393ms
-[INFO] GET /src/components/ui/separator.tsx 304 in 396ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 392ms
-[INFO] GET /src/components/ui/textarea.tsx 304 in 394ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 394ms
-[INFO] GET /src/components/ui/scroll-area.tsx 304 in 396ms
-[INFO] GET /src/components/ui/progress.tsx 304 in 398ms
-[INFO] GET /src/components/ui/label.tsx 304 in 397ms
-[INFO] GET /src/components/ui/select.tsx 304 in 397ms
-[INFO] GET /src/components/ui/popover.tsx 304 in 394ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 395ms
-[INFO] GET /src/components/ui/slider.tsx 304 in 396ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 396ms
-[INFO] GET /src/components/ui/dialog.tsx 304 in 399ms
-[INFO] GET /src/pages/FeedbackPage.tsx 304 in 174ms
-[INFO] GET /src/hooks/use-user.ts 304 in 117ms
-[INFO] GET /api/user 304 in 84ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 123ms
-[INFO] GET /src/components/ui/button.tsx 304 in 121ms
-[INFO] GET / 200 in 138ms
-[INFO] GET / 200 in 169ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 290ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 289ms
-[INFO] GET /api/playlists 304 in 441ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 496ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 152ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 166ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 65ms
-[INFO] GET /src/components/Logo.tsx 304 in 67ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 66ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 65ms
-[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 67ms
-[INFO] GET /src/components/ui/input.tsx 304 in 66ms
-[INFO] GET /src/components/ui/form.tsx 304 in 65ms
-[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 67ms
-[INFO] GET /src/hooks/use-audio.ts 304 in 66ms
-[INFO] GET /src/components/AudioPlayer.tsx 304 in 68ms
-[INFO] GET /src/lib/utils.ts 304 in 67ms
-[INFO] GET /src/components/ui/card.tsx 304 in 66ms
-[INFO] GET /src/components/ui/tabs.tsx 304 in 65ms
-[INFO] GET /src/components/ui/avatar.tsx 304 in 68ms
-[INFO] GET /src/components/PaymentModal.tsx 304 in 67ms
-[INFO] GET /src/components/LoadingScreen.tsx 304 in 66ms
-[INFO] GET /src/components/ui/separator.tsx 304 in 65ms
-[INFO] GET /src/components/ui/textarea.tsx 304 in 64ms
-[INFO] GET /src/components/ui/scroll-area.tsx 304 in 66ms
-[INFO] GET /src/components/ui/progress.tsx 304 in 66ms
-[INFO] GET /src/components/ui/label.tsx 304 in 65ms
-[INFO] GET /src/components/ui/slider.tsx 304 in 68ms
-[INFO] GET /src/components/ui/popover.tsx 304 in 66ms
-[INFO] GET /src/components/ui/select.tsx 304 in 65ms
-[INFO] GET /src/components/ui/dialog.tsx 304 in 68ms
-[INFO] GET /api/user 304 in 56ms
-[INFO] GET / 200 in 117ms
-[INFO] GET /api/playlists 304 in 172ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 200 in 162ms
-[INFO] Stripe initialized successfully
-[INFO] ***Starting server initialization...
-
-
-[INFO] Registering routes...
-[INFO] Setting up Vite for development...
-[INFO] Server started successfully on port 4000
-[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
-[INFO] GET / 200 in 36ms
-[INFO] GET / 200 in 31ms
-[INFO] GET /@vite/client 304 in 12ms
-[INFO] GET /@vite/client 304 in 18ms
-[INFO] GET /src/main.tsx 304 in 75ms
-[INFO] GET /src/main.tsx 304 in 38ms
-[INFO] GET /@react-refresh 304 in 74ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 250ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 1ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
-[INFO] GET /src/lib/queryClient.ts 304 in 1ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
-[INFO] GET /@react-refresh 304 in 1ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 0ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 0ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
-[INFO] GET /src/index.css 304 in 690ms
-[INFO] GET /src/hooks/use-user.ts 304 in 1ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
-[INFO] GET /src/pages/FeedbackPage.tsx 304 in 0ms
-[INFO] GET /src/index.css 304 in 1ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/button.tsx 304 in 1ms
-[INFO] GET /src/lib/queryClient.ts 304 in 1ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 0ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 0ms
-[INFO] GET /src/components/ui/input.tsx 304 in 1ms
-[INFO] GET /src/components/ui/form.tsx 304 in 1ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 0ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 0ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
-[INFO] GET /src/components/Logo.tsx 304 in 0ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 0ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 0ms
-[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-audio.ts 304 in 0ms
-[INFO] GET /src/lib/utils.ts 304 in 0ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/avatar.tsx 304 in 0ms
-[INFO] GET /src/components/ui/card.tsx 304 in 1ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/textarea.tsx 304 in 1ms
-[INFO] GET /src/components/ui/scroll-area.tsx 304 in 0ms
-[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 0ms
-[INFO] GET /src/components/ui/tabs.tsx 304 in 0ms
-[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
-[INFO] GET /src/components/LoadingScreen.tsx 304 in 0ms
-[INFO] GET /src/components/ui/separator.tsx 304 in 1ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 0ms
-[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
-[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 0ms
-[INFO] GET /src/components/ui/select.tsx 304 in 1ms
-[INFO] GET /src/components/ui/slider.tsx 304 in 0ms
-[INFO] GET /src/components/ui/label.tsx 304 in 0ms
-[INFO] GET /src/components/ui/dialog.tsx 304 in 0ms
-[INFO] GET /src/pages/FeedbackPage.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-user.ts 304 in 0ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
-[INFO] GET /api/user 401 in 1ms
-[INFO] GET /src/components/ui/button.tsx 304 in 0ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
-[INFO] GET / 200 in 4ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
-[INFO] GET /src/components/Logo.tsx 304 in 1ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 0ms
-[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 1ms
-[INFO] GET /src/components/ui/input.tsx 304 in 0ms
-[INFO] GET /src/components/ui/form.tsx 304 in 1ms
-[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-audio.ts 304 in 1ms
-[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
-[INFO] GET /src/lib/utils.ts 304 in 1ms
-[INFO] GET /src/components/ui/card.tsx 304 in 0ms
-[INFO] GET /src/components/ui/tabs.tsx 304 in 1ms
-[INFO] GET /src/components/ui/avatar.tsx 304 in 0ms
-[INFO] GET /src/components/PaymentModal.tsx 304 in 0ms
-[INFO] GET /src/components/LoadingScreen.tsx 304 in 1ms
-[INFO] GET /src/components/ui/separator.tsx 304 in 1ms
-[INFO] GET /src/components/ui/textarea.tsx 304 in 0ms
-[INFO] GET /src/components/ui/scroll-area.tsx 304 in 0ms
-[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
-[INFO] GET /src/components/ui/label.tsx 304 in 0ms
-[INFO] GET /src/components/ui/slider.tsx 304 in 0ms
-[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
-[INFO] GET /src/components/ui/select.tsx 304 in 1ms
-[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
-[INFO] GET /api/user 401 in 1ms
-[INFO] GET / 200 in 3ms
-[INFO] POST /api/login 200 in 381ms
-[INFO] GET /api/user 304 in 59ms
-[INFO] GET / 200 in 98ms
-[INFO] GET / 200 in 116ms
-[INFO] GET /api/playlists 304 in 228ms
-[INFO] GET /api/podcasts 304 in 273ms
-[INFO] GET / 200 in 59ms
-[INFO] GET / 200 in 59ms
-[INFO] GET / 200 in 108ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 200 in 170ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 133ms
-[INFO] 
-
- PDF has 3 pages
-[INFO] Calculating estimated pricing and checking usage limits
-[INFO] 
-======= Starting Pricing Calculation ======
- -Input text length: 16704
- -Number of Vertex AI responses: 0
-
-[INFO] 
-        Input text length: 16704
-        Input token count: 3419
-        System prompt length: 2718
-        System token count: 525
-        Total input tokens: 3944
-      
-[INFO] 
----***** Estimated Calculation Summary **** ---
-Total Input Tokens: 3944
-Total Output Tokens: 5916
-Total Tokens: 9860
-Total TTS Characters: 23664
-Vertex AI Input Cost: $0.000002
-Vertex AI Output Cost: $0.000003
-TTS Cost: $0.378624
-Total Cost: $0.378629
-[INFO] Estimated Podify Tokens: 190 
-
-Usage limits check for user 26:
- Current articles: 0/3
- Current Podify tokens: 0/10000
- Would exceed article limit: false
- Would exceed token limit: false
-[INFO] Starting audio generation process
-[INFO] 
---- Starting Conversation Generation ---
-
-[INFO] Processing 11 lines of text
-[INFO] Successfully extracted 11 conversation parts
-[INFO] Processing 15 lines of text
-[INFO] No speaker pattern match found at line 1: "**(Podcast intro music fades out)**..."
-[INFO] No speaker pattern match found at line 15: "**(Podcast outro music fades in)**..."
-[INFO] Successfully extracted 13 conversation parts
-[INFO] Processing 10 lines of text
-[INFO] Successfully extracted 10 conversation parts
-[INFO] Processing 11 lines of text
-[INFO] Successfully extracted 11 conversation parts
-[INFO] 
-
- ==================Last Chunk===================
-
-[INFO] Processing 18 lines of text
-[INFO] No speaker pattern match found at line 1: "(Sound of a gentle cough)..."
-[INFO] No speaker pattern match found at line 16: "Thank you for joining us on this episode of Scienc..."
-[INFO] No speaker pattern match found at line 17: "If you enjoyed this journey, don't forget to subsc..."
-[INFO] No speaker pattern match found at line 18: "Until next time, keep exploring the wonders of sci..."
-[INFO] Successfully extracted 14 conversation parts
-[INFO] 
-======= Starting Pricing Calculation ======
- -Input text length: 16704
- -Number of Vertex AI responses: 5
-
-[INFO] 
-        Input text length: 16704
-        Input token count: 3419
-        System prompt length: 2718
-        System token count: 525
-        Total input tokens: 3944
-      
-[INFO] Response 1 details:
-- Length: 3873 characters
-- Output tokens: 829
-[INFO] Response 2 details:
-- Length: 3549 characters
-- Output tokens: 809
-[INFO] Response 3 details:
-- Length: 3507 characters
-- Output tokens: 778
-[INFO] Response 4 details:
-- Length: 3154 characters
-- Output tokens: 687
-[INFO] Response 5 details:
-- Length: 3131 characters
-- Output tokens: 727
-[INFO] Total TTS characters calculated: 16597
-[INFO] 
----***** Final Pricing Calculation Summary **** ---
-Total Input Tokens: 3944
-Total Output Tokens: 3830
-Total Tokens: 7774
-Total TTS Characters: 16597
-Vertex AI Input Cost: $0.000002
-Vertex AI Output Cost: $0.000002
-TTS Cost: $0.265552
-Total Cost: $0.265556
-[INFO] Generating audio files...
-[INFO] Audio content written to file "audio-files/0.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 115ms
-[INFO] Audio content written to file "audio-files/1.mp3"
-[INFO] Audio content written to file "audio-files/2.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 114ms
-[INFO] Audio content written to file "audio-files/3.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 113ms
-[INFO] Audio content written to file "audio-files/4.mp3"
-[INFO] Audio content written to file "audio-files/5.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 112ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 116ms
-[INFO] Audio content written to file "audio-files/6.mp3"
-[INFO] Audio content written to file "audio-files/7.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 112ms
-[INFO] Audio content written to file "audio-files/8.mp3"
-[INFO] Audio content written to file "audio-files/9.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 114ms
-[INFO] Audio content written to file "audio-files/10.mp3"
-[INFO] Audio content written to file "audio-files/11.mp3"
-[INFO] Audio content written to file "audio-files/12.mp3"
-[INFO] Audio content written to file "audio-files/13.mp3"
-[INFO] Audio content written to file "audio-files/14.mp3"
-[INFO] Audio content written to file "audio-files/15.mp3"
-[INFO] Audio content written to file "audio-files/16.mp3"
-[INFO] Audio content written to file "audio-files/17.mp3"
-[INFO] Audio content written to file "audio-files/18.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 114ms
-[INFO] Audio content written to file "audio-files/19.mp3"
-[INFO] Audio content written to file "audio-files/20.mp3"
-[INFO] Audio content written to file "audio-files/21.mp3"
-[INFO] Audio content written to file "audio-files/22.mp3"
-[INFO] Audio content written to file "audio-files/23.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 115ms
-[INFO] Audio content written to file "audio-files/24.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 113ms
-[INFO] Audio content written to file "audio-files/25.mp3"
-[INFO] Audio content written to file "audio-files/26.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 141ms
-[INFO] Audio content written to file "audio-files/27.mp3"
-[INFO] Audio content written to file "audio-files/28.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 112ms
-[INFO] Audio content written to file "audio-files/29.mp3"
-[INFO] Audio content written to file "audio-files/30.mp3"
-[INFO] Audio content written to file "audio-files/31.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 113ms
-[INFO] Audio content written to file "audio-files/32.mp3"
-[INFO] Audio content written to file "audio-files/33.mp3"
-[INFO] Audio content written to file "audio-files/34.mp3"
-[INFO] Audio content written to file "audio-files/35.mp3"
-[INFO] Audio content written to file "audio-files/36.mp3"
-[INFO] Audio content written to file "audio-files/37.mp3"
-[INFO] Audio content written to file "audio-files/38.mp3"
-[INFO] Audio content written to file "audio-files/39.mp3"
-[INFO] Audio content written to file "audio-files/40.mp3"
-[INFO] Audio content written to file "audio-files/41.mp3"
-[INFO] Audio content written to file "audio-files/42.mp3"
-[INFO] Audio content written to file "audio-files/43.mp3"
-[INFO] Audio content written to file "audio-files/44.mp3"
-[INFO] Audio content written to file "audio-files/45.mp3"
-[INFO] Audio content written to file "audio-files/46.mp3"
-[INFO] Audio content written to file "audio-files/47.mp3"
-[INFO] Audio content written to file "audio-files/48.mp3"
-[INFO] Audio content written to file "audio-files/49.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 114ms
-[INFO] Audio content written to file "audio-files/50.mp3"
-[INFO] Audio content written to file "audio-files/51.mp3"
-[INFO] Audio content written to file "audio-files/52.mp3"
-[INFO] Audio content written to file "audio-files/53.mp3"
-[INFO] Audio content written to file "audio-files/54.mp3"
-[INFO] Audio content written to file "audio-files/55.mp3"
-[INFO] Audio content written to file "audio-files/56.mp3"
-[INFO] Audio content written to file "audio-files/57.mp3"
-[INFO] Audio content written to file "audio-files/58.mp3"
-[INFO] Copied intro file podcast.mp3 to audio folder
-[INFO] Merging the following files in order:
-[INFO] 0.mp3
-[INFO] 1.mp3
-[INFO] 2.mp3
-[INFO] 4.mp3
-[INFO] 5.mp3
-[INFO] 3.mp3
-[INFO] 6.mp3
-[INFO] 7.mp3
-[INFO] 8.mp3
-[INFO] 9.mp3
-[INFO] 10.mp3
-[INFO] 11.mp3
-[INFO] 12.mp3
-[INFO] 13.mp3
-[INFO] 14.mp3
-[INFO] 15.mp3
-[INFO] 16.mp3
-[INFO] 17.mp3
-[INFO] 18.mp3
-[INFO] 19.mp3
-[INFO] 21.mp3
-[INFO] 20.mp3
-[INFO] 22.mp3
-[INFO] 23.mp3
-[INFO] 24.mp3
-[INFO] 25.mp3
-[INFO] 26.mp3
-[INFO] 27.mp3
-[INFO] 28.mp3
-[INFO] 29.mp3
-[INFO] 30.mp3
-[INFO] 31.mp3
-[INFO] 32.mp3
-[INFO] 33.mp3
-[INFO] 34.mp3
-[INFO] 35.mp3
-[INFO] 36.mp3
-[INFO] 37.mp3
-[INFO] 38.mp3
-[INFO] 39.mp3
-[INFO] 40.mp3
-[INFO] 41.mp3
-[INFO] 42.mp3
-[INFO] 43.mp3
-[INFO] 44.mp3
-[INFO] 45.mp3
-[INFO] 46.mp3
-[INFO] 47.mp3
-[INFO] 48.mp3
-[INFO] 49.mp3
-[INFO] 50.mp3
-[INFO] 51.mp3
-[INFO] 52.mp3
-[INFO] 53.mp3
-[INFO] 54.mp3
-[INFO] 55.mp3
-[INFO] 56.mp3
-[INFO] 57.mp3
-[INFO] 58.mp3
-[INFO] Successfully merged audio saved as audio-files/final_output.mp3
-[INFO] Cleaned up audio-files directory after successful generation
-[INFO] Audio generation completed: Duration: 813s Actual tokens used: 7774 Actual cost: 0.265555887
-[INFO] 
-
----------- Updated Usage ----------
- Updated usage for user 26:
- Articles: 1/3
- Podify Tokens: 133/10000
-[ERROR] Error processing podcast: timestamp is not defined
-[INFO] POST /api/podcast 500 in 197136ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 115ms
-[INFO] Stripe initialized successfully
-[INFO] ***Starting server initialization...
-
-
-[INFO] Registering routes...
-[INFO] Setting up Vite for development...
-[INFO] Stripe initialized successfully
-[INFO] ***Starting server initialization...
-
-
-[INFO] Registering routes...
-[INFO] Setting up Vite for development...
-[INFO] Server started successfully on port 4000
-[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
-[INFO] GET / 200 in 43ms
-[INFO] GET /@vite/client 304 in 22ms
-[INFO] GET /src/main.tsx 304 in 38ms
-[INFO] GET /@react-refresh 304 in 292ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
-[INFO] GET /src/lib/queryClient.ts 304 in 1ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 0ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
-[INFO] GET /src/pages/FeedbackPage.tsx 304 in 1ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
-[INFO] GET /src/index.css 304 in 787ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 848ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/button.tsx 304 in 0ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-user.ts 304 in 1ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 0ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 0ms
-[INFO] GET /src/components/Logo.tsx 304 in 1ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 1ms
-[INFO] GET /src/hooks/use-audio.ts 304 in 1ms
-[INFO] GET /src/components/ui/form.tsx 304 in 0ms
-[INFO] GET /src/lib/utils.ts 304 in 0ms
-[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
-[INFO] GET /src/components/ui/input.tsx 304 in 1ms
-[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
-[INFO] GET /src/components/ui/textarea.tsx 304 in 1ms
-[INFO] GET /src/components/ui/avatar.tsx 304 in 0ms
-[INFO] GET /src/components/ui/card.tsx 304 in 1ms
-[INFO] GET /src/components/ui/separator.tsx 304 in 0ms
-[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
-[INFO] GET /src/components/LoadingScreen.tsx 304 in 0ms
-[INFO] GET /src/components/ui/tabs.tsx 304 in 0ms
-[INFO] GET /src/components/ui/scroll-area.tsx 304 in 0ms
-[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
-[INFO] GET /src/components/ui/label.tsx 304 in 0ms
-[INFO] GET /src/components/ui/slider.tsx 304 in 1ms
-[INFO] GET /src/components/ui/select.tsx 304 in 0ms
-[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
-[INFO] GET /src/components/ui/popover.tsx 304 in 0ms
-[INFO] GET /api/user 401 in 3ms
-[INFO] GET / 200 in 3ms
-[INFO] GET /@vite/client 304 in 1ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 0ms
-[INFO] GET /@react-refresh 304 in 1ms
-[INFO] GET /src/main.tsx 304 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 0ms
-[INFO] GET /src/lib/queryClient.ts 304 in 0ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 0ms
-[INFO] GET /src/index.css 304 in 0ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 0ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 0ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 0ms
-[INFO] GET /src/pages/FeedbackPage.tsx 304 in 0ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-user.ts 304 in 0ms
-[INFO] GET /src/components/ui/button.tsx 304 in 1ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
-[INFO] GET /src/components/Logo.tsx 304 in 1ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 0ms
-[INFO] GET /src/components/ui/input.tsx 304 in 1ms
-[INFO] GET /src/components/ui/form.tsx 304 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 1ms
-[INFO] GET /src/hooks/use-audio.ts 304 in 0ms
-[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 0ms
-[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
-[INFO] GET /src/components/ui/card.tsx 304 in 1ms
-[INFO] GET /src/lib/utils.ts 304 in 0ms
-[INFO] GET /src/components/ui/tabs.tsx 304 in 0ms
-[INFO] GET /src/components/ui/textarea.tsx 304 in 1ms
-[INFO] GET /src/components/ui/avatar.tsx 304 in 0ms
-[INFO] GET /src/components/ui/separator.tsx 304 in 1ms
-[INFO] GET /src/components/LoadingScreen.tsx 304 in 1ms
-[INFO] GET /src/components/ui/scroll-area.tsx 304 in 0ms
-[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
-[INFO] GET /src/components/ui/label.tsx 304 in 1ms
-[INFO] GET /src/components/ui/progress.tsx 304 in 0ms
-[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
-[INFO] GET /src/components/ui/slider.tsx 304 in 0ms
-[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
-[INFO] GET /src/components/ui/select.tsx 304 in 0ms
-[INFO] GET /api/user 401 in 0ms
-[INFO] GET / 200 in 3ms
-[INFO] GET / 200 in 3ms
-[INFO] POST /api/login 200 in 356ms
-[INFO] GET /api/user 304 in 60ms
-[INFO] GET / 200 in 112ms
-[INFO] GET / 200 in 59ms
-[INFO] GET /api/playlists 304 in 193ms
-[INFO] GET /api/podcasts 304 in 234ms
-[INFO] GET / 200 in 59ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 169ms
-[INFO] 
-
- PDF has 10 pages
-[INFO] Processing only the first 3 pages of the PDF
-[INFO] Calculating estimated pricing and checking usage limits
-[INFO] 
-======= Starting Pricing Calculation ======
- -Input text length: 30763
- -Number of Vertex AI responses: 0
-
-[INFO] 
-        Input text length: 30763
-        Input token count: 6656
-        System prompt length: 2718
-        System token count: 525
-        Total input tokens: 7181
-      
-[INFO] 
----***** Estimated Calculation Summary **** ---
-Total Input Tokens: 7181
-Total Output Tokens: 10772
-Total Tokens: 17953
-Total TTS Characters: 43088
-Vertex AI Input Cost: $0.000004
-Vertex AI Output Cost: $0.000005
-TTS Cost: $0.689408
-Total Cost: $0.689417
-[INFO] Estimated Podify Tokens: 345 
-
-Usage limits check for user 26:
- Current articles: 0/3
- Current Podify tokens: 0/10000
- Would exceed article limit: false
- Would exceed token limit: false
-[INFO] Starting audio generation process
-[INFO] 
---- Starting Conversation Generation ---
-
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 114ms
-[INFO] Processing 8 lines of text
-[INFO] Successfully extracted 8 conversation parts
-[INFO] Processing 8 lines of text
-[INFO] Successfully extracted 8 conversation parts
-[INFO] Processing 9 lines of text
-[INFO] Successfully extracted 9 conversation parts
-[INFO] Processing 8 lines of text
-[INFO] Successfully extracted 8 conversation parts
-[INFO] Processing 11 lines of text
-[INFO] Successfully extracted 11 conversation parts
-[INFO] Processing 9 lines of text
-[INFO] Successfully extracted 9 conversation parts
-[INFO] Processing 8 lines of text
-[INFO] Successfully extracted 8 conversation parts
-[INFO] 
-
- ==================Last Chunk===================
-
-[INFO] Processing 15 lines of text
-[INFO] No speaker pattern match found at line 1: "(Podcast intro music fades)..."
-[INFO] No speaker pattern match found at line 15: "(Podcast outro music fades in)..."
-[INFO] Successfully extracted 13 conversation parts
-[INFO] 
-======= Starting Pricing Calculation ======
- -Input text length: 30763
- -Number of Vertex AI responses: 8
-
-[INFO] 
-        Input text length: 30763
-        Input token count: 6656
-        System prompt length: 2718
-        System token count: 525
-        Total input tokens: 7181
-      
-[INFO] Response 1 details:
-- Length: 3536 characters
-- Output tokens: 775
-[INFO] Response 2 details:
-- Length: 2875 characters
-- Output tokens: 667
-[INFO] Response 3 details:
-- Length: 3019 characters
-- Output tokens: 705
-[INFO] Response 4 details:
-- Length: 2753 characters
-- Output tokens: 646
-[INFO] Response 5 details:
-- Length: 2548 characters
-- Output tokens: 636
-[INFO] Response 6 details:
-- Length: 2675 characters
-- Output tokens: 635
-[INFO] Response 7 details:
-- Length: 2844 characters
-- Output tokens: 604
-[INFO] Response 8 details:
-- Length: 3258 characters
-- Output tokens: 722
-[INFO] Total TTS characters calculated: 23245
-[INFO] 
----***** Final Pricing Calculation Summary **** ---
-Total Input Tokens: 7181
-Total Output Tokens: 5390
-Total Tokens: 12571
-Total TTS Characters: 23245
-Vertex AI Input Cost: $0.000004
-Vertex AI Output Cost: $0.000003
-TTS Cost: $0.371920
-Total Cost: $0.371926
-[INFO] Generating audio files...
-[INFO] Audio content written to file "audio-files/0.mp3"
-[INFO] Audio content written to file "audio-files/1.mp3"
-[INFO] Audio content written to file "audio-files/2.mp3"
-[INFO] Audio content written to file "audio-files/3.mp3"
-[INFO] Audio content written to file "audio-files/4.mp3"
-[INFO] Audio content written to file "audio-files/5.mp3"
-[INFO] Audio content written to file "audio-files/6.mp3"
-[INFO] Audio content written to file "audio-files/7.mp3"
-[INFO] Audio content written to file "audio-files/8.mp3"
-[INFO] Audio content written to file "audio-files/9.mp3"
-[INFO] Audio content written to file "audio-files/10.mp3"
-[INFO] Audio content written to file "audio-files/11.mp3"
-[INFO] Audio content written to file "audio-files/12.mp3"
-[INFO] Audio content written to file "audio-files/13.mp3"
-[INFO] Audio content written to file "audio-files/14.mp3"
-[INFO] Audio content written to file "audio-files/15.mp3"
-[INFO] Audio content written to file "audio-files/16.mp3"
-[INFO] Audio content written to file "audio-files/17.mp3"
-[INFO] Audio content written to file "audio-files/18.mp3"
-[INFO] Audio content written to file "audio-files/19.mp3"
-[INFO] Audio content written to file "audio-files/20.mp3"
-[INFO] Audio content written to file "audio-files/21.mp3"
-[INFO] Audio content written to file "audio-files/22.mp3"
-[INFO] Audio content written to file "audio-files/23.mp3"
-[INFO] Audio content written to file "audio-files/24.mp3"
-[INFO] Audio content written to file "audio-files/25.mp3"
-[INFO] Audio content written to file "audio-files/26.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 160ms
-[INFO] Audio content written to file "audio-files/27.mp3"
-[INFO] Audio content written to file "audio-files/28.mp3"
-[INFO] Audio content written to file "audio-files/29.mp3"
-[INFO] Audio content written to file "audio-files/30.mp3"
-[INFO] Audio content written to file "audio-files/31.mp3"
-[INFO] Audio content written to file "audio-files/32.mp3"
-[INFO] Audio content written to file "audio-files/33.mp3"
-[INFO] Audio content written to file "audio-files/34.mp3"
-[INFO] Audio content written to file "audio-files/35.mp3"
-[INFO] Audio content written to file "audio-files/36.mp3"
-[INFO] Audio content written to file "audio-files/37.mp3"
-[INFO] Audio content written to file "audio-files/38.mp3"
-[INFO] Audio content written to file "audio-files/39.mp3"
-[INFO] Audio content written to file "audio-files/40.mp3"
-[INFO] Audio content written to file "audio-files/41.mp3"
-[INFO] Audio content written to file "audio-files/42.mp3"
-[INFO] Audio content written to file "audio-files/43.mp3"
-[INFO] Audio content written to file "audio-files/44.mp3"
-[INFO] Audio content written to file "audio-files/45.mp3"
-[INFO] Audio content written to file "audio-files/46.mp3"
-[INFO] Audio content written to file "audio-files/47.mp3"
-[INFO] Audio content written to file "audio-files/48.mp3"
-[INFO] Audio content written to file "audio-files/49.mp3"
-[INFO] Audio content written to file "audio-files/50.mp3"
-[INFO] Audio content written to file "audio-files/51.mp3"
-[INFO] Audio content written to file "audio-files/52.mp3"
-[INFO] Audio content written to file "audio-files/53.mp3"
-[INFO] Audio content written to file "audio-files/54.mp3"
-[INFO] Audio content written to file "audio-files/55.mp3"
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 115ms
-[INFO] Audio content written to file "audio-files/56.mp3"
-[INFO] Audio content written to file "audio-files/57.mp3"
-[INFO] Audio content written to file "audio-files/58.mp3"
-[INFO] Audio content written to file "audio-files/59.mp3"
-[INFO] Audio content written to file "audio-files/60.mp3"
-[INFO] Audio content written to file "audio-files/61.mp3"
-[INFO] Audio content written to file "audio-files/62.mp3"
-[INFO] Audio content written to file "audio-files/63.mp3"
-[INFO] Audio content written to file "audio-files/64.mp3"
-[INFO] Audio content written to file "audio-files/65.mp3"
-[INFO] Audio content written to file "audio-files/66.mp3"
-[INFO] Audio content written to file "audio-files/67.mp3"
-[INFO] Audio content written to file "audio-files/68.mp3"
-[INFO] Audio content written to file "audio-files/69.mp3"
-[INFO] Audio content written to file "audio-files/70.mp3"
-[INFO] Audio content written to file "audio-files/71.mp3"
-[INFO] Audio content written to file "audio-files/72.mp3"
-[INFO] Audio content written to file "audio-files/73.mp3"
-[INFO] Copied intro file podcast.mp3 to audio folder
-[INFO] Merging the following files in order:
-[INFO] 0.mp3
-[INFO] 1.mp3
-[INFO] 2.mp3
-[INFO] 3.mp3
-[INFO] 5.mp3
-[INFO] 4.mp3
-[INFO] 6.mp3
-[INFO] 7.mp3
-[INFO] 8.mp3
-[INFO] 9.mp3
-[INFO] 10.mp3
-[INFO] 11.mp3
-[INFO] 12.mp3
-[INFO] 13.mp3
-[INFO] 14.mp3
-[INFO] 15.mp3
-[INFO] 16.mp3
-[INFO] 17.mp3
-[INFO] 18.mp3
-[INFO] 19.mp3
-[INFO] 20.mp3
-[INFO] 21.mp3
-[INFO] 22.mp3
-[INFO] 23.mp3
-[INFO] 24.mp3
-[INFO] 25.mp3
-[INFO] 26.mp3
-[INFO] 27.mp3
-[INFO] 28.mp3
-[INFO] 29.mp3
-[INFO] 30.mp3
-[INFO] 31.mp3
-[INFO] 32.mp3
-[INFO] 33.mp3
-[INFO] 34.mp3
-[INFO] 35.mp3
-[INFO] 36.mp3
-[INFO] 37.mp3
-[INFO] 38.mp3
-[INFO] 39.mp3
-[INFO] 40.mp3
-[INFO] 41.mp3
-[INFO] 42.mp3
-[INFO] 43.mp3
-[INFO] 44.mp3
-[INFO] 45.mp3
-[INFO] 46.mp3
-[INFO] 47.mp3
-[INFO] 48.mp3
-[INFO] 49.mp3
-[INFO] 50.mp3
-[INFO] 51.mp3
-[INFO] 52.mp3
-[INFO] 53.mp3
-[INFO] 54.mp3
-[INFO] 55.mp3
-[INFO] 56.mp3
-[INFO] 57.mp3
-[INFO] 58.mp3
-[INFO] 59.mp3
-[INFO] 60.mp3
-[INFO] 61.mp3
-[INFO] 62.mp3
-[INFO] 63.mp3
-[INFO] 64.mp3
-[INFO] 65.mp3
-[INFO] 66.mp3
-[INFO] 67.mp3
-[INFO] 68.mp3
-[INFO] 69.mp3
-[INFO] 70.mp3
-[INFO] 71.mp3
-[INFO] 72.mp3
-[INFO] 73.mp3
-[INFO] Successfully merged audio saved as audio-files/final_output.mp3
-[INFO] Cleaned up audio-files directory after successful generation
-[INFO] Audio generation completed: Duration: 1141s Actual tokens used: 12571 Actual cost: 0.37192628549999995
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 705ms
-[INFO] 
-
----------- Updated Usage ----------
- Updated usage for user 26:
- Articles: 1/3
- Podify Tokens: 186/10000
-[ERROR] Error processing podcast: timestamp is not defined
-[INFO] POST /api/podcast 500 in 269666ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 114ms
