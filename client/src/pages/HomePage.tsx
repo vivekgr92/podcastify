@@ -169,6 +169,19 @@ export default function HomePage() {
               Upload any article and convert it into a natural-sounding podcast
               in seconds
             </p>
+          </div>
+
+          {user && (
+            <div className="mb-8">
+              <UsageProgress
+                showUpgradeButton={true}
+                onLimitReached={handleLimitReached}
+              />
+            </div>
+          )}
+
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold mb-4">Step 1: Select Podcast Category</h2>
             <div className="max-w-xs mx-auto">
               <Select 
                 required
@@ -203,6 +216,7 @@ export default function HomePage() {
             </div>
           )}
 
+          <h2 className="text-xl font-semibold mb-4">Step 2: Upload Your Article</h2>
           <div
             {...getRootProps()}
             className={`border-2 border-dashed rounded-lg p-16 mb-12 transition-colors 
