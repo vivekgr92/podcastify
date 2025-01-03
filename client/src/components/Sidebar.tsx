@@ -179,11 +179,11 @@ export default function Sidebar({ isMobileMenuOpen = false, setIsMobileMenuOpen 
           )}
           <Button
             variant="destructive"
-            className="w-full justify-start gap-2 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-all duration-200 ease-in-out hover:shadow-xl"
+            className="w-full justify-start gap-2 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-all duration-200 ease-in-out hover:shadow-xl transform hover:-translate-y-0.5"
             onClick={() => logout()}
           >
-            <LogOut size={20} />
-            Log Out
+            <LogOut size={20} className="shrink-0" />
+            <span className="flex-1">Log Out</span>
           </Button>
         </div>
       </div>
