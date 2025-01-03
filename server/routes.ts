@@ -557,7 +557,7 @@ export function registerRoutes(app: Express) {
       let numPages = 0;
 
       try {
-        const fileBuffer = file.buffer;  // Use buffer directly from memory storage
+        const fileBuffer = file.buffer; // Use buffer directly from memory storage
 
         if (file.mimetype === "application/pdf") {
           const pdfData = await pdfParse(fileBuffer);
@@ -705,7 +705,7 @@ export function registerRoutes(app: Express) {
       // Generate audio only if usage limits allow
       await logger.info("Starting audio generation process");
       const { audioBuffer, duration, usage } =
-        await ttsService.generateConversationPages(fileContent);
+        await ttsService.generateConversation(fileContent);
 
       if (!audioBuffer || !duration || !usage) {
         throw new Error(
@@ -876,12 +876,12 @@ export function registerRoutes(app: Express) {
           return res.status(404).json({
             error: "Audio file not found",
             type: "not_found",
-            message: "The audio file is no longer available"
+            message: "The audio file is no longer available",
           });
         }
 
         const audioStream = await storage.downloadAsStream(filename);
-        
+
         // Set proper headers for audio streaming
         res.setHeader("Content-Type", "audio/mpeg");
         res.setHeader("Accept-Ranges", "bytes");
@@ -920,7 +920,8 @@ export function registerRoutes(app: Express) {
         .select({
           articlesConverted: userUsage.articlesConverted,
           tokensUsed: userUsage.tokensUsed,
-          podifyTokens: userUsage.podifyTokens,          lastConversion: userUsage.lastConversion,
+          podifyTokens: userUsage.podifyTokens,
+          lastConversion: userUsage.lastConversion,
           monthYear: userUsage.monthYear,
         })
         .from(userUsage)
@@ -1106,9 +1107,9 @@ export function registerRoutes(app: Express) {
         try {
           const { Client } = await import("@replit/object-storage");
           const storage = new Client();
-          
+
           // Extract filename from audioUrl
-          const filename = podcast.audioUrl.split('/').pop();
+          const filename = podcast.audioUrl.split("/").pop();
           if (filename) {
             await storage.delete(filename);
             await logger.info(`Deleted audio file from storage: ${filename}`);
@@ -1626,13 +1627,13 @@ export function registerRoutes(app: Express) {
 
       const validation = insertFeedbackSchema.safeParse({
         ...req.body,
-        userId: req.user.id
+        userId: req.user.id,
       });
 
       if (!validation.success) {
         return res.status(400).json({
           error: "Invalid feedback data",
-          details: validation.error.errors
+          details: validation.error.errors,
         });
       }
 
@@ -1643,22 +1644,21 @@ export function registerRoutes(app: Express) {
           content: validation.data.content,
           rating: validation.data.rating,
           status: "pending",
-          createdAt: new Date()
+          createdAt: new Date(),
         })
         .returning();
 
       res.json({
         message: "Feedback submitted successfully",
-        feedback: newFeedback
+        feedback: newFeedback,
       });
-
     } catch (error) {
       logger.error(
-        `Error submitting feedback: ${error instanceof Error ? error.message : String(error)}`
+        `Error submitting feedback: ${error instanceof Error ? error.message : String(error)}`,
       );
       res.status(500).json({
         error: "Failed to submit feedback",
-        message: error instanceof Error ? error.message : "Unknown error"
+        message: error instanceof Error ? error.message : "Unknown error",
       });
     }
   });
@@ -1677,14 +1677,13 @@ export function registerRoutes(app: Express) {
         .orderBy(desc(feedback.createdAt));
 
       res.json(userFeedback);
-
     } catch (error) {
       logger.error(
-        `Error fetching feedback: ${error instanceof Error ? error.message : String(error)}`
+        `Error fetching feedback: ${error instanceof Error ? error.message : String(error)}`,
       );
       res.status(500).json({
         error: "Failed to fetch feedback",
-        message: error instanceof Error ? error.message : "Unknown error"
+        message: error instanceof Error ? error.message : "Unknown error",
       });
     }
   });

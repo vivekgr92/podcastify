@@ -1,583 +1,199 @@
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 3ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 3ms
-[INFO] GET /src/hooks/use-user.ts 304 in 3ms
-[INFO] GET /src/components/ui/button.tsx 304 in 1ms
-[INFO] GET /src/pages/FeedbackPage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/alert-dialog.tsx 200 in 1ms
-[INFO] GET /src/hooks/use-audio.ts 200 in 1ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-toast.ts 200 in 1ms
-[INFO] GET /src/lib/utils.ts 200 in 1ms
-[INFO] GET /src/components/AudioPlayer.tsx 200 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 200 in 1ms
-[INFO] GET /src/components/ui/input.tsx 200 in 0ms
-[INFO] GET /src/components/ui/form.tsx 200 in 1ms
-[INFO] GET /src/components/ui/toast.tsx 200 in 1ms
-[INFO] GET /src/hooks/use-tts.ts 200 in 1ms
-[INFO] GET /src/components/Logo.tsx 200 in 1ms
-[INFO] GET /src/components/UsageProgress.tsx 200 in 1ms
-[INFO] GET /src/components/ui/collapsible.tsx 200 in 1ms
-[INFO] GET /src/components/ui/tabs.tsx 200 in 1ms
-[INFO] GET /src/components/LoadingScreen.tsx 200 in 1ms
-[INFO] GET /src/components/PaymentModal.tsx 200 in 0ms
-[INFO] GET /src/components/ui/separator.tsx 200 in 1ms
-[INFO] GET /src/components/ui/card.tsx 200 in 1ms
-[INFO] GET /src/components/ui/avatar.tsx 200 in 1ms
-[INFO] GET /src/components/ui/textarea.tsx 200 in 4ms
-[INFO] GET /src/components/ui/scroll-area.tsx 200 in 1ms
-[INFO] GET /src/components/ui/slider.tsx 304 in 3ms
-[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
-[INFO] GET /src/components/ui/select.tsx 304 in 1ms
-[INFO] GET /src/components/ui/label.tsx 304 in 0ms
-[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
-[INFO] GET /src/components/ui/dialog.tsx 304 in 0ms
-[INFO] GET /api/user 401 in 4ms
-[INFO] GET / 200 in 6ms
-[INFO] GET /src/main.tsx 304 in 1ms
-[INFO] GET /@react-refresh 304 in 0ms
-[INFO] GET /@vite/client 304 in 1ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 1ms
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] GET / 200 in 35ms
+[INFO] GET /@vite/client 304 in 17ms
+[INFO] GET /src/main.tsx 304 in 37ms
+[INFO] GET /@react-refresh 304 in 1ms
+[INFO] GET /src/index.css 304 in 641ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 1565ms
 [INFO] GET /src/lib/queryClient.ts 304 in 1ms
-[INFO] GET /src/index.css 304 in 0ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 0ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
 [INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 0ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
 [INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 0ms
 [INFO] GET /src/pages/ProfilePage.tsx 304 in 0ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
 [INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/button.tsx 304 in 1ms
-[INFO] GET /src/pages/FeedbackPage.tsx 304 in 1ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-user.ts 304 in 0ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 0ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
-[INFO] GET /src/components/Logo.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 0ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
-[INFO] GET /src/components/ui/form.tsx 304 in 0ms
-[INFO] GET /src/components/ui/input.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-audio.ts 304 in 0ms
-[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 0ms
-[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 0ms
-[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
-[INFO] GET /src/lib/utils.ts 304 in 0ms
-[INFO] GET /src/components/ui/tabs.tsx 304 in 0ms
-[INFO] GET /src/components/ui/card.tsx 304 in 0ms
-[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
-[INFO] GET /src/components/ui/avatar.tsx 304 in 0ms
-[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
-[INFO] GET /src/components/ui/separator.tsx 304 in 1ms
-[INFO] GET /src/components/ui/textarea.tsx 304 in 0ms
-[INFO] GET /src/components/ui/label.tsx 304 in 1ms
-[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
-[INFO] GET /src/components/LoadingScreen.tsx 304 in 0ms
-[INFO] GET /src/components/ui/popover.tsx 304 in 0ms
-[INFO] GET /src/components/ui/slider.tsx 304 in 0ms
-[INFO] GET /src/components/ui/dialog.tsx 304 in 0ms
-[INFO] GET /src/components/ui/select.tsx 304 in 0ms
-[INFO] GET /api/user 401 in 0ms
-[INFO] GET / 200 in 3ms
-[INFO] POST /api/login 200 in 418ms
-[INFO] GET /api/user 304 in 68ms
-[INFO] GET / 200 in 65ms
-[INFO] 
-========Streaming audio file: 1735923996260-article.mp3
-[INFO] GET /api/playlists 304 in 430ms
-[INFO] GET /api/podcasts 200 in 533ms
-[INFO] Stripe initialized successfully
-[INFO] ***Starting server initialization...
-
-
-[INFO] Setting up Vite for development...
-[INFO] Registering routes...
-[INFO] Server started successfully on port 4000
-[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
-[INFO] GET / 200 in 45ms
-[INFO] GET /@react-refresh 304 in 188ms
-[INFO] GET /@vite/client 304 in 284ms
-[INFO] GET /src/main.tsx 304 in 350ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 222ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
-[INFO] GET /src/lib/queryClient.ts 304 in 49ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 2ms
-[INFO] GET /src/index.css 304 in 1669ms
-[INFO] GET / 200 in 1553ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 5ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
-[INFO] GET /@vite/client 304 in 1ms
-[INFO] GET /src/main.tsx 304 in 2ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 1ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 0ms
-[INFO] GET /@react-refresh 304 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 3ms
-[INFO] GET /src/index.css 304 in 1ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 3ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
-[INFO] GET /src/lib/queryClient.ts 304 in 1ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 0ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 8ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 0ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 0ms
-[INFO] GET /src/pages/FeedbackPage.tsx 304 in 1ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
 [INFO] GET /src/pages/FeedbackPage.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-user.ts 304 in 1ms
-[INFO] GET /src/components/ui/button.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-user.ts 304 in 0ms
 [INFO] GET /src/components/Sidebar.tsx 304 in 1ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 0ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
-[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-audio.ts 304 in 1ms
 [INFO] GET /src/components/ui/button.tsx 304 in 1ms
-[INFO] GET /src/lib/utils.ts 304 in 1ms
-[INFO] GET /src/components/ui/card.tsx 304 in 1ms
-[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 0ms
+[INFO] GET /src/hooks/use-user.ts 304 in 1ms
 [INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 2ms
 [INFO] GET /src/hooks/use-tts.ts 304 in 0ms
-[INFO] GET /src/components/ui/avatar.tsx 304 in 0ms
-[INFO] GET /src/components/ui/input.tsx 304 in 0ms
-[INFO] GET /src/components/Logo.tsx 304 in 0ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 0ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
-[INFO] GET /src/components/ui/form.tsx 304 in 0ms
-[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 0ms
-[INFO] GET /src/components/LoadingScreen.tsx 304 in 1ms
-[INFO] GET /src/components/PaymentModal.tsx 304 in 0ms
-[INFO] GET /src/components/Logo.tsx 304 in 1ms
-[INFO] GET /src/components/ui/textarea.tsx 304 in 1ms
-[INFO] GET /src/components/ui/separator.tsx 304 in 0ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
-[INFO] GET /src/components/ui/popover.tsx 304 in 2ms
-[INFO] GET /src/components/ui/slider.tsx 304 in 1ms
-[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
-[INFO] GET /src/components/ui/tabs.tsx 304 in 0ms
-[INFO] GET /src/components/ui/select.tsx 304 in 1ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 0ms
-[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
-[INFO] GET /src/components/ui/label.tsx 304 in 0ms
-[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
-[INFO] GET /src/components/ui/form.tsx 304 in 1ms
-[INFO] GET /src/components/ui/input.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-audio.ts 304 in 0ms
-[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 2ms
-[INFO] GET /api/user 401 in 10ms
-[INFO] GET /src/components/AudioPlayer.tsx 304 in 8ms
-[INFO] GET /src/lib/utils.ts 304 in 2ms
-[INFO] GET /src/components/ui/tabs.tsx 304 in 3ms
-[INFO] GET /src/components/ui/card.tsx 304 in 0ms
-[INFO] GET / 200 in 7ms
-[INFO] GET /src/components/ui/avatar.tsx 304 in 1ms
-[INFO] GET /src/components/PaymentModal.tsx 304 in 3ms
-[INFO] GET /src/components/ui/separator.tsx 304 in 5ms
-[INFO] GET /src/components/LoadingScreen.tsx 304 in 6ms
-[INFO] GET /src/components/ui/textarea.tsx 304 in 5ms
-[INFO] GET /src/components/ui/scroll-area.tsx 304 in 0ms
-[INFO] GET /src/components/ui/label.tsx 304 in 0ms
-[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
-[INFO] GET /src/components/ui/slider.tsx 304 in 1ms
-[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
-[INFO] GET /src/components/ui/select.tsx 304 in 2ms
-[INFO] GET /src/components/ui/dialog.tsx 304 in 13ms
-[INFO] GET /api/user 401 in 2ms
-[INFO] POST /api/login 200 in 380ms
-[INFO] GET /api/user 304 in 61ms
-[INFO] GET / 200 in 64ms
-[INFO] 
-========Streaming audio file: 1735923996260-article.mp3
-[INFO] GET /api/playlists 304 in 335ms
-[INFO] GET /api/podcasts 304 in 390ms
-[INFO] Stripe initialized successfully
-[INFO] Registering routes...
-[INFO] ***Starting server initialization...
-
-
-[INFO] Setting up Vite for development...
-[INFO] Server started successfully on port 4000
-[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
-[INFO] GET / 200 in 46ms
-[INFO] GET /@vite/client 304 in 36ms
-[INFO] GET /src/main.tsx 304 in 69ms
-[INFO] GET /@react-refresh 304 in 1ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 1077ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
-[INFO] GET /src/lib/queryClient.ts 304 in 1ms
-[INFO] GET /src/index.css 304 in 886ms
-[INFO] GET / 200 in 1149ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 2ms
-[INFO] GET /@vite/client 304 in 1ms
-[INFO] GET /@react-refresh 304 in 2ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
-[INFO] GET /src/main.tsx 304 in 1ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 0ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
-[INFO] GET /src/lib/queryClient.ts 304 in 1ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
-[INFO] GET /src/index.css 304 in 0ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 0ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 0ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 2ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 0ms
-[INFO] GET /src/pages/FeedbackPage.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-user.ts 304 in 1ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-user.ts 304 in 0ms
-[INFO] GET /src/pages/FeedbackPage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/button.tsx 304 in 1ms
-[INFO] GET /src/components/Logo.tsx 304 in 0ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/button.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
 [INFO] GET /src/components/ui/toast.tsx 304 in 0ms
-[INFO] GET /src/components/ui/input.tsx 304 in 0ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/form.tsx 304 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 0ms
-[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 0ms
-[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
-[INFO] GET /src/lib/utils.ts 304 in 0ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
-[INFO] GET /src/hooks/use-audio.ts 304 in 1ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
-[INFO] GET /src/components/ui/separator.tsx 304 in 1ms
-[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
-[INFO] GET /src/components/LoadingScreen.tsx 304 in 0ms
-[INFO] GET /src/components/ui/tabs.tsx 304 in 1ms
-[INFO] GET /src/components/ui/avatar.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
-[INFO] GET /src/components/ui/card.tsx 304 in 1ms
-[INFO] GET /src/components/Logo.tsx 304 in 1ms
-[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
-[INFO] GET /src/components/ui/label.tsx 304 in 0ms
-[INFO] GET /src/components/ui/progress.tsx 304 in 0ms
-[INFO] GET /src/components/ui/textarea.tsx 304 in 1ms
-[INFO] GET /src/components/ui/slider.tsx 304 in 0ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 0ms
-[INFO] GET /src/components/ui/popover.tsx 304 in 0ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
-[INFO] GET /src/components/ui/select.tsx 304 in 1ms
-[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 1ms
-[INFO] GET /src/components/ui/input.tsx 304 in 4ms
-[INFO] GET /src/components/ui/form.tsx 304 in 1ms
-[INFO] GET /api/user 401 in 3ms
-[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-audio.ts 304 in 1ms
-[INFO] GET /src/components/AudioPlayer.tsx 304 in 0ms
-[INFO] GET /src/lib/utils.ts 304 in 1ms
-[INFO] GET / 200 in 4ms
-[INFO] GET /src/components/ui/card.tsx 304 in 1ms
-[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
-[INFO] GET /src/components/ui/tabs.tsx 304 in 1ms
-[INFO] GET /src/components/LoadingScreen.tsx 304 in 1ms
-[INFO] GET /src/components/ui/separator.tsx 304 in 1ms
-[INFO] GET /src/components/ui/avatar.tsx 304 in 3ms
-[INFO] GET /src/components/ui/textarea.tsx 304 in 5ms
-[INFO] GET /src/components/ui/progress.tsx 304 in 0ms
-[INFO] GET /src/components/ui/scroll-area.tsx 304 in 0ms
-[INFO] GET /src/components/ui/label.tsx 304 in 1ms
-[INFO] GET /src/components/ui/slider.tsx 304 in 15ms
-[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
-[INFO] GET /src/components/ui/select.tsx 304 in 0ms
-[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
-[INFO] GET /api/user 401 in 1ms
-[INFO] POST /api/login 400 in 304ms
-[INFO] GET /api/user 401 in 1ms
-[INFO] 
-
-Sending welcome email...
-[INFO] 
-
----------- Welcome Email Status ---------- User: vivek (vivek@foresee.health) Status Code: 202 Headers: {"server":"nginx","date":"Fri, 03 Jan 2025 17:13:37 GMT","content-length":"0","connection":"keep-alive","x-message-id":"4q9QCg0gTf-pYICiAjyodg","access-control-allow-origin":"https://sendgrid.api-docs.io","access-control-allow-methods":"POST","access-control-allow-headers":"Authorization, Content-Type, On-behalf-of, x-sg-elas-acl","access-control-max-age":"600","x-no-cors-reason":"https://sendgrid.com/docs/Classroom/Basics/API/cors.html","strict-transport-security":"max-age=31536000; includeSubDomains","content-security-policy":"frame-ancestors 'none'","cache-control":"no-cache","x-content-type-options":"no-sniff","referrer-policy":"strict-origin-when-cross-origin"} -----------------------------------------
-
-[INFO] POST /api/register 200 in 644ms
-[INFO] GET /api/user 200 in 61ms
-[INFO] GET / 200 in 61ms
-[INFO] 
-========Streaming audio file: 1735923996260-article.mp3
-[INFO] GET /api/podcasts 304 in 271ms
-[INFO] GET /api/playlists 304 in 304ms
-[INFO] Stripe initialized successfully
-[INFO] ***Starting server initialization...
-
-
-[INFO] Registering routes...
-[INFO] Setting up Vite for development...
-[INFO] Server started successfully on port 4000
-[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
-[INFO] GET / 200 in 71ms
-[INFO] GET /@vite/client 304 in 62ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 6ms
-[INFO] GET /@react-refresh 304 in 91ms
-[INFO] GET /src/main.tsx 304 in 218ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 850ms
-[INFO] GET /src/lib/queryClient.ts 304 in 1012ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 1079ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 2ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
-[INFO] GET /src/pages/FeedbackPage.tsx 304 in 3ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 3ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 0ms
-[INFO] GET /src/index.css 304 in 959ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-user.ts 304 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 0ms
-[INFO] GET /src/hooks/use-audio.ts 304 in 0ms
-[INFO] GET /src/components/ui/button.tsx 304 in 1ms
-[INFO] GET /src/components/ui/form.tsx 304 in 0ms
-[INFO] GET /src/components/AudioPlayer.tsx 304 in 0ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
 [INFO] GET /src/hooks/use-toast.ts 304 in 0ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 1ms
 [INFO] GET /src/components/ui/input.tsx 304 in 0ms
-[INFO] GET /src/lib/utils.ts 304 in 0ms
-[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 0ms
-[INFO] GET /src/components/ui/avatar.tsx 304 in 1ms
-[INFO] GET /src/components/ui/card.tsx 304 in 1ms
-[INFO] GET /src/components/PaymentModal.tsx 304 in 0ms
-[INFO] GET /src/components/ui/textarea.tsx 304 in 1ms
-[INFO] GET /src/components/LoadingScreen.tsx 304 in 1ms
-[INFO] GET /src/components/ui/separator.tsx 304 in 1ms
-[INFO] GET /src/components/Logo.tsx 304 in 0ms
-[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 0ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
+[INFO] GET /src/components/Logo.tsx 304 in 1ms
+[INFO] GET /src/components/ui/form.tsx 304 in 0ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 0ms
 [INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
-[INFO] GET /src/components/ui/tabs.tsx 304 in 3ms
-[INFO] GET /src/components/ui/label.tsx 304 in 0ms
-[INFO] GET /src/components/ui/slider.tsx 304 in 0ms
-[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
-[INFO] GET /src/components/ui/select.tsx 304 in 0ms
-[INFO] GET /src/components/ui/dialog.tsx 304 in 0ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
+[INFO] GET /src/lib/utils.ts 304 in 1ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 0ms
+[INFO] GET /src/components/ui/card.tsx 304 in 0ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 1ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 1ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 1ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 0ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 1ms
+[INFO] GET /src/components/ui/textarea.tsx 304 in 0ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
+[INFO] GET /src/components/ui/label.tsx 304 in 1ms
+[INFO] GET /src/components/ui/select.tsx 304 in 1ms
 [INFO] GET /src/components/ui/progress.tsx 304 in 1ms
-[INFO] GET /api/user 401 in 4ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 0ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 0ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
+[INFO] GET /api/user 401 in 3ms
 [INFO] GET / 200 in 6ms
 [INFO] GET /src/main.tsx 304 in 1ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 1ms
 [INFO] GET /@vite/client 304 in 1ms
-[INFO] GET /@react-refresh 304 in 1ms
-[INFO] GET /src/index.css 304 in 1ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 0ms
-[INFO] GET /src/lib/queryClient.ts 304 in 1ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 0ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 0ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 2ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
-[INFO] GET /src/pages/FeedbackPage.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-user.ts 304 in 0ms
-[INFO] GET /src/components/ui/button.tsx 304 in 2ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 0ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
-[INFO] GET /src/components/Logo.tsx 304 in 1ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 0ms
-[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 1ms
-[INFO] GET /src/components/ui/input.tsx 304 in 1ms
-[INFO] GET /src/components/ui/form.tsx 304 in 1ms
-[INFO] GET /src/components/ui/card.tsx 304 in 0ms
-[INFO] GET /src/components/ui/tabs.tsx 304 in 0ms
-[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
-[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-audio.ts 304 in 1ms
-[INFO] GET /src/lib/utils.ts 304 in 1ms
-[INFO] GET /src/components/ui/avatar.tsx 304 in 1ms
-[INFO] GET /src/components/PaymentModal.tsx 304 in 0ms
-[INFO] GET /src/components/ui/separator.tsx 304 in 1ms
-[INFO] GET /src/components/LoadingScreen.tsx 304 in 1ms
-[INFO] GET /src/components/ui/textarea.tsx 304 in 1ms
-[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
-[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
-[INFO] GET /src/components/ui/label.tsx 304 in 1ms
-[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
-[INFO] GET /src/components/ui/slider.tsx 304 in 0ms
-[INFO] GET /src/components/ui/select.tsx 304 in 1ms
-[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
-[INFO] GET /api/user 401 in 1ms
-[INFO] GET / 200 in 3ms
-[INFO] POST /api/login 200 in 375ms
-[INFO] GET /api/user 304 in 61ms
-[INFO] GET / 200 in 61ms
-[INFO] 
-========Streaming audio file: 1735923996260-article.mp3
-[INFO] GET /api/podcasts 304 in 286ms
-[INFO] GET /api/playlists 304 in 416ms
-[INFO] Stripe initialized successfully
-[INFO] ***Starting server initialization...
-
-
-[INFO] Registering routes...
-[INFO] Setting up Vite for development...
-[INFO] Server started successfully on port 4000
-[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
-[INFO] GET / 200 in 54ms
-[INFO] GET / 200 in 49ms
-[INFO] GET /@vite/client 304 in 8ms
-[INFO] GET /@vite/client 304 in 48ms
-[INFO] GET /@react-refresh 304 in 42ms
-[INFO] GET /src/main.tsx 304 in 65ms
-[INFO] GET /src/main.tsx 304 in 58ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 109ms
+[INFO] GET /@react-refresh 304 in 0ms
 [INFO] GET /@vite-plugin-checker-runtime 304 in 0ms
-[INFO] GET /src/lib/queryClient.ts 304 in 47ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 6ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 0ms
-[INFO] GET /@react-refresh 304 in 1ms
-[INFO] GET /src/index.css 304 in 1960ms
-[INFO] GET /src/index.css 304 in 959ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 3ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 0ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-user.ts 304 in 0ms
+[INFO] GET /src/index.css 304 in 1ms
 [INFO] GET /src/components/ui/toaster.tsx 304 in 0ms
-[INFO] GET /src/lib/queryClient.ts 304 in 1ms
-[INFO] GET /src/components/ui/button.tsx 304 in 0ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 0ms
-[INFO] GET /src/pages/FeedbackPage.tsx 304 in 1ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 0ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/scroll-area.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 0ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
-[INFO] GET /src/components/Logo.tsx 304 in 1ms
 [INFO] GET /src/pages/AuthPage.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 0ms
-[INFO] GET /src/components/ui/avatar.tsx 304 in 0ms
-[INFO] GET /src/components/ui/input.tsx 304 in 0ms
-[INFO] GET /src/components/ui/card.tsx 304 in 0ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 0ms
+[INFO] GET /src/lib/queryClient.ts 304 in 1ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 0ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 0ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-user.ts 304 in 1ms
+[INFO] GET /src/pages/FeedbackPage.tsx 304 in 1ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
+[INFO] GET /src/components/ui/button.tsx 304 in 1ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 0ms
+[INFO] GET /src/components/ui/input.tsx 304 in 1ms
+[INFO] GET /src/components/Logo.tsx 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 0ms
 [INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/form.tsx 304 in 1ms
 [INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 1ms
 [INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
-[INFO] GET /src/components/AudioPlayer.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-audio.ts 304 in 0ms
-[INFO] GET /src/lib/utils.ts 304 in 1ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 0ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
-[INFO] GET /src/components/PaymentModal.tsx 304 in 0ms
-[INFO] GET /src/components/LoadingScreen.tsx 304 in 1ms
-[INFO] GET /src/components/ui/separator.tsx 304 in 1ms
-[INFO] GET /src/components/ui/tabs.tsx 304 in 1ms
-[INFO] GET /src/components/ui/textarea.tsx 304 in 1ms
-[INFO] GET /src/pages/FeedbackPage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/progress.tsx 304 in 0ms
-[INFO] GET /src/components/ui/label.tsx 304 in 1ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
-[INFO] GET /src/components/ui/slider.tsx 304 in 0ms
-[INFO] GET /src/components/ui/select.tsx 304 in 0ms
-[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-user.ts 304 in 0ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 2ms
-[INFO] GET /src/components/ui/button.tsx 304 in 0ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 0ms
-[INFO] GET /api/user 401 in 3ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 0ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 0ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 0ms
-[INFO] GET / 200 in 3ms
-[INFO] GET /src/components/Logo.tsx 304 in 0ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 0ms
-[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 0ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
-[INFO] GET /src/components/ui/input.tsx 304 in 1ms
 [INFO] GET /src/components/ui/form.tsx 304 in 1ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
 [INFO] GET /src/hooks/use-audio.ts 304 in 1ms
-[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
-[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
-[INFO] GET /src/lib/utils.ts 304 in 1ms
-[INFO] GET /src/components/ui/card.tsx 304 in 1ms
-[INFO] GET /src/components/ui/tabs.tsx 304 in 1ms
-[INFO] GET /src/components/ui/textarea.tsx 304 in 2ms
-[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
-[INFO] GET /src/components/LoadingScreen.tsx 304 in 1ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 2ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 0ms
 [INFO] GET /src/components/ui/avatar.tsx 304 in 1ms
-[INFO] GET /src/components/ui/separator.tsx 304 in 1ms
-[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
+[INFO] GET /src/components/ui/card.tsx 304 in 1ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 0ms
+[INFO] GET /src/lib/utils.ts 304 in 2ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 0ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 0ms
+[INFO] GET /src/components/ui/textarea.tsx 304 in 0ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 3ms
+[INFO] GET /src/components/ui/label.tsx 304 in 0ms
 [INFO] GET /src/components/ui/progress.tsx 304 in 1ms
-[INFO] GET /src/components/ui/label.tsx 304 in 1ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 18ms
 [INFO] GET /src/components/ui/slider.tsx 304 in 1ms
-[INFO] GET /src/components/ui/popover.tsx 304 in 0ms
-[INFO] GET /src/components/ui/select.tsx 304 in 1ms
+[INFO] GET /src/components/ui/select.tsx 304 in 3ms
 [INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
 [INFO] GET /api/user 401 in 1ms
-[INFO] POST /api/login 200 in 401ms
-[INFO] GET /api/user 304 in 63ms
-[INFO] GET / 200 in 109ms
-[INFO] 
-========Streaming audio file: 1735923996260-article.mp3
-[INFO] GET /api/playlists 304 in 264ms
-[ERROR] File not found in Object Storage: 1735923996260-article.mp3
-[INFO] GET /api/audio/stream/1735923996260-article.mp3 404 in 443ms
-[INFO] GET /api/podcasts 304 in 482ms
+[INFO] GET / 200 in 10ms
+[INFO] POST /api/login 200 in 359ms
+[INFO] GET /api/user 304 in 60ms
+[INFO] GET / 200 in 59ms
 [INFO] 
 ========Streaming audio file: 1735923996260-article.mp3
 [ERROR] File not found in Object Storage: 1735923996260-article.mp3
-[INFO] GET /api/audio/stream/1735923996260-article.mp3 404 in 134ms
-[INFO] GET / 200 in 65ms
-[INFO] GET / 200 in 61ms
-[INFO] GET / 200 in 106ms
+[INFO] GET /api/audio/stream/1735923996260-article.mp3 404 in 212ms
+[INFO] GET /api/podcasts 304 in 348ms
+[INFO] GET /api/playlists 304 in 369ms
+[INFO] 
+========Streaming audio file: 1735923996260-article.mp3
+[ERROR] File not found in Object Storage: 1735923996260-article.mp3
+[INFO] GET /api/audio/stream/1735923996260-article.mp3 404 in 148ms
+[INFO] GET / 200 in 59ms
+[INFO] GET /@vite/client 304 in 56ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 101ms
+[INFO] GET /@react-refresh 304 in 157ms
+[INFO] GET /src/main.tsx 304 in 212ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 144ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 67ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 121ms
+[INFO] GET /src/index.css 304 in 175ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 220ms
+[INFO] GET /src/lib/queryClient.ts 304 in 235ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 216ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 234ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 277ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 289ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 288ms
+[INFO] GET /src/pages/FeedbackPage.tsx 304 in 291ms
+[INFO] GET /src/hooks/use-user.ts 304 in 287ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 289ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 288ms
+[INFO] GET /src/components/ui/button.tsx 304 in 287ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 287ms
+[INFO] GET /src/components/ui/input.tsx 304 in 292ms
+[INFO] GET /src/components/ui/form.tsx 304 in 292ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 290ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 294ms
+[INFO] GET /src/components/Logo.tsx 304 in 287ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 293ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 289ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 295ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 293ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 248ms
+[INFO] GET /src/lib/utils.ts 304 in 292ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 291ms
+[INFO] GET /src/components/ui/card.tsx 304 in 290ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 291ms
+[ERROR] Webhook signature verification failed: No signatures found matching the expected signature for payload. Are you passing the raw request body you received from Stripe? 
+ If a webhook request is being forwarded by a third-party tool, ensure that the exact request body, including JSON formatting and new line style, is preserved.
+
+Learn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature
+
+[INFO] POST /api/webhooks/stripe 400 in 2ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 289ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 289ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 288ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 291ms
+[INFO] GET /src/components/ui/textarea.tsx 304 in 293ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 291ms
+[INFO] GET /src/components/ui/label.tsx 304 in 291ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 291ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 290ms
+[INFO] GET /src/components/ui/select.tsx 304 in 291ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 291ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 291ms
+[INFO] GET /api/user 304 in 57ms
+[INFO] GET / 200 in 103ms
+[INFO] GET / 200 in 58ms
+[INFO] 
+========Streaming audio file: 1735923996260-article.mp3
+[ERROR] File not found in Object Storage: 1735923996260-article.mp3
+[INFO] GET /api/audio/stream/1735923996260-article.mp3 404 in 81ms
+[INFO] 
+========Streaming audio file: 1735923996260-article.mp3
+[ERROR] File not found in Object Storage: 1735923996260-article.mp3
+[INFO] GET /api/audio/stream/1735923996260-article.mp3 404 in 123ms
+[INFO] GET /api/podcasts 304 in 284ms
+[INFO] GET /api/playlists 304 in 339ms
+[INFO] GET / 200 in 62ms
 [INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 200 in 176ms
-[INFO] GET / 200 in 61ms
-[INFO] 
-========Streaming audio file: 1735923996260-article.mp3
-[INFO] GET / 200 in 120ms
-[ERROR] File not found in Object Storage: 1735923996260-article.mp3
-[INFO] GET /api/audio/stream/1735923996260-article.mp3 404 in 175ms
-[INFO] 
-========Streaming audio file: 1735923996260-article.mp3
-[ERROR] File not found in Object Storage: 1735923996260-article.mp3
-[INFO] GET /api/audio/stream/1735923996260-article.mp3 404 in 121ms
-[INFO] GET / 200 in 113ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 179ms
+[INFO] GET /api/user/usage/check 304 in 166ms
 [INFO] 
 
  PDF has 3 pages
@@ -607,217 +223,319 @@ Total Cost: $0.378629
 [INFO] Estimated Podify Tokens: 190 
 
 Usage limits check for user 26:
- Current articles: 0/3
- Current Podify tokens: 0/10000
+ Current articles: 1/3
+ Current Podify tokens: 34/10000
  Would exceed article limit: false
  Would exceed token limit: false
 [INFO] Starting audio generation process
 [INFO] 
 --- Starting Conversation Generation ---
 
-[INFO] 
-
- ------------PROMPT to VERTEX AI-----------------
- Speaker Joe should Start the podcast by saying this: Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies,
-unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!
-
-**Guidelines**:
-1. Joe provides detailed technical insights but avoids overusing analogies. Instead, focus on straightforward, clear explanations.
-2. Sarah asks probing, thoughtful questions, occasionally offers her own insights, and challenges Joe to explain concepts simply and conversationally.
-3. Both speakers use natural human speech patterns, including filler words like "um," "ah," "you know," and short pauses.
-
-**Focus**:
-- Avoid excessive use of analogies. Use one or two if necessary for clarity but prioritize clear, direct explanations.
-- Include natural conversational flow with interruptions, backtracking, and filler words to make the dialogue feel authentic.
-- Encourage a natural dialogue with varied contributions from both speakers.
-
-**Tone**:
-- Engaging, relatable, and spontaneous.
-- Emphasize human-like emotions, with occasional humor or lighthearted moments.
-- Balance technical depth with conversational relatability, avoiding overly formal language.
-
-You are generating a podcast conversation between Joe and Sarah.
-
-**Guidelines**:
-1. Joe provides detailed technical insights but avoids overusing analogies. Instead, focus on straightforward, clear explanations.
-2. Sarah asks probing, thoughtful questions, occasionally offers her own insights, and challenges Joe to explain concepts simply and conversationally.
-3. Both speakers use natural human speech patterns, including filler words like "you know," and short pauses.
-4. Don't include any sound effects or background music.
-
-**Focus**:
-- Avoid excessive use of analogies. Use one or two if necessary for clarity but prioritize clear, direct explanations.
-- Include natural conversational flow with interruptions, backtracking, and filler words to make the dialogue feel authentic.
-- Encourage a natural dialogue with varied contributions from both speakers.
-
-**Tone**:
-- Engaging, relatable, and spontaneous.
-- Emphasize human-like emotions, with occasional humor or lighthearted moments.
-- Balance technical depth with conversational relatability, avoiding overly formal language.
-
-Joe: C arl Laflamme knew what protein he wanted to study, but not where to find it. It is encoded by a gene called C9ORF72, which is mutated in some people with the devastating neuro- logical condition motor neuron disease, also known as amyotrophic lateral sclerosis. And Laflamme wanted to understand its role in the disease. When he started his postdoctoral fellowship at the Montreal Neurological Institute-Hospital in Canada, Laflamme scoured the literature, searching for information on the protein. The problem was that none of the papers seemed to agree where in the cell this mysterious mol- ecule operates. There was so much confusion in the field, Laflamme says. He wondered whether a reagent was to blame, in particular the antibodies that scientists used to measure the amount of the protein and track its position in the cell. So, he and his colleagues decided to test the antibodies that were available. They identified 16 commercial antibodies that were adver- tised as able to bind to the protein encoded by C9ORF72. When the researchers put them THE QUEST TO RID LABS OF THE REAGENTS THAT RUIN EXPERIMENTS Poorly performing antibodies have plagued biomedicalsciences for decades. Several fresh initiativeshope to change this. By Diana Kwon ILLUSTRATION BY FABIO BUONOCORE 26 | Nature | Vol 635 | 7 November 2024 Feature through their paces, only three performed wellmeaning that the antibodies bound to the protein of interest without binding to other molecules. But not one published study had used these antibodies. About 15 papers described experiments using an antibody that didnt even bind the key protein in Laflammes testing. And those papers had been collec- tively cited more than 3,000 times 1 . Laflammes experience isnt unusual. Scien- tists have long known that many commercial antibodies dont work as they should they often fail to recognize a specific protein or non-selectively bind to several other targets. The result is a waste of time and resources that some say has contributed to a repro - ducibility crisis in the biological sciences, potentially slowing the pace of discovery and drug development. Laflamme is part of a growing community that wants to solve the problem of unreliable antibodies in research. He teamed up with molecular geneticist Aled Edwards at the University of Toronto, Canada, to set up Antibody Characterization through Open Science (YCharOS, pronounced Icarus), an initiative that aims to characterize commer- cially available research antibodies for every human protein. There are also efforts under way to produce better-performing antibodies, to make it easier for researchers to find them and to encourage the research community to adopt best prac- tices when it comes to choosing and working with these molecules. Antibody vendors, funding agencies and scientific publishers are all getting in on the action, says Harvinder Virk, a physicianscientist at the University of Leicester, UK. Its hard to imagine that a problem that has been going on so long will suddenly change but Im hopeful. Putting antibodies to the test The immune system produces antibodies in response to foreign substances, such as viruses and bacteria, flagging them for destruction. This makes antibodies useful in laboratory experiments. Scientists co-opt this ability by using them to mark or quantify spe- cific biological molecules, such as a segment of a protein. To be effective, these molecular tags need to have both specificity a strong affinity for the target and selectivity the ability to leave other proteins unmarked. For decades, scientists created these anti- bodies themselves. They injected proteins into animals, such as rabbits, whose immune systems would generate antibodies against the foreign molecules. To create a longer- term, more consistent supply of antibodies, researchers extracted immune cells from ani- mals and combined them with immortalized cancer cells. When reagent companies began the mass production of antibodies in the 1990s, most researchers shifted to purchasing antibodies from a catalogue. Today, there are around 7.7 million research antibody products on the market, sold by almost 350antibody suppliers around the world. In the late 2000s, scientists began reporting problems with both the specificity and selectivity of many commercially available antibodies, leading researchers to call for an independent body to certify that the molecules work as advertised. Over the years, a handful of groups have launched efforts to evaluate antibodies. What sets YCharOS apart is the level of cooperation that it has obtained from com- panies that sell antibodies. When Laflamme and Edwards set out to start YCharOS, they called every single vendor they could find; more than a dozen were interested in collab- orating. YCharOSs industry partners provide the antibodies for testing, free of charge. The partners, along with the funders of the initia- tive (which include various non-profit organ- izations and funding agencies), are given the chance to review characterization reports and provide feedback before they are published. YCharOS tests antibodies by comparing their specificity in a cell line that expresses the target protein at normal biological levels against their performance in whats called a knock-out cell line that lacks the protein (see Ways to validate). In an analysis published in eLife last year, the YCharOS team used this method to assess 614commercial antibodies, targeting a total of 65neuroscience-related proteins 2 . Two- thirds of them did not work as recommended by manufacturers. It never fails to amaze me how much of a hit or miss antibodies are, says Riham Ayoubi, director of operations at YCharOS. It shows you how important it is to include that nega- tive control in the work. Antibody manufacturers reassessed more than half of the underperforming antibodies that YCharOS flagged in 2023. They issued updated recommendations for 153 of them and removed 73 from the market. The YCharOS team has now tested more than 1,000 anti- bodies that are meant to bind to more than 100human proteins. Theres still a lot of work ahead, Laflamme says. He estimates that, of the 1.6 million commercially available antibodies to human proteins, roughly 200,000 are unique (many suppliers sell the same antibodies under different names). I think the YCharOS initiative can really make a difference, says Cecilia Williams, a cancer researcher at the KTH Royal Institute of Technology in Stockholm. But its not everything, because researchers will use these antibodies in other protocols, and in other tissues and cells that may express the protein differently, she says. The context in which anti- bodies are used can change how they perform. Other characterization efforts are trying to tackle this challenge. Andrea Radtke and her collaborators were part of a cell-mapping con- sortium called the Human BioMolecular Atlas Program when they set up the Organ Mapping Antibody Panels (OMAPs). OMAPs are col- lections of community-validated antibodies used in multiplex imaging a technique that involves visualizing several proteins in a single specimen. Unlike YCharOS, which focuses on conducting rigorous characterizations of antibodies for various applications in one specific context, OMAPs is looking at a single application for the antibodies, but in several contexts, such as in different human tissues and imaging methods. To do so, OMAPs recruits scientists from both academia and industry to conduct validations in their own labs. Vendors cannot test all possible applica- tions of their antibodies, but as a community we can say lets try this, says Radtke, who now works as a principal scientist at the instru- mentation company Leica Microsystems in Bethesda, Maryland. People are testing things that you would never think you could test. Expanding the toolbox Even if good antibodies are available, they are not always easy to find. In 2009, Anita Bandrowski, founder and chief executive of the data-sharing platform SciCrunch in San Diego, California, and her colleagues were examining how difficult it was to identify antibodies in journal articles. After sifting through papers in the Journal of Neuroscience, they found that 90% of the antibodies cited lacked a catalogue number (codes used by ven- dors to label specific products)making them almost impossible to track down. To replicate an experiment, its important to have the right reagents and proper labelling is crucial to finding them, Bandrowski says. After seeing that a similar problem plagued other journals, Bandrowski and her colleagues decided to create unique, persistent identifiers for antibodies and other scientific resources, such as model organisms, which they called research resource identifiers, or RRIDs. Catalogue numbers can disappear if a com- pany discontinues a product and because companies create them independently, two different products might end up with the same one. RRIDs solve this. In 2014, Bandrowski and her team started a pilot project 3 with 25 journals, in which they asked authors to include RRIDs in their manuscripts. In the years since, more than 1,000journals have adopted policies that It never fails to amaze me how much of a hit or miss antibodies are. Nature | Vol 635 | 7 November 2024 | 27 request these identifiers. We currently have nearly one million citations to RRIDs from papers, says Bandrowski. Ultimately, the hope is that authors of every journal article will clearly label the resources they used, such as antibodies, with RRIDs, Bandrowski says. That wont change repro- ducibility by itself, but it is the first step. In addition to being able to track down antibodies, researchers need a way to choose which ones to use. In 2012, Andrew Chalmers, who was then a researcher at the University of Bath, UK, co-founded CiteAb, a search engine to help researchers find the most highly cited antibodies. Over the years, the platform has grown to include more than seven million antibodies and now also includes, when available, information regarding validations. In May, CiteAb began integrating YCharOSs characterization data onto its site. The big challenge is that antibodies are just used in so many different ways, for so many dif- ferent species that you cant tick off that an anti- body is good or bad, Chalmers says. Many say that knock-out validation is key, but less than 5% of antibodies on CiteAb have been validated in this way, either by suppliers or through other independent initiatives, such as YCharOS. Theres a long way to go, Chalmers says. Stakeholders get involved Like many others, Virk developed an interest in antibody reliability after a personal experience with bad antibodies. In 2016, Virk received a big grant to study the role of a protein called TRPA1 in airway inflammation. But one of his colleagues mentioned that, on the basis of his own experience, the antibodies he was working with might not be reliable. When Virk put TRPA1 antibodies to the test, he discovered that his colleague was right: of the three most-cited antibodies used to study TRPA1, two didnt detect the human protein at all, and the other detected several other proteins at the same time. That was a shock, Virk says. At that point, I wanted to leave science because if things are really this unreliable, whats the point? Instead of leaving academia, Virk co-founded the Only Good Antibodies (OGA) community last year, with the aim of bringing together stakeholders such as researchers, antibody manufacturers, funding agencies and publishers to tackle the problem of poorly performing antibodies. In February, the OGA community hosted its first work- shop, which included individuals from these various groups to discuss how to improve the reproducibility of research conducted with antibodies. They were joined by NC3Rs, a scientific organization and funder, based in London that focuses on reducing the use of animals in research. Better antibodies means fewer animals are used in the process of producing these molecules and conducting experiments with them. Currently, the OGA community is working on a project to help researchers choose the right antibodies for their work and to make it easier for them to identify, use and share data about antibody quality. It is also piloting an YCharOS site at the University of Leicester the first outside Canada which will focus on antibodies used in respiratory sciences. The OGA community is also working with funders and publishers to find ways to reward researchers for adopting antibody-related best practices. Examples of such rewards include grants for scientists taking part in antibody-validation initiatives. Manufacturers have also been taking steps to improve antibody performance. In addition to increasingly conducting their own knock-out validations, a number of suppliers are also alter- ing the way some of their products are made. The need to modify antibody-production practices was brought to the fore in 2015, when a group of more than 100 scientists penned a commentary in Nature calling for the community to shift from antibodies gener- ated by immune cells or immunecancer-cell hybrids, to what are known as recombinant antibodies 4 . Recombinant antibodies are produced in genetically engineered cells pro- grammed to make a specific antibody. Using these antibodies exclusively, the authors argued, would enable infinite production of antibodies that do not vary from batch to batch a key problem with the older methods. A few manufacturers are shifting towards making more recombinant antibodies. For example, Abcam, an antibody supplier in Cambridge, UK, has added more than 32,000 of them to their portfolio. Facilitating the move towards recombinants across life-science research is a key part of improv- ing reproducibility, says Hannah Cable, the vice-president of new product development at Abcam. Thats something that antibody suppliers should be doing. Rob Meijers, director of the antibody plat- form at the Institute for Protein Innovation in Boston, Massachusetts, a non-profit research organization that makes recombinant anti- bodies, says that this shift simply makes more business sense. Theyre much more reproduc- ible, you can standardize the process for them, and the user feedback is very positive, he says. CiteAbs data have revealed that scientists behaviour around antibody use has shifted drastically over the past decade. About 20% of papers from 2023 that involved antibodies used recombinants. Thats a big change from where we were ten years ago, says Chalmers, who is now CiteAbs chief executive. Although the ongoing efforts to improve antibody reliability are a move in the right direction, changing scientists behaviour remains one of the biggest challenges, say those leading the charge. There are cases in which researchers dont want to hear that an antibody theyve been using for their experi- ments isnt actually doing what its meant to, Williams says. If somebody is happy with the result of an antibody, its being used regard- less, even if its certain that it doesnt bind this protein, Williams says. Ultimately, she adds, you can never get around the fact that the researcher will have to do validations. Still, many scientists are hopeful that recent efforts will lead to much needed change. Im optimistic that things are getting better, Radtke says. What Im so encouraged by is the young generation of scientists, who have more of a wolf-pack mentality, and are working together to solve this problem as a community. Diana Kwon writes for Nature from Berlin. 1. Laflamme, C. et al. eLife 8, e48363 (2019). 2. Ayoubi, R. et al. eLife 12, RP91645 (2023). 3. Bandrowski, A. et al. J. Comp. Neurol. 524, 822 (2016). 4. Bradbury, A. & Plckthun, A. Nature 518, 2729 (2015). WAYS TO VALIDATE Researchers test antibodies that they wish to use in several ways. They can stain a sample of cells that express a protein of interest using immunohistochemistry. Western blotting can reveal whether an antibody binds to a specific protein with an expected molecular weight. And scientists can use immunoprecipitation to pull the protein out of a mixture and then check its identity using mass spectrometry. Immunohistochemistry Antibodies label cells with the target protein Cells without target protein Western blot Molecular- weight reference ladder Imummoprecipitation Antibodies attached to beads Protein of interest is captured and then confirmed using mass spectrometry A single band is found at the expected molecular weight I wanted to leave science because if things are really this unreliable, whats the point? 28 | Nature | Vol 635 | 7 November 2024 Feature
-
-Sarah: 
-
- ------------END-----------------
-
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 117ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 117ms
-[INFO] 
-
- -------RESPONSE FROM VERTEX AI---------
- Joe: Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies, unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!  Today, we're diving into a fascinating, and frankly, slightly frustrating, area of biomedical research: antibodies.  Specifically, the problem of unreliable antibodies and the ongoing efforts to fix it.
-
-Sarah:  Oh, I've heard whispers about this.  It sounds like a pretty significant issue.  Um, can you give us a bit of background? What's the problem with antibodies in research, exactly?
-
-Joe:  Right. So, antibodies are crucial tools in biological research.  They're, you know, essentially molecular tags that scientists use to identify and quantify specific proteins within cells and tissues.  The problem is that for decades, many commercially available antibodies haven't been working as advertised.  They either don't bind to the intended protein, or they bind to multiple proteins – which makes the research results unreliable.
-
-Sarah:  So, it's like... false positives all over the place?  That would really mess up a study.  And I guess it would explain why some research is difficult to reproduce.
-
-Joe: Exactly.  It leads to wasted time, resources, and potentially, incorrect conclusions. This has, um, seriously contributed to what some call a reproducibility crisis in biology.  Think about it - a researcher spends months, maybe years, on a project only to find out the fundamental tool they were using was faulty.  It's a huge problem.
-
-Sarah:  Wow. So, what's being done to address this?
-
-Joe: Well, there are several initiatives springing up.  One example is YCharOS,  short for Antibody Characterization through Open Science.  This project, spearheaded by Carl Laflamme and Aled Edwards, aims to systematically test commercially available antibodies for every human protein.
-
-Sarah:  That sounds like a monumental task! How are they doing it?
-
-Joe:  They're using a rigorous testing method.  Basically, they compare how an antibody performs in a cell line that *does* express the target protein, with how it performs in a cell line that *doesn't* have that protein.   This "knock-out" approach helps them determine specificity – does the antibody only bind to the intended protein, or does it latch onto other things as well?
-
-Sarah: That makes perfect sense.  A control group, but on a cellular level.  So, what are the results like?  Are most antibodies failing these tests?
-
-Joe:  Um, sadly, yes.  Their initial results were quite striking.  In one analysis, two-thirds of the antibodies tested didn't perform as claimed by the manufacturers.  This highlights just how widespread the problem is.  But the good news is that YCharOS is working with manufacturers to improve their products and even remove unreliable ones from the market.
-
-Sarah:  That's encouraging!  So it's not just about identifying the bad antibodies, it’s also about getting them fixed or removed?
-
-Joe: Precisely.  It's a collaborative effort involving researchers, manufacturers, funders, and even publishers.  There’s also a push for better labeling and tracking of antibodies using things like RRIDs – research resource identifiers – to make it easier to find and verify the reagents used in studies.
-
-Sarah:  So there's a whole ecosystem of improvements happening? That's great to hear.  It sounds like there's a real concerted effort to improve things.  But is there anything else beyond better testing and labeling?
-
-Joe:  Yes! There's also a push to transition from older antibody production methods to newer, more reliable ones, such as recombinant antibodies. Recombinant antibodies are made in genetically engineered cells, leading to more consistent and reproducible results.  This is a big shift, but manufacturers are starting to embrace it.
-
-Sarah:  It sounds like a long road to fixing this problem, but it's encouraging to see so much progress being made.  Thanks for explaining this, Joe. This was really eye-opening.
-
-Joe:  My pleasure, Sarah.  It's a complex issue, but the progress being made gives me hope for more reliable research in the future.  And that's a good thing for everyone.  Thanks for listening to Science Odyssey!
- 
-
- ------------END-----------------
-
-[INFO] Processing 17 lines of text
+[INFO] Processing 13 lines of text
 [INFO] Added conversation part: Joe with Welcome to Science Odyssey, the podcast where we j...
-[INFO] Added conversation part: Sarah with Oh, I've heard whispers about this.  It sounds lik...
-[INFO] Added conversation part: Joe with Right. So, antibodies are crucial tools in biologi...
-[INFO] Added conversation part: Sarah with So, it's like... false positives all over the plac...
-[INFO] Added conversation part: Joe with Exactly.  It leads to wasted time, resources, and ...
-[INFO] Added conversation part: Sarah with Wow. So, what's being done to address this?...
-[INFO] Added conversation part: Joe with Well, there are several initiatives springing up. ...
-[INFO] Added conversation part: Sarah with That sounds like a monumental task! How are they d...
-[INFO] Added conversation part: Joe with They're using a rigorous testing method.  Basicall...
-[INFO] Added conversation part: Sarah with That makes perfect sense.  A control group, but on...
-[INFO] Added conversation part: Joe with Um, sadly, yes.  Their initial results were quite ...
-[INFO] Added conversation part: Sarah with That's encouraging!  So it's not just about identi...
-[INFO] Added conversation part: Joe with Precisely.  It's a collaborative effort involving ...
-[INFO] Added conversation part: Sarah with So there's a whole ecosystem of improvements happe...
-[INFO] Added conversation part: Joe with Yes! There's also a push to transition from older ...
-[INFO] Added conversation part: Sarah with It sounds like a long road to fixing this problem,...
-[INFO] Added conversation part: Joe with My pleasure, Sarah.  It's a complex issue, but the...
-[INFO] Successfully extracted 17 conversation parts
+[INFO] Added conversation part: Sarah with Oh, I've heard whispers of this.  It sounds… messy...
+[INFO] Added conversation part: Joe with Exactly.  They're crucial.  Think about it – scien...
+[INFO] Added conversation part: Sarah with So, false positives, essentially?  Or even worse, ...
+[INFO] Added conversation part: Joe with It's incredibly widespread.  There was this study,...
+[INFO] Added conversation part: Sarah with Whoa. Three thousand citations based on faulty dat...
+[INFO] Added conversation part: Joe with It's not that simple.  It's a combination of facto...
+[INFO] Added conversation part: Sarah with So, what's being done to fix this?  Is it just a m...
+[INFO] Added conversation part: Joe with It's more than that.  There are several initiative...
+[INFO] Added conversation part: Sarah with That sounds promising.  It's a huge undertaking, t...
+[INFO] Added conversation part: Joe with Oh yeah, it's a massive project.  But, um, it's cr...
+[INFO] Added conversation part: Sarah with It's a great example of how seemingly small, techn...
+[INFO] Added conversation part: Joe with My pleasure, Sarah. It's a vital issue for the sci...
+[INFO] Successfully extracted 13 conversation parts
 [INFO] Cleaned Text (Chunk 1): [
   {
     "speaker": "Joe",
-    "text": "Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies, unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!  Today, we're diving into a fascinating, and frankly, slightly frustrating, area of biomedical research: antibodies.  Specifically, the problem of unreliable antibodies and the ongoing efforts to fix it."
+    "text": "Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies, unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!  So, Sarah, today we're diving into a fascinating—and frankly, a bit frustrating—problem in biomedical research: unreliable antibodies."
   },
   {
     "speaker": "Sarah",
-    "text": "Oh, I've heard whispers about this.  It sounds like a pretty significant issue.  Um, can you give us a bit of background? What's the problem with antibodies in research, exactly?"
+    "text": "Oh, I've heard whispers of this.  It sounds… messy.  I mean, antibodies are fundamental to so much biological research, right?  What's the core issue?"
   },
   {
     "speaker": "Joe",
-    "text": "Right. So, antibodies are crucial tools in biological research.  They're, you know, essentially molecular tags that scientists use to identify and quantify specific proteins within cells and tissues.  The problem is that for decades, many commercially available antibodies haven't been working as advertised.  They either don't bind to the intended protein, or they bind to multiple proteins – which makes the research results unreliable."
+    "text": "Exactly.  They're crucial.  Think about it – scientists use antibodies to, um, identify and quantify specific proteins within cells.  But the problem is, many commercially available antibodies, you know, the ones researchers buy, simply don't work as advertised.  They might not bind to the *right* protein, or they might bind to multiple proteins, giving you completely misleading results."
   },
   {
     "speaker": "Sarah",
-    "text": "So, it's like... false positives all over the place?  That would really mess up a study.  And I guess it would explain why some research is difficult to reproduce."
+    "text": "So, false positives, essentially?  Or even worse, false negatives?  That's a huge problem.  How widespread is this?"
   },
   {
     "speaker": "Joe",
-    "text": "Exactly.  It leads to wasted time, resources, and potentially, incorrect conclusions. This has, um, seriously contributed to what some call a reproducibility crisis in biology.  Think about it - a researcher spends months, maybe years, on a project only to find out the fundamental tool they were using was faulty.  It's a huge problem."
+    "text": "It's incredibly widespread.  There was this study, a researcher named Carl Laflamme, he was looking at a protein linked to motor neuron disease. He found that out of sixteen commercially available antibodies supposedly targeting this specific protein, only *three* actually worked properly.  And the ones that *didn't* work?  They’d been used in, like, fifteen papers—cited over three thousand times!"
   },
   {
     "speaker": "Sarah",
-    "text": "Wow. So, what's being done to address this?"
+    "text": "Whoa. Three thousand citations based on faulty data? That's… staggering.  What causes these antibodies to fail?  Is it just shoddy manufacturing?"
   },
   {
     "speaker": "Joe",
-    "text": "Well, there are several initiatives springing up.  One example is YCharOS,  short for Antibody Characterization through Open Science.  This project, spearheaded by Carl Laflamme and Aled Edwards, aims to systematically test commercially available antibodies for every human protein."
+    "text": "It's not that simple.  It's a combination of factors. Sometimes the antibody doesn't bind strongly enough to its target protein – it lacks affinity. Other times, it binds to other proteins too – it lacks selectivity.  And, you know,  the process of producing antibodies is complex.  There's a lot of variability involved.  It's not always easy to get a consistently reliable product. Plus, a lot of the testing isn't always rigorous enough."
   },
   {
     "speaker": "Sarah",
-    "text": "That sounds like a monumental task! How are they doing it?"
+    "text": "So, what's being done to fix this?  Is it just a matter of better manufacturing processes?"
   },
   {
     "speaker": "Joe",
-    "text": "They're using a rigorous testing method.  Basically, they compare how an antibody performs in a cell line that *does* express the target protein, with how it performs in a cell line that *doesn't* have that protein.   This \"knock-out\" approach helps them determine specificity – does the antibody only bind to the intended protein, or does it latch onto other things as well?"
+    "text": "It's more than that.  There are several initiatives springing up.  One, called iCharOS – that's Icarus – aims to rigorously test *every* commercially available antibody targeting human proteins.  There's also a push for better standards, better testing protocols, and more transparency from antibody manufacturers. It's a multi-pronged approach."
   },
   {
     "speaker": "Sarah",
-    "text": "That makes perfect sense.  A control group, but on a cellular level.  So, what are the results like?  Are most antibodies failing these tests?"
+    "text": "That sounds promising.  It's a huge undertaking, though, right?  Testing every single antibody..."
   },
   {
     "speaker": "Joe",
-    "text": "Um, sadly, yes.  Their initial results were quite striking.  In one analysis, two-thirds of the antibodies tested didn't perform as claimed by the manufacturers.  This highlights just how widespread the problem is.  But the good news is that YCharOS is working with manufacturers to improve their products and even remove unreliable ones from the market."
+    "text": "Oh yeah, it's a massive project.  But, um, it's crucial.  The consequences of unreliable antibodies are far-reaching.  It wastes time, money, and resources, and, more importantly, it could be slowing down scientific progress, potentially hindering drug development.  It's really a crisis of reproducibility in a lot of biomedical research."
   },
   {
     "speaker": "Sarah",
-    "text": "That's encouraging!  So it's not just about identifying the bad antibodies, it’s also about getting them fixed or removed?"
+    "text": "It's a great example of how seemingly small, technical details can have enormous consequences.  Thanks for shedding light on this, Joe.  It's a problem I certainly wasn't aware of the full extent of."
   },
   {
     "speaker": "Joe",
-    "text": "Precisely.  It's a collaborative effort involving researchers, manufacturers, funders, and even publishers.  There’s also a push for better labeling and tracking of antibodies using things like RRIDs – research resource identifiers – to make it easier to find and verify the reagents used in studies."
+    "text": "My pleasure, Sarah. It's a vital issue for the scientific community to address.  And that’s all the time we have for today’s episode of Science Odyssey. Join us next time for another fascinating journey into the world of scientific discovery!"
+  }
+]
+[INFO] Processing 11 lines of text
+[INFO] No speaker pattern match found at line 1: "**(Sound of a gentle transition, then silence)**..."
+[INFO] Added conversation part: Joe with ** So, Sarah, that was a fascinating look at the a...
+[INFO] Added conversation part: Sarah with **  It is mind-boggling, Joe. And the fact that tw...
+[INFO] Added conversation part: Joe with ** Sure.  Rigorous validation, in the case of anti...
+[INFO] Added conversation part: Sarah with **  So, it's a kind of control experiment, right? ...
+[INFO] Added conversation part: Joe with ** Exactly.  It's a crucial negative control.  Wit...
+[INFO] Added conversation part: Sarah with **  That's what I was getting at with the OMAPs in...
+[INFO] Added conversation part: Joe with **  It's a monumental task, Sarah.  Feasible?  May...
+[INFO] Added conversation part: Sarah with **  So, it's a bit like crowdsourcing validation, ...
+[INFO] Added conversation part: Joe with ** That’s the million-dollar question, Sarah.  The...
+[INFO] No speaker pattern match found at line 11: "**(Sound of a gentle transition, then silence)**..."
+[INFO] Successfully extracted 9 conversation parts
+[INFO] Cleaned Text (Chunk 2): [
+  {
+    "speaker": "Joe",
+    "text": "** So, Sarah, that was a fascinating look at the antibody validation crisis, wasn't it?  The sheer number of antibodies on the market… it's staggering, really.  Seven point seven million…  I mean, just think about that for a second."
   },
   {
     "speaker": "Sarah",
-    "text": "So there's a whole ecosystem of improvements happening? That's great to hear.  It sounds like there's a real concerted effort to improve things.  But is there anything else beyond better testing and labeling?"
+    "text": "**  It is mind-boggling, Joe. And the fact that two-thirds of those tested by YCharOS didn't perform as advertised… that's a huge problem. It really highlights the need for rigorous validation, doesn't it?  But I'm curious, what exactly *is* rigorous validation in this context?  Can you break it down for our listeners?"
   },
   {
     "speaker": "Joe",
-    "text": "Yes! There's also a push to transition from older antibody production methods to newer, more reliable ones, such as recombinant antibodies. Recombinant antibodies are made in genetically engineered cells, leading to more consistent and reproducible results.  This is a big shift, but manufacturers are starting to embrace it."
+    "text": "** Sure.  Rigorous validation, in the case of antibodies, means carefully characterizing their specificity and selectivity. Specificity means the antibody only binds to its intended target protein, and nothing else. Selectivity means it binds strongly to that target, even when other similar proteins are present.  YCharOS uses a clever approach comparing the antibody's performance in a cell line expressing the target protein with a \"knock-out\" cell line lacking that protein.  If the antibody only binds to the cell line with the target protein, it's a good indication of specificity."
   },
   {
     "speaker": "Sarah",
-    "text": "It sounds like a long road to fixing this problem, but it's encouraging to see so much progress being made.  Thanks for explaining this, Joe. This was really eye-opening."
+    "text": "**  So, it's a kind of control experiment, right?  Like, a way to rule out false positives?"
   },
   {
     "speaker": "Joe",
-    "text": "My pleasure, Sarah.  It's a complex issue, but the progress being made gives me hope for more reliable research in the future.  And that's a good thing for everyone.  Thanks for listening to Science Odyssey!"
+    "text": "** Exactly.  It's a crucial negative control.  Without it, you could easily get false positives, where the antibody seems to be working, but it's actually binding to something else.  That's a major source of error in research.  Um… another aspect of validation is testing the antibody across different experimental conditions, though that's something even YCharOS can't fully address on its own."
+  },
+  {
+    "speaker": "Sarah",
+    "text": "**  That's what I was getting at with the OMAPs initiative, actually.  They're tackling the issue of context-dependent performance, aren't they?  It seems like a huge undertaking to validate antibodies across all possible applications and tissues.  Is that even feasible?"
+  },
+  {
+    "speaker": "Joe",
+    "text": "**  It's a monumental task, Sarah.  Feasible?  Maybe not completely, not in the foreseeable future.  But the collaborative approach of OMAPs, getting researchers from different labs and industries involved, is a really smart way to expand the scope of validation. It's like... you know, a distributed validation effort, leveraging the collective expertise and resources of the scientific community.  It's a necessary approach given the sheer scale of the problem.  Think about it – each lab might test a subset of conditions, adding to the overall picture."
+  },
+  {
+    "speaker": "Sarah",
+    "text": "**  So, it's a bit like crowdsourcing validation, but on a far more sophisticated and rigorous scale.  It makes sense, given the limitations of any single lab or company.  But it still leaves a lot of questions unanswered, doesn’t it?  How do we ensure the quality of all these antibodies in the long run? Is there a way to prevent this from happening again in the future?"
+  },
+  {
+    "speaker": "Joe",
+    "text": "** That’s the million-dollar question, Sarah.  There’s no single solution, unfortunately.  Improved manufacturing standards, more transparent data sharing, and stricter regulations are all part of the solution.  And initiatives like YCharOS and OMAPs are crucial steps towards building a more reliable system.  It's going to take a concerted effort from everyone involved – researchers, manufacturers, funding agencies – to truly address this challenge."
+  }
+]
+[INFO] Processing 10 lines of text
+[INFO] Added conversation part: Sarah with So, Joe, we've talked about the massive problem of...
+[INFO] Added conversation part: Joe with Right, it's a multifaceted issue.  Um… let's see. ...
+[INFO] Added conversation part: Sarah with So, it's like a universal identifier, making it ea...
+[INFO] Added conversation part: Joe with Exactly.  That's where initiatives like YCharOS an...
+[INFO] Added conversation part: Sarah with So, you have RRIDs for identification, and YCharOS...
+[INFO] Added conversation part: Joe with Yeah, the scale is a huge challenge. There are mil...
+[INFO] Added conversation part: Sarah with It sounds like a systemic problem that requires a ...
+[INFO] Added conversation part: Joe with Precisely.  The Only Good Antibodies (OGA) communi...
+[INFO] Added conversation part: Sarah with (laughs)  I appreciate you resisting the urge for ...
+[INFO] Added conversation part: Joe with Exactly.  A very long marathon....
+[INFO] Successfully extracted 10 conversation parts
+[INFO] Cleaned Text (Chunk 3): [
+  {
+    "speaker": "Sarah",
+    "text": "So, Joe, we've talked about the massive problem of unreliable antibodies in research.  You mentioned several initiatives – YCharOS, OMAPs, RRIDs –  but it still sounds incredibly complex.  Can you break down how these different approaches work together, or even if they *do* work together?"
+  },
+  {
+    "speaker": "Joe",
+    "text": "Right, it's a multifaceted issue.  Um… let's see.  RRIDs, the Research Resource Identifiers, are basically unique ID numbers for antibodies and other research materials.  Think of them like product barcodes, but specifically designed for scientific resources.  They help track down the exact antibody used in a study, even if the manufacturer changes or discontinues the product.  It's a crucial first step in reproducibility, because if you can't even find the same antibody, you can't replicate the experiment, right?"
+  },
+  {
+    "speaker": "Sarah",
+    "text": "So, it's like a universal identifier, making it easier to find specific antibodies mentioned in papers.  But that doesn't solve the problem of the antibody itself being unreliable, does it?"
+  },
+  {
+    "speaker": "Joe",
+    "text": "Exactly.  That's where initiatives like YCharOS and OMAPs come in.  They focus on characterizing antibodies – rigorously testing them to see how well they perform.  YCharOS, for example, provides detailed data on the specificity and sensitivity of antibodies.  This data, ideally, should be readily available,  and platforms like CiteAb are integrating this information so researchers can make informed choices.  OMAPs… well, that’s a bit more complex, involving…  it's essentially a community effort to standardize antibody validation methods."
+  },
+  {
+    "speaker": "Sarah",
+    "text": "So, you have RRIDs for identification, and YCharOS and OMAPs for quality control and validation. But it sounds like even with all these initiatives, there's still a long way to go.  What are the biggest hurdles, you know, besides the sheer volume of antibodies out there?"
+  },
+  {
+    "speaker": "Joe",
+    "text": "Yeah, the scale is a huge challenge. There are millions of antibodies, and validating them all is a monumental task.  Another significant hurdle is the lack of standardization.  Different labs use different methods for validation, making it difficult to compare results.  And then there's the issue of incentives.  Manufacturers might not prioritize rigorous validation if it's not financially beneficial for them.  So, you need a combination of technological solutions, like the databases and identifiers, along with regulatory changes and a shift in the research culture itself."
+  },
+  {
+    "speaker": "Sarah",
+    "text": "It sounds like a systemic problem that requires a collaborative effort from everyone involved.  It's not just about the tech; it's about changing the way research is done and funded, right?"
+  },
+  {
+    "speaker": "Joe",
+    "text": "Precisely.  The Only Good Antibodies (OGA) community is a great example of that collaborative effort.  They're bringing together researchers, manufacturers, funding agencies – all the stakeholders – to discuss and implement solutions.  It's a long-term project, but it's a necessary one.  You know, it's a bit like…  (pauses)  No, let's not use an analogy.  It's a complex issue requiring a multifaceted approach."
+  },
+  {
+    "speaker": "Sarah",
+    "text": "(laughs)  I appreciate you resisting the urge for analogies!  It makes it much clearer.  So, in short, we need better identifiers, better validation methods, a more collaborative approach, and maybe some regulatory changes to really tackle this problem.  It's a marathon, not a sprint."
+  },
+  {
+    "speaker": "Joe",
+    "text": "Exactly.  A very long marathon."
+  }
+]
+[INFO] Processing 9 lines of text
+[INFO] Added conversation part: Joe with So, Sarah, that was… a marathon, wasn't it?  A lot...
+[INFO] Added conversation part: Sarah with Right. And that's a huge shift, isn't it?  It soun...
+[INFO] Added conversation part: Joe with Okay, so the traditional methods, using hybridomas...
+[INFO] Added conversation part: Sarah with So, it's like... a recipe, but instead of baking a...
+[INFO] Added conversation part: Joe with It's not a bad analogy, but it's more precise than...
+[INFO] Added conversation part: Sarah with Okay, I think I get that.  But even with this more...
+[INFO] Added conversation part: Joe with Partly, yes, but also habit, inertia, and perhaps ...
+[INFO] Added conversation part: Sarah with So it's a combination of factors – the cost of cha...
+[INFO] Added conversation part: Joe with Exactly. It's not just about the technology; it's ...
+[INFO] Successfully extracted 9 conversation parts
+[INFO] Cleaned Text (Chunk 4): [
+  {
+    "speaker": "Joe",
+    "text": "So, Sarah, that was… a marathon, wasn't it?  A lot of information on antibody reliability and reproducibility.  The core issue, as I see it, boils down to the shift from antibodies produced using traditional methods – you know, from immune cells or hybridomas – to recombinant antibodies."
+  },
+  {
+    "speaker": "Sarah",
+    "text": "Right. And that's a huge shift, isn't it?  It sounds like a pretty fundamental change in how these things are made. Can you break down *why* recombinant antibodies are so much better?  I mean, I get the \"infinite production\" part, but what's the technical reason behind the improved reproducibility?"
+  },
+  {
+    "speaker": "Joe",
+    "text": "Okay, so the traditional methods, using hybridomas, are inherently variable.  The process of creating and growing these cell lines is complex, and slight variations in culture conditions, even minor genetic drift within the hybridoma population, can lead to differences in the antibody produced from batch to batch.  Recombinant antibodies, on the other hand, are produced using genetically engineered cells.  Think of it as a precise, repeatable manufacturing process.  You have a defined DNA sequence encoding the specific antibody you want, and you use that to create cells that consistently produce that exact antibody.  There's less room for error, for variation.  It's all much more controlled."
+  },
+  {
+    "speaker": "Sarah",
+    "text": "So, it's like... a recipe, but instead of baking a cake, you're making antibodies?  Is that a fair analogy?"
+  },
+  {
+    "speaker": "Joe",
+    "text": "It's not a bad analogy, but it's more precise than that.  A recipe can still have variations depending on the baker, right?  With recombinant antibody production,  the \"recipe\" – the DNA sequence – is fixed, and the \"baking process\" – the cell culture – is standardized to minimize variation.  It’s more like a highly automated factory producing identical products."
+  },
+  {
+    "speaker": "Sarah",
+    "text": "Okay, I think I get that.  But even with this more controlled process, you mentioned there's still resistance from some researchers.  Why is that?  Is it just stubbornness?"
+  },
+  {
+    "speaker": "Joe",
+    "text": "Partly, yes, but also habit, inertia, and perhaps a lack of awareness of the benefits.  Some researchers might have been using a particular antibody for years, and they’re hesitant to switch, even if there's evidence suggesting it's not as reliable as a recombinant alternative.  There's also the time and effort involved in validating a new antibody.  It’s not a trivial process."
+  },
+  {
+    "speaker": "Sarah",
+    "text": "So it's a combination of factors – the cost of changing, the time investment in validation, and maybe even a bit of resistance to change? That makes sense.  It sounds like a long road ahead to get everyone on board with the recombinant method."
+  },
+  {
+    "speaker": "Joe",
+    "text": "Exactly. It's not just about the technology; it's about changing the culture of research, too.  The good news is that initiatives like the ones discussed, promoting best practices and rewarding researchers for using validated antibodies, are starting to make a difference.  It's a slow process, but I'm optimistic things are moving in the right direction.  The younger generation seems particularly keen on improving reproducibility."
   }
 ]
 [INFO] 
---- Full Generated Conversation ---
-[INFO] Joe: Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies, unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!  Today, we're diving into a fascinating, and frankly, slightly frustrating, area of biomedical research: antibodies.  Specifically, the problem of unreliable antibodies and the ongoing efforts to fix it.
-[INFO] Sarah: Oh, I've heard whispers about this.  It sounds like a pretty significant issue.  Um, can you give us a bit of background? What's the problem with antibodies in research, exactly?
-[INFO] Joe: Right. So, antibodies are crucial tools in biological research.  They're, you know, essentially molecular tags that scientists use to identify and quantify specific proteins within cells and tissues.  The problem is that for decades, many commercially available antibodies haven't been working as advertised.  They either don't bind to the intended protein, or they bind to multiple proteins – which makes the research results unreliable.
-[INFO] Sarah: So, it's like... false positives all over the place?  That would really mess up a study.  And I guess it would explain why some research is difficult to reproduce.
-[INFO] Joe: Exactly.  It leads to wasted time, resources, and potentially, incorrect conclusions. This has, um, seriously contributed to what some call a reproducibility crisis in biology.  Think about it - a researcher spends months, maybe years, on a project only to find out the fundamental tool they were using was faulty.  It's a huge problem.
-[INFO] Sarah: Wow. So, what's being done to address this?
-[INFO] Joe: Well, there are several initiatives springing up.  One example is YCharOS,  short for Antibody Characterization through Open Science.  This project, spearheaded by Carl Laflamme and Aled Edwards, aims to systematically test commercially available antibodies for every human protein.
-[INFO] Sarah: That sounds like a monumental task! How are they doing it?
-[INFO] Joe: They're using a rigorous testing method.  Basically, they compare how an antibody performs in a cell line that *does* express the target protein, with how it performs in a cell line that *doesn't* have that protein.   This "knock-out" approach helps them determine specificity – does the antibody only bind to the intended protein, or does it latch onto other things as well?
-[INFO] Sarah: That makes perfect sense.  A control group, but on a cellular level.  So, what are the results like?  Are most antibodies failing these tests?
-[INFO] Joe: Um, sadly, yes.  Their initial results were quite striking.  In one analysis, two-thirds of the antibodies tested didn't perform as claimed by the manufacturers.  This highlights just how widespread the problem is.  But the good news is that YCharOS is working with manufacturers to improve their products and even remove unreliable ones from the market.
-[INFO] Sarah: That's encouraging!  So it's not just about identifying the bad antibodies, it’s also about getting them fixed or removed?
-[INFO] Joe: Precisely.  It's a collaborative effort involving researchers, manufacturers, funders, and even publishers.  There’s also a push for better labeling and tracking of antibodies using things like RRIDs – research resource identifiers – to make it easier to find and verify the reagents used in studies.
-[INFO] Sarah: So there's a whole ecosystem of improvements happening? That's great to hear.  It sounds like there's a real concerted effort to improve things.  But is there anything else beyond better testing and labeling?
-[INFO] Joe: Yes! There's also a push to transition from older antibody production methods to newer, more reliable ones, such as recombinant antibodies. Recombinant antibodies are made in genetically engineered cells, leading to more consistent and reproducible results.  This is a big shift, but manufacturers are starting to embrace it.
-[INFO] Sarah: It sounds like a long road to fixing this problem, but it's encouraging to see so much progress being made.  Thanks for explaining this, Joe. This was really eye-opening.
-[INFO] Joe: My pleasure, Sarah.  It's a complex issue, but the progress being made gives me hope for more reliable research in the future.  And that's a good thing for everyone.  Thanks for listening to Science Odyssey!
-[INFO] --- End of Conversation ---
 
+ ==================Last Chunk===================
+
+[INFO] Processing 14 lines of text
+[INFO] Added conversation part: Sarah with So, Joe, you were just saying about validating ant...
+[INFO] Added conversation part: Joe with Sure.  There are several key methods. Um, one is i...
+[INFO] Added conversation part: Sarah with Okay, so it's a visual test, almost?  Like, you ca...
+[INFO] Added conversation part: Joe with Exactly.  Another method is Western blotting. This...
+[INFO] Added conversation part: Sarah with I see. So, Western blotting gives you a more preci...
+[INFO] Added conversation part: Joe with Precisely. And then there's immunoprecipitation.  ...
+[INFO] Added conversation part: Sarah with So, you're basically using the antibody as a tool ...
+[INFO] Added conversation part: Joe with Absolutely.  Even with these methods, there are li...
+[INFO] Added conversation part: Sarah with It’s a lot to keep track of.  It sounds incredibly...
+[INFO] Added conversation part: Joe with It really is. And it's a big part of why we're see...
+[INFO] Added conversation part: Sarah with That’s reassuring to hear.  Thanks for explaining ...
+[INFO] Added conversation part: Joe with My pleasure, Sarah.  It's a complex area, but cruc...
+[INFO] Added conversation part: Sarah with Definitely....
+[INFO] Added conversation part: Joe with Thank you for joining us on this episode of Scienc...
+[INFO] Successfully extracted 14 conversation parts
+[INFO] Cleaned Text (Chunk 5): [
+  {
+    "speaker": "Sarah",
+    "text": "So, Joe, you were just saying about validating antibodies.  That sounds… complicated. Can you break that down a bit more for our listeners?  What are the main ways researchers do this?"
+  },
+  {
+    "speaker": "Joe",
+    "text": "Sure.  There are several key methods. Um, one is immunohistochemistry.  Basically, you're using an antibody to label cells that express a specific protein.  If the antibody is good, it’ll only bind to the cells that actually have that protein.  You know, it's like...  well, forget the analogy. It's a direct test of whether the antibody binds to the right thing in its natural environment, within the cells."
+  },
+  {
+    "speaker": "Sarah",
+    "text": "Okay, so it's a visual test, almost?  Like, you can see which cells are labeled?"
+  },
+  {
+    "speaker": "Joe",
+    "text": "Exactly.  Another method is Western blotting. This one's a bit different.  Here, you're using the antibody to detect a specific protein in a sample that's been separated by size using gel electrophoresis.  If the antibody is specific, it will only bind to the protein band with the expected molecular weight.  It's like... you're looking for a specific person in a lineup, based on their height and weight."
+  },
+  {
+    "speaker": "Sarah",
+    "text": "I see. So, Western blotting gives you a more precise measurement of the protein size as well.  That's helpful for confirming identity, right?  Because sometimes proteins can be similar in structure."
+  },
+  {
+    "speaker": "Joe",
+    "text": "Precisely. And then there's immunoprecipitation.  This is where you use the antibody to physically pull out the protein of interest from a complex mixture of proteins.  Then, you can analyze what you've pulled out using something like mass spectrometry to confirm its identity.  It's a much more rigorous way to confirm that you're actually interacting with the protein you think you are."
+  },
+  {
+    "speaker": "Sarah",
+    "text": "So, you're basically using the antibody as a tool to isolate the protein and then independently verify its identity.  That makes sense.  It sounds like a pretty thorough process, but still… there's room for error, I guess?"
+  },
+  {
+    "speaker": "Joe",
+    "text": "Absolutely.  Even with these methods, there are limitations.  And, you know, sometimes researchers might cut corners or misinterpret results.  That's why having standardized protocols and rigorous quality control are so important."
+  },
+  {
+    "speaker": "Sarah",
+    "text": "It’s a lot to keep track of.  It sounds incredibly detailed and meticulous.  And yet, it is crucial to the whole process."
+  },
+  {
+    "speaker": "Joe",
+    "text": "It really is. And it's a big part of why we're seeing such an emphasis on reproducibility in science right now.  It's not just about the technology; it's about changing the culture of research, too. The good news is that initiatives promoting best practices and rewarding researchers for using validated antibodies are starting to make a difference.  It's a slow process, but I'm optimistic things are moving in the right direction. The younger generation seems particularly keen on improving reproducibility."
+  },
+  {
+    "speaker": "Sarah",
+    "text": "That’s reassuring to hear.  Thanks for explaining all of that, Joe. It’s clear there's a lot more to it than just throwing an antibody at a sample."
+  },
+  {
+    "speaker": "Joe",
+    "text": "My pleasure, Sarah.  It's a complex area, but crucial for the reliability of scientific findings."
+  },
+  {
+    "speaker": "Sarah",
+    "text": "Definitely."
+  },
+  {
+    "speaker": "Joe",
+    "text": "Thank you for joining us on this episode of Science Odyssey, where we explored the groundbreaking research shaping our understanding of the world. If you enjoyed this journey, don't forget to subscribe, leave a review, and share the podcast with fellow science enthusiasts. Until next time, keep exploring the wonders of science—your next discovery awaits!"
+  }
+]
 [INFO] 
 ======= Starting Pricing Calculation ======
  -Input text length: 16704
- -Number of Vertex AI responses: 1
+ -Number of Vertex AI responses: 5
 
 [INFO] 
         Input text length: 16704
@@ -827,93 +545,225 @@ Joe:  My pleasure, Sarah.  It's a complex issue, but the progress being made giv
         Total input tokens: 3944
       
 [INFO] Response 1 details:
-- Length: 4240 characters
-- Output tokens: 918
-[INFO] Total TTS characters calculated: 4195
+- Length: 3386 characters
+- Output tokens: 765
+[INFO] Response 2 details:
+- Length: 3456 characters
+- Output tokens: 766
+[INFO] Response 3 details:
+- Length: 3397 characters
+- Output tokens: 749
+[INFO] Response 4 details:
+- Length: 3063 characters
+- Output tokens: 673
+[INFO] Response 5 details:
+- Length: 3476 characters
+- Output tokens: 776
+[INFO] Total TTS characters calculated: 16535
 [INFO] 
 ---***** Final Pricing Calculation Summary **** ---
 Total Input Tokens: 3944
-Total Output Tokens: 918
-Total Tokens: 4862
-Total TTS Characters: 4195
+Total Output Tokens: 3729
+Total Tokens: 7673
+Total TTS Characters: 16535
 Vertex AI Input Cost: $0.000002
-Vertex AI Output Cost: $0.000000
-TTS Cost: $0.067120
-Total Cost: $0.067122
+Vertex AI Output Cost: $0.000002
+TTS Cost: $0.264560
+Total Cost: $0.264564
 [INFO] Generating audio files...
 [INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 117ms
+[INFO] GET /api/user/usage/check 304 in 113ms
 [INFO] Audio content written to file "audio-files/0.mp3"
 [INFO] Audio content written to file "audio-files/1.mp3"
 [INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 118ms
+[INFO] GET /api/user/usage/check 304 in 113ms
 [INFO] Audio content written to file "audio-files/2.mp3"
 [INFO] Audio content written to file "audio-files/3.mp3"
+[ERROR] Webhook signature verification failed: No signatures found matching the expected signature for payload. Are you passing the raw request body you received from Stripe? 
+ If a webhook request is being forwarded by a third-party tool, ensure that the exact request body, including JSON formatting and new line style, is preserved.
+
+Learn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature
+
+[INFO] POST /api/webhooks/stripe 400 in 1ms
 [INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 117ms
+[INFO] GET /api/user/usage/check 304 in 113ms
 [INFO] Audio content written to file "audio-files/4.mp3"
 [INFO] Audio content written to file "audio-files/5.mp3"
+[ERROR] Webhook signature verification failed: No signatures found matching the expected signature for payload. Are you passing the raw request body you received from Stripe? 
+ If a webhook request is being forwarded by a third-party tool, ensure that the exact request body, including JSON formatting and new line style, is preserved.
+
+Learn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature
+
+[INFO] POST /api/webhooks/stripe 400 in 1ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 112ms
 [INFO] Audio content written to file "audio-files/6.mp3"
 [INFO] Audio content written to file "audio-files/7.mp3"
 [INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 120ms
+[INFO] GET /api/user/usage/check 304 in 112ms
 [INFO] Audio content written to file "audio-files/8.mp3"
 [INFO] Audio content written to file "audio-files/9.mp3"
 [INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 117ms
+[INFO] GET /api/user/usage/check 304 in 118ms
 [INFO] Audio content written to file "audio-files/10.mp3"
 [INFO] Audio content written to file "audio-files/11.mp3"
 [INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 117ms
+[INFO] GET /api/user/usage/check 304 in 112ms
 [INFO] Audio content written to file "audio-files/12.mp3"
 [INFO] Audio content written to file "audio-files/13.mp3"
 [INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 117ms
+[INFO] GET /api/user/usage/check 304 in 113ms
 [INFO] Audio content written to file "audio-files/14.mp3"
 [INFO] Audio content written to file "audio-files/15.mp3"
 [INFO] Audio content written to file "audio-files/16.mp3"
+[INFO] Audio content written to file "audio-files/17.mp3"
+[INFO] Audio content written to file "audio-files/18.mp3"
+[INFO] Audio content written to file "audio-files/19.mp3"
+[INFO] Audio content written to file "audio-files/20.mp3"
+[INFO] Audio content written to file "audio-files/21.mp3"
+[INFO] Audio content written to file "audio-files/22.mp3"
+[INFO] Audio content written to file "audio-files/23.mp3"
+[INFO] Audio content written to file "audio-files/24.mp3"
+[INFO] Audio content written to file "audio-files/25.mp3"
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Audio content written to file "audio-files/26.mp3"
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 112ms
+[INFO] Audio content written to file "audio-files/27.mp3"
+[INFO] Audio content written to file "audio-files/28.mp3"
+[INFO] Audio content written to file "audio-files/29.mp3"
+[INFO] Audio content written to file "audio-files/30.mp3"
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 114ms
+[INFO] Audio content written to file "audio-files/31.mp3"
+[INFO] Audio content written to file "audio-files/32.mp3"
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 111ms
+[INFO] Audio content written to file "audio-files/33.mp3"
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 114ms
+[INFO] Audio content written to file "audio-files/34.mp3"
+[INFO] Audio content written to file "audio-files/35.mp3"
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 112ms
+[INFO] Audio content written to file "audio-files/36.mp3"
+[INFO] Audio content written to file "audio-files/37.mp3"
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 116ms
+[INFO] Audio content written to file "audio-files/38.mp3"
+[INFO] Audio content written to file "audio-files/39.mp3"
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 115ms
+[INFO] Audio content written to file "audio-files/40.mp3"
+[INFO] Audio content written to file "audio-files/41.mp3"
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 112ms
+[INFO] Audio content written to file "audio-files/42.mp3"
+[INFO] Audio content written to file "audio-files/43.mp3"
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 112ms
+[INFO] Audio content written to file "audio-files/44.mp3"
+[INFO] Audio content written to file "audio-files/45.mp3"
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 113ms
+[INFO] Audio content written to file "audio-files/46.mp3"
+[INFO] Audio content written to file "audio-files/47.mp3"
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 112ms
+[INFO] Audio content written to file "audio-files/48.mp3"
+[INFO] Audio content written to file "audio-files/49.mp3"
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 111ms
+[INFO] Audio content written to file "audio-files/50.mp3"
+[INFO] Audio content written to file "audio-files/51.mp3"
+[INFO] Audio content written to file "audio-files/52.mp3"
+[INFO] Audio content written to file "audio-files/53.mp3"
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 112ms
+[INFO] Audio content written to file "audio-files/54.mp3"
 [INFO] Copied intro file podcast.mp3 to audio folder
 [INFO] Merging the following files in order:
 [INFO] 0.mp3
 [INFO] 1.mp3
-[INFO] 2.mp3
 [INFO] 3.mp3
-[INFO] 4.mp3
 [INFO] 5.mp3
 [INFO] 6.mp3
 [INFO] 7.mp3
 [INFO] 8.mp3
 [INFO] 9.mp3
+[INFO] 2.mp3
 [INFO] 10.mp3
-[INFO] 11.mp3
+[INFO] 4.mp3
 [INFO] 12.mp3
+[INFO] 11.mp3
 [INFO] 13.mp3
 [INFO] 14.mp3
 [INFO] 15.mp3
 [INFO] 16.mp3
+[INFO] 17.mp3
+[INFO] 18.mp3
+[INFO] 19.mp3
+[INFO] 20.mp3
+[INFO] 21.mp3
+[INFO] 22.mp3
+[INFO] 23.mp3
+[INFO] 24.mp3
+[INFO] 25.mp3
+[INFO] 26.mp3
+[INFO] 27.mp3
+[INFO] 29.mp3
+[INFO] 28.mp3
+[INFO] 30.mp3
+[INFO] 31.mp3
+[INFO] 32.mp3
+[INFO] 33.mp3
+[INFO] 34.mp3
+[INFO] 35.mp3
+[INFO] 36.mp3
+[INFO] 37.mp3
+[INFO] 38.mp3
+[INFO] 39.mp3
+[INFO] 40.mp3
+[INFO] 42.mp3
+[INFO] 41.mp3
+[INFO] 43.mp3
+[INFO] 44.mp3
+[INFO] 45.mp3
+[INFO] 46.mp3
+[INFO] 47.mp3
+[INFO] 48.mp3
+[INFO] 49.mp3
+[INFO] 51.mp3
+[INFO] 50.mp3
+[INFO] 52.mp3
+[INFO] 53.mp3
+[INFO] 54.mp3
 [INFO] Successfully merged audio saved as audio-files/final_output.mp3
 [INFO] Cleaned up audio-files directory after successful generation
-[INFO] Audio generation completed: Duration: 205s Actual tokens used: 4862 Actual cost: 0.067122431
+[INFO] Audio generation completed: Duration: 811s Actual tokens used: 7673 Actual cost: 0.2645638365
 [INFO] 
 
 ---------- Updated Usage ----------
  Updated usage for user 26:
- Articles: 1/3
- Podify Tokens: 34/10000
-[INFO] Successfully saved audio file (audio/mpeg) to Object Storage: 1735925015129-article.mp3
-[INFO] Successfully created podcast entry with ID: 35
-[INFO] POST /api/podcast 200 in 58509ms
-[INFO] GET / 200 in 114ms
-[INFO] 
-========Streaming audio file: 1735923996260-article.mp3
-[INFO] GET /api/podcasts 200 in 232ms
-[ERROR] File not found in Object Storage: 1735923996260-article.mp3
-[INFO] GET /api/audio/stream/1735923996260-article.mp3 404 in 285ms
+ Articles: 2/3
+ Podify Tokens: 167/10000
+[INFO] Successfully saved audio file (audio/mpeg) to Object Storage: 1735925804169-article.mp3
+[INFO] Successfully created podcast entry with ID: 36
+[INFO] POST /api/podcast 200 in 196191ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 200 in 4858ms
+[INFO] GET / 200 in 65ms
 [INFO] 
 ========Streaming audio file: 1735923996260-article.mp3
 [ERROR] File not found in Object Storage: 1735923996260-article.mp3
-[INFO] GET /api/audio/stream/1735923996260-article.mp3 404 in 143ms
+[INFO] GET /api/audio/stream/1735923996260-article.mp3 404 in 166ms
+[INFO] GET /api/podcasts 200 in 221ms
 [INFO] 
-========Streaming audio file: 1735925015129-article.mp3
-[ERROR] File not found in Object Storage: 1735925015129-article.mp3
-[INFO] HEAD /api/audio/stream/1735925015129-article.mp3 404 in 121ms
+========Streaming audio file: 1735923996260-article.mp3
+[ERROR] File not found in Object Storage: 1735923996260-article.mp3
+[INFO] GET /api/audio/stream/1735923996260-article.mp3 404 in 60ms
+[INFO] 
+========Streaming audio file: 1735925804169-article.mp3
+[ERROR] File not found in Object Storage: 1735925804169-article.mp3
+[INFO] HEAD /api/audio/stream/1735925804169-article.mp3 404 in 60ms
