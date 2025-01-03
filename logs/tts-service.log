@@ -926,3 +926,37 @@ Total Cost: $0.049185
 [INFO] GET /api/playlists 304 in 183ms
 [INFO] GET /api/podcasts 304 in 225ms
 [INFO] GET / 200 in 58ms
+[INFO] GET / 200 in 62ms
+[INFO] GET /@vite/client 304 in 230ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 281ms
+[INFO] GET /src/main.tsx 200 in 296ms
+[INFO] GET /@react-refresh 304 in 84ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 115ms
+[INFO] GET /src/index.css 200 in 76ms
+[INFO] GET /src/lib/queryClient.ts 304 in 124ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 123ms
+[INFO] GET /src/pages/HomePage.tsx 200 in 76ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 142ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 134ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 112ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 119ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 124ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 124ms
+[INFO] GET /src/pages/FeedbackPage.tsx 304 in 123ms
+[INFO] GET /src/hooks/use-user.ts 304 in 118ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 125ms
+[INFO] GET /src/components/ui/button.tsx 304 in 120ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 131ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 133ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 123ms
+[INFO] GET /src/components/ui/select.tsx 304 in 122ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 125ms
+[INFO] GET /src/components/Logo.tsx 304 in 122ms
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
