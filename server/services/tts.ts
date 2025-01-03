@@ -67,64 +67,60 @@ const GENERATION_CONFIG = {
 };
 
 // System prompts exactly matching Python implementation
-type PodcastCategory = 'general' | 'kids' | 'research';
+type PodcastCategory = "general" | "kids" | "research";
 
-const CATEGORY_PROMPTS = {
+const SYSTEM_PROMPTS = {
   general: {
     WELCOME: `Speaker Joe should Start the podcast by saying this: Welcome to Podify, where we explore fascinating topics and stories from around the world.`,
     MAIN: `You are generating a podcast conversation between Joe and Sarah aimed at a general audience. Keep the language simple and engaging.`,
-    FAREWELL: `Thank you for joining us on this episode of Podify. If you enjoyed this content, don't forget to subscribe and share!`
+    FAREWELL: `Thank you for joining us on this episode of Podify. If you enjoyed this content, don't forget to subscribe and share!`,
   },
   kids: {
     WELCOME: `Speaker Joe should Start the podcast by saying this: Hey kids! Welcome to Podify Kids, where we make learning super fun and exciting!`,
     MAIN: `You are generating a kid-friendly podcast conversation between Joe and Sarah. Use simple language, fun explanations, and keep things entertaining.`,
-    FAREWELL: `Thanks for joining us, kids! Remember, learning is an adventure. See you next time on Podify Kids!`
+    FAREWELL: `Thanks for joining us, kids! Remember, learning is an adventure. See you next time on Podify Kids!`,
   },
   research: {
-    WELCOME: `Speaker Joe should Start the podcast by saying this: Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies,`
-  }
-};
+    WELCOME: `Speaker Joe should Start the podcast by saying this: Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies,
+    unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!
 
-const SYSTEM_PROMPTS = {
-  WELCOME: `Speaker Joe should Start the podcast by saying this: Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies,
-unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!
+    **Guidelines**:
+    1. Joe provides detailed technical insights but avoids overusing analogies. Instead, focus on straightforward, clear explanations.
+    2. Sarah asks probing, thoughtful questions, occasionally offers her own insights, and challenges Joe to explain concepts simply and conversationally.
+    3. Both speakers use natural human speech patterns, including filler words like "um," "ah," "you know," and short pauses.
 
-**Guidelines**:
-1. Joe provides detailed technical insights but avoids overusing analogies. Instead, focus on straightforward, clear explanations.
-2. Sarah asks probing, thoughtful questions, occasionally offers her own insights, and challenges Joe to explain concepts simply and conversationally.
-3. Both speakers use natural human speech patterns, including filler words like "um," "ah," "you know," and short pauses.
+    **Focus**:
+    - Avoid excessive use of analogies. Use one or two if necessary for clarity but prioritize clear, direct explanations.
+    - Include natural conversational flow with interruptions, backtracking, and filler words to make the dialogue feel authentic.
+    - Encourage a natural dialogue with varied contributions from both speakers.
 
-**Focus**:
-- Avoid excessive use of analogies. Use one or two if necessary for clarity but prioritize clear, direct explanations.
-- Include natural conversational flow with interruptions, backtracking, and filler words to make the dialogue feel authentic.
-- Encourage a natural dialogue with varied contributions from both speakers.
+    **Tone**:
+    - Engaging, relatable, and spontaneous.
+    - Emphasize human-like emotions, with occasional humor or lighthearted moments.
+    - Balance technical depth with conversational relatability, avoiding overly formal language.`,
 
-**Tone**:
-- Engaging, relatable, and spontaneous.
-- Emphasize human-like emotions, with occasional humor or lighthearted moments.
-- Balance technical depth with conversational relatability, avoiding overly formal language.`,
+    MAIN: `You are generating a podcast conversation between Joe and Sarah.
 
-  MAIN: `You are generating a podcast conversation between Joe and Sarah.
+    **Guidelines**:
+    1. Joe provides detailed technical insights but avoids overusing analogies. Instead, focus on straightforward, clear explanations.
+    2. Sarah asks probing, thoughtful questions, occasionally offers her own insights, and challenges Joe to explain concepts simply and conversationally.
+    3. Both speakers use natural human speech patterns, including filler words like "you know," and short pauses.
+    4. Don't include any sound effects or background music.
 
-**Guidelines**:
-1. Joe provides detailed technical insights but avoids overusing analogies. Instead, focus on straightforward, clear explanations.
-2. Sarah asks probing, thoughtful questions, occasionally offers her own insights, and challenges Joe to explain concepts simply and conversationally.
-3. Both speakers use natural human speech patterns, including filler words like "you know," and short pauses.
-4. Don't include any sound effects or background music.
+    **Focus**:
+    - Avoid excessive use of analogies. Use one or two if necessary for clarity but prioritize clear, direct explanations.
+    - Include natural conversational flow with interruptions, backtracking, and filler words to make the dialogue feel authentic.
+    - Encourage a natural dialogue with varied contributions from both speakers.
 
-**Focus**:
-- Avoid excessive use of analogies. Use one or two if necessary for clarity but prioritize clear, direct explanations.
-- Include natural conversational flow with interruptions, backtracking, and filler words to make the dialogue feel authentic.
-- Encourage a natural dialogue with varied contributions from both speakers.
+    **Tone**:
+    - Engaging, relatable, and spontaneous.
+    - Emphasize human-like emotions, with occasional humor or lighthearted moments.
+    - Balance technical depth with conversational relatability, avoiding overly formal language.`,
 
-**Tone**:
-- Engaging, relatable, and spontaneous.
-- Emphasize human-like emotions, with occasional humor or lighthearted moments.
-- Balance technical depth with conversational relatability, avoiding overly formal language.`,
-
-  FAREWELL: `Speaker Joe should End the podcast by saying this: Thank you for joining us on this episode of Science Odyssey, where we explored the groundbreaking research shaping our understanding of the world. 
-If you enjoyed this journey, don't forget to subscribe, leave a review, and share the podcast with fellow science enthusiasts.
-Until next time, keep exploring the wonders of science—your next discovery awaits!`,
+    FAREWELL: `Speaker Joe should End the podcast by saying this: Thank you for joining us on this episode of Science Odyssey, where we explored the groundbreaking research shaping our understanding of the world. 
+    If you enjoyed this journey, don't forget to subscribe, leave a review, and share the podcast with fellow science enthusiasts.
+    Until next time, keep exploring the wonders of science—your next discovery awaits!`,
+  },
 };
 
 export class TTSService {
