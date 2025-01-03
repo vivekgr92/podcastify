@@ -36,6 +36,15 @@ export default function HomePage() {
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
+      if (!req.session?.podcastCategory) {
+        toast({
+          title: "Category Required",
+          description: "Please select a podcast category before uploading",
+          variant: "destructive",
+        });
+        return;
+      }
+
       if (hasReachedLimit) {
         toast({
           title: "Usage Limit Reached",
@@ -181,10 +190,12 @@ export default function HomePage() {
 
           <div className="mb-6">
             <h2 className="text-xl font-semibold mb-4">Step 1: Select Category</h2>
-            <div className="max-w-xl mx-auto bg-gray-900/50 p-6 rounded-lg">
+            <div className="max-w-xl mx-auto bg-gray-900/50 p-6 rounded-lg border border-red-500">
+              <p className="text-red-500 text-sm mb-2">Please select a category to continue</p>
               <Select
                 required
                 onValueChange={(value) => {
+                  if (!value) return;
                   if (!value) {
                     return;
                   }
