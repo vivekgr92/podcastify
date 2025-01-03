@@ -562,7 +562,8 @@ export function registerRoutes(app: Express) {
         // Store original PDF in Object Storage
         const { Client } = await import("@replit/object-storage");
         const storage = new Client();
-        const pdfFileName = `${Date.now()}-${file.originalname}`;
+        const timestamp = Date.now();
+        const pdfFileName = `${timestamp}-${file.originalname}`;
         await storage.uploadFromBytes(pdfFileName, fileBuffer);
 
         if (file.mimetype === "application/pdf") {
@@ -764,8 +765,7 @@ export function registerRoutes(app: Express) {
           `Podify Tokens: ${updatedUsage.podifyTokens}/${currentLimits.podifyTokenLimit}`,
         ]);
 
-        // Save the audio file to Object Storage
-        const timestamp = Date.now();
+        // Save the audio file to Object Storage using the same timestamp
         const sanitizedFileName = file.originalname
           .replace(/\.[^/.]+$/, "")
           .replace(/[^a-zA-Z0-9]/g, "_");
