@@ -1873,3 +1873,346 @@ Total Cost: $0.260308
 [INFO] GET /api/user/usage/check 304 in 107ms
 [INFO] Usage check for user: inactive
 [INFO] GET /api/user/usage/check 304 in 106ms
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] GET / 200 in 90ms
+[INFO] GET /@vite/client 304 in 36ms
+[INFO] GET /src/main.tsx 304 in 72ms
+[INFO] GET /@react-refresh 304 in 3ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 442ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
+[INFO] GET /src/index.css 304 in 926ms
+[INFO] GET /src/lib/queryClient.ts 304 in 1ms
+[INFO] GET / 200 in 962ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 0ms
+[INFO] GET /@vite/client 304 in 1ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 0ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
+[INFO] GET /src/main.tsx 304 in 1ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 1ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 0ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 0ms
+[INFO] GET /@react-refresh 304 in 1ms
+[INFO] GET /src/lib/queryClient.ts 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 0ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 0ms
+[INFO] GET /src/pages/FeedbackPage.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-user.ts 304 in 1ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 0ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 0ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
+[INFO] GET /src/components/ui/button.tsx 304 in 1ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-user.ts 304 in 1ms
+[INFO] GET /src/index.css 304 in 1ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
+[INFO] GET /src/components/ui/button.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 0ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
+[INFO] GET /src/components/Logo.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 0ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 0ms
+[INFO] GET /src/pages/FeedbackPage.tsx 304 in 0ms
+[INFO] GET /src/components/ui/input.tsx 304 in 0ms
+[INFO] GET /src/components/Logo.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 0ms
+[INFO] GET /src/components/ui/form.tsx 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 1ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 2ms
+[INFO] GET /src/components/ui/card.tsx 304 in 0ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 0ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 0ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 0ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 1ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 1ms
+[INFO] GET /src/lib/utils.ts 304 in 1ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
+[INFO] GET /src/components/ui/input.tsx 304 in 1ms
+[INFO] GET /src/components/ui/textarea.tsx 304 in 0ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 1ms
+[INFO] GET /src/components/ui/label.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 0ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
+[INFO] GET /src/components/ui/select.tsx 304 in 0ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
+[INFO] GET /src/components/ui/form.tsx 304 in 1ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 1ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 0ms
+[INFO] GET /api/user 401 in 2ms
+[INFO] GET /src/lib/utils.ts 304 in 0ms
+[INFO] GET /src/components/ui/card.tsx 304 in 0ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 1ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 1ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
+[INFO] GET / 200 in 3ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 1ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 1ms
+[INFO] GET /src/components/ui/textarea.tsx 304 in 1ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
+[INFO] GET /src/components/ui/label.tsx 304 in 1ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 0ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
+[INFO] GET /src/components/ui/select.tsx 304 in 1ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 0ms
+[INFO] GET /api/user 401 in 1ms
+[INFO] POST /api/login 200 in 425ms
+[INFO] GET /api/user 304 in 60ms
+[INFO] GET / 200 in 60ms
+[INFO] GET /api/podcasts 304 in 174ms
+[INFO] GET /api/playlists 304 in 229ms
+[INFO] GET / 200 in 112ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 200 in 171ms
+[INFO] 
+
+ PDF has 3 pages
+[INFO] Calculating estimated pricing and checking usage limits
+[INFO] 
+======= Starting Pricing Calculation ======
+ -Input text length: 16704
+ -Number of Vertex AI responses: 0
+
+[INFO] 
+        Input text length: 16704
+        Input token count: 3419
+        System prompt length: 2718
+        System token count: 525
+        Total input tokens: 3944
+      
+[INFO] 
+---***** Estimated Calculation Summary **** ---
+Total Input Tokens: 3944
+Total Output Tokens: 5916
+Total Tokens: 9860
+Total TTS Characters: 23664
+Vertex AI Input Cost: $0.000002
+Vertex AI Output Cost: $0.000003
+TTS Cost: $0.378624
+Total Cost: $0.378629
+[INFO] Estimated Podify Tokens: 190 
+
+Usage limits check for user 26:
+ Current articles: 2/3
+ Current Podify tokens: 266/10000
+ Would exceed article limit: false
+ Would exceed token limit: false
+[INFO] Starting audio generation process
+[INFO] 
+--- Starting Conversation Generation ---
+
+[INFO] Processing 11 lines of text
+[INFO] Successfully extracted 11 conversation parts
+[INFO] Processing 9 lines of text
+[INFO] Successfully extracted 9 conversation parts
+[INFO] Processing 7 lines of text
+[INFO] Successfully extracted 7 conversation parts
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 117ms
+[INFO] Processing 13 lines of text
+[INFO] Successfully extracted 13 conversation parts
+[INFO] 
+
+ ==================Last Chunk===================
+
+[INFO] Processing 16 lines of text
+[INFO] No speaker pattern match found at line 1: "(Sound of a gentle intro music fade out)..."
+[INFO] No speaker pattern match found at line 16: "(Sound of a gentle outro music fade in)..."
+[INFO] Successfully extracted 14 conversation parts
+[INFO] 
+======= Starting Pricing Calculation ======
+ -Input text length: 16704
+ -Number of Vertex AI responses: 5
+
+[INFO] 
+        Input text length: 16704
+        Input token count: 3419
+        System prompt length: 2718
+        System token count: 525
+        Total input tokens: 3944
+      
+[INFO] Response 1 details:
+- Length: 3323 characters
+- Output tokens: 725
+[INFO] Response 2 details:
+- Length: 3059 characters
+- Output tokens: 643
+[INFO] Response 3 details:
+- Length: 3177 characters
+- Output tokens: 708
+[INFO] Response 4 details:
+- Length: 3069 characters
+- Output tokens: 653
+[INFO] Response 5 details:
+- Length: 3540 characters
+- Output tokens: 821
+[INFO] Total TTS characters calculated: 15944
+[INFO] 
+---***** Final Pricing Calculation Summary **** ---
+Total Input Tokens: 3944
+Total Output Tokens: 3550
+Total Tokens: 7494
+Total TTS Characters: 15944
+Vertex AI Input Cost: $0.000002
+Vertex AI Output Cost: $0.000002
+TTS Cost: $0.255104
+Total Cost: $0.255108
+[INFO] Generating audio files...
+[INFO] Audio content written to file "audio-files/0.mp3"
+[INFO] Audio content written to file "audio-files/1.mp3"
+[INFO] Audio content written to file "audio-files/2.mp3"
+[INFO] Audio content written to file "audio-files/3.mp3"
+[INFO] Audio content written to file "audio-files/4.mp3"
+[INFO] Audio content written to file "audio-files/5.mp3"
+[INFO] Audio content written to file "audio-files/6.mp3"
+[INFO] Audio content written to file "audio-files/7.mp3"
+[INFO] Audio content written to file "audio-files/8.mp3"
+[INFO] Audio content written to file "audio-files/9.mp3"
+[INFO] Audio content written to file "audio-files/10.mp3"
+[INFO] Audio content written to file "audio-files/11.mp3"
+[INFO] Audio content written to file "audio-files/12.mp3"
+[INFO] Audio content written to file "audio-files/13.mp3"
+[INFO] Audio content written to file "audio-files/14.mp3"
+[INFO] Audio content written to file "audio-files/15.mp3"
+[INFO] Audio content written to file "audio-files/16.mp3"
+[INFO] Audio content written to file "audio-files/17.mp3"
+[INFO] Audio content written to file "audio-files/18.mp3"
+[INFO] Audio content written to file "audio-files/19.mp3"
+[INFO] Audio content written to file "audio-files/20.mp3"
+[INFO] Audio content written to file "audio-files/21.mp3"
+[INFO] Audio content written to file "audio-files/22.mp3"
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 115ms
+[INFO] Audio content written to file "audio-files/23.mp3"
+[INFO] Audio content written to file "audio-files/24.mp3"
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 115ms
+[INFO] Audio content written to file "audio-files/25.mp3"
+[INFO] Audio content written to file "audio-files/26.mp3"
+[INFO] Audio content written to file "audio-files/27.mp3"
+[INFO] Audio content written to file "audio-files/28.mp3"
+[INFO] Audio content written to file "audio-files/29.mp3"
+[INFO] Audio content written to file "audio-files/30.mp3"
+[INFO] Audio content written to file "audio-files/31.mp3"
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 115ms
+[INFO] Audio content written to file "audio-files/32.mp3"
+[INFO] Audio content written to file "audio-files/33.mp3"
+[INFO] Audio content written to file "audio-files/34.mp3"
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 114ms
+[INFO] Audio content written to file "audio-files/35.mp3"
+[INFO] Audio content written to file "audio-files/36.mp3"
+[INFO] Audio content written to file "audio-files/37.mp3"
+[INFO] Audio content written to file "audio-files/38.mp3"
+[INFO] Audio content written to file "audio-files/39.mp3"
+[INFO] Audio content written to file "audio-files/40.mp3"
+[INFO] Audio content written to file "audio-files/41.mp3"
+[INFO] Audio content written to file "audio-files/42.mp3"
+[INFO] Audio content written to file "audio-files/43.mp3"
+[INFO] Audio content written to file "audio-files/44.mp3"
+[INFO] Audio content written to file "audio-files/45.mp3"
+[INFO] Audio content written to file "audio-files/46.mp3"
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 115ms
+[INFO] Audio content written to file "audio-files/47.mp3"
+[INFO] Audio content written to file "audio-files/48.mp3"
+[INFO] Audio content written to file "audio-files/49.mp3"
+[INFO] Audio content written to file "audio-files/50.mp3"
+[INFO] Audio content written to file "audio-files/51.mp3"
+[INFO] Audio content written to file "audio-files/52.mp3"
+[INFO] Audio content written to file "audio-files/53.mp3"
+[INFO] Copied intro file podcast.mp3 to audio folder
+[INFO] Merging the following files in order:
+[INFO] 0.mp3
+[INFO] 1.mp3
+[INFO] 3.mp3
+[INFO] 2.mp3
+[INFO] 4.mp3
+[INFO] 5.mp3
+[INFO] 6.mp3
+[INFO] 7.mp3
+[INFO] 8.mp3
+[INFO] 9.mp3
+[INFO] 10.mp3
+[INFO] 11.mp3
+[INFO] 12.mp3
+[INFO] 13.mp3
+[INFO] 14.mp3
+[INFO] 15.mp3
+[INFO] 16.mp3
+[INFO] 17.mp3
+[INFO] 18.mp3
+[INFO] 19.mp3
+[INFO] 20.mp3
+[INFO] 21.mp3
+[INFO] 22.mp3
+[INFO] 23.mp3
+[INFO] 24.mp3
+[INFO] 25.mp3
+[INFO] 26.mp3
+[INFO] 27.mp3
+[INFO] 29.mp3
+[INFO] 28.mp3
+[INFO] 30.mp3
+[INFO] 31.mp3
+[INFO] 32.mp3
+[INFO] 33.mp3
+[INFO] 34.mp3
+[INFO] 35.mp3
+[INFO] 36.mp3
+[INFO] 37.mp3
+[INFO] 38.mp3
+[INFO] 39.mp3
+[INFO] 40.mp3
+[INFO] 41.mp3
+[INFO] 42.mp3
+[INFO] 43.mp3
+[INFO] 44.mp3
+[INFO] 45.mp3
+[INFO] 46.mp3
+[INFO] 47.mp3
+[INFO] 48.mp3
+[INFO] 49.mp3
+[INFO] 50.mp3
+[INFO] 51.mp3
+[INFO] 52.mp3
+[INFO] 53.mp3
+[INFO] Successfully merged audio saved as audio-files/final_output.mp3
+[INFO] Cleaned up audio-files directory after successful generation
+[INFO] Audio generation completed: Duration: 781s Actual tokens used: 7494 Actual cost: 0.255107747
+[INFO] 
+
+---------- Updated Usage ----------
+ Updated usage for user 26:
+ Articles: 3/3
+ Podify Tokens: 394/10000
+[INFO] Successfully saved audio file (audio/mpeg) to Object Storage: 1735931509416-article.mp3
+[INFO] Successfully created podcast entry with ID: 40
+[INFO] POST /api/podcast 200 in 191054ms
+[INFO] GET / 200 in 115ms
+[INFO] GET /api/podcasts 200 in 171ms
