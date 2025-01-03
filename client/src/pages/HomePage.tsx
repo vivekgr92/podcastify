@@ -34,11 +34,13 @@ export default function HomePage() {
   const queryClient = useQueryClient();
   const { user } = useUser();
 
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
-      if (!req.session?.podcastCategory) {
+      if (!selectedCategory) {
         toast({
-          title: "Category Required",
+          title: "Category Required", 
           description: "Please select a podcast category before uploading",
           variant: "destructive",
         });
@@ -196,11 +198,7 @@ export default function HomePage() {
                 required
                 onValueChange={(value) => {
                   if (!value) return;
-                  if (!value) {
-                    return;
-                  }
-                  const formData = new FormData();
-                  formData.append('category', value);
+                  setSelectedCategory(value);
                   fetch('/api/set-category', {
                     method: 'POST',
                     body: JSON.stringify({ category: value }),
