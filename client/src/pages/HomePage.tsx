@@ -180,21 +180,28 @@ export default function HomePage() {
           )}
 
           <div className="mb-6">
+            <h2 className="text-xl font-semibold mb-4">Step 1: Select Category</h2>
             <div className="max-w-xl mx-auto bg-gray-900/50 p-6 rounded-lg">
               <Select
                 required
                 onValueChange={(value) => {
+                  if (!value) {
+                    return;
+                  }
                   const formData = new FormData();
                   formData.append('category', value);
                   fetch('/api/set-category', {
                     method: 'POST',
-                    body: formData,
+                    body: JSON.stringify({ category: value }),
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
                     credentials: 'include'
                   });
                 }}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select podcast category" />
+                  <SelectValue placeholder="Select podcast category (required)" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="general">General</SelectItem>

@@ -852,10 +852,11 @@ export function registerRoutes(app: Express) {
   // Set podcast category
   app.post("/api/set-category", (req, res) => {
     if (!req.session) {
-      req.session = {};
+      return res.status(400).json({ error: "No session available" });
     }
-    req.session.podcastCategory = req.body.get('category') || 'general';
-    res.json({ success: true });
+    const category = req.body.category || 'general';
+    req.session.podcastCategory = category;
+    res.json({ success: true, category });
   });
 
   // Stream audio from Object Storage
