@@ -267,6 +267,9 @@ export default function HomePage() {
               <p className="text-xs text-gray-500 mt-2">
                 Supported formats: PDF, DOC, DOCX, TXT
               </p>
+              <p className="text-xs text-gray-500 mt-2">
+                ** Please Upload articles greater than 1 page for an effective podcast conversion
+              </p>
             </div>
           </div>
 
