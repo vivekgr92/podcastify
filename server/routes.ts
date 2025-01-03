@@ -563,7 +563,7 @@ export function registerRoutes(app: Express) {
         const { Client } = await import("@replit/object-storage");
         const storage = new Client();
         const pdfFileName = `${Date.now()}-${file.originalname}`;
-        await storage.upload(pdfFileName, fileBuffer);
+        await storage.uploadFromBytes(pdfFileName, fileBuffer);
 
         if (file.mimetype === "application/pdf") {
           const pdfData = await pdfParse(fileBuffer);
