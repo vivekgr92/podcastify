@@ -723,7 +723,7 @@ export function registerRoutes(app: Express) {
       // Generate audio only if usage limits allow
       await logger.info("Starting audio generation process");
       const { audioBuffer, duration, usage } =
-        await ttsService.generateConversationPages(fileContent);
+        await ttsService.generateConversation(fileContent);
 
       if (!audioBuffer || !duration || !usage) {
         throw new Error(

@@ -709,11 +709,11 @@ export class TTSService {
             }${currentSpeaker}: ${chunk}`;
           }
 
-          await logger.info([
-            "\n\n ------------PROMPT to VERTEX AI-----------------\n",
-            prompt,
-            "\n\n ------------END-----------------\n",
-          ]);
+          // await logger.info([
+          //   "\n\n ------------PROMPT to VERTEX AI-----------------\n",
+          //   prompt,
+          //   "\n\n ------------END-----------------\n",
+          // ]);
 
           // Generate content using Vertex AI
           const result = (await model.generateContent({
@@ -728,11 +728,11 @@ export class TTSService {
             throw new Error("Invalid response from Vertex AI");
           }
 
-          await logger.info([
-            "\n\n -------RESPONSE FROM VERTEX AI---------\n",
-            rawText,
-            "\n\n ------------END-----------------\n",
-          ]);
+          // await logger.info([
+          //   "\n\n -------RESPONSE FROM VERTEX AI---------\n",
+          //   rawText,
+          //   "\n\n ------------END-----------------\n",
+          // ]);
 
           // add the response to the array
           responseTexts.push(rawText);
@@ -760,12 +760,12 @@ export class TTSService {
         }
       }
 
-      // Print full conversation for debugging
-      await logger.log("\n--- Full Generated Conversation ---");
-      allConversations.forEach((part) => {
-        logger.log(`${part.speaker}: ${part.text}`);
-      });
-      await logger.log("--- End of Conversation ---\n");
+      // // Print full conversation for debugging
+      // await logger.log("\n--- Full Generated Conversation ---");
+      // allConversations.forEach((part) => {
+      //   logger.log(`${part.speaker}: ${part.text}`);
+      // });
+      // await logger.log("--- End of Conversation ---\n");
 
       // Calculate pricing using all generated responses
       const usage = await this.calculatePricing(
@@ -892,11 +892,11 @@ export class TTSService {
             }${currentSpeaker}: ${page}`;
           }
 
-          await logger.info([
-            "\n\n ------------PROMPT to VERTEX AI-----------------\n",
-            prompt,
-            "\n\n ------------END-----------------\n",
-          ]);
+          // await logger.info([
+          //   "\n\n ------------PROMPT to VERTEX AI-----------------\n",
+          //   prompt,
+          //   "\n\n ------------END-----------------\n",
+          // ]);
 
           // Generate content using Vertex AI
           const result = (await model.generateContent({
@@ -911,11 +911,11 @@ export class TTSService {
             throw new Error("Invalid response from Vertex AI");
           }
 
-          await logger.info([
-            "\n\n -------RESPONSE FROM VERTEX AI---------\n",
-            rawText,
-            "\n\n ------------END-----------------\n",
-          ]);
+          // await logger.info([
+          //   "\n\n -------RESPONSE FROM VERTEX AI---------\n",
+          //   rawText,
+          //   "\n\n ------------END-----------------\n",
+          // ]);
 
           // add the response to the array
           responseTexts.push(rawText);
@@ -969,12 +969,12 @@ export class TTSService {
         }
       }
 
-      // Print full conversation for debugging
-      await logger.log("\n--- Full Generated Conversation ---");
-      allConversations.forEach((part) => {
-        logger.log(`${part.speaker}: ${part.text}`);
-      });
-      await logger.log("--- End of Conversation ---\n");
+      // // Print full conversation for debugging
+      // await logger.log("\n--- Full Generated Conversation ---");
+      // allConversations.forEach((part) => {
+      //   logger.log(`${part.speaker}: ${part.text}`);
+      // });
+      // await logger.log("--- End of Conversation ---\n");
 
       // Calculate pricing using all generated responses
       const usage = await this.calculatePricing(
