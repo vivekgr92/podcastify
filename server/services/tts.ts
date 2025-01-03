@@ -447,9 +447,9 @@ export class TTSService {
             text: trimmedDialogue,
           });
 
-          await logger.debug(
-            `Added conversation part: ${trimmedSpeaker} with ${trimmedDialogue.substring(0, 50)}...`,
-          );
+          // await logger.debug(
+          //   `Added conversation part: ${trimmedSpeaker} with ${trimmedDialogue.substring(0, 50)}...`,
+          // );
         } else {
           await logger.debug(
             `No speaker pattern match found at line ${i + 1}: "${line.substring(0, 50)}..."`,
@@ -739,10 +739,10 @@ export class TTSService {
 
           // Process conversation parts
           const conversationParts = await this.cleanGeneratedText(rawText);
-          await logger.info([
-            `Cleaned Text (Chunk ${index + 1}):`,
-            JSON.stringify(conversationParts, null, 2),
-          ]);
+          // await logger.info([
+          //   `Cleaned Text (Chunk ${index + 1}):`,
+          //   JSON.stringify(conversationParts, null, 2),
+          // ]);
 
           if (conversationParts.length > 0) {
             allConversations.push(...conversationParts);
