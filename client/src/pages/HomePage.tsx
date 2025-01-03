@@ -160,7 +160,7 @@ export default function HomePage() {
   if (user) {
     return (
       <div className="min-h-screen bg-black text-white">
-        <div className="max-w-4xl mx-auto px-6 pt-20 md:pt-12">
+        <div className="max-w-3xl mx-auto px-4 pt-16 md:pt-8">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold mb-4">
               Transform Your Articles Into Podcasts
@@ -183,8 +183,8 @@ export default function HomePage() {
 
           <div className="mb-8">
             <h2 className="text-xl font-semibold mb-4">Step 1: Select Podcast Category</h2>
-            <div className="max-w-xs mx-auto">
-              <Select 
+            <div className="max-w-sm mx-auto">
+              <Select className="w-full" 
                 required
                 onValueChange={(value) => {
                   const formData = new FormData();
@@ -212,7 +212,7 @@ export default function HomePage() {
             <h2 className="text-xl font-semibold mb-4">Step 2: Upload Your Article</h2>
           <div
             {...getRootProps()}
-            className={`border-2 border-dashed rounded-lg p-16 mb-12 transition-colors 
+            className={`border-2 border-dashed rounded-lg p-8 mb-8 transition-colors 
               ${
                 hasReachedLimit
                   ? "opacity-50 cursor-not-allowed border-gray-700 hover:border-gray-700"
