@@ -5780,3 +5780,19 @@ Total Cost: $0.271366
 [INFO] Using existing customer: cus_RWN2hQIJoXHIr4
 [INFO] Created subscription: sub_1QdKR6BwEMzOkTIKWNzJN1UK
 [INFO] POST /api/create-subscription 200 in 1272ms
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
