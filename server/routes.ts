@@ -867,18 +867,25 @@ export function registerRoutes(app: Express) {
       const { Client } = await import("@replit/object-storage");
       const storage = new Client();
 
-      // Download file from Object Storage
       try {
-        const audioStream = await storage.downloadAsStream(filename);
-
-        if (!audioStream) {
-          logger.warn(`File not found in Object Storage: ${filename}`);
+        // Check if file exists first
+        try {
+          await storage.head(filename);
+        } catch (err) {
+          // Clean up database if file doesn't exist
+          const audioPath = `/api/audio/stream/${filename}`;
+          await db.delete(podcasts).where(eq(podcasts.audioUrl, audioPath));
+          
+          logger.error(`File not found in Object Storage: ${filename}`);
           return res.status(404).json({
             error: "Audio file not found",
             type: "not_found",
+            message: "The audio file is no longer available"
           });
         }
 
+        const audioStream = await storage.downloadAsStream(filename);
+        
         // Set proper headers for audio streaming
         res.setHeader("Content-Type", "audio/mpeg");
         res.setHeader("Accept-Ranges", "bytes");
