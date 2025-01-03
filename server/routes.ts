@@ -557,7 +557,7 @@ export function registerRoutes(app: Express) {
       let numPages = 0;
 
       try {
-        const fileBuffer = file.buffer; // Use buffer directly from memory storage
+        const fileBuffer = await fs.readFile(file.path);
 
         if (file.mimetype === "application/pdf") {
           const pdfData = await pdfParse(fileBuffer);
@@ -705,7 +705,7 @@ export function registerRoutes(app: Express) {
       // Generate audio only if usage limits allow
       await logger.info("Starting audio generation process");
       const { audioBuffer, duration, usage } =
-        await ttsService.generateConversation(fileContent);
+        await ttsService.generateConversationPages(fileContent);
 
       if (!audioBuffer || !duration || !usage) {
         throw new Error(
@@ -867,26 +867,17 @@ export function registerRoutes(app: Express) {
       const { Client } = await import("@replit/object-storage");
       const storage = new Client();
 
+      // Download file from Object Storage
       try {
-        // Extract just the filename without any path
-        const bareFilename = filename.split('/').pop();
-        if (!bareFilename) {
-          throw new Error("Invalid filename");
-        }
+        const audioStream = await storage.downloadAsStream(filename);
 
-        // Check if file exists first
-        try {
-          await storage.head(bareFilename);
-        } catch (err) {
-          logger.error(`File not found in Object Storage: ${bareFilename}`);
+        if (!audioStream) {
+          logger.warn(`File not found in Object Storage: ${filename}`);
           return res.status(404).json({
             error: "Audio file not found",
             type: "not_found",
-            message: "The audio file is no longer available",
           });
         }
-
-        const audioStream = await storage.downloadAsStream(bareFilename);
 
         // Set proper headers for audio streaming
         res.setHeader("Content-Type", "audio/mpeg");
@@ -926,8 +917,7 @@ export function registerRoutes(app: Express) {
         .select({
           articlesConverted: userUsage.articlesConverted,
           tokensUsed: userUsage.tokensUsed,
-          podifyTokens: userUsage.podifyTokens,
-          lastConversion: userUsage.lastConversion,
+          podifyTokens: userUsage.podifyTokens,          lastConversion: userUsage.lastConversion,
           monthYear: userUsage.monthYear,
         })
         .from(userUsage)
@@ -1108,29 +1098,28 @@ export function registerRoutes(app: Express) {
         });
       }
 
-      // Delete from object storage first
-      if (podcast.audioUrl) {
-        try {
-          const { Client } = await import("@replit/object-storage");
-          const storage = new Client();
-
-          // Extract filename from audioUrl
-          const filename = podcast.audioUrl.split("/").pop();
-          if (filename) {
-            await storage.delete(filename);
-            await logger.info(`Deleted audio file from storage: ${filename}`);
-          }
-        } catch (error) {
-          await logger.warn(
-            `Failed to delete from object storage: ${error instanceof Error ? error.message : String(error)}`,
-          );
-        }
-      }
-
-      // Delete the podcast from database
+      // Delete the podcast
       await db
         .delete(podcasts)
         .where(and(eq(podcasts.id, podcastId), eq(podcasts.userId, user.id)));
+
+      // Try to delete the associated audio file
+      if (podcast.audioUrl) {
+        const audioPath = path.join(
+          __dirname,
+          "..",
+          podcast.audioUrl.replace(/^\//, ""),
+        );
+        try {
+          await fs.unlink(audioPath);
+          await logger.info(`Deleted audio file: ${audioPath}`);
+        } catch (error) {
+          // Log but don't fail if file deletion fails
+          await logger.warn(
+            `Failed to delete audio file ${audioPath}: ${error instanceof Error ? error.message : String(error)}`,
+          );
+        }
+      }
 
       res.json({
         message: "Podcast deleted successfully",
@@ -1633,13 +1622,13 @@ export function registerRoutes(app: Express) {
 
       const validation = insertFeedbackSchema.safeParse({
         ...req.body,
-        userId: req.user.id,
+        userId: req.user.id
       });
 
       if (!validation.success) {
         return res.status(400).json({
           error: "Invalid feedback data",
-          details: validation.error.errors,
+          details: validation.error.errors
         });
       }
 
@@ -1650,21 +1639,22 @@ export function registerRoutes(app: Express) {
           content: validation.data.content,
           rating: validation.data.rating,
           status: "pending",
-          createdAt: new Date(),
+          createdAt: new Date()
         })
         .returning();
 
       res.json({
         message: "Feedback submitted successfully",
-        feedback: newFeedback,
+        feedback: newFeedback
       });
+
     } catch (error) {
       logger.error(
-        `Error submitting feedback: ${error instanceof Error ? error.message : String(error)}`,
+        `Error submitting feedback: ${error instanceof Error ? error.message : String(error)}`
       );
       res.status(500).json({
         error: "Failed to submit feedback",
-        message: error instanceof Error ? error.message : "Unknown error",
+        message: error instanceof Error ? error.message : "Unknown error"
       });
     }
   });
@@ -1683,13 +1673,14 @@ export function registerRoutes(app: Express) {
         .orderBy(desc(feedback.createdAt));
 
       res.json(userFeedback);
+
     } catch (error) {
       logger.error(
-        `Error fetching feedback: ${error instanceof Error ? error.message : String(error)}`,
+        `Error fetching feedback: ${error instanceof Error ? error.message : String(error)}`
       );
       res.status(500).json({
         error: "Failed to fetch feedback",
-        message: error instanceof Error ? error.message : "Unknown error",
+        message: error instanceof Error ? error.message : "Unknown error"
       });
     }
   });
