@@ -868,11 +868,17 @@ export function registerRoutes(app: Express) {
       const storage = new Client();
 
       try {
+        // Extract just the filename without any path
+        const bareFilename = filename.split('/').pop();
+        if (!bareFilename) {
+          throw new Error("Invalid filename");
+        }
+
         // Check if file exists first
         try {
-          await storage.head(filename);
+          await storage.head(bareFilename);
         } catch (err) {
-          logger.error(`File not found in Object Storage: ${filename}`);
+          logger.error(`File not found in Object Storage: ${bareFilename}`);
           return res.status(404).json({
             error: "Audio file not found",
             type: "not_found",
@@ -880,7 +886,7 @@ export function registerRoutes(app: Express) {
           });
         }
 
-        const audioStream = await storage.downloadAsStream(filename);
+        const audioStream = await storage.downloadAsStream(bareFilename);
 
         // Set proper headers for audio streaming
         res.setHeader("Content-Type", "audio/mpeg");
