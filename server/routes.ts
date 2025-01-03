@@ -557,12 +557,12 @@ export function registerRoutes(app: Express) {
       let numPages = 0;
 
       try {
+        const timestamp = Date.now(); // Define timestamp first
         const fileBuffer = file.buffer;
         
         // Store original PDF in Object Storage
         const { Client } = await import("@replit/object-storage");
         const storage = new Client();
-        const timestamp = Date.now();
         const pdfFileName = `${timestamp}-${file.originalname}`;
         await storage.uploadFromBytes(pdfFileName, fileBuffer);
 
