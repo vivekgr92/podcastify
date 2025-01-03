@@ -207,16 +207,8 @@ export default function HomePage() {
             </div>
           </div>
 
-          {user && (
-            <div className="mb-8">
-              <UsageProgress
-                showUpgradeButton={true}
-                onLimitReached={handleLimitReached}
-              />
-            </div>
-          )}
-
-          <h2 className="text-xl font-semibold mb-4">Step 2: Upload Your Article</h2>
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold mb-4">Step 2: Upload Your Article</h2>
           <div
             {...getRootProps()}
             className={`border-2 border-dashed rounded-lg p-16 mb-12 transition-colors 
