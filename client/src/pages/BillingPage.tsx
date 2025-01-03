@@ -166,7 +166,7 @@ const BillingPage: React.FC = () => {
 
       {hasActiveSubscription && (
         <div className="max-w-md mx-auto">
-          <h2 className="text-2xl font-semibold mb-6">Current Subscription</h2>
+          <h2 className="text-2xl font-semibold mb-6 text-center">Current Subscription</h2>
           <div className="bg-gray-900 rounded-2xl p-8 border border-gray-800">
             <div className="space-y-4">
               <div className="flex justify-between items-center">
