@@ -33,7 +33,7 @@ const plans: Plan[] = [
     ],
     buttonText: "Subscribe Now",
     popular: false,
-    priceId: "price_1QdDlMBwEMzOkTIKJikjLbE2",
+    priceId: "price_1Qb8xDBwEMzOkTIKEcpAxav4",
   },
   {
     name: "Pro Plan",

@@ -68,11 +68,11 @@ function getLimits(subscriptionStatus: string | null | undefined) {
 // Initialize Stripe with proper API version and error handling
 let stripe: Stripe;
 try {
-  if (!process.env.STRIPE_SECRET_KEY) {
+  if (!process.env.STRIPE_SECRET_KEY_TEST) {
     throw new Error("STRIPE_SECRET_KEY is required");
   }
 
-  stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  stripe = new Stripe(process.env.STRIPE_SECRET_KEY_TEST, {
     apiVersion: "2024-12-18.acacia",
     typescript: true,
   });
@@ -206,7 +206,7 @@ export function registerRoutes(app: Express) {
       }
 
       // Ensure we have the webhook secret
-      if (!process.env.STRIPE_WEBHOOK_SECRET) {
+      if (!process.env.STRIPE_WEBHOOK_SECRET_TEST) {
         logger.error("Missing STRIPE_WEBHOOK_SECRET environment variable");
         return res.status(500).json({ error: "Webhook secret not configured" });
       }
@@ -215,7 +215,7 @@ export function registerRoutes(app: Express) {
         event = stripe.webhooks.constructEvent(
           req.body,
           sig,
-          process.env.STRIPE_WEBHOOK_SECRET,
+          process.env.STRIPE_WEBHOOK_SECRET_TEST,
         );
       } catch (err) {
         const error = err instanceof Error ? err.message : String(err);
