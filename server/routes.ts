@@ -559,7 +559,7 @@ export function registerRoutes(app: Express) {
 
       try {
         const fileBuffer = file.buffer;
-        
+
         // Store original PDF in Object Storage
         const { Client } = await import("@replit/object-storage");
         const storage = new Client();
@@ -711,7 +711,8 @@ export function registerRoutes(app: Express) {
       }
       // Generate audio only if usage limits allow
       await logger.info("Starting audio generation process");
-      const category = req.session?.podcastCategory || 'general';
+      const category = req.session?.podcastCategory || "general";
+      await logger.info(`\n\nCategory: ${category}`);
       const { audioBuffer, duration, usage } =
         await ttsService.generateConversation(fileContent, category);
 
@@ -855,7 +856,7 @@ export function registerRoutes(app: Express) {
     if (!req.session) {
       return res.status(400).json({ error: "No session available" });
     }
-    const category = req.body.category || 'general';
+    const category = req.body.category || "general";
     req.session.podcastCategory = category;
     res.json({ success: true, category });
   });
