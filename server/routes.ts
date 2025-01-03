@@ -1098,28 +1098,29 @@ export function registerRoutes(app: Express) {
         });
       }
 
-      // Delete the podcast
-      await db
-        .delete(podcasts)
-        .where(and(eq(podcasts.id, podcastId), eq(podcasts.userId, user.id)));
-
-      // Try to delete the associated audio file
+      // Delete from object storage first
       if (podcast.audioUrl) {
-        const audioPath = path.join(
-          __dirname,
-          "..",
-          podcast.audioUrl.replace(/^\//, ""),
-        );
         try {
-          await fs.unlink(audioPath);
-          await logger.info(`Deleted audio file: ${audioPath}`);
+          const { Client } = await import("@replit/object-storage");
+          const storage = new Client();
+          
+          // Extract filename from audioUrl
+          const filename = podcast.audioUrl.split('/').pop();
+          if (filename) {
+            await storage.delete(filename);
+            await logger.info(`Deleted audio file from storage: ${filename}`);
+          }
         } catch (error) {
-          // Log but don't fail if file deletion fails
           await logger.warn(
-            `Failed to delete audio file ${audioPath}: ${error instanceof Error ? error.message : String(error)}`,
+            `Failed to delete from object storage: ${error instanceof Error ? error.message : String(error)}`,
           );
         }
       }
+
+      // Delete the podcast from database
+      await db
+        .delete(podcasts)
+        .where(and(eq(podcasts.id, podcastId), eq(podcasts.userId, user.id)));
 
       res.json({
         message: "Podcast deleted successfully",
