@@ -109,7 +109,7 @@ export default function HomePage() {
         }
       }
     },
-    [toast, setLocation, setIsConverting, setProgress, queryClient, hasReachedLimit],
+    [toast, setLocation, setIsConverting, setProgress, queryClient, hasReachedLimit, selectedCategory],
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
