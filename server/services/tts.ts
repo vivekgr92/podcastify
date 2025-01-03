@@ -666,7 +666,7 @@ export class TTSService {
     }
   }
 
-  async generateConversation(text: string): Promise<{
+  async generateConversation(text: string, category: PodcastCategory = 'general'): Promise<{
     audioBuffer: Buffer;
     duration: number;
     usage: PricingDetails;
@@ -706,7 +706,6 @@ export class TTSService {
           // Dynamic prompting based on chunk position
           let prompt: string;
 
-          const category = req.session?.podcastCategory || 'general' as PodcastCategory;
           const prompts = SYSTEM_PROMPTS[category];
 
           if (index === 0) {
