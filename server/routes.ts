@@ -488,26 +488,8 @@ export function registerRoutes(app: Express) {
   }
 
   // Configure multer for file uploads
-  const storage = multer.diskStorage({
-    destination: async (req, file, cb) => {
-      const dir = "./uploads";
-      try {
-        await fs.mkdir(dir, { recursive: true });
-        cb(null, dir);
-      } catch (err) {
-        cb(err as Error, dir);
-      }
-    },
-    filename: (req, file, cb) => {
-      const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-      cb(
-        null,
-        file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname),
-      );
-    },
-  });
-
-  const upload = multer({ storage });
+  // Use memory storage instead of disk
+  const upload = multer({ storage: multer.memoryStorage() });
 
   // Create Setup Intent endpoint
   app.post("/api/create-setup-intent", async (req, res) => {
@@ -575,7 +557,13 @@ export function registerRoutes(app: Express) {
       let numPages = 0;
 
       try {
-        const fileBuffer = await fs.readFile(file.path);
+        const fileBuffer = file.buffer;
+        
+        // Store original PDF in Object Storage
+        const { Client } = await import("@replit/object-storage");
+        const storage = new Client();
+        const pdfFileName = `${Date.now()}-${file.originalname}`;
+        await storage.upload(pdfFileName, fileBuffer);
 
         if (file.mimetype === "application/pdf") {
           const pdfData = await pdfParse(fileBuffer);
@@ -858,21 +846,6 @@ export function registerRoutes(app: Express) {
         error: errorMessage,
         type: isValidationError ? "validation" : "server",
       });
-    } finally {
-      // Clean up the uploaded file
-      if (file?.path) {
-        try {
-          await fs.unlink(file.path);
-        } catch (unlinkError) {
-          const cleanupError =
-            unlinkError instanceof Error
-              ? unlinkError.message
-              : "Unknown error";
-          await logger.error(
-            `Error cleaning up uploaded file: ${cleanupError}`,
-          );
-        }
-      }
     }
   });
 
