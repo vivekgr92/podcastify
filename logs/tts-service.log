@@ -1,2 +1,133 @@
 [INFO] Usage check for user: inactive
 [INFO] GET /api/user/usage/check 304 in 120ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 114ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 112ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 112ms
+[INFO] GET /src/index.css 200 in 159ms
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] GET / 200 in 33ms
+[INFO] GET /@vite/client 304 in 36ms
+[INFO] GET /@react-refresh 304 in 37ms
+[INFO] GET /src/main.tsx 304 in 72ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 912ms
+[INFO] GET /src/lib/queryClient.ts 304 in 6ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 2ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
+[INFO] GET /src/index.css 304 in 922ms
+[INFO] GET /src/pages/HomePage.tsx 200 in 2ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
+[INFO] GET /src/pages/FeedbackPage.tsx 304 in 1ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 1049ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-user.ts 304 in 1ms
+[INFO] GET /src/components/ui/card.tsx 304 in 0ms
+[INFO] GET /src/components/ui/button.tsx 304 in 0ms
+[INFO] GET /src/components/ui/input.tsx 304 in 0ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 0ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 0ms
+[INFO] GET /src/components/ui/form.tsx 304 in 1ms
+[INFO] GET /src/components/ui/textarea.tsx 304 in 2ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
+[INFO] GET /src/components/Logo.tsx 304 in 1ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 6ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 0ms
+[INFO] GET /src/components/ui/select.tsx 304 in 1ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 1ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
+[INFO] GET /src/lib/utils.ts 304 in 1ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 1ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 1ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 1ms
+[INFO] GET /src/components/ui/label.tsx 304 in 1ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 1ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
+[INFO] GET /api/user 401 in 2ms
+[INFO] GET / 200 in 4ms
+[INFO] GET / 200 in 3ms
+[INFO] POST /api/login 200 in 355ms
+[INFO] GET /api/user 304 in 61ms
+[INFO] GET / 200 in 106ms
+[INFO] GET / 200 in 98ms
+[INFO] GET /api/playlists 304 in 222ms
+[INFO] GET /api/podcasts 304 in 238ms
+[INFO] GET / 200 in 59ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 165ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 110ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 110ms
+[INFO] POST /api/set-category 200 in 56ms
+[INFO] Usage check for user: inactive
+[INFO] GET /api/user/usage/check 304 in 126ms
+[INFO] 
+
+ PDF has 3 pages
+[INFO] Calculating estimated pricing and checking usage limits
+[INFO] 
+======= Starting Pricing Calculation ======
+ -Input text length: 16704
+ -Number of Vertex AI responses: 0
+
+[INFO] 
+        Input text length: 16704
+        Input token count: 3419
+        System prompt length: 47
+        System token count: 14
+        Total input tokens: 3433
+      
+[INFO] 
+---***** Estimated Calculation Summary **** ---
+Total Input Tokens: 3433
+Total Output Tokens: 5150
+Total Tokens: 8583
+Total TTS Characters: 20600
+Vertex AI Input Cost: $0.000002
+Vertex AI Output Cost: $0.000003
+TTS Cost: $0.329600
+Total Cost: $0.329604
+[INFO] Estimated Podify Tokens: 165 
+
+Usage limits check for user 26:
+ Current articles: 0/3
+ Current Podify tokens: 0/10000
+ Would exceed article limit: false
+ Would exceed token limit: false
+[INFO] Starting audio generation process
+[INFO] 
+--- Starting Conversation Generation ---
+
+[ERROR] Error processing chunk 1: req is not defined
+[INFO] Error generating conversation: req is not defined
+[ERROR] Error processing podcast: req is not defined
+[INFO] POST /api/podcast 500 in 1189ms
