@@ -57,7 +57,7 @@ async function startServer() {
     // Add error handler after routes
     app.use(errorHandler);
 
-    const PORT = 5000;
+    const PORT = process.env.NODE_ENV === 'production' ? 80 : 5000;
     const server = createServer(app);
 
     // Setup Vite or static serving
