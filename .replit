@@ -50,6 +50,10 @@ args = "StripeSetup"
 task = "workflow.run"
 args = "Server"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Client"
+
 [[workflows.workflow]]
 name = "Server"
 author = "agent"
@@ -63,7 +67,22 @@ task = "packager.installForAll"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "NODE_ENV=development tsx watch server/index.ts"
-waitForPort = 8080
+waitForPort = 4000
+
+[[workflows.workflow]]
+name = "Client"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd client && npm install && npm run dev -- --host 0.0.0.0"
+waitForPort = 5175
 
 [objectStorage]
 defaultBucketID = "replit-objstore-38912112-08a6-4e06-98ca-2afae8ad1501"
