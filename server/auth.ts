@@ -1,7 +1,8 @@
 import passport from "passport";
 import { Strategy as LocalStrategy, IVerifyOptions } from "passport-local";
 import { type Express } from "express";
-import session from "express-session";
+import * as expressSession from "express-session";
+const session = expressSession.default;
 import createMemoryStore from "memorystore";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";

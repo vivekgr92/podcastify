@@ -1,6 +1,6 @@
 
 declare module 'express-session' {
-  interface Session {
+  interface SessionData {
     podcastCategory?: string;
   }
 }
