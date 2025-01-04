@@ -1132,23 +1132,8 @@ export function registerRoutes(app: Express) {
         .delete(podcasts)
         .where(and(eq(podcasts.id, podcastId), eq(podcasts.userId, user.id)));
 
-      // Try to delete the associated audio file
-      if (podcast.audioUrl) {
-        const audioPath = path.join(
-          __dirname,
-          "..",
-          podcast.audioUrl.replace(/^\//, ""),
-        );
-        try {
-          await fs.unlink(audioPath);
-          await logger.info(`Deleted audio file: ${audioPath}`);
-        } catch (error) {
-          // Log but don't fail if file deletion fails
-          await logger.warn(
-            `Failed to delete audio file ${audioPath}: ${error instanceof Error ? error.message : String(error)}`,
-          );
-        }
-      }
+      // Audio file will be retained in Object Storage
+      await logger.info(`Keeping audio file in storage for podcast ${podcastId}`);
 
       res.json({
         message: "Podcast deleted successfully",
