@@ -57,7 +57,7 @@ async function startServer() {
     // Add error handler after routes
     app.use(errorHandler);
 
-    const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : (process.env.NODE_ENV === "production" ? 80 : 5000);
+    const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : (process.env.NODE_ENV === "production" ? 3000 : 5000);
 
     const server = createServer(app);
 
@@ -83,10 +83,12 @@ async function startServer() {
     });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    logger.error(`Fatal error during server initialization: ${errorMessage}`);
-    if (error instanceof Error && error.stack) {
-      logger.error(`Stack trace: ${error.stack}`);
-    }
+    logger.error([
+      `Fatal error during server initialization: ${errorMessage}`,
+      `Environment: ${process.env.NODE_ENV}`,
+      `Port: ${PORT}`,
+      `Stack trace: ${error instanceof Error ? error.stack : 'No stack trace available'}`
+    ]);
     process.exit(1);
   }
 }
