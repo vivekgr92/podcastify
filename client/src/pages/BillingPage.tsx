@@ -19,7 +19,7 @@ type Plan = {
   priceId: string;
 };
 
-const isDev = import.meta.env.MODE === 'development';
+const isDev = import.meta.env.MODE === "development";
 
 const plans: Plan[] = [
   {
@@ -35,7 +35,9 @@ const plans: Plan[] = [
     ],
     buttonText: "Subscribe Now",
     popular: false,
-    priceId: isDev ? "price_test_basic" : "price_1Qb8xDBwEMzOkTIKEcpAxav4",
+    priceId: isDev
+      ? "price_1Qb8xDBwEMzOkTIKEcpAxav4"
+      : "price_1QdDlMBwEMzOkTIKJikjLbE2",
   },
   {
     name: "Pro Plan",
@@ -51,7 +53,9 @@ const plans: Plan[] = [
     ],
     buttonText: "Subscribe Now",
     popular: true,
-    priceId: isDev ? "price_test_pro" : "price_1QdDlNBwEMzOkTIKzYG5pwi6",
+    priceId: isDev
+      ? "price_1Qb8xDBwEMzOkTIK2QLZKX9c"
+      : "price_1QdDlNBwEMzOkTIKzYG5pwi6",
   },
   {
     name: "Enterprise Plan",
@@ -68,7 +72,9 @@ const plans: Plan[] = [
     ],
     buttonText: "Subscribe Now",
     popular: false,
-    priceId: isDev ? "price_test_enterprise" : "price_1QdDlNBwEMzOkTIKT3LgtrnV",
+    priceId: isDev
+      ? "price_1Qb8xDBwEMzOkTIK8ZAYiRIi"
+      : "price_1QdDlNBwEMzOkTIKT3LgtrnV",
   },
 ];
 
@@ -168,7 +174,9 @@ const BillingPage: React.FC = () => {
 
       {hasActiveSubscription && (
         <div className="max-w-md mx-auto">
-          <h2 className="text-2xl font-semibold mb-6 text-center">Current Subscription</h2>
+          <h2 className="text-2xl font-semibold mb-6 text-center">
+            Current Subscription
+          </h2>
           <div className="bg-gray-900 rounded-2xl p-8 border border-gray-800">
             <div className="space-y-4">
               <div className="flex justify-between items-center">
