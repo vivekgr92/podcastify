@@ -691,3 +691,328 @@ Learn more about webhook signing and explore webhook integration examples for va
 [INFO] GET /api/playlists 304 in 221ms
 [INFO] GET /api/podcasts 304 in 226ms
 [INFO] GET / 200 in 61ms
+[INFO] Stripe initialized successfully in development mode
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] Stripe initialized successfully in development mode
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] GET / 200 in 37ms
+[INFO] GET /@vite/client 304 in 23ms
+[INFO] GET /src/main.tsx 304 in 49ms
+[INFO] GET /@react-refresh 304 in 1ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 348ms
+[INFO] GET /src/lib/queryClient.ts 304 in 1ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
+[INFO] GET /src/index.css 304 in 1245ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
+[INFO] GET /src/pages/FeedbackPage.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-user.ts 304 in 1ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
+[INFO] GET /src/components/ui/button.tsx 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 0ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 0ms
+[INFO] GET /src/components/ui/input.tsx 304 in 1ms
+[INFO] GET /src/components/ui/form.tsx 304 in 0ms
+[INFO] GET /src/components/ui/select.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
+[INFO] GET /src/components/Logo.tsx 304 in 0ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 0ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 0ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 0ms
+[INFO] GET /src/lib/utils.ts 304 in 0ms
+[INFO] GET /src/components/ui/card.tsx 304 in 0ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 0ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 0ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 1ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 0ms
+[INFO] GET /src/components/ui/textarea.tsx 304 in 1ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 0ms
+[INFO] GET /src/components/ui/label.tsx 304 in 0ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 0ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 1ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 0ms
+[INFO] GET /api/user 401 in 2ms
+[INFO] GET / 200 in 5ms
+[INFO] Stripe initialized successfully in development mode
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Stripe initialized successfully in development mode
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] ***Starting server initialization...
+
+
+[INFO] Stripe initialized successfully in development mode
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] Stripe initialized successfully in development mode
+[INFO] ***Starting server initialization...
+
+
+[INFO] Setting up Vite for development...
+[INFO] Registering routes...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] GET / 200 in 40ms
+[INFO] GET /@vite/client 304 in 25ms
+[INFO] GET /@react-refresh 304 in 20ms
+[INFO] GET /src/main.tsx 304 in 51ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 59ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
+[INFO] GET /src/lib/queryClient.ts 304 in 1ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 0ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 0ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
+[INFO] GET /src/index.css 304 in 1120ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 0ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
+[INFO] GET /src/pages/FeedbackPage.tsx 304 in 0ms
+[INFO] GET /src/components/ui/button.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-user.ts 304 in 0ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
+[INFO] GET /src/components/ui/card.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
+[INFO] GET /src/components/ui/select.tsx 304 in 0ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 1ms
+[INFO] GET /src/components/Logo.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 0ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 0ms
+[INFO] GET /src/components/ui/input.tsx 304 in 1ms
+[INFO] GET /src/components/ui/form.tsx 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 1ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 1ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 0ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 0ms
+[INFO] GET /src/lib/utils.ts 304 in 1ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 0ms
+[INFO] GET /src/components/ui/textarea.tsx 304 in 0ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 1ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 0ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 1ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
+[INFO] GET /src/components/ui/label.tsx 304 in 1ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 0ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
+[INFO] GET /api/user 401 in 2ms
+[INFO] GET / 200 in 4ms
+[INFO] POST /api/login 200 in 379ms
+[INFO] GET /api/user 304 in 59ms
+[INFO] GET / 200 in 105ms
+[INFO] GET / 200 in 61ms
+[INFO] GET /api/playlists 304 in 191ms
+[INFO] GET /api/podcasts 304 in 244ms
+[INFO] GET / 200 in 59ms
+[INFO] POST /api/create-portal-session 200 in 478ms
+[INFO] Successfully verified webhook event: billing_portal.session.created
+[INFO] POST /api/webhooks/stripe 200 in 2ms
+[INFO] Successfully verified webhook event: customer.subscription.updated
+[INFO] Updated subscription status for user 26: canceled
+[INFO] POST /api/webhooks/stripe 200 in 58ms
+[INFO] Successfully verified webhook event: customer.subscription.updated
+[INFO] Updated subscription status for user 26: canceled
+[INFO] POST /api/webhooks/stripe 200 in 57ms
+[INFO] Successfully verified webhook event: customer.subscription.updated
+[INFO] Updated subscription status for user 26: canceled
+[INFO] POST /api/webhooks/stripe 200 in 57ms
+[INFO] Successfully verified webhook event: customer.subscription.updated
+[INFO] Updated subscription status for user 26: canceled
+[INFO] POST /api/webhooks/stripe 200 in 58ms
+[INFO] Successfully verified webhook event: customer.subscription.updated
+[INFO] Updated subscription status for user 24: canceled
+[INFO] POST /api/webhooks/stripe 200 in 62ms
+[INFO] Successfully verified webhook event: customer.subscription.updated
+[INFO] Updated subscription status for user 24: canceled
+[INFO] POST /api/webhooks/stripe 200 in 57ms
+[INFO] GET / 200 in 60ms
+[INFO] GET /@vite/client 304 in 57ms
+[INFO] GET /@react-refresh 304 in 98ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 151ms
+[INFO] GET /src/main.tsx 304 in 206ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 162ms
+[INFO] GET /src/lib/queryClient.ts 304 in 62ms
+[INFO] GET /src/index.css 304 in 116ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 171ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 219ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 273ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 295ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 292ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 292ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 293ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 286ms
+[INFO] GET /src/pages/FeedbackPage.tsx 304 in 286ms
+[INFO] GET /src/hooks/use-user.ts 304 in 286ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 286ms
+[INFO] GET /src/components/ui/button.tsx 304 in 288ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 289ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 288ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 293ms
+[INFO] GET /src/components/ui/select.tsx 304 in 292ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 292ms
+[INFO] GET /src/components/Logo.tsx 304 in 294ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 289ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 285ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 286ms
+[INFO] GET /src/components/ui/input.tsx 304 in 289ms
+[INFO] GET /src/components/ui/form.tsx 304 in 290ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 288ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 287ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 285ms
+[INFO] GET /src/lib/utils.ts 304 in 290ms
+[INFO] GET /src/components/ui/card.tsx 304 in 289ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 289ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 292ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 289ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 288ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 287ms
+[INFO] GET /src/components/ui/textarea.tsx 304 in 288ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 290ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 293ms
+[INFO] GET /src/components/ui/label.tsx 304 in 291ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 291ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 292ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 291ms
+[INFO] GET /api/user 200 in 57ms
+[INFO] GET / 200 in 71ms
+[INFO] GET / 200 in 58ms
+[INFO] GET /api/playlists 304 in 133ms
+[INFO] Creating subscription for user 26 with price price_1Qb8xDBwEMzOkTIKEcpAxav4
+[INFO] Creating subscription for user 26 with price price_1Qb8xDBwEMzOkTIKEcpAxav4
+[INFO] Using existing customer: cus_RU8Oe0EMwc74Kh
+[INFO] Using existing customer: cus_RU8Oe0EMwc74Kh
+[INFO] Created subscription: sub_1QdKorBwEMzOkTIKSLeqy3qv
+[INFO] POST /api/create-subscription 200 in 1531ms
+[INFO] Successfully verified webhook event: payment_intent.created
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] Successfully verified webhook event: customer.subscription.created
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] Successfully verified webhook event: invoice.created
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] Successfully verified webhook event: invoice.finalized
+[INFO] POST /api/webhooks/stripe 200 in 0ms
+[INFO] Created subscription: sub_1QdKosBwEMzOkTIKRr9aOq5x
+[INFO] POST /api/create-subscription 200 in 2745ms
+[INFO] Successfully verified webhook event: payment_intent.created
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] Successfully verified webhook event: customer.subscription.created
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] Successfully verified webhook event: invoice.created
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] Successfully verified webhook event: invoice.finalized
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] GET / 200 in 59ms
+[INFO] GET /@vite/client 304 in 56ms
+[INFO] GET /@react-refresh 304 in 94ms
+[INFO] Successfully verified webhook event: charge.succeeded
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] Successfully verified webhook event: payment_method.attached
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 149ms
+[INFO] GET /src/main.tsx 304 in 203ms
+[INFO] Successfully verified webhook event: customer.subscription.updated
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 129ms
+[INFO] Successfully verified webhook event: payment_intent.succeeded
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] Updated subscription status for user 26: active
+[INFO] POST /api/webhooks/stripe 200 in 100ms
+[INFO] GET /src/index.css 304 in 114ms
+[INFO] Successfully verified webhook event: invoice.updated
+[INFO] POST /api/webhooks/stripe 200 in 1ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 167ms
+[INFO] Successfully verified webhook event: invoice.paid
+[INFO] POST /api/webhooks/stripe 200 in 0ms
+[INFO] GET /src/lib/queryClient.ts 304 in 222ms
+[INFO] Successfully verified webhook event: invoice.payment_succeeded
+[INFO] GET /src/pages/HomePage.tsx 304 in 273ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 326ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 345ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 289ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 287ms
+[INFO] 
+
+ ------Subscription Type ------- Basic Plan:monthly
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 286ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 288ms
+[INFO] GET /src/pages/FeedbackPage.tsx 304 in 291ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 289ms
+[INFO] GET /src/hooks/use-user.ts 304 in 288ms
+[INFO] GET /src/components/ui/button.tsx 304 in 344ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 245ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 299ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 346ms
+[INFO] GET /src/components/ui/select.tsx 304 in 344ms
+[INFO] GET /src/components/Logo.tsx 304 in 343ms
+[INFO] Successfully processed payment for subscription sub_1QdKorBwEMzOkTIKSLeqy3qv
+[INFO] GET /src/hooks/use-tts.ts 304 in 357ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 333ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 345ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 362ms
+[INFO] GET /src/components/ui/input.tsx 304 in 359ms
+[INFO] GET /src/components/ui/form.tsx 304 in 364ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 285ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 290ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 287ms
+[INFO] Subscription confirmation email sent. Status: 202
+[INFO] POST /api/webhooks/stripe 200 in 1497ms
+[INFO] GET /src/lib/utils.ts 304 in 286ms
+[INFO] GET /src/components/ui/card.tsx 304 in 289ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 284ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 286ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 279ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 286ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 287ms
+[INFO] GET /src/components/ui/textarea.tsx 304 in 280ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 285ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 287ms
+[INFO] GET /src/components/ui/label.tsx 304 in 288ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 286ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 290ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 288ms
+[INFO] GET /api/user 200 in 57ms
+[INFO] GET / 200 in 60ms
+[INFO] GET / 200 in 87ms
+[INFO] GET /api/playlists 304 in 167ms
+[INFO] GET / 200 in 122ms
+[INFO] POST /api/logout 200 in 57ms
+[INFO] GET /api/user 401 in 1ms
+[INFO] Successfully verified webhook event: balance.available
+[INFO] POST /api/webhooks/stripe 200 in 0ms

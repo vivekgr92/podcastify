@@ -68,9 +68,10 @@ function getLimits(subscriptionStatus: string | null | undefined) {
 // Initialize Stripe with proper API version and error handling
 let stripe: Stripe;
 try {
-  const isDev = process.env.NODE_ENV === 'development';
-  const stripeKey = isDev ? process.env.STRIPE_SECRET_KEY_TEST : process.env.STRIPE_SECRET_KEY;
-  const webhookSecret = isDev ? process.env.STRIPE_WEBHOOK_SECRET_TEST : process.env.STRIPE_WEBHOOK_SECRET;
+  const isDev = process.env.NODE_ENV === "development";
+  const stripeKey = isDev
+    ? process.env.STRIPE_SECRET_KEY_TEST
+    : process.env.STRIPE_SECRET_KEY;
 
   if (!stripeKey) {
     throw new Error("Stripe secret key is required");
@@ -81,7 +82,9 @@ try {
     typescript: true,
   });
 
-  logger.info(`Stripe initialized successfully in ${isDev ? 'development' : 'production'} mode`);
+  logger.info(
+    `Stripe initialized successfully in ${isDev ? "development" : "production"} mode`,
+  );
 } catch (error) {
   const errorMessage = error instanceof Error ? error.message : String(error);
   logger.error(`Failed to initialize Stripe: ${errorMessage}`);
@@ -210,8 +213,10 @@ export function registerRoutes(app: Express) {
       }
 
       // Ensure we have the webhook secret
-      const isDev = process.env.NODE_ENV === 'development';
-      const webhookSecret = isDev ? process.env.STRIPE_WEBHOOK_SECRET_TEST : process.env.STRIPE_WEBHOOK_SECRET;
+      const isDev = process.env.NODE_ENV === "development";
+      const webhookSecret = isDev
+        ? process.env.STRIPE_WEBHOOK_SECRET_TEST
+        : process.env.STRIPE_WEBHOOK_SECRET;
 
       if (!webhookSecret) {
         logger.error("Missing Stripe webhook secret");
@@ -219,11 +224,7 @@ export function registerRoutes(app: Express) {
       }
 
       try {
-        event = stripe.webhooks.constructEvent(
-          req.body,
-          sig,
-          webhookSecret,
-        );
+        event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
       } catch (err) {
         const error = err instanceof Error ? err.message : String(err);
         logger.error(`Webhook signature verification failed: ${error}`);
