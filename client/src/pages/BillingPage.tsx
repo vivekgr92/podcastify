@@ -19,21 +19,21 @@ type Plan = {
   priceId: string;
 };
 
-const isDev = process.env.NODE_ENV === 'development';
+const isDev = process.env.NODE_ENV === "development";
 
 const PRICE_IDS = {
   basic: {
-    dev: "price_test_basic123",
-    prod: "price_1QdDlMBwEMzOkTIKJikjLbE2"
+    dev: "price_1Qb8xDBwEMzOkTIKEcpAxav4",
+    prod: "price_1QdDlMBwEMzOkTIKJikjLbE2",
   },
   pro: {
-    dev: "price_test_pro456",
-    prod: "price_1QdDlNBwEMzOkTIKzYG5pwi6"
+    dev: "price_1Qb8xDBwEMzOkTIK2QLZKX9c",
+    prod: "price_1QdDlNBwEMzOkTIKzYG5pwi6",
   },
   enterprise: {
-    dev: "price_test_enterprise789",
-    prod: "price_1QdDlNBwEMzOkTIKT3LgtrnV"
-  }
+    dev: "price_1Qb8xDBwEMzOkTIK8ZAYiRIi",
+    prod: "price_1QdDlNBwEMzOkTIKT3LgtrnV",
+  },
 };
 
 const plans: Plan[] = [
