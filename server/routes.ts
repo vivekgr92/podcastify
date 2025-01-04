@@ -29,6 +29,14 @@ import { feedback, insertFeedbackSchema } from "../db/schema.js";
 const PODIFY_TOKEN_RATE = 0.005;
 const PODIFY_MARGIN = 0.6;
 
+declare module "express-session" {
+  interface SessionData {
+    podcastCategory?: PodcastCategory; // Ensure the type matches
+  }
+}
+
+type PodcastCategory = "general" | "kids" | "research";
+
 type SubscriptionTier =
   | "free"
   | "Basic Plan:monthly"
@@ -726,7 +734,9 @@ export function registerRoutes(app: Express) {
       }
       // Generate audio only if usage limits allow
       await logger.info("Starting audio generation process");
-      const category = req.session?.podcastCategory || "general";
+      const category =
+        (req.session?.podcastCategory as PodcastCategory) || "general";
+
       await logger.info(`\n\nCategory: ${category}`);
       const { audioBuffer, duration, usage } =
         await ttsService.generateConversation(fileContent, category);
