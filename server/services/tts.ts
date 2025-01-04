@@ -929,20 +929,19 @@ export class TTSService {
           // Dynamic prompting based on chunk position
           let prompt: string;
 
-          const category = 'general';
           if (index === 0) {
-            prompt = `${SYSTEM_PROMPTS[category].WELCOME}\n\n${SYSTEM_PROMPTS[category].MAIN}\n\nJoe: ${page}\n\nSarah:`;
+            prompt = `${SYSTEM_PROMPTS.WELCOME}\n\n${SYSTEM_PROMPTS.MAIN}\n\nJoe: ${page}\n\nSarah:`;
             speakerIndex = 0;
           } else if (index === pages.length - 1) {
             await logger.info([
               "\n\n ==================Last Chunk===================\n",
             ]);
 
-            prompt = `${SYSTEM_PROMPTS[category].MAIN}\n\n${
+            prompt = `${SYSTEM_PROMPTS.MAIN}\n\n${
               lastResponse ? `**Previous Context**:\n${lastResponse}\n\n` : ""
-            }${currentSpeaker}: ${page}\n\n${SYSTEM_PROMPTS[category].FAREWELL}`;
+            }${currentSpeaker}: ${page}\n\n${SYSTEM_PROMPTS.FAREWELL}`;
           } else {
-            prompt = `${SYSTEM_PROMPTS[category].MAIN}\n\n${
+            prompt = `${SYSTEM_PROMPTS.MAIN}\n\n${
               lastResponse ? `**Previous Context**:\n${lastResponse}\n\n` : ""
             }${currentSpeaker}: ${page}`;
           }
