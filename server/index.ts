@@ -10,6 +10,12 @@ dotenv.config();
 
 const app = express();
 
+const PORT = process.env.PORT
+  ? parseInt(process.env.PORT, 10)
+  : process.env.NODE_ENV === "production"
+    ? 3000
+    : 5000;
+
 // Add raw body parser for Stripe webhook first
 app.post("/api/webhooks/stripe", express.raw({ type: "application/json" }));
 
@@ -57,8 +63,6 @@ async function startServer() {
     // Add error handler after routes
     app.use(errorHandler);
 
-    const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : (process.env.NODE_ENV === "production" ? 3000 : 5000);
-
     const server = createServer(app);
 
     // Setup Vite or static serving
@@ -73,13 +77,12 @@ async function startServer() {
     // Start server
     server.listen(PORT, "0.0.0.0", () => {
       // Construct webhook URL without port number
-      const webhookUrl =
-        process.env.REPL_SLUG && process.env.REPL_OWNER
-          ? `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co/api/webhooks/stripe`
-          : `https://${process.env.REPL_ID}.id.repl.co/api/webhooks/stripe`;
-
-      logger.info(`Server started successfully on port ${PORT}`);
-      logger.info(`Webhook endpoint available at: ${webhookUrl}`);
+      // const webhookUrl =
+      //   process.env.REPL_SLUG && process.env.REPL_OWNER
+      //     ? `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co/api/webhooks/stripe`
+      //     : `https://${process.env.REPL_ID}.id.repl.co/api/webhooks/stripe`;
+      // logger.info(`Server started successfully on port ${PORT}`);
+      // logger.info(`Webhook endpoint available at: ${webhookUrl}`);
     });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
@@ -87,7 +90,7 @@ async function startServer() {
       `Fatal error during server initialization: ${errorMessage}`,
       `Environment: ${process.env.NODE_ENV}`,
       `Port: ${PORT}`,
-      `Stack trace: ${error instanceof Error ? error.stack : 'No stack trace available'}`
+      `Stack trace: ${error instanceof Error ? error.stack : "No stack trace available"}`,
     ]);
     process.exit(1);
   }
