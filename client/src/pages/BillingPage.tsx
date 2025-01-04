@@ -1,4 +1,3 @@
-
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { useUser } from "../hooks/use-user";
@@ -20,13 +19,15 @@ type Plan = {
   priceId: string;
 };
 
+const isDev = import.meta.env.MODE === "development";
+
 const plans: Plan[] = [
   {
     name: "Basic Plan",
     price: "9.99",
     period: "per month",
     features: [
-      "Convert up to 20 articles/month",
+      "Convert up to 10 articles/month",
       "Basic voice selection",
       "Standard quality audio",
       "Email support",
@@ -34,11 +35,13 @@ const plans: Plan[] = [
     ],
     buttonText: "Subscribe Now",
     popular: false,
-    priceId: "price_1Qb8xDBwEMzOkTIKEcpAxav4",
+    priceId: isDev
+      ? "price_1Qb8xDBwEMzOkTIKEcpAxav4"
+      : "price_1QdDlMBwEMzOkTIKJikjLbE2",
   },
   {
     name: "Pro Plan",
-    price: "24.99",
+    price: "16.99",
     period: "per month",
     features: [
       "Convert up to 50 articles/month",
@@ -50,7 +53,9 @@ const plans: Plan[] = [
     ],
     buttonText: "Subscribe Now",
     popular: true,
-    priceId: "price_1QaJICBwEMzOkTIKbuyKiDjb",
+    priceId: isDev
+      ? "price_1Qb8xDBwEMzOkTIK2QLZKX9c"
+      : "price_1QdDlNBwEMzOkTIKzYG5pwi6",
   },
   {
     name: "Enterprise Plan",
@@ -67,7 +72,9 @@ const plans: Plan[] = [
     ],
     buttonText: "Subscribe Now",
     popular: false,
-    priceId: "price_1QaJICBwEMzOkTIKRE8yNZHc",
+    priceId: isDev
+      ? "price_1Qb8xDBwEMzOkTIK8ZAYiRIi"
+      : "price_1QdDlNBwEMzOkTIKT3LgtrnV",
   },
 ];
 
@@ -95,7 +102,8 @@ const BillingPage: React.FC = () => {
     } else if (paymentStatus === "failed") {
       toast({
         title: "Payment Failed",
-        description: message || "There was an issue with your payment. Please try again.",
+        description:
+          message || "There was an issue with your payment. Please try again.",
         variant: "destructive",
         duration: 5000,
       });
@@ -120,7 +128,8 @@ const BillingPage: React.FC = () => {
     } catch (error) {
       toast({
         title: "Error",
-        description: "Could not access subscription management. Please try again later.",
+        description:
+          "Could not access subscription management. Please try again later.",
         variant: "destructive",
       });
     } finally {
@@ -137,16 +146,17 @@ const BillingPage: React.FC = () => {
     setIsPaymentModalOpen(true);
   };
 
-  const hasActiveSubscription = user.subscriptionStatus && 
-                              user.subscriptionStatus !== "inactive" && 
-                              user.subscriptionStatus !== "canceled" &&
-                              user.subscriptionType !== "free";
+  const hasActiveSubscription =
+    user.subscriptionStatus &&
+    user.subscriptionStatus !== "inactive" &&
+    user.subscriptionStatus !== "canceled" &&
+    user.subscriptionType !== "free";
 
   const getCurrentPlan = () => {
     if (!user.subscriptionType || user.subscriptionType === "free") {
       return null;
     }
-    return plans.find(plan => plan.name === user.subscriptionType) || null;
+    return plans.find((plan) => plan.name === user.subscriptionType) || null;
   };
 
   const currentPlan = getCurrentPlan();
@@ -156,7 +166,7 @@ const BillingPage: React.FC = () => {
       <div className="text-center">
         <h1 className="text-4xl font-bold mb-4">Billing & Subscription</h1>
         <p className="text-gray-400 max-w-2xl mx-auto">
-          {hasActiveSubscription 
+          {hasActiveSubscription
             ? "Manage your subscription and billing details"
             : "Choose a plan that best fits your needs"}
         </p>
@@ -164,12 +174,16 @@ const BillingPage: React.FC = () => {
 
       {hasActiveSubscription && (
         <div className="max-w-md mx-auto">
-          <h2 className="text-2xl font-semibold mb-6">Current Subscription</h2>
+          <h2 className="text-2xl font-semibold mb-6 text-center">
+            Current Subscription
+          </h2>
           <div className="bg-gray-900 rounded-2xl p-8 border border-gray-800">
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <span className="text-gray-400">Plan</span>
-                <span className="capitalize">{currentPlan?.name || user.subscriptionType || "Free"}</span>
+                <span className="capitalize">
+                  {currentPlan?.name || user.subscriptionType || "Free"}
+                </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-400">Status</span>
@@ -208,7 +222,7 @@ const BillingPage: React.FC = () => {
         <div className="text-center mb-12">
           <h2 className="text-2xl font-semibold mb-4">Available Plans</h2>
           <p className="text-gray-400">
-            {hasActiveSubscription 
+            {hasActiveSubscription
               ? "Compare your current plan with other options"
               : "Select a plan that best fits your needs"}
           </p>
@@ -260,11 +274,11 @@ const BillingPage: React.FC = () => {
                     onClick={() => handlePlanSelect(plan)}
                     disabled={Boolean(hasActiveSubscription) && !isCurrentPlan}
                   >
-                    {isCurrentPlan 
+                    {isCurrentPlan
                       ? "Current Plan"
                       : hasActiveSubscription
-                      ? "Manage Current Plan First"
-                      : plan.buttonText}
+                        ? "Manage Current Plan First"
+                        : plan.buttonText}
                   </Button>
                 </div>
               </div>

@@ -1,294 +1,4 @@
-[INFO] GET / 200 in 63ms
-[INFO] GET / 200 in 110ms
-[INFO] Usage check for user: canceled
-[INFO] GET /api/user/usage/check 304 in 181ms
-[INFO] 
-
- PDF has 6 pages
-[INFO] Usage check for user: canceled
-[INFO] GET /api/user/usage/check 304 in 366ms
-[INFO] Calculating estimated pricing and checking usage limits
-[INFO] 
-======= Starting Pricing Calculation ======
- -Input text length: 41085
- -Number of Vertex AI responses: 0
-
-[INFO] 
-        Input text length: 41085
-        Input token count: 9342
-        System prompt length: 2718
-        System token count: 525
-        Total input tokens: 9867
-      
-[INFO] 
----***** Estimated Calculation Summary **** ---
-Total Input Tokens: 9867
-Total Output Tokens: 14801
-Total Tokens: 24668
-Total TTS Characters: 59204
-Vertex AI Input Cost: $0.000005
-Vertex AI Output Cost: $0.000007
-TTS Cost: $0.947264
-Total Cost: $0.947276
-[INFO] Estimated Podify Tokens: 474 
-
-Usage limits check for user 24:
- Current articles: 0/3
- Current Podify tokens: 0/10000
- Would exceed article limit: false
- Would exceed token limit: false
-[INFO] Starting audio generation process
-[INFO] generateConversationPages is called
-[INFO] 
---- Starting Conversation Generation ---
-
-[INFO] 
-
- ------------PROMPT to VERTEX AI-----------------
- Speaker Joe should Start the podcast by saying this: Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies,
-unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!
-
-**Guidelines**:
-1. Joe provides detailed technical insights but avoids overusing analogies. Instead, focus on straightforward, clear explanations.
-2. Sarah asks probing, thoughtful questions, occasionally offers her own insights, and challenges Joe to explain concepts simply and conversationally.
-3. Both speakers use natural human speech patterns, including filler words like "um," "ah," "you know," and short pauses.
-
-**Focus**:
-- Avoid excessive use of analogies. Use one or two if necessary for clarity but prioritize clear, direct explanations.
-- Include natural conversational flow with interruptions, backtracking, and filler words to make the dialogue feel authentic.
-- Encourage a natural dialogue with varied contributions from both speakers.
-
-**Tone**:
-- Engaging, relatable, and spontaneous.
-- Emphasize human-like emotions, with occasional humor or lighthearted moments.
-- Balance technical depth with conversational relatability, avoiding overly formal language.
-
-You are generating a podcast conversation between Joe and Sarah.
-
-**Guidelines**:
-1. Joe provides detailed technical insights but avoids overusing analogies. Instead, focus on straightforward, clear explanations.
-2. Sarah asks probing, thoughtful questions, occasionally offers her own insights, and challenges Joe to explain concepts simply and conversationally.
-3. Both speakers use natural human speech patterns, including filler words like "you know," and short pauses.
-4. Don't include any sound effects or background music.
-
-**Focus**:
-- Avoid excessive use of analogies. Use one or two if necessary for clarity but prioritize clear, direct explanations.
-- Include natural conversational flow with interruptions, backtracking, and filler words to make the dialogue feel authentic.
-- Encourage a natural dialogue with varied contributions from both speakers.
-
-**Tone**:
-- Engaging, relatable, and spontaneous.
-- Emphasize human-like emotions, with occasional humor or lighthearted moments.
-- Balance technical depth with conversational relatability, avoiding overly formal language.
-
-Joe: Automated microscope system for determining factors that predict neuronal fate Montserrat Arrasate* and Steven Finkbeiner* *Gladstone Institute of Neurological Disease, 1650 Owens Street, San Francisco, CA 94158; and Departments of Neurology and Physiology, Neuroscience, and Biomedical Science Programs, University of California, San Francisco, CA 94114 Communicated by Robert W. Mahley, The J. David Gladstone Institutes, San Francisco, CA, December 28, 2004 (received for review October 28, 2004) Unraveling cause-and-effect relationships in the nervous system is challenging because some biological processes begin stochasti- cally, take a significant amount of time to unfold, and affect small neuronal subpopulations that can be difficult to isolate and mea- sure. Single-cell approaches are slow, subject to user bias, and sometimes too laborious to achieve sample sizes large enough to detect important effects. Here, we describe an automated imaging and analysis system that enables us to follow the fates of individ- ual cells and intracellular proteins over time. Observations can be quantified in a high-throughput manner with minimal user bias. We have adapted survival analysis methods to determine whether and how factors measured during longitudinal analysis predict a particular biological outcome. The ability to monitor complex processes at single-cell resolution quickly, quantitatively, and over long intervals should have wide applications for biology. Aktproportional hazard analysissurvival analysis T he nervous system poses difficult experimental challenges for those seeking to understand the biochemical bases for its function in health and disease. The brain is composed of a staggering number of different cell types (14). Because the relevant changes often occur in a small subpopulation of neu- rons, the primary signals can be small and difficult to detect by standard biochemical or molecular biological assays. Moreover, changes in one subpopulation of neurons can trigger additional changes in neighboring cells or in distant but synaptically con- nected neuronal subpopulations. Because the different cell types are often intermixed and the sources of the signals cannot be resolved, the picture that emerges can be complex and misleading. Elucidating pathogenic mechanisms can be especially chal- lenging. First, the time at which a particular neuron dies from disease may be stochastic (5), which reduces the measurable signal and increases its variability. Second, the initiating patho- logical event may incite a myriad of homeostatic responses within the affected cell, its neighbors, and its synaptic partners. Consequently, changes associated with pathological states are necessarily abnormal but are not necessarily pathogenic. How- ever, determining whether a change is pathogenic, an epiphe- nomenon, or a beneficial coping response can be a conundrum with standard approaches that rely on static snapshots. Third, the disease itself may limit detection. As a degenerative disease progresses, vulnerable neurons die, and fewer are available to generate detectable biochemical signals. Eventually, the pre- dominant biochemical changes are the coping responses of the remaining cells. Finally, many pathogenic processes are slow, further reducing the signals that can be measured at any single point in time. One strategy to overcome these limitations is to use assays that can resolve signals from single cells. However, standard single- cell assays are commonly time-consuming, subject to user bias, and often less quantitative than population-based assays. To overcome the problems, we built a system with the ability to repeatedly and accurately resolve signals within single cells over arbitrary time intervals. Our system combines the specificity of single-cell approaches with the throughput of population-based approaches and enables us to systematically and quantitatively elucidate the relationship between intermediate changes and the long-term fate of a cell. Methods Reagents and Plasmids.Kainic acid was from SigmaAldrich, ethidium homodimer (EtHD) was from Molecular Probes, and Lipofectamine2000 was from Invitrogen. We used the following plasmids: pCMV6-Myr-Akt-hemagglutinin (a gift of Thomas F. Franke, Columbia University, New York; ref. 6), pCMV4 (a gift from Warner Greene, Gladstone Institute of Virology and Immunology, San Francisco), pGW1-GFP (a gift of Don Arnold, University of Southern California, Los Angeles), pGW1-CFP and pGW1-YFP (gifts from Ricardo Dolmetsch, Stanford Uni- versity, Stanford, CA), and mammalian expression plasmid encoding dsRED1 (Clontech). Neuronal Culture.Primary cultures of cortical neurons were prepared from rat embryos (E1618) as reported in ref. 7. Brain cortices were dissected, treated with papain and then trypsin inhibitor, and gently triturated to dissociate single neurons in Optimemglucose medium. Cells (610 5 ) were plated in each well of a 24-well tissue culture plate; 2 h later, the plating medium was replaced by growth medium with serum. (Contact S.F. for additional details.) Transfection.Neurons were transfected at 67 daysin vitroas described in ref. 7. Growth medium was replaced 1 h before transfection. A Ca 2 phosphate coprecipitate of plasmid DNA (14 g) was formed and added to each well of a 24-well plate. GFP was coprecipitated with AKT or empty plasmid in a 1:3 ratio. Approximately 20 min after the precipitate was added, the medium was removed, and cells were treated briefly with medium containing 2% dimethyl sulfoxide, rinsed twice, and maintained in serum-free growth medium. For some transfec- tions, Lipofectamine2000 and DNA were mixed together, added to neurons for 5 h, and replaced with serum-free growth medium. Robotic Microscope.The imaging system was built with a Nikon TE300 Quantex base and was equipped with Super Fluor40 [numerical aperture (N.A.) 1.3] and CFI Plan Achromat100 (N.A. 1.3) objectives, longer working distance objectives 20 (N.A. 0.45) and40 (N.A. 0.6), and low-magnification10 (N.A. 0.3) and4 (N.A. 0.13) objectives. The detector was a Hamamatsu Orca II 1214-bit digital cooled charge-coupled device camera (Middlesex, NJ). Images were collected and analyzed with METAMORPH(Universal Imaging, Downingtown, PA) and custom programs written with MAT LABandVISUAL C. A Uniblitz shutter (Vincent Associates, Rochester, NY) limited Abbreviations: EtHD, ethidium homodimer; YFP, yellow fluorescent protein; CFP, cyan fluorescent protein; CA-Akt, constitutively active Akt; N.A., numerical aperture. To whom correspondence should be addressed. E-mail: sfinkbeiner@gladstone.ucsf.edu. 2005 by The National Academy of Sciences of the USA 3840 3845PNASMarch 8, 2005vol. 102no. 10www.pnas.orgcgidoi10.1073pnas.0409777102 Downloaded from https://www.pnas.org by UC San Francisco on December 18, 2024 from IP address 169.230.76.4. transmitted light illumination. The motorized stage and focus knob control (ProScan II with linear encoders) were from Prior Scientific (Rockland, MA). Illumination was from a xenon lamp (175 W) via a liquid light guide. Fluorescence excitation and emission were controlled independently with sets of optical filters (Chroma Technology, Rockingham, VT) by using two 10-position motorized filter wheels (Lambda 102, Sutter In- struments, Novato, CA). The system was mounted on a vibration isolation table (Technical Manufacturing, Peabody, MA). Im- ages were stored temporarily on computer hard drives and then burned onto digital video discs for further off-line automated analysis. Software Control of Image Acquisition and Analysis.To determine the tilt of the plate, we wrote a program to measure the relative location of the focal plane at three different locations within a single well or three different locations within a multiwell plate. The program uses the lateral distances between the three measurement points and their relative focal points to calculate the slope of the focal plane. The program that registers the position of a plate directs the stage to image the location of a fiduciary mark on the plate created by the manufacturer, focus, and then collect a reference image of the mark. We then relate every other point in the acquisition program to this fiduciary mark. When the plate is returned to the plate holder, we reposition it to restore registration of the fiduciary mark. Threshold values were determined with the following equation: Tk 1 Ak 2 Bk 3 , whereTis the calculated threshold value,k 1 ,k 2 , andk 3 are empirically determined constants,Ais the standard deviation of the array of digitized pixel values that compose an image, andB is the minimum pixel value in the array. Results Image Acquisition.We built an efficient wide-field epifluores- cence imaging system with motorized stage and focus controls. The camera was placed at the basement port of the inverted microscope to minimize the complexity of the light path and to maximize the number of detected photons. Fixed multiband pass dichroic mirrors and 10-position excitation and emission filter wheels were used to examine fluorescent signals from selected spectra. Filter wheels were computer controlled during auto- mated image acquisition. We also used a 14-bit charge-coupled device camera to resolve a wide range of signal intensities for a particular bandwidth of light. With this configuration, we generated high-resolution images of neurons grown on plastic tissue culture plates and transfected with a variety of fluorescent proteins (Fig. 1). Tissue culture plastic transmits some wavelengths of light (e.g., UV) less well than glass and can scatter more light, reducing image resolution. However, plastic has several advantages. First, neurons survive better and appear healthier when grown on plastic than on glass. Second, plastic plates are well suited to inexpensive high- throughput analysis. Finally, the direct attachment of a neuron to the plate facilitates the development of software algorithms that enable us to return to precisely the same neuron or field of neurons over arbitrary time intervals. To automate image acquisition, we wrote computer programs to control the stage and focus knob motors. These programs specify the number of stepper motor movements needed to scan a single well of a multiwell plate and generate a series of nonoverlapping images with different objectives (4,10,20, and40). Additional programs move the plate so that each well of a multiwell plate can be systematically scanned. For auto- mated focusing between stage movements, we incorporated a commercially available algorithm ( METAMORPH, Universal Im- aging). It identifies the focal plane by comparing images col- lected at different focus knob positions. Content-based mathe- matical algorithms to identify the image corresponding to the focal plane among a series of adjacent images along thez-axis are described in refs. 810. Some of these algorithms have been implemented in high-content screening systems, as described in refs. 1114. Initially, automated focusing was unreliable, phototoxic, and slow, accounting for 90% of the time to execute a single cycle of imaging and lateral stage movement. This process involves image collection by the cameras charge-coupled device chip, transfer of the electronic information to the computer, analysis by the Fig. 1.Highly resolved images of neurons grown on plastic tissue-culture dishes and expressing a variety of fluorescent proteins. (A) Spines (arrows) on dendrites of a cortical neuron transfected with dsRED. (40, N.A. 0.60; scale bar, 15 m.) (B) Cell bodies and neurites of a group of neurons containing CFP. (10, N.A. 0.30; scale bar, 150 m.) (C) Growth cones and neurites (arrows) on a striatal neuron expressing GFP. (20, N.A. 0.45; scale bar, 50m.) (D) Cell bodies (arrows) of cortical neurons transfected with GFP. (4, N.A. 0.13; scale bar, 300 m.) (E) Images collected (4) at approximately daily intervals after transfection demonstrate the ability to return to the same field of neurons. One neuron (open arrow) survives throughout the experiment; another (filled arrow) dies between days 4 and 5. (Scale bar, 300 m.) (F) Intracellular and extracellular structures (e.g., neurites) of single neurons can be resolved and monitored over time. (20, N.A. 0.45; scale bar, 60 m.) Arrasate and FinkbeinerPNASMarch 8, 2005vol. 102no. 103841 NEUROSCIENCE Downloaded from https://www.pnas.org by UC San Francisco on December 18, 2024 from IP address 169.230.76.4. computer, and movement of the focus knob in response to the analysis. Transfer of the electronic information to the computer was the most time-consuming step. Therefore, we tested the effect of reducing spatial resolution of the image on autofocusing by varying the number of discrete elements of the charge- coupled device chip that we used. Reducing the spatial resolu- tion by95% sped up the focusing cycle 5-fold without reducing its accuracy. Using fluorescence illumination to focus was potentially pho- totoxic and unreliable. For fields lacking fluorescence, the microscope could search so far from the focal plane that it never recovered. By using phase-contrast optics and a 20-ms light pulse from a low-intensity incandescent lamp, we can generate an image with sufficient spatial contrast to sharply focus the mi- croscope whether or not the image contained fluorescence (8). To acquire images of multiple fields of neurons within a single well of a multiwell dish, we moved the stage in a spiral pattern from the center of the well outward. However, the meniscus of the medium interfered with phase-contrast optics, degrading the image with increasing radial distance from the center of the well. Automated focusing quickly became impossible. We engineered two related solutions that made automated focusing reliable and significantly sped up the image-acquisition routine. In one approach, we used an objective with such a low N.A. and therefore high depth of field that all objects within adjacent fields in a well of a 24-well plate remained sharply focused. This solution is especially useful for high-throughput applications (e.g., counting neurons to measure neuronal sur- vival). The lateral spatial resolution was sufficient to resolve individual neurons, and the low magnification made it possible to image many neurons in a single field. However, this approach failed with higher N.A. objectives whose narrow depth of field could no longer keep adjacent fields in focus. Instead, we programmed the microscope to measure the tilt of the plate. We then used the measurement to introduce a compensatory vertical movement of the objective for each lateral movement of the stage, thereby keeping all adjacent fields in focus. The program uses the slope to modify the automated stage movements so that the field remains in focus, even with a high N.A. objective. We next developed an approach to return to precisely the same neuron or field of neurons. Although the movements of the stepper motors were precise, when we removed and then re- placed the plate on the holder, the contents of the microscopic fields from corresponding images were different or only partially overlapped. Attempts to fix the position of the plate within the plate holder were impractical and largely ineffective. Instead, we developed a simple program to relate the movements of our acquisition programs to a fiduciary mark on the plate. Rereg- istration can be performed by using automated programs de- scribed below. The strategy allows us to return to precisely the same neuron or field of neurons over almost any interval (Fig. 1EandF). Image Analysis.To avoid user bias, we automated the analysis by selecting positive pixels in an image and grouping them together as objects for further analysis. We tested whether simple features of an image could be used to accurately calculate a threshold value for a positive pixel. A relatively good estimate of a threshold value could be calculated from the minimum pixel value and the overall variance of the pixels in an image (see Fig. 5AE, which is published as supporting information on the PNAS web site). This program accurately selected appropriate threshold values of unrelated images and of images of the same field of neurons at different times and performed better than a commonly used commercially available algorithm on images with30 objects of interest. For images with fewer objects, the latter algorithm was more reliable. This finding is important because fluorescence from green fluorescent protein (GFP) can be detected within 23 h after transfection, and fluorescence continues to increase for 100 h after transfection, owing to increasing steady-state GFP levels (Fig. 5FandG). Our program compensates for the changing GFP expression levels, enabling it to identify the same objects (e.g., neurons) from images collected at different times (Fig. 5F). This compensation also makes it possible to more accurately measure the true dimensions of a neuron independently of the absolute level of GFP (Fig. 5F). Once a cutoff was determined, contiguous pixels whose in- tensities exceeded this value were grouped together as distinct objects. These objects could be evaluated further with software filters, programs that measure the shape and dimensions of the object ( METAMORPH, Universal Imaging). We constructed soft- ware filters based solely on the area and elipticity of an object, which could routinely identify and measure 9398% of the living neurons in a microscope field while excluding99% of fluo- rescent debris. If two or more positive cells are too close to each other, our threshold algorithm and the commercial one treated the contiguous positive pixels as a single object. Empiric mea- surement of the areas of contiguous positive pixels formed from clusters of positive neurons showed that the areas tended to fall within relatively narrow ranges, which were directly proportional to the number of neurons within the cluster. With this informa- tion, we constructed software filters to count clusters of two, three, and four neurons and thereby arrived at accurate (1%) estimates of the number of cells within a field. The biological response produced by a protein often depends on its concentration. Therefore, failure to capture the relation- ship between gene expression at the single-cell level and the biological response it produces could make it difficult to detect or characterize a relationship. The cellular heterogeneity of the brain compounds these problems because the same gene may have significantly different effects that depend on both concen- tration and cell type. Therefore, it would be valuable to be able to both identify transfected cells and estimate the expression level of the transfected gene within each cell over time. Therefore, we assessed the expression level of a marker gene as a surrogate for expression of a cotransfected gene (15). We cotransfected neurons with various amounts of yellow fluores- cent protein (YFP) and cyan fluorescent protein (CFP), mea- sured the fluorescence of each protein in each neuron, and determined whether the expression of one gene correlated with the expression of the other. We confirmed that we could measure the fluorescence of each protein independently (see Fig. 6, which is published as supporting information on the PNAS web site). Then, we cotransfected YFP and CFP into neurons in various ratios. Although the expression of the two proteins varied significantly from cell to cell, the fluorescence of one protein was nearly always highly correlated with the fluorescence of the other (r 2 0.99) and related directly to the ratio of transfected plasmid DNA (Fig. 2A). We then measured GFP expression by imaging GFP fluorescence and by immunocyto- chemistry in single neurons. The two measurements were highly correlated (16) (Fig. 2B). Thus, fluorescence of a marker gene in vivois a good indicator of its expression level and can be used to estimate the expression of a cotransfected gene. In the previous experiment, we compared the fluorescence of CFP with YFP on a neuron-by-neuron basis. Accurately auto- mating these and other (e.g., Boolean) comparisons requires that the exact pixel positions in the two images correspond. However, the automated movements of the filter wheels occasionally led to a small misregistration of different fluorescence images of the same microscope field. We developed a simple automated algorithm to correct misregistration. After each fluorescence image was collected, a 12-bit digital phase-contrast image of the same microscope field also was collected. The phase-contrast images were binarized to generate matrices in which approxi- mately half the digits of each matrix were zeroes and half were 3842www.pnas.orgcgidoi10.1073pnas.0409777102Arrasate and Finkbeiner Downloaded from https://www.pnas.org by UC San Francisco on December 18, 2024 from IP address 169.230.76.4. ones. A subset of one matrix was selected and multiplied by a subset of the other matrix; the product matrix was summed. The sum is maximal when the images (and the subset matrices) are identical (i.e., when they are in perfect registration) (Fig. 2C). Thus, we can empirically sample a set of potentialxymisreg- istration quantities and calculate the one that produces the optimal registration. The optimal value then is used to register the portions of the original image that overlap, which can be used for direct comparisons. Automated Longitudinal Analysis of Biological Processes.To deter- mine whether the system can be used to longitudinally monitor neuronal survival or other long-term adaptive responses, we compared images collected periodically over several days or weeks. Occasionally, the GFP fluorescence of a neuron in one image would abruptly disappear in a subsequent image. Erb and colleagues (17) recently showed that the loss of GFP is a sensitive and specific marker of different types of death in some nonneu- ronal cell types. If GFP loss corresponds to the death of a neuron, it can be quantified over time as a measure of neuronal survival (17, 18). To test this possibility, we simultaneously measured the loss of GFP in transfected neurons and the loss of membrane integrity by using a membrane-impermeant nuclear dye, EtHD. EtHD staining of cell nuclei indicates death in the widely used LIVEDEAD assay. In response to the neurotoxin kainic acid and in the presence of extracellular EtHD, the cell bodies of GFP-transfected neurons rounded and swelled, and their neu- rites began to retract. Eventually, the fluorescence of particular neurons disappeared abruptly, and at that moment, their nuclei stained positively with EtHD (Fig. 3A). Recently, loss of one soluble cytosolic fluorescent protein, GFP, was shown to coin- cide with the loss of a cotransfected soluble cytosolic fluorescent Fig. 2.Boolean image analysis. (A) Neurons were cotransfected with CFP, YFP, or both. Cell-by-cell comparison of CFP and YFP fluorescence from neurons transfected with CFP and YFP in various ratios reveals that nearly all neurons are cotransfected and that the fluorescence intensities of the two transfected proteins are highly correlated (r 2 0.99). (B) Cell-by-cell comparison of GFP expression as estimated by measuring GFP fluorescence directly and by measuring immunofluorescence against GFP. (C) A matrix algorithm to register two images. Here, two images are placed out of register in thexyplane to various degrees and then subjected to a computer algorithm that calculates the sum of a product matrix derived from the two images. The sum is maximal when the two images are registered. A.U., arbitrary units. Fig. 3.Automated imaging of neuronal survival. (A) GFP-transfected neurons (arrows) were treated with kainate in the presence of the membrane-impermeant nuclear dye EtHD. Loss of GFP fluorescence correlated with loss of membrane integrity and nuclear staining with EtHD (n12). (Scale bar, 50 m.) (B) The frequency of automated imaging measurements did not detectably affect survival. Neurons in sister cultures subjected to (1) daily removal from the incubator and imaging, (2) daily removal from the incubator with imaging every third day, or (3) removal from the incubator and imaging every third day survived equally well. (C) In parallel, one culture of transfected neurons was imaged once at the end of the experiment (gold bar), and the other was imaged both 1 day after transfection and at the end of the experiment (blue bars). The survival rates were nearly identical. N.S., not significant. (D) GFP expression does not detectably affect survival. The duration of survival of each neuron was determined and plotted against the GFP expression level in that neuron before its death. GFP expression did not correlate with neuronal survival by correlation analysis (n2). A.U., arbitrary units. (E) Automated imaging and analysis demonstrate kainate neurotoxicity (n2). The survival of transfected neurons in three sister cultures was compared. In the first (blue squares), neurons were left untreated. In the second (gold triangles) and third (green triangles), kainate (10 M) was added 24 or 76 h after transfection, respectively. Neuronal survival significantly decreased soon after kainate treatment in both treated cultures. (F) Automated imaging and analysis detects the ability of CA-Akt to promote neuronal survival (n3). Neurons were transfected with GFP and either an expression plasmid for CA-Akt (gold triangles) or an empty control vector (green triangles). Arrasate and FinkbeinerPNASMarch 8, 2005vol. 102no. 103843 NEUROSCIENCE Downloaded from https://www.pnas.org by UC San Francisco on December 18, 2024 from IP address 169.230.76.4. protein, red fluorescent protein (mRFP) (16). In turn, staining of neurons with the apoptosis marker annexin V immediately preceded loss of mRFP. Thus, the loss of GFP fluorescence correlates well with two widely accepted measures of cell death. To monitor neuronal survival and other long-term responses, we need to know whether the periodic imaging or the GFP marker affected neuronal survival (19, 20). First, we found no significant survival difference between neurons from sister cultures that were imaged with different frequencies (Fig. 3B andC), suggesting that our imaging methods do not perturb neuronal survival. Next, we tested whether the expression of GFP affected survival. Studies of the potential toxicity of GFP and its variants have arrived at conflicting conclusions (1719, 21). If GFP is toxic, the level of GFP expression as measured by GFP fluorescence should correlate inversely with duration of survival. By using the robotic microscope to track GFP fluores- cence and survival times of GFP-transfected neurons, we found no correlation between the survival of individual neurons and their levels of GFP expression (Fig. 3D,r 2 0.047), suggesting no significant effect on survival. If this approach accurately measures neuronal survival, it also should detect the effects of molecules that regulate survival. To test this possibility, we transfected neurons with GFP and periodically imaged the cells before and after mock treatment or treatment with kainic acid. As shown by automated analysis of GFP-positive neurons, neuronal survival decreased after kainate application (Fig. 3E) and increased after cotransfection of a constitutively active form of the prosurvival kinase Akt (Fig. 3F). These results suggest that the automated microscope is a sen- sitive and valid way to measure the effects of extracellular or intracellular molecules on neuronal survival. The ability to return periodically to precisely the same micro- scope field creates unparalleled opportunities for data analysis. Cohorts of neurons can be tracked longitudinally, and the number of neurons that die during the intervening period can be deduced by simple subtraction with an automated analysis program. By determining the survival times of particular cohorts of neurons, we lay the foundation for the application of powerful statistical techniques known as survival analysis. For the pur- poses of survival analysis and by convention, neurons that died during the interval were assigned a survival time equivalent to the period between transfection and their disappearance from an image. For example, we deduced survival times for cohorts of neurons transfected with empty vector or active Akt (Fig. 3F) and then used nonparametric KaplanMeier analysis to estimate the underlying survival function,S(t), for each condition (Fig. 4A). Analysis with the log-rank test showed that the survival functions were significantly different ( 2 4,086). To confirm that our automated image-analysis programs accurately quantify neuronal survival, we performed longitudi- nal analysis manually. We randomly chose three microscope fields and examined each image of those fields over the course of the experiment. The survival time of each neuron in each field was determined and then subjected to KaplanMeier analysis (Fig. 4B). Although the sample size (83 control neurons and 88 neurons with Akt) was only1% of that in the automated analysis, the survival curves were remarkably similar. These results support two conclusions. First, our automated analysis programs can measure neuronal survival quickly and accurately and can generate data sets whose sheer size makes the statistical analysis extremely sensitive. Second, survival analysis performed on even very small samples of neurons can detect and accurately measure biological effects. Longitudinal Analysis of Single Cells to Identify Factors That Predict Fate.Although slower than our automated approaches, longitu- dinal analysis of single cells provides unique opportunities to elucidate cause-and-effect mechanisms. For example, any num- ber of variables can be measured within an individual neuron and followed longitudinally until an important biological fate is observed. Additional statistical techniques, such as proportion- al-hazards regression analysis of survival data, make it possible to quantify the contribution of a particular factor to the fate of a neuron. The sensitivity and accuracy of single-cell analysis of small samples suggests that this approach is feasible and worth- while. For survival studies, automated and single-cell analyses make it possible to identify and distinguish early changes within a neuron that predict survival or death or are unrelated to neuron fate. Next, we determined whether expression of active Akt in a Fig. 4.Applications of survival analysis. (A) KaplanMeier analysis of pop- ulation-based Akt survival data. The number of surviving neurons transfected with CA-Akt or an empty vector was determined at different intervals from a longitudinal series of low-magnification (4) images. The number of neurons that died during each interval was deduced by comparing identical micro- scope fields before and after the interval. By convention, the neurons that died during a particular interval were assigned an event (i.e., survival) time that corresponded to the end of that interval. These event times were used to construct the KaplanMeier cumulative survival plot shown and analyzed for statistical significance by the log-rank (MantelCox) test (n2). (B) Kaplan- Meier analysis of single-cell-based Akt survival data. Three higher- magnification (20) images of the same transfected neurons as inAwere collected longitudinally. Individual neurons were identified in each of the three images. The approach described inAwas used to determine the event time for each neuron by comparing images of those neurons collected at different time points, and a Kaplan-Meier survival plot was constructed (n 2). (C) Neurons cotransfected with GFP and with hemagglutinin-tagged CA- Akt were immunostained, and fluorescent signals were measured and corre- lated cell by cell. Expression of GFP and CA-Akt are significantly correlated, suggesting that GFP fluorescencein vivocan be used as a surrogate for CA-Akt expression. (DandE) GFP fluorescence is correlated with and predicts longev- ity in neurons cotransfected with CA-Akt (D) but not in those cotransfected with empty vector (E). A.U., arbitrary units; N.S., not significant. 3844www.pnas.orgcgidoi10.1073pnas.0409777102Arrasate and Finkbeiner Downloaded from https://www.pnas.org by UC San Francisco on December 18, 2024 from IP address 169.230.76.4. neuron predicts its longevity. We anticipated that the fluores- cence of a marker protein (e.g., GFP)in vivocould be used as a surrogate for the expression level of cotransfected Akt (Fig. 2 AandB). However, because the expression plasmids that encode GFP and constitutively active Akt (CA-Akt) use different pro- moters, the expression of GFP and CA-Akt might not be correlated. We cotransfected neurons with GFP and a hemag- glutinin-tagged version of CA-Akt, performed dual-label immu- nocytochemistry, and quantified the fluorescence of each tag cell by cell. GFP and CA-Akt expressions were significantly corre- lated (Fig. 4C). Therefore, we used longitudinal single-cell analysis to examine neurons cotransfected with GFP and empty vector or CA-Akt. GFP fluorescence from each neuron was estimated by measuring average pixel intensity values from images. GFP fluorescence and longevity were highly correlated in neurons cotransfected with CA-Akt and GFP (Fig. 4D), but not in neurons transfected with GFP and empty vector (Fig. 4E). These results suggest that the level of CA-Akt expression within individual neurons, as estimated by the level of GFP fluores- cence, is the critical factor promoting survival, not GFP itself, and can predict the longevity of a neuron. That cotransfected GFP acts a surrogate for expression avoids the potential for unanticipated effects of fusing GFP to the molecule of interest and increases the systems versatility and efficiency. Discussion We developed a robotic microscope with several features. It can acquire images rapidly and automatically, making it suitable for high-throughput applications. Acquisition is sufficiently accu- rate and precise to allow fine features of a neuron or other cell types (16) to be spatially resolved and to allow the same neuron or field of neurons to be reimaged after arbitrary time intervals. The automated analysis programs can extract critical morpho- metric features of neurons within each microscope field, per- form Boolean analyses of different fluorescence images of the same field, and follow cohorts of neurons longitudinally to determine how features of these neurons change over time. In our case, Boolean analysis refers to logical operations that determine the symbolic relationship (e.g., AND, OR, NOT) between different features of the same object as revealed by images of that object collected with different fluorescence filters (22). Such analysis can expand the amount of information derived from multichannel high-content screening. With the appropriate analysis programs, the system also should be appli- cable to nonfluorescent images of cells (22). Finally, our single- cell analysis methods make it possible to identify and distinguish early changes within a neuron that predict its fate, making it possible to evaluate potential cause-and-effect relationships. Automation of image acquisition and analysis improves both the quality and the speed of our measurements. It eliminates intense fluorescence illumination during manual focusing and thereby reduces associated photobleaching and phototoxicity. As a result, low-intensity fluorophores can be observed and more images collected without perturbing neuronal health. Automated survival analysis provides an extremely rapid and sensitive way to quantify the regulatory effects of molecules on long-term biological re- sponses. Recently, we used this system to assess the detrimental effects of disease-associated versions of the huntingtin protein (16) and found that survival of individual neurons could be predicted from the number of mutant huntingtin molecules they contained. Here, we detected the survival-promoting effect of active Akt with 10% of the number of neurons used in the original report and nevertheless achieved greater statistical significance (23). The automated survival analysis was even quicker, and the statistical significance was nearly 20-fold greater than was obtained by single- cell analysis. The speed and additional sensitivity might be espe- cially useful for high-throughput screening. Thus, the range of the image acquisition and processing programs of the automated microscope system encompass both survival- and death-promoting genes and molecules. Longitudinal analysis is particularly useful in neuroscience, because variability associated with static measurements can obscure important effects. Variability likely arises from multiple factors, including cell diversity, the stochastic nature of the underlying biochemical processes, and the slow pace of many long-term adaptive and maladaptive responses (20). Here, the stochastic nature of events is exploited to identify factors that contribute the most to a particular outcome. Elucidating disease mechanisms may be even more complicated than studying physiologic pathways. Disease-related changes are likely to represent a complex combination of primary pathogenic changes and helpful and harmful coping responses by the affected cell or neighboring cells. Untangling the contributions of these changes to the disease is critical to identifying potential therapeutic targets. By focusing on an outcome of interest, we can identify combinations of factors that predict a particular fate and classify those factors as pathogenic, incidental, or potentially beneficial. We thank members of the S.F. laboratory for useful discussions, Stephen Ordway and Gary Howard for editorial assistance, and Kelley Nelson for administrative assistance. M.A. is a Ministry of Education, Science and CultureFulbright Fellow and is supported by the Hillblom Foundation. Primary support for this work was provided by National Institute of Neurological Disease and Stroke Grant R01 NS45491. Additional sup- port was provided by National Institute of Aging Grant P01 AG022074, the Taube Family Foundation Program in Huntingtons Disease Re- search, the J. David Institutes, the Hereditary Disease Foundation, and National Institute of Neurological Disease and Stroke Grant R01 NS39074. 1. Pituello, F. (1997)Curr. Biol.7,R701R704. 2. Brody, T. & Odenwald, W. F. (2002)Development(Cambridge, U.K.)129, 37633770. 3. McConnell, S. K. (1995)J. Neurosci.15,69876998. 4. Price, J., Williams, B. P. & Go tz, M. (1995)Ciba Found. Symp.193,7184. 5. Clarke, G., Collins, R. A., Leavitt, B. R., Andrews, D. F., Hayden, M. R., Lumsden, C. J. & McInnes, R. R. (2000)Nature406,195199. 6. Franke, T. F., Yang, S.-I., Chan, T. O., Datta, K., Kazlauskas, A., Morrison, D. K., Kaplan, D. R. & Tsichlis, P. N. (1995)Cell81,727736. 7. Finkbeiner, S., Tavazoie, S. F., Maloratsky, A., Jacobs, K., Harris, K. M. & Greenberg, M. E. (1997)Neuron19,10311047. 8. Price, J. H. & Gough, D. A. (1994)Cytometry16,283297. 9. Groen, F. C. A., Young, I. T. & Lighart, G. (1985)Cytometry6,8191. 10. Kenny, L. C. (1983)J. Microsc.132,97107. 11. Li, Z., Yan, Y., Powers, E. A., Ying, X., Janjua, K., Garyantes, T. & Baron, B. (2003)J. Biomol. Screening8,489499. 12. Ding, G. J. F., Fischer, P. A., Boltz, R. C., Schmidt, J. A., Colaianne, J. J., Gough, A., Rubin, A. & Miller, D. K. (1998)J. Biol. Chem.273,2889728905. 13. Giuliano, K. A., Debiasio, R. L., Dunlay, R. T., Gough, A., Volosky, J. M., Zock, J., Pavlakis, G. N. & Taylor, D. L. (1997)J. Biomol. Screening2,249259. 14. Ramm, P., Alexandrov, Y., Cholewinski, A., Cybuch, Y., Nadon, R. & Soltys, B. J. (2003)J. Biomol. Screening8,718. 15. Hack, N. J., Billups, B., Guthrie, P. B., Rogers, J. H., Muir, E. M., Parks, T. N. & Kater, S. B. (2000)J. Neurosci. Methods95,177184. 16. Arrasate, M., Mitra, S., Schweitzer, E. S., Segal, M. R. & Finkbeiner, S. (2004) Nature431,805810. 17. Strebel, A., Harr, T., Bachmann, F., Wernli, M. & Erb, P. (2001)Cytometry43, 126133. 18. Steff, A.-M., Fortin, M., Arguin, C. & Hugo, P. (2001)Cytometry45,237243. 19. Liu, H.-S., Jan, M.-S., Chou, C.-K., Chen, P.-H. & Ke, N.-J. (1999)Biochem. Biophys. Res. Commun.260,712717. 20. Trachtenberg, J. T., Chen, B. E., Knott, G. W., Feng, G., Sanes, J. R., Welker, E. & Svoboda, K. (2002)Nature420,788794. 21. Alexander, L., Lee, H., Rosenzweig, M., Jung, J. U. & Desrosiers, R. C. (1997) BioTechniques23,6466. 22. Xu-van Opstal, W. Y., Ranger, C., Leujeune, O., Forgez, P., Boudin, H., Bisconte, J. C. & Rostene, W. (1994)Microsc. Res. Tech.28,440447. 23. Dudek, H., Datta, S. R., Franke, T. F., Birnbaum, M. J., Yao, R., Cooper, G. M., Segal, R. A., Kaplan, D. R. & Greenberg, M. E. (1997)Science275,661665. Arrasate and FinkbeinerPNASMarch 8, 2005vol. 102no. 103845 NEUROSCIENCE Downloaded from https://www.pnas.org by UC San Francisco on December 18, 2024 from IP address 169.230.76.4.
-
-Sarah: 
-
- ------------END-----------------
-
-[INFO] 
-
- -------RESPONSE FROM VERTEX AI---------
- Joe: Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies, unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!  Today, Sarah, we're diving into a fascinating 2005 PNAS paper by Arrasate and Finkbeiner on an automated microscope system for studying neuronal fate.
-
-Sarah:  Wow, an automated microscope? That sounds incredibly high-tech.  What exactly did they automate, and why was it so important for their research?
-
-Joe: Right.  So, they essentially automated the entire process of imaging and analyzing neurons over time. Um, this was crucial because, you know, studying the brain is notoriously difficult.  Neuronal processes are slow, they often affect small groups of cells, and traditional methods are just...laborious.  Single-cell analysis is incredibly time-consuming and prone to bias.  Their automated system addressed all of that. They built a system that could repeatedly image the same neurons over days or even weeks, capturing changes in fluorescence intensity, cell morphology—all sorts of things—with minimal human intervention.
-
-Sarah:  So, they were essentially tracking individual neurons over a long period?  That's impressive.  What kind of data were they collecting?
-
-Joe:  Yeah, exactly. They were primarily looking at neuronal survival.  They transfected neurons with fluorescent proteins, like GFP, and then used the automated system to track the presence or absence of that fluorescence over time.  The disappearance of GFP fluorescence, it turns out, is a good indicator of cell death.  They also used another dye, ethidium homodimer, to confirm the loss of membrane integrity in those cells.  So, they had a really robust way of measuring survival.  But beyond that, they could also measure changes in the intensity of the fluorescence which, um, provided information about protein expression levels within the cells.
-
-Sarah: I'm curious about the automation itself.  How did they manage to keep track of the same neurons over such long periods?  That seems like a huge technological hurdle.
-
-Joe:  Ah, that's a great point.  They used a really clever approach.  They had the microscope locate a fiduciary mark on the plate—a tiny reference point—and all their imaging movements were referenced to that.  They also developed algorithms to compensate for any tilt in the plate, which is important for maintaining focus across the well. So, even if you remove and replace the plate, the system can reliably return to the exact same spot.
-
-Sarah:  Fascinating. So they could essentially follow the same neuron for weeks, observing changes in its fluorescence, which correlated with its protein expression levels... and ultimately, whether it lived or died.  And this all happened without the constant, potentially biased, intervention of a human researcher?
-
-Joe:  Precisely.  The automation minimized bias, increased throughput, and allowed for much larger sample sizes than previously possible. This led to statistically significant results, things they likely wouldn't have seen with smaller, manually collected datasets.
-
-Sarah:  It seems this technology opened up a whole new avenue for research.  Did they use this data to find anything particularly interesting about what predicts neuronal fate?
-
-Joe:  Yes!  They looked at the relationship between the expression of a protein called Akt, a pro-survival kinase, and neuronal survival. They found a strong correlation:  higher Akt expression, as measured by the GFP fluorescence, predicted longer survival.  They used survival analysis, a statistical method specifically designed for this kind of longitudinal data, to confirm this.
-
-Sarah: So, essentially, they built a machine that could watch individual neurons live and die, and then use that data to uncover fundamental biological relationships.  That's pretty amazing. Thanks for explaining this, Joe.  This is truly groundbreaking work.
-
-Joe: Absolutely, Sarah. It's a fantastic example of how technological advancements can revolutionize our understanding of complex biological systems. And that's all the time we have for today’s episode of Science Odyssey.  Join us next time for another journey through the fascinating world of scientific discovery!
- 
-
- ------------END-----------------
-
-[INFO] Processing 13 lines of text
-[INFO] Added conversation part: Joe with Welcome to Science Odyssey, the podcast where we j...
-[INFO] Added conversation part: Sarah with Wow, an automated microscope? That sounds incredib...
-[INFO] Added conversation part: Joe with Right.  So, they essentially automated the entire ...
-[INFO] Added conversation part: Sarah with So, they were essentially tracking individual neur...
-[INFO] Added conversation part: Joe with Yeah, exactly. They were primarily looking at neur...
-[INFO] Added conversation part: Sarah with I'm curious about the automation itself.  How did ...
-[INFO] Added conversation part: Joe with Ah, that's a great point.  They used a really clev...
-[INFO] Added conversation part: Sarah with Fascinating. So they could essentially follow the ...
-[INFO] Added conversation part: Joe with Precisely.  The automation minimized bias, increas...
-[INFO] Added conversation part: Sarah with It seems this technology opened up a whole new ave...
-[INFO] Added conversation part: Joe with Yes!  They looked at the relationship between the ...
-[INFO] Added conversation part: Sarah with So, essentially, they built a machine that could w...
-[INFO] Added conversation part: Joe with Absolutely, Sarah. It's a fantastic example of how...
-[INFO] Successfully extracted 13 conversation parts
-[INFO] Cleaned Text (Chunk 1): [
-  {
-    "speaker": "Joe",
-    "text": "Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies, unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!  Today, Sarah, we're diving into a fascinating 2005 PNAS paper by Arrasate and Finkbeiner on an automated microscope system for studying neuronal fate."
-  },
-  {
-    "speaker": "Sarah",
-    "text": "Wow, an automated microscope? That sounds incredibly high-tech.  What exactly did they automate, and why was it so important for their research?"
-  },
-  {
-    "speaker": "Joe",
-    "text": "Right.  So, they essentially automated the entire process of imaging and analyzing neurons over time. Um, this was crucial because, you know, studying the brain is notoriously difficult.  Neuronal processes are slow, they often affect small groups of cells, and traditional methods are just...laborious.  Single-cell analysis is incredibly time-consuming and prone to bias.  Their automated system addressed all of that. They built a system that could repeatedly image the same neurons over days or even weeks, capturing changes in fluorescence intensity, cell morphology—all sorts of things—with minimal human intervention."
-  },
-  {
-    "speaker": "Sarah",
-    "text": "So, they were essentially tracking individual neurons over a long period?  That's impressive.  What kind of data were they collecting?"
-  },
-  {
-    "speaker": "Joe",
-    "text": "Yeah, exactly. They were primarily looking at neuronal survival.  They transfected neurons with fluorescent proteins, like GFP, and then used the automated system to track the presence or absence of that fluorescence over time.  The disappearance of GFP fluorescence, it turns out, is a good indicator of cell death.  They also used another dye, ethidium homodimer, to confirm the loss of membrane integrity in those cells.  So, they had a really robust way of measuring survival.  But beyond that, they could also measure changes in the intensity of the fluorescence which, um, provided information about protein expression levels within the cells."
-  },
-  {
-    "speaker": "Sarah",
-    "text": "I'm curious about the automation itself.  How did they manage to keep track of the same neurons over such long periods?  That seems like a huge technological hurdle."
-  },
-  {
-    "speaker": "Joe",
-    "text": "Ah, that's a great point.  They used a really clever approach.  They had the microscope locate a fiduciary mark on the plate—a tiny reference point—and all their imaging movements were referenced to that.  They also developed algorithms to compensate for any tilt in the plate, which is important for maintaining focus across the well. So, even if you remove and replace the plate, the system can reliably return to the exact same spot."
-  },
-  {
-    "speaker": "Sarah",
-    "text": "Fascinating. So they could essentially follow the same neuron for weeks, observing changes in its fluorescence, which correlated with its protein expression levels... and ultimately, whether it lived or died.  And this all happened without the constant, potentially biased, intervention of a human researcher?"
-  },
-  {
-    "speaker": "Joe",
-    "text": "Precisely.  The automation minimized bias, increased throughput, and allowed for much larger sample sizes than previously possible. This led to statistically significant results, things they likely wouldn't have seen with smaller, manually collected datasets."
-  },
-  {
-    "speaker": "Sarah",
-    "text": "It seems this technology opened up a whole new avenue for research.  Did they use this data to find anything particularly interesting about what predicts neuronal fate?"
-  },
-  {
-    "speaker": "Joe",
-    "text": "Yes!  They looked at the relationship between the expression of a protein called Akt, a pro-survival kinase, and neuronal survival. They found a strong correlation:  higher Akt expression, as measured by the GFP fluorescence, predicted longer survival.  They used survival analysis, a statistical method specifically designed for this kind of longitudinal data, to confirm this."
-  },
-  {
-    "speaker": "Sarah",
-    "text": "So, essentially, they built a machine that could watch individual neurons live and die, and then use that data to uncover fundamental biological relationships.  That's pretty amazing. Thanks for explaining this, Joe.  This is truly groundbreaking work."
-  },
-  {
-    "speaker": "Joe",
-    "text": "Absolutely, Sarah. It's a fantastic example of how technological advancements can revolutionize our understanding of complex biological systems. And that's all the time we have for today’s episode of Science Odyssey.  Join us next time for another journey through the fascinating world of scientific discovery!"
-  }
-]
-[INFO] 
---- Full Generated Conversation ---
-[INFO] Joe: Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies, unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!  Today, Sarah, we're diving into a fascinating 2005 PNAS paper by Arrasate and Finkbeiner on an automated microscope system for studying neuronal fate.
-[INFO] Sarah: Wow, an automated microscope? That sounds incredibly high-tech.  What exactly did they automate, and why was it so important for their research?
-[INFO] Joe: Right.  So, they essentially automated the entire process of imaging and analyzing neurons over time. Um, this was crucial because, you know, studying the brain is notoriously difficult.  Neuronal processes are slow, they often affect small groups of cells, and traditional methods are just...laborious.  Single-cell analysis is incredibly time-consuming and prone to bias.  Their automated system addressed all of that. They built a system that could repeatedly image the same neurons over days or even weeks, capturing changes in fluorescence intensity, cell morphology—all sorts of things—with minimal human intervention.
-[INFO] Sarah: So, they were essentially tracking individual neurons over a long period?  That's impressive.  What kind of data were they collecting?
-[INFO] Joe: Yeah, exactly. They were primarily looking at neuronal survival.  They transfected neurons with fluorescent proteins, like GFP, and then used the automated system to track the presence or absence of that fluorescence over time.  The disappearance of GFP fluorescence, it turns out, is a good indicator of cell death.  They also used another dye, ethidium homodimer, to confirm the loss of membrane integrity in those cells.  So, they had a really robust way of measuring survival.  But beyond that, they could also measure changes in the intensity of the fluorescence which, um, provided information about protein expression levels within the cells.
-[INFO] Sarah: I'm curious about the automation itself.  How did they manage to keep track of the same neurons over such long periods?  That seems like a huge technological hurdle.
-[INFO] Joe: Ah, that's a great point.  They used a really clever approach.  They had the microscope locate a fiduciary mark on the plate—a tiny reference point—and all their imaging movements were referenced to that.  They also developed algorithms to compensate for any tilt in the plate, which is important for maintaining focus across the well. So, even if you remove and replace the plate, the system can reliably return to the exact same spot.
-[INFO] Sarah: Fascinating. So they could essentially follow the same neuron for weeks, observing changes in its fluorescence, which correlated with its protein expression levels... and ultimately, whether it lived or died.  And this all happened without the constant, potentially biased, intervention of a human researcher?
-[INFO] Joe: Precisely.  The automation minimized bias, increased throughput, and allowed for much larger sample sizes than previously possible. This led to statistically significant results, things they likely wouldn't have seen with smaller, manually collected datasets.
-[INFO] Sarah: It seems this technology opened up a whole new avenue for research.  Did they use this data to find anything particularly interesting about what predicts neuronal fate?
-[INFO] Joe: Yes!  They looked at the relationship between the expression of a protein called Akt, a pro-survival kinase, and neuronal survival. They found a strong correlation:  higher Akt expression, as measured by the GFP fluorescence, predicted longer survival.  They used survival analysis, a statistical method specifically designed for this kind of longitudinal data, to confirm this.
-[INFO] Sarah: So, essentially, they built a machine that could watch individual neurons live and die, and then use that data to uncover fundamental biological relationships.  That's pretty amazing. Thanks for explaining this, Joe.  This is truly groundbreaking work.
-[INFO] Joe: Absolutely, Sarah. It's a fantastic example of how technological advancements can revolutionize our understanding of complex biological systems. And that's all the time we have for today’s episode of Science Odyssey.  Join us next time for another journey through the fascinating world of scientific discovery!
-[INFO] --- End of Conversation ---
-
-[INFO] 
-======= Starting Pricing Calculation ======
- -Input text length: 41085
- -Number of Vertex AI responses: 1
-
-[INFO] 
-        Input text length: 41085
-        Input token count: 9342
-        System prompt length: 2718
-        System token count: 525
-        Total input tokens: 9867
-      
-[INFO] Response 1 details:
-- Length: 4279 characters
-- Output tokens: 857
-[INFO] Total TTS characters calculated: 4246
-[INFO] 
----***** Final Pricing Calculation Summary **** ---
-Total Input Tokens: 9867
-Total Output Tokens: 857
-Total Tokens: 10724
-Total TTS Characters: 4246
-Vertex AI Input Cost: $0.000005
-Vertex AI Output Cost: $0.000000
-TTS Cost: $0.067936
-Total Cost: $0.067941
-[INFO] Generating audio files...
-[INFO] Audio content written to file "audio-files/0.mp3"
-[INFO] Audio content written to file "audio-files/1.mp3"
-[INFO] Audio content written to file "audio-files/2.mp3"
-[INFO] Audio content written to file "audio-files/3.mp3"
-[INFO] Audio content written to file "audio-files/4.mp3"
-[INFO] Audio content written to file "audio-files/5.mp3"
-[INFO] Audio content written to file "audio-files/6.mp3"
-[INFO] Audio content written to file "audio-files/7.mp3"
-[INFO] Audio content written to file "audio-files/8.mp3"
-[INFO] Audio content written to file "audio-files/9.mp3"
-[INFO] Audio content written to file "audio-files/10.mp3"
-[INFO] Audio content written to file "audio-files/11.mp3"
-[INFO] Audio content written to file "audio-files/12.mp3"
-[INFO] Copied intro file podcast.mp3 to audio folder
-[INFO] Merging the following files in order:
-[INFO] 0.mp3
-[INFO] 1.mp3
-[INFO] 2.mp3
-[INFO] 3.mp3
-[INFO] 4.mp3
-[INFO] 5.mp3
-[INFO] 6.mp3
-[INFO] 7.mp3
-[INFO] 8.mp3
-[INFO] 9.mp3
-[INFO] 10.mp3
-[INFO] 11.mp3
-[INFO] 12.mp3
-[INFO] Successfully merged audio saved as audio-files/final_output.mp3
-[INFO] Cleaned up audio-files directory after successful generation
-[INFO] Audio generation completed: Duration: 209s Actual tokens used: 10724 Actual cost: 0.06794136199999999
-[INFO] 
-
----------- Updated Usage ----------
- Updated usage for user 24:
- Articles: 1/3
- Podify Tokens: 34/10000
-[INFO] Successfully saved audio file (audio/mpeg) to Object Storage: 1735767685572-arrasate_finkbeiner_2005_automated_microscope_system_for_determining_factors_that_predict_neuronal_fate.mp3
-[INFO] Successfully created podcast entry with ID: 30
-[INFO] POST /api/podcast 200 in 51336ms
-[INFO] GET / 200 in 114ms
-[INFO] GET /api/podcasts 200 in 175ms
-[INFO] 
-========Streaming audio file: 1735677566488-article.mp3
-[INFO] 
-========Streaming audio file: 1735677566488-article.mp3
-[INFO] GET /api/audio/stream/1735677566488-article.mp3 200 in 694ms
-[INFO] GET / 200 in 118ms
-[INFO] Usage check for user: canceled
-[INFO] GET /api/user/usage/check 200 in 175ms
-[INFO] Usage check for user: canceled
-[INFO] GET /api/user/usage/check 304 in 116ms
-[INFO] Usage check for user: canceled
-[INFO] GET /api/user/usage/check 304 in 119ms
-[INFO] Usage check for user: canceled
-[INFO] GET /api/user/usage/check 304 in 117ms
-[INFO] Stripe initialized successfully
+[INFO] Stripe initialized successfully in development mode
 [INFO] ***Starting server initialization...
 
 
@@ -296,663 +6,71 @@ Total Cost: $0.067941
 [INFO] Setting up Vite for development...
 [INFO] Server started successfully on port 4000
 [INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
-[INFO] GET / 200 in 36ms
-[INFO] GET /src/main.tsx 304 in 46ms
-[INFO] GET /@vite/client 304 in 478ms
-[INFO] GET /@react-refresh 304 in 2ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 1433ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
-[INFO] GET /src/lib/queryClient.ts 304 in 1ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 0ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
-[INFO] Stripe initialized successfully
-[INFO] ***Starting server initialization...
-
-
-[INFO] Registering routes...
-[INFO] Setting up Vite for development...
-[INFO] Stripe initialized successfully
-[INFO] Registering routes...
+[INFO] Stripe initialized successfully in development mode
 [INFO] ***Starting server initialization...
 
 
 [INFO] Setting up Vite for development...
+[INFO] Registering routes...
 [INFO] Server started successfully on port 4000
 [INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
-[INFO] GET / 200 in 53ms
-[INFO] GET /@vite/client 304 in 25ms
-[INFO] GET /src/main.tsx 304 in 76ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 200 in 2ms
-[INFO] GET /src/pages/BillingPage.tsx 200 in 2ms
-[INFO] GET /src/pages/ProfilePage.tsx 200 in 1ms
-[INFO] GET /@react-refresh 304 in 1ms
-[INFO] GET /src/lib/queryClient.ts 304 in 1ms
-[INFO] GET /src/index.css 304 in 655ms
-[INFO] GET /src/hooks/use-user.ts 200 in 13ms
-[INFO] GET /src/components/Sidebar.tsx 200 in 5ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 1660ms
-[INFO] GET /src/components/ui/button.tsx 200 in 2ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 200 in 1ms
+[INFO] GET / 200 in 46ms
+[INFO] GET /@vite/client 304 in 35ms
+[INFO] GET /@react-refresh 304 in 40ms
+[INFO] GET /src/main.tsx 304 in 57ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 339ms
+[INFO] GET /src/lib/queryClient.ts 304 in 745ms
 [INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/input.tsx 200 in 1ms
-[INFO] GET /src/components/ui/card.tsx 200 in 1ms
-[INFO] GET /src/hooks/use-toast.ts 200 in 1ms
-[INFO] GET /src/components/ui/avatar.tsx 304 in 1ms
-[INFO] GET /src/components/LoadingScreen.tsx 304 in 0ms
-[INFO] GET /src/components/ui/separator.tsx 304 in 0ms
-[INFO] GET /src/components/PaymentModal.tsx 304 in 0ms
-[INFO] GET /src/components/ui/toast.tsx 200 in 1ms
-[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
-[INFO] GET /src/components/Logo.tsx 200 in 1ms
-[INFO] GET /src/components/ui/form.tsx 200 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 200 in 1ms
-[INFO] GET /src/components/UsageProgress.tsx 200 in 1ms
-[INFO] GET /src/hooks/use-tts.ts 200 in 1ms
-[INFO] GET /src/lib/utils.ts 200 in 1ms
-[INFO] GET /src/components/ui/collapsible.tsx 200 in 1ms
-[INFO] GET /src/components/ui/alert-dialog.tsx 200 in 1ms
-[INFO] GET /src/hooks/use-audio.ts 200 in 1ms
-[INFO] GET /src/components/AudioPlayer.tsx 200 in 1ms
-[INFO] GET /src/components/ui/tabs.tsx 200 in 0ms
-[INFO] GET /src/components/ui/dialog.tsx 304 in 0ms
-[INFO] GET /src/components/ui/label.tsx 304 in 0ms
-[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
-[INFO] GET /src/components/ui/slider.tsx 304 in 0ms
-[INFO] GET /src/components/ui/select.tsx 304 in 0ms
-[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
-[INFO] GET /api/user 401 in 3ms
-[INFO] Stripe initialized successfully
-[INFO] Setting up Vite for development...
-[INFO] Registering routes...
-[INFO] ***Starting server initialization...
-
-
-[INFO] Server started successfully on port 4000
-[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
-[INFO] Stripe initialized successfully
-[INFO] Registering routes...
-[INFO] ***Starting server initialization...
-
-
-[INFO] Setting up Vite for development...
-[INFO] Server started successfully on port 4000
-[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
-[INFO] GET / 200 in 43ms
-[INFO] GET /@vite/client 304 in 13ms
-[INFO] GET /@react-refresh 304 in 18ms
-[INFO] GET /src/main.tsx 304 in 72ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 648ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 2ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
 [INFO] GET /src/pages/HomePage.tsx 304 in 1ms
-[INFO] GET /src/lib/queryClient.ts 304 in 1ms
 [INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 2ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 5ms
-[INFO] GET /src/index.css 304 in 2098ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-user.ts 304 in 1ms
-[INFO] GET /src/components/ui/button.tsx 304 in 0ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-audio.ts 304 in 1ms
-[INFO] GET /src/lib/utils.ts 304 in 1ms
-[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
-[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 2ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
-[INFO] GET /src/components/Logo.tsx 304 in 1ms
-[INFO] GET /src/components/ui/input.tsx 304 in 1ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
-[INFO] GET /src/components/ui/form.tsx 304 in 1ms
-[INFO] GET /src/components/LoadingScreen.tsx 304 in 3ms
-[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 1ms
-[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
-[INFO] GET /src/components/ui/card.tsx 304 in 0ms
-[INFO] GET /src/components/ui/tabs.tsx 304 in 0ms
-[INFO] GET /src/components/ui/separator.tsx 304 in 0ms
-[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
-[INFO] GET /src/components/ui/avatar.tsx 304 in 1ms
-[INFO] GET /src/components/ui/select.tsx 304 in 1ms
-[INFO] GET /src/components/ui/popover.tsx 304 in 0ms
-[INFO] GET /src/components/ui/slider.tsx 304 in 0ms
-[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
-[INFO] GET /src/components/ui/label.tsx 304 in 1ms
-[INFO] GET /src/components/ui/dialog.tsx 304 in 0ms
-[INFO] GET /api/user 401 in 2ms
-[INFO] Stripe initialized successfully
-[INFO] ***Starting server initialization...
-
-
-[INFO] Registering routes...
-[INFO] Setting up Vite for development...
-[INFO] Server started successfully on port 4000
-[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
-[INFO] GET / 200 in 73ms
-[INFO] GET /@vite/client 304 in 28ms
-[INFO] GET /@react-refresh 304 in 25ms
-[INFO] GET /src/main.tsx 304 in 76ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 78ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 31ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
+[INFO] GET /src/index.css 304 in 745ms
 [INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
 [INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
-[INFO] GET /src/lib/queryClient.ts 304 in 1ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
-[INFO] GET /src/index.css 304 in 1549ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 2ms
-[INFO] GET /src/hooks/use-user.ts 304 in 1ms
-[INFO] GET /src/components/ui/form.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 4ms
-[INFO] GET /src/components/ui/button.tsx 304 in 0ms
-[INFO] GET /src/components/ui/input.tsx 304 in 1ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 0ms
-[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 1ms
-[INFO] GET /src/components/ui/card.tsx 304 in 1ms
-[INFO] GET /src/components/ui/avatar.tsx 304 in 0ms
-[INFO] GET /src/components/ui/tabs.tsx 304 in 1ms
-[INFO] GET /src/lib/utils.ts 304 in 0ms
-[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-audio.ts 304 in 0ms
-[INFO] GET /src/components/AudioPlayer.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 0ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 0ms
-[INFO] GET /src/components/Logo.tsx 304 in 0ms
-[INFO] GET /src/components/PaymentModal.tsx 304 in 0ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
-[INFO] GET /src/components/LoadingScreen.tsx 304 in 1ms
-[INFO] GET /src/components/ui/separator.tsx 304 in 0ms
-[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
-[INFO] GET /src/components/ui/label.tsx 304 in 0ms
-[INFO] GET /src/components/ui/select.tsx 304 in 1ms
-[INFO] GET /src/components/ui/slider.tsx 304 in 1ms
-[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
-[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
-[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
-[INFO] GET /api/user 401 in 2ms
-[INFO] GET / 200 in 4ms
-[INFO] GET /@vite/client 304 in 1ms
-[INFO] GET /src/main.tsx 304 in 0ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 0ms
-[INFO] GET /@react-refresh 304 in 0ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
-[INFO] GET /src/index.css 304 in 1ms
-[INFO] GET /src/lib/queryClient.ts 304 in 0ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 0ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 1659ms
+[INFO] GET /src/pages/FeedbackPage.tsx 304 in 1ms
 [INFO] GET /src/hooks/use-user.ts 304 in 0ms
-[INFO] GET /src/components/ui/button.tsx 304 in 1ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 1ms
 [INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 0ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
-[INFO] GET /src/components/Logo.tsx 304 in 1ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 0ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 0ms
-[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 0ms
+[INFO] GET /src/components/ui/button.tsx 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 0ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
+[INFO] GET /src/lib/utils.ts 304 in 1ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
 [INFO] GET /src/components/ui/input.tsx 304 in 1ms
 [INFO] GET /src/components/ui/form.tsx 304 in 0ms
-[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-audio.ts 304 in 1ms
-[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
-[INFO] GET /src/lib/utils.ts 304 in 1ms
-[INFO] GET /src/components/ui/card.tsx 304 in 1ms
-[INFO] GET /src/components/ui/tabs.tsx 304 in 1ms
-[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
-[INFO] GET /src/components/LoadingScreen.tsx 304 in 3ms
-[INFO] GET /src/components/ui/separator.tsx 304 in 16ms
-[INFO] GET /src/components/ui/avatar.tsx 304 in 0ms
-[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
-[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
-[INFO] GET /src/components/ui/label.tsx 304 in 1ms
-[INFO] GET /src/components/ui/slider.tsx 304 in 1ms
-[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
-[INFO] GET /src/components/ui/select.tsx 304 in 0ms
-[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
-[INFO] GET /api/user 401 in 2ms
-[INFO] GET / 200 in 3ms
-[INFO] GET / 200 in 4ms
-[INFO] POST /api/login 200 in 368ms
-[INFO] GET /api/user 304 in 60ms
-[INFO] GET / 200 in 106ms
-[INFO] GET / 200 in 59ms
-[INFO] 
-========Streaming audio file: 1735677566488-article.mp3
-[INFO] GET /api/podcasts 304 in 262ms
-[INFO] GET /api/playlists 304 in 317ms
-[INFO] 
-========Streaming audio file: 1735677566488-article.mp3
-[INFO] GET /api/audio/stream/1735677566488-article.mp3 200 in 1076ms
-[INFO] 
-========Streaming audio file: 1735767685572-arrasate_finkbeiner_2005_automated_microscope_system_for_determining_factors_that_predict_neuronal_fate.mp3
-[INFO] HEAD /api/audio/stream/1735767685572-arrasate_finkbeiner_2005_automated_microscope_system_for_determining_factors_that_predict_neuronal_fate.mp3 200 in 356ms
-[INFO] 
-========Streaming audio file: 1735767685572-arrasate_finkbeiner_2005_automated_microscope_system_for_determining_factors_that_predict_neuronal_fate.mp3
-[INFO] GET /api/audio/stream/1735767685572-arrasate_finkbeiner_2005_automated_microscope_system_for_determining_factors_that_predict_neuronal_fate.mp3 200 in 267ms
-[INFO] GET / 200 in 58ms
-[INFO] GET / 200 in 103ms
-[INFO] Usage check for user: canceled
-[INFO] GET /api/user/usage/check 304 in 166ms
-[INFO] Usage check for user: canceled
-[INFO] GET /api/user/usage/check 304 in 110ms
-[INFO] 
-
- PDF has 3 pages
-[INFO] Calculating estimated pricing and checking usage limits
-[INFO] 
-======= Starting Pricing Calculation ======
- -Input text length: 16704
- -Number of Vertex AI responses: 0
-
-[INFO] 
-        Input text length: 16704
-        Input token count: 3419
-        System prompt length: 2718
-        System token count: 525
-        Total input tokens: 3944
-      
-[INFO] 
----***** Estimated Calculation Summary **** ---
-Total Input Tokens: 3944
-Total Output Tokens: 5916
-Total Tokens: 9860
-Total TTS Characters: 23664
-Vertex AI Input Cost: $0.000002
-Vertex AI Output Cost: $0.000003
-TTS Cost: $0.378624
-Total Cost: $0.378629
-[INFO] Estimated Podify Tokens: 190 
-
-Usage limits check for user 24:
- Current articles: 1/3
- Current Podify tokens: 34/10000
- Would exceed article limit: false
- Would exceed token limit: false
-[INFO] Starting audio generation process
-[INFO] 
---- Starting Conversation Generation ---
-
-[INFO] 
-
- ------------PROMPT to VERTEX AI-----------------
- Speaker Joe should Start the podcast by saying this: Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies,
-unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!
-
-**Guidelines**:
-1. Joe provides detailed technical insights but avoids overusing analogies. Instead, focus on straightforward, clear explanations.
-2. Sarah asks probing, thoughtful questions, occasionally offers her own insights, and challenges Joe to explain concepts simply and conversationally.
-3. Both speakers use natural human speech patterns, including filler words like "um," "ah," "you know," and short pauses.
-
-**Focus**:
-- Avoid excessive use of analogies. Use one or two if necessary for clarity but prioritize clear, direct explanations.
-- Include natural conversational flow with interruptions, backtracking, and filler words to make the dialogue feel authentic.
-- Encourage a natural dialogue with varied contributions from both speakers.
-
-**Tone**:
-- Engaging, relatable, and spontaneous.
-- Emphasize human-like emotions, with occasional humor or lighthearted moments.
-- Balance technical depth with conversational relatability, avoiding overly formal language.
-
-You are generating a podcast conversation between Joe and Sarah.
-
-**Guidelines**:
-1. Joe provides detailed technical insights but avoids overusing analogies. Instead, focus on straightforward, clear explanations.
-2. Sarah asks probing, thoughtful questions, occasionally offers her own insights, and challenges Joe to explain concepts simply and conversationally.
-3. Both speakers use natural human speech patterns, including filler words like "you know," and short pauses.
-4. Don't include any sound effects or background music.
-
-**Focus**:
-- Avoid excessive use of analogies. Use one or two if necessary for clarity but prioritize clear, direct explanations.
-- Include natural conversational flow with interruptions, backtracking, and filler words to make the dialogue feel authentic.
-- Encourage a natural dialogue with varied contributions from both speakers.
-
-**Tone**:
-- Engaging, relatable, and spontaneous.
-- Emphasize human-like emotions, with occasional humor or lighthearted moments.
-- Balance technical depth with conversational relatability, avoiding overly formal language.
-
-Joe: C arl Laflamme knew what protein he wanted to study, but not where to find it. It is encoded by a gene called C9ORF72, which is mutated in some people with the devastating neuro- logical condition motor neuron disease, also known as amyotrophic lateral sclerosis. And Laflamme wanted to understand its role in the disease. When he started his postdoctoral fellowship at the Montreal Neurological Institute-Hospital in Canada, Laflamme scoured the literature, searching for information on the protein. The problem was that none of the papers seemed to agree where in the cell this mysterious mol- ecule operates. There was so much confusion in the field, Laflamme says. He wondered whether a reagent was to blame, in particular the antibodies that scientists used to measure the amount of the protein and track its position in the cell. So, he and his colleagues decided to test the antibodies that were available. They identified 16 commercial antibodies that were adver- tised as able to bind to the protein encoded by C9ORF72. When the researchers put them THE QUEST TO RID LABS OF THE REAGENTS THAT RUIN EXPERIMENTS Poorly performing antibodies have plagued biomedicalsciences for decades. Several fresh initiativeshope to change this. By Diana Kwon ILLUSTRATION BY FABIO BUONOCORE 26 | Nature | Vol 635 | 7 November 2024 Feature through their paces, only three performed wellmeaning that the antibodies bound to the protein of interest without binding to other molecules. But not one published study had used these antibodies. About 15 papers described experiments using an antibody that didnt even bind the key protein in Laflammes testing. And those papers had been collec- tively cited more than 3,000 times 1 . Laflammes experience isnt unusual. Scien- tists have long known that many commercial antibodies dont work as they should they often fail to recognize a specific protein or non-selectively bind to several other targets. The result is a waste of time and resources that some say has contributed to a repro - ducibility crisis in the biological sciences, potentially slowing the pace of discovery and drug development. Laflamme is part of a growing community that wants to solve the problem of unreliable antibodies in research. He teamed up with molecular geneticist Aled Edwards at the University of Toronto, Canada, to set up Antibody Characterization through Open Science (YCharOS, pronounced Icarus), an initiative that aims to characterize commer- cially available research antibodies for every human protein. There are also efforts under way to produce better-performing antibodies, to make it easier for researchers to find them and to encourage the research community to adopt best prac- tices when it comes to choosing and working with these molecules. Antibody vendors, funding agencies and scientific publishers are all getting in on the action, says Harvinder Virk, a physicianscientist at the University of Leicester, UK. Its hard to imagine that a problem that has been going on so long will suddenly change but Im hopeful. Putting antibodies to the test The immune system produces antibodies in response to foreign substances, such as viruses and bacteria, flagging them for destruction. This makes antibodies useful in laboratory experiments. Scientists co-opt this ability by using them to mark or quantify spe- cific biological molecules, such as a segment of a protein. To be effective, these molecular tags need to have both specificity a strong affinity for the target and selectivity the ability to leave other proteins unmarked. For decades, scientists created these anti- bodies themselves. They injected proteins into animals, such as rabbits, whose immune systems would generate antibodies against the foreign molecules. To create a longer- term, more consistent supply of antibodies, researchers extracted immune cells from ani- mals and combined them with immortalized cancer cells. When reagent companies began the mass production of antibodies in the 1990s, most researchers shifted to purchasing antibodies from a catalogue. Today, there are around 7.7 million research antibody products on the market, sold by almost 350antibody suppliers around the world. In the late 2000s, scientists began reporting problems with both the specificity and selectivity of many commercially available antibodies, leading researchers to call for an independent body to certify that the molecules work as advertised. Over the years, a handful of groups have launched efforts to evaluate antibodies. What sets YCharOS apart is the level of cooperation that it has obtained from com- panies that sell antibodies. When Laflamme and Edwards set out to start YCharOS, they called every single vendor they could find; more than a dozen were interested in collab- orating. YCharOSs industry partners provide the antibodies for testing, free of charge. The partners, along with the funders of the initia- tive (which include various non-profit organ- izations and funding agencies), are given the chance to review characterization reports and provide feedback before they are published. YCharOS tests antibodies by comparing their specificity in a cell line that expresses the target protein at normal biological levels against their performance in whats called a knock-out cell line that lacks the protein (see Ways to validate). In an analysis published in eLife last year, the YCharOS team used this method to assess 614commercial antibodies, targeting a total of 65neuroscience-related proteins 2 . Two- thirds of them did not work as recommended by manufacturers. It never fails to amaze me how much of a hit or miss antibodies are, says Riham Ayoubi, director of operations at YCharOS. It shows you how important it is to include that nega- tive control in the work. Antibody manufacturers reassessed more than half of the underperforming antibodies that YCharOS flagged in 2023. They issued updated recommendations for 153 of them and removed 73 from the market. The YCharOS team has now tested more than 1,000 anti- bodies that are meant to bind to more than 100human proteins. Theres still a lot of work ahead, Laflamme says. He estimates that, of the 1.6 million commercially available antibodies to human proteins, roughly 200,000 are unique (many suppliers sell the same antibodies under different names). I think the YCharOS initiative can really make a difference, says Cecilia Williams, a cancer researcher at the KTH Royal Institute of Technology in Stockholm. But its not everything, because researchers will use these antibodies in other protocols, and in other tissues and cells that may express the protein differently, she says. The context in which anti- bodies are used can change how they perform. Other characterization efforts are trying to tackle this challenge. Andrea Radtke and her collaborators were part of a cell-mapping con- sortium called the Human BioMolecular Atlas Program when they set up the Organ Mapping Antibody Panels (OMAPs). OMAPs are col- lections of community-validated antibodies used in multiplex imaging a technique that involves visualizing several proteins in a single specimen. Unlike YCharOS, which focuses on conducting rigorous characterizations of antibodies for various applications in one specific context, OMAPs is looking at a single application for the antibodies, but in several contexts, such as in different human tissues and imaging methods. To do so, OMAPs recruits scientists from both academia and industry to conduct validations in their own labs. Vendors cannot test all possible applica- tions of their antibodies, but as a community we can say lets try this, says Radtke, who now works as a principal scientist at the instru- mentation company Leica Microsystems in Bethesda, Maryland. People are testing things that you would never think you could test. Expanding the toolbox Even if good antibodies are available, they are not always easy to find. In 2009, Anita Bandrowski, founder and chief executive of the data-sharing platform SciCrunch in San Diego, California, and her colleagues were examining how difficult it was to identify antibodies in journal articles. After sifting through papers in the Journal of Neuroscience, they found that 90% of the antibodies cited lacked a catalogue number (codes used by ven- dors to label specific products)making them almost impossible to track down. To replicate an experiment, its important to have the right reagents and proper labelling is crucial to finding them, Bandrowski says. After seeing that a similar problem plagued other journals, Bandrowski and her colleagues decided to create unique, persistent identifiers for antibodies and other scientific resources, such as model organisms, which they called research resource identifiers, or RRIDs. Catalogue numbers can disappear if a com- pany discontinues a product and because companies create them independently, two different products might end up with the same one. RRIDs solve this. In 2014, Bandrowski and her team started a pilot project 3 with 25 journals, in which they asked authors to include RRIDs in their manuscripts. In the years since, more than 1,000journals have adopted policies that It never fails to amaze me how much of a hit or miss antibodies are. Nature | Vol 635 | 7 November 2024 | 27 request these identifiers. We currently have nearly one million citations to RRIDs from papers, says Bandrowski. Ultimately, the hope is that authors of every journal article will clearly label the resources they used, such as antibodies, with RRIDs, Bandrowski says. That wont change repro- ducibility by itself, but it is the first step. In addition to being able to track down antibodies, researchers need a way to choose which ones to use. In 2012, Andrew Chalmers, who was then a researcher at the University of Bath, UK, co-founded CiteAb, a search engine to help researchers find the most highly cited antibodies. Over the years, the platform has grown to include more than seven million antibodies and now also includes, when available, information regarding validations. In May, CiteAb began integrating YCharOSs characterization data onto its site. The big challenge is that antibodies are just used in so many different ways, for so many dif- ferent species that you cant tick off that an anti- body is good or bad, Chalmers says. Many say that knock-out validation is key, but less than 5% of antibodies on CiteAb have been validated in this way, either by suppliers or through other independent initiatives, such as YCharOS. Theres a long way to go, Chalmers says. Stakeholders get involved Like many others, Virk developed an interest in antibody reliability after a personal experience with bad antibodies. In 2016, Virk received a big grant to study the role of a protein called TRPA1 in airway inflammation. But one of his colleagues mentioned that, on the basis of his own experience, the antibodies he was working with might not be reliable. When Virk put TRPA1 antibodies to the test, he discovered that his colleague was right: of the three most-cited antibodies used to study TRPA1, two didnt detect the human protein at all, and the other detected several other proteins at the same time. That was a shock, Virk says. At that point, I wanted to leave science because if things are really this unreliable, whats the point? Instead of leaving academia, Virk co-founded the Only Good Antibodies (OGA) community last year, with the aim of bringing together stakeholders such as researchers, antibody manufacturers, funding agencies and publishers to tackle the problem of poorly performing antibodies. In February, the OGA community hosted its first work- shop, which included individuals from these various groups to discuss how to improve the reproducibility of research conducted with antibodies. They were joined by NC3Rs, a scientific organization and funder, based in London that focuses on reducing the use of animals in research. Better antibodies means fewer animals are used in the process of producing these molecules and conducting experiments with them. Currently, the OGA community is working on a project to help researchers choose the right antibodies for their work and to make it easier for them to identify, use and share data about antibody quality. It is also piloting an YCharOS site at the University of Leicester the first outside Canada which will focus on antibodies used in respiratory sciences. The OGA community is also working with funders and publishers to find ways to reward researchers for adopting antibody-related best practices. Examples of such rewards include grants for scientists taking part in antibody-validation initiatives. Manufacturers have also been taking steps to improve antibody performance. In addition to increasingly conducting their own knock-out validations, a number of suppliers are also alter- ing the way some of their products are made. The need to modify antibody-production practices was brought to the fore in 2015, when a group of more than 100 scientists penned a commentary in Nature calling for the community to shift from antibodies gener- ated by immune cells or immunecancer-cell hybrids, to what are known as recombinant antibodies 4 . Recombinant antibodies are produced in genetically engineered cells pro- grammed to make a specific antibody. Using these antibodies exclusively, the authors argued, would enable infinite production of antibodies that do not vary from batch to batch a key problem with the older methods. A few manufacturers are shifting towards making more recombinant antibodies. For example, Abcam, an antibody supplier in Cambridge, UK, has added more than 32,000 of them to their portfolio. Facilitating the move towards recombinants across life-science research is a key part of improv- ing reproducibility, says Hannah Cable, the vice-president of new product development at Abcam. Thats something that antibody suppliers should be doing. Rob Meijers, director of the antibody plat- form at the Institute for Protein Innovation in Boston, Massachusetts, a non-profit research organization that makes recombinant anti- bodies, says that this shift simply makes more business sense. Theyre much more reproduc- ible, you can standardize the process for them, and the user feedback is very positive, he says. CiteAbs data have revealed that scientists behaviour around antibody use has shifted drastically over the past decade. About 20% of papers from 2023 that involved antibodies used recombinants. Thats a big change from where we were ten years ago, says Chalmers, who is now CiteAbs chief executive. Although the ongoing efforts to improve antibody reliability are a move in the right direction, changing scientists behaviour remains one of the biggest challenges, say those leading the charge. There are cases in which researchers dont want to hear that an antibody theyve been using for their experi- ments isnt actually doing what its meant to, Williams says. If somebody is happy with the result of an antibody, its being used regard- less, even if its certain that it doesnt bind this protein, Williams says. Ultimately, she adds, you can never get around the fact that the researcher will have to do validations. Still, many scientists are hopeful that recent efforts will lead to much needed change. Im optimistic that things are getting better, Radtke says. What Im so encouraged by is the young generation of scientists, who have more of a wolf-pack mentality, and are working together to solve this problem as a community. Diana Kwon writes for Nature from Berlin. 1. Laflamme, C. et al. eLife 8, e48363 (2019). 2. Ayoubi, R. et al. eLife 12, RP91645 (2023). 3. Bandrowski, A. et al. J. Comp. Neurol. 524, 822 (2016). 4. Bradbury, A. & Plckthun, A. Nature 518, 2729 (2015). WAYS TO VALIDATE Researchers test antibodies that they wish to use in several ways. They can stain a sample of cells that express a protein of interest using immunohistochemistry. Western blotting can reveal whether an antibody binds to a specific protein with an expected molecular weight. And scientists can use immunoprecipitation to pull the protein out of a mixture and then check its identity using mass spectrometry. Immunohistochemistry Antibodies label cells with the target protein Cells without target protein Western blot Molecular- weight reference ladder Imummoprecipitation Antibodies attached to beads Protein of interest is captured and then confirmed using mass spectrometry A single band is found at the expected molecular weight I wanted to leave science because if things are really this unreliable, whats the point? 28 | Nature | Vol 635 | 7 November 2024 Feature
-
-Sarah: 
-
- ------------END-----------------
-
-[INFO] Usage check for user: canceled
-[INFO] GET /api/user/usage/check 304 in 110ms
-[INFO] 
-
- -------RESPONSE FROM VERTEX AI---------
- Joe: Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies, unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!  Today, we're diving into a fascinating, and frankly, slightly frustrating, area of research: the reliability of antibodies in scientific experiments.
-
-Sarah:  Antibodies –  I mean, I know they're crucial for so much biological research, but I don't really understand the nitty-gritty. Can you give us a quick rundown?
-
-Joe:  Sure. Um, so antibodies are essentially these proteins, right?  Your immune system produces them to target and neutralize foreign substances like bacteria or viruses.  Scientists have cleverly adapted this to use antibodies as tools in the lab.  We use them to, you know, identify and quantify specific proteins within cells or tissues. Think of them as highly specific molecular tags.
-
-Sarah:  Okay, so like, a little flag for a particular protein?
-
-Joe:  Exactly!  But... and this is a big but...  many commercially available antibodies, the ones scientists buy for their research, aren't as specific as they should be.  They might stick to other proteins besides the target, giving you inaccurate results. This has been a huge problem, leading to, ah, a reproducibility crisis in some areas of biology.
-
-Sarah: A reproducibility crisis? What does that mean?
-
-Joe:  It means that sometimes, other scientists can't replicate the findings of a study because, for example, the antibodies used in the original study weren't reliable.  A lot of time, money, and effort is wasted on research that ultimately produces flawed data. It's a major issue.
-
-Sarah: Wow. So, what's being done to fix this?
-
-Joe: Well, there are several initiatives underway. One is YCharOS,  short for Antibody Characterization through Open Science.  This group, led by Carl Laflamme and Aled Edwards, is systematically testing commercially available antibodies. They've already tested over a thousand antibodies, and the results are... well, eye-opening.
-
-Sarah:  Eye-opening how?
-
-Joe:  Two-thirds of the antibodies they tested didn't perform as advertised.  They either didn't bind to the target protein at all, or they bound to other proteins as well.  It's a much bigger problem than many people realized.  It's like, you order a specific part for your car, and you get something completely different.
-
-Sarah:  That's crazy!  So, what's YCharOS doing about it?
-
-Joe:  They're working with antibody manufacturers.  They're sharing their data, and the manufacturers are, in many cases, updating their products or removing unreliable ones from the market. It's a collaborative effort to improve the quality of antibodies available for research. There are other initiatives too, like OMAPs, which focuses on validating antibodies for specific imaging techniques in different tissues.  It's a multi-pronged approach.
-
-Sarah: So, it's not just about the antibodies themselves, but also how we find and use them, right?
-
-Joe:  Exactly.  There's a lot of effort going into creating better identifiers for antibodies, so researchers can easily find and track down the specific reagents used in studies.  This makes it easier to replicate experiments and builds trust in the data.
-
-Sarah:  It sounds like a long road to fixing this problem, but it’s encouraging to hear that things are changing.  Thanks, Joe, for shedding light on this.
-
-Joe:  My pleasure, Sarah.  It's a critical issue, and I think the collaborative efforts underway are promising.  We’ll keep an eye on this field and bring you updates as they happen.  Thanks for listening everyone, and join us next time on Science Odyssey!
- 
-
- ------------END-----------------
-
-[INFO] Processing 17 lines of text
-[INFO] Added conversation part: Joe with Welcome to Science Odyssey, the podcast where we j...
-[INFO] Added conversation part: Sarah with Antibodies –  I mean, I know they're crucial for s...
-[INFO] Added conversation part: Joe with Sure. Um, so antibodies are essentially these prot...
-[INFO] Added conversation part: Sarah with Okay, so like, a little flag for a particular prot...
-[INFO] Added conversation part: Joe with Exactly!  But... and this is a big but...  many co...
-[INFO] Added conversation part: Sarah with A reproducibility crisis? What does that mean?...
-[INFO] Added conversation part: Joe with It means that sometimes, other scientists can't re...
-[INFO] Added conversation part: Sarah with Wow. So, what's being done to fix this?...
-[INFO] Added conversation part: Joe with Well, there are several initiatives underway. One ...
-[INFO] Added conversation part: Sarah with Eye-opening how?...
-[INFO] Added conversation part: Joe with Two-thirds of the antibodies they tested didn't pe...
-[INFO] Added conversation part: Sarah with That's crazy!  So, what's YCharOS doing about it?...
-[INFO] Added conversation part: Joe with They're working with antibody manufacturers.  They...
-[INFO] Added conversation part: Sarah with So, it's not just about the antibodies themselves,...
-[INFO] Added conversation part: Joe with Exactly.  There's a lot of effort going into creat...
-[INFO] Added conversation part: Sarah with It sounds like a long road to fixing this problem,...
-[INFO] Added conversation part: Joe with My pleasure, Sarah.  It's a critical issue, and I ...
-[INFO] Successfully extracted 17 conversation parts
-[INFO] Cleaned Text (Chunk 1): [
-  {
-    "speaker": "Joe",
-    "text": "Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies, unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!  Today, we're diving into a fascinating, and frankly, slightly frustrating, area of research: the reliability of antibodies in scientific experiments."
-  },
-  {
-    "speaker": "Sarah",
-    "text": "Antibodies –  I mean, I know they're crucial for so much biological research, but I don't really understand the nitty-gritty. Can you give us a quick rundown?"
-  },
-  {
-    "speaker": "Joe",
-    "text": "Sure. Um, so antibodies are essentially these proteins, right?  Your immune system produces them to target and neutralize foreign substances like bacteria or viruses.  Scientists have cleverly adapted this to use antibodies as tools in the lab.  We use them to, you know, identify and quantify specific proteins within cells or tissues. Think of them as highly specific molecular tags."
-  },
-  {
-    "speaker": "Sarah",
-    "text": "Okay, so like, a little flag for a particular protein?"
-  },
-  {
-    "speaker": "Joe",
-    "text": "Exactly!  But... and this is a big but...  many commercially available antibodies, the ones scientists buy for their research, aren't as specific as they should be.  They might stick to other proteins besides the target, giving you inaccurate results. This has been a huge problem, leading to, ah, a reproducibility crisis in some areas of biology."
-  },
-  {
-    "speaker": "Sarah",
-    "text": "A reproducibility crisis? What does that mean?"
-  },
-  {
-    "speaker": "Joe",
-    "text": "It means that sometimes, other scientists can't replicate the findings of a study because, for example, the antibodies used in the original study weren't reliable.  A lot of time, money, and effort is wasted on research that ultimately produces flawed data. It's a major issue."
-  },
-  {
-    "speaker": "Sarah",
-    "text": "Wow. So, what's being done to fix this?"
-  },
-  {
-    "speaker": "Joe",
-    "text": "Well, there are several initiatives underway. One is YCharOS,  short for Antibody Characterization through Open Science.  This group, led by Carl Laflamme and Aled Edwards, is systematically testing commercially available antibodies. They've already tested over a thousand antibodies, and the results are... well, eye-opening."
-  },
-  {
-    "speaker": "Sarah",
-    "text": "Eye-opening how?"
-  },
-  {
-    "speaker": "Joe",
-    "text": "Two-thirds of the antibodies they tested didn't perform as advertised.  They either didn't bind to the target protein at all, or they bound to other proteins as well.  It's a much bigger problem than many people realized.  It's like, you order a specific part for your car, and you get something completely different."
-  },
-  {
-    "speaker": "Sarah",
-    "text": "That's crazy!  So, what's YCharOS doing about it?"
-  },
-  {
-    "speaker": "Joe",
-    "text": "They're working with antibody manufacturers.  They're sharing their data, and the manufacturers are, in many cases, updating their products or removing unreliable ones from the market. It's a collaborative effort to improve the quality of antibodies available for research. There are other initiatives too, like OMAPs, which focuses on validating antibodies for specific imaging techniques in different tissues.  It's a multi-pronged approach."
-  },
-  {
-    "speaker": "Sarah",
-    "text": "So, it's not just about the antibodies themselves, but also how we find and use them, right?"
-  },
-  {
-    "speaker": "Joe",
-    "text": "Exactly.  There's a lot of effort going into creating better identifiers for antibodies, so researchers can easily find and track down the specific reagents used in studies.  This makes it easier to replicate experiments and builds trust in the data."
-  },
-  {
-    "speaker": "Sarah",
-    "text": "It sounds like a long road to fixing this problem, but it’s encouraging to hear that things are changing.  Thanks, Joe, for shedding light on this."
-  },
-  {
-    "speaker": "Joe",
-    "text": "My pleasure, Sarah.  It's a critical issue, and I think the collaborative efforts underway are promising.  We’ll keep an eye on this field and bring you updates as they happen.  Thanks for listening everyone, and join us next time on Science Odyssey!"
-  }
-]
-[INFO] 
---- Full Generated Conversation ---
-[INFO] Joe: Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies, unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!  Today, we're diving into a fascinating, and frankly, slightly frustrating, area of research: the reliability of antibodies in scientific experiments.
-[INFO] Sarah: Antibodies –  I mean, I know they're crucial for so much biological research, but I don't really understand the nitty-gritty. Can you give us a quick rundown?
-[INFO] Joe: Sure. Um, so antibodies are essentially these proteins, right?  Your immune system produces them to target and neutralize foreign substances like bacteria or viruses.  Scientists have cleverly adapted this to use antibodies as tools in the lab.  We use them to, you know, identify and quantify specific proteins within cells or tissues. Think of them as highly specific molecular tags.
-[INFO] Sarah: Okay, so like, a little flag for a particular protein?
-[INFO] Joe: Exactly!  But... and this is a big but...  many commercially available antibodies, the ones scientists buy for their research, aren't as specific as they should be.  They might stick to other proteins besides the target, giving you inaccurate results. This has been a huge problem, leading to, ah, a reproducibility crisis in some areas of biology.
-[INFO] Sarah: A reproducibility crisis? What does that mean?
-[INFO] Joe: It means that sometimes, other scientists can't replicate the findings of a study because, for example, the antibodies used in the original study weren't reliable.  A lot of time, money, and effort is wasted on research that ultimately produces flawed data. It's a major issue.
-[INFO] Sarah: Wow. So, what's being done to fix this?
-[INFO] Joe: Well, there are several initiatives underway. One is YCharOS,  short for Antibody Characterization through Open Science.  This group, led by Carl Laflamme and Aled Edwards, is systematically testing commercially available antibodies. They've already tested over a thousand antibodies, and the results are... well, eye-opening.
-[INFO] Sarah: Eye-opening how?
-[INFO] Joe: Two-thirds of the antibodies they tested didn't perform as advertised.  They either didn't bind to the target protein at all, or they bound to other proteins as well.  It's a much bigger problem than many people realized.  It's like, you order a specific part for your car, and you get something completely different.
-[INFO] Sarah: That's crazy!  So, what's YCharOS doing about it?
-[INFO] Joe: They're working with antibody manufacturers.  They're sharing their data, and the manufacturers are, in many cases, updating their products or removing unreliable ones from the market. It's a collaborative effort to improve the quality of antibodies available for research. There are other initiatives too, like OMAPs, which focuses on validating antibodies for specific imaging techniques in different tissues.  It's a multi-pronged approach.
-[INFO] Sarah: So, it's not just about the antibodies themselves, but also how we find and use them, right?
-[INFO] Joe: Exactly.  There's a lot of effort going into creating better identifiers for antibodies, so researchers can easily find and track down the specific reagents used in studies.  This makes it easier to replicate experiments and builds trust in the data.
-[INFO] Sarah: It sounds like a long road to fixing this problem, but it’s encouraging to hear that things are changing.  Thanks, Joe, for shedding light on this.
-[INFO] Joe: My pleasure, Sarah.  It's a critical issue, and I think the collaborative efforts underway are promising.  We’ll keep an eye on this field and bring you updates as they happen.  Thanks for listening everyone, and join us next time on Science Odyssey!
-[INFO] --- End of Conversation ---
-
-[INFO] 
-======= Starting Pricing Calculation ======
- -Input text length: 16704
- -Number of Vertex AI responses: 1
-
-[INFO] 
-        Input text length: 16704
-        Input token count: 3419
-        System prompt length: 2718
-        System token count: 525
-        Total input tokens: 3944
-      
-[INFO] Response 1 details:
-- Length: 3683 characters
-- Output tokens: 816
-[INFO] Total TTS characters calculated: 3638
-[INFO] 
----***** Final Pricing Calculation Summary **** ---
-Total Input Tokens: 3944
-Total Output Tokens: 816
-Total Tokens: 4760
-Total TTS Characters: 3638
-Vertex AI Input Cost: $0.000002
-Vertex AI Output Cost: $0.000000
-TTS Cost: $0.058208
-Total Cost: $0.058210
-[INFO] Generating audio files...
-[INFO] Usage check for user: canceled
-[INFO] GET /api/user/usage/check 304 in 110ms
-[INFO] Audio content written to file "audio-files/0.mp3"
-[INFO] Audio content written to file "audio-files/1.mp3"
-[INFO] Usage check for user: canceled
-[INFO] GET /api/user/usage/check 304 in 111ms
-[INFO] Audio content written to file "audio-files/2.mp3"
-[INFO] Audio content written to file "audio-files/3.mp3"
-[INFO] Usage check for user: canceled
-[INFO] GET /api/user/usage/check 304 in 111ms
-[INFO] Audio content written to file "audio-files/4.mp3"
-[INFO] Audio content written to file "audio-files/5.mp3"
-[INFO] Audio content written to file "audio-files/6.mp3"
-[INFO] Audio content written to file "audio-files/7.mp3"
-[INFO] Audio content written to file "audio-files/8.mp3"
-[INFO] Audio content written to file "audio-files/9.mp3"
-[INFO] Audio content written to file "audio-files/10.mp3"
-[INFO] Audio content written to file "audio-files/11.mp3"
-[INFO] Audio content written to file "audio-files/12.mp3"
-[INFO] Audio content written to file "audio-files/13.mp3"
-[INFO] Audio content written to file "audio-files/14.mp3"
-[INFO] Audio content written to file "audio-files/15.mp3"
-[INFO] Audio content written to file "audio-files/16.mp3"
-[INFO] Copied intro file podcast.mp3 to audio folder
-[INFO] Merging the following files in order:
-[INFO] 0.mp3
-[INFO] 1.mp3
-[INFO] 2.mp3
-[INFO] 3.mp3
-[INFO] 4.mp3
-[INFO] 5.mp3
-[INFO] 6.mp3
-[INFO] 7.mp3
-[INFO] 8.mp3
-[INFO] 9.mp3
-[INFO] 10.mp3
-[INFO] 11.mp3
-[INFO] 12.mp3
-[INFO] 13.mp3
-[INFO] 14.mp3
-[INFO] 15.mp3
-[INFO] 16.mp3
-[INFO] Successfully merged audio saved as audio-files/final_output.mp3
-[INFO] Cleaned up audio-files directory after successful generation
-[INFO] Audio generation completed: Duration: 177s Actual tokens used: 4760 Actual cost: 0.05821038
-[INFO] 
-
----------- Updated Usage ----------
- Updated usage for user 24:
- Articles: 2/3
- Podify Tokens: 64/10000
-[INFO] Successfully saved audio file (audio/mpeg) to Object Storage: 1735768659466-article.mp3
-[INFO] Successfully created podcast entry with ID: 31
-[INFO] POST /api/podcast 200 in 44396ms
-[INFO] Usage check for user: canceled
-[INFO] GET /api/user/usage/check 200 in 1278ms
-[INFO] 
-========Streaming audio file: 1735767685572-arrasate_finkbeiner_2005_automated_microscope_system_for_determining_factors_that_predict_neuronal_fate.mp3
-[INFO] GET /api/podcasts 200 in 167ms
-[INFO] GET / 200 in 95ms
-[INFO] GET /api/audio/stream/1735767685572-arrasate_finkbeiner_2005_automated_microscope_system_for_determining_factors_that_predict_neuronal_fate.mp3 200 in 482ms
-[INFO] GET / 200 in 60ms
-[INFO] Usage check for user: canceled
-[INFO] GET /api/user/usage/check 304 in 160ms
-[INFO] GET / 200 in 62ms
-[INFO] 
-========Streaming audio file: 1735768659466-article.mp3
-[INFO] HEAD /api/audio/stream/1735768659466-article.mp3 200 in 268ms
-[INFO] 
-========Streaming audio file: 1735768659466-article.mp3
-[INFO] GET /api/audio/stream/1735768659466-article.mp3 200 in 268ms
-[INFO] GET /src/components/Sidebar.tsx 200 in 2ms
-[INFO] GET /src/pages/HomePage.tsx 200 in 2ms
-[INFO] GET /src/main.tsx 200 in 4ms
-[INFO] GET /src/main.tsx 200 in 1ms
-[INFO] GET /src/pages/BillingPage.tsx 200 in 2ms
-[INFO] GET /src/pages/LibraryPage.tsx 200 in 1ms
-[INFO] GET /src/index.css 200 in 92ms
-[INFO] GET /src/index.css 200 in 87ms
-[INFO] Stripe initialized successfully
-[INFO] ***Starting server initialization...
-
-
-[INFO] Registering routes...
-[INFO] Setting up Vite for development...
-[INFO] Server started successfully on port 4000
-[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
-[INFO] GET / 200 in 37ms
-[INFO] GET /@vite/client 304 in 14ms
-[INFO] GET /src/main.tsx 304 in 56ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
-[INFO] GET /@react-refresh 304 in 1ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 259ms
-[INFO] GET /src/lib/queryClient.ts 304 in 2ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 9ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-user.ts 200 in 1ms
-[INFO] GET /src/components/ui/button.tsx 304 in 1ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
-[INFO] GET /src/index.css 304 in 1479ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 9ms
-[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 200 in 2ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/input.tsx 304 in 0ms
-[INFO] GET /src/components/ui/form.tsx 304 in 1ms
-[INFO] GET /src/lib/utils.ts 304 in 1ms
-[INFO] GET /src/hooks/use-audio.ts 304 in 0ms
-[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
-[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
-[INFO] GET /src/components/ui/card.tsx 304 in 0ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 0ms
-[INFO] GET /src/components/Logo.tsx 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 0ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 0ms
+[INFO] GET /src/components/ui/select.tsx 304 in 2ms
 [INFO] GET /src/hooks/use-tts.ts 304 in 1ms
 [INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
-[INFO] GET /src/components/ui/avatar.tsx 304 in 0ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
 [INFO] GET /src/components/ui/toast.tsx 304 in 1ms
-[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
-[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
-[INFO] GET /src/components/ui/tabs.tsx 304 in 1ms
+[INFO] GET /src/components/Logo.tsx 304 in 1ms
+[INFO] GET /src/components/ui/card.tsx 304 in 0ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 1ms
 [INFO] GET /src/components/LoadingScreen.tsx 304 in 1ms
 [INFO] GET /src/components/ui/separator.tsx 304 in 1ms
-[INFO] GET /src/components/ui/label.tsx 304 in 1ms
-[INFO] GET /src/components/ui/select.tsx 304 in 1ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
+[INFO] GET /src/components/ui/textarea.tsx 304 in 0ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 0ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 0ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 1ms
 [INFO] GET /src/components/ui/popover.tsx 304 in 0ms
-[INFO] GET /src/components/ui/slider.tsx 304 in 0ms
-[INFO] GET /src/components/ui/progress.tsx 304 in 0ms
-[INFO] GET /src/components/ui/dialog.tsx 304 in 0ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
+[INFO] GET /src/components/ui/label.tsx 304 in 1ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
 [INFO] GET /api/user 401 in 2ms
-[INFO] Stripe initialized successfully
+[INFO] GET / 200 in 5ms
+[INFO] POST /api/login 200 in 368ms
+[INFO] GET /api/user 304 in 61ms
+[INFO] GET / 200 in 109ms
+[INFO] GET / 200 in 61ms
+[INFO] GET /api/playlists 304 in 201ms
+[INFO] GET /api/podcasts 304 in 235ms
+[INFO] Stripe initialized successfully in development mode
 [INFO] ***Starting server initialization...
 
 
@@ -960,185 +78,70 @@ Total Cost: $0.058210
 [INFO] Setting up Vite for development...
 [INFO] Server started successfully on port 4000
 [INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
-[INFO] GET / 200 in 38ms
-[INFO] GET /@vite/client 304 in 23ms
-[INFO] GET /src/main.tsx 304 in 65ms
+[INFO] Stripe initialized successfully in development mode
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] GET / 200 in 32ms
+[INFO] GET /@vite/client 304 in 42ms
+[INFO] GET /@react-refresh 304 in 23ms
+[INFO] GET /src/main.tsx 304 in 67ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 74ms
 [INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
-[INFO] GET /@react-refresh 304 in 292ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 306ms
-[INFO] GET /src/pages/HomePage.tsx 304 in 575ms
-[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 2ms
 [INFO] GET /src/lib/queryClient.ts 304 in 1ms
-[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
-[INFO] GET /src/index.css 304 in 692ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 2ms
-[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/button.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-user.ts 304 in 1ms
-[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
-[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
-[INFO] GET / 200 in 94ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
-[INFO] GET /@vite/client 304 in 1ms
-[INFO] GET /src/main.tsx 304 in 1ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
-[INFO] GET /src/components/Logo.tsx 304 in 0ms
-[INFO] GET /@vite-plugin-checker-runtime 304 in 0ms
-[INFO] GET /@react-refresh 304 in 1ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 0ms
-[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
 [INFO] GET /src/pages/HomePage.tsx 304 in 1ms
+[INFO] GET /src/index.css 304 in 987ms
 [INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
-[INFO] GET /src/lib/queryClient.ts 304 in 0ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 0ms
-[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 1ms
-[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
 [INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
-[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
 [INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/input.tsx 304 in 1ms
-[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
-[INFO] GET /src/index.css 304 in 1ms
-[INFO] GET /src/components/ui/form.tsx 304 in 0ms
+[INFO] GET /src/pages/FeedbackPage.tsx 304 in 1ms
 [INFO] GET /src/hooks/use-user.ts 304 in 1ms
-[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
-[INFO] GET /src/components/ui/button.tsx 304 in 0ms
 [INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
-[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
+[INFO] GET /src/components/ui/button.tsx 304 in 1ms
 [INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 0ms
-[INFO] GET /src/components/ui/toast.tsx 304 in 0ms
-[INFO] GET /src/components/Logo.tsx 304 in 1ms
-[INFO] GET /src/hooks/use-tts.ts 304 in 0ms
-[INFO] GET /src/hooks/use-audio.ts 304 in 0ms
-[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
-[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
-[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
 [INFO] GET /src/components/ui/input.tsx 304 in 1ms
-[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
-[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 1ms
 [INFO] GET /src/components/ui/form.tsx 304 in 1ms
-[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 0ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 1ms
 [INFO] GET /src/lib/utils.ts 304 in 1ms
-[INFO] GET /src/components/AudioPlayer.tsx 304 in 0ms
-[INFO] GET /src/components/ui/card.tsx 304 in 0ms
-[INFO] GET /src/hooks/use-audio.ts 304 in 2ms
-[INFO] GET /src/lib/utils.ts 304 in 1ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
+[INFO] GET /src/components/ui/select.tsx 304 in 1ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 0ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
+[INFO] GET /src/components/Logo.tsx 304 in 0ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 0ms
 [INFO] GET /src/components/LoadingScreen.tsx 304 in 1ms
 [INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
 [INFO] GET /src/components/ui/separator.tsx 304 in 0ms
-[INFO] GET /src/components/ui/tabs.tsx 304 in 0ms
-[INFO] GET /src/components/ui/card.tsx 304 in 0ms
-[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
-[INFO] GET /src/components/ui/tabs.tsx 304 in 0ms
-[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
-[INFO] GET /src/components/ui/avatar.tsx 304 in 1ms
-[INFO] GET /src/components/ui/label.tsx 304 in 0ms
-[INFO] GET /src/components/ui/progress.tsx 304 in 0ms
-[INFO] GET /src/components/LoadingScreen.tsx 304 in 0ms
-[INFO] GET /src/components/ui/popover.tsx 304 in 0ms
-[INFO] GET /src/components/ui/separator.tsx 304 in 8ms
-[INFO] GET /src/components/ui/slider.tsx 304 in 1ms
-[INFO] GET /src/components/ui/select.tsx 304 in 0ms
-[INFO] GET /src/components/ui/dialog.tsx 304 in 0ms
+[INFO] GET /src/components/ui/textarea.tsx 304 in 1ms
 [INFO] GET /src/components/ui/avatar.tsx 304 in 0ms
-[INFO] GET /src/components/ui/scroll-area.tsx 304 in 0ms
-[INFO] GET /api/user 401 in 3ms
-[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
-[INFO] GET /src/components/ui/label.tsx 304 in 1ms
-[INFO] GET / 200 in 4ms
-[INFO] GET /src/components/ui/slider.tsx 304 in 1ms
+[INFO] GET /src/components/ui/card.tsx 304 in 1ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 1ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
 [INFO] GET /src/components/ui/popover.tsx 304 in 0ms
+[INFO] GET /src/components/ui/label.tsx 304 in 1ms
 [INFO] GET /src/components/ui/dialog.tsx 304 in 0ms
-[INFO] GET /src/components/ui/select.tsx 304 in 0ms
-[INFO] GET /api/user 401 in 1ms
-[INFO] 
-
-Sending welcome email...
-[INFO] 
-
----------- Welcome Email Status ---------- User: vivek (vivek@foresee.health) Status Code: 202 Headers: {"server":"nginx","date":"Wed, 01 Jan 2025 22:27:28 GMT","content-length":"0","connection":"keep-alive","x-message-id":"plqNsSMQTK6-OFFAwe4amQ","access-control-allow-origin":"https://sendgrid.api-docs.io","access-control-allow-methods":"POST","access-control-allow-headers":"Authorization, Content-Type, On-behalf-of, x-sg-elas-acl","access-control-max-age":"600","x-no-cors-reason":"https://sendgrid.com/docs/Classroom/Basics/API/cors.html","strict-transport-security":"max-age=31536000; includeSubDomains","content-security-policy":"frame-ancestors 'none'","cache-control":"no-cache","x-content-type-options":"no-sniff","referrer-policy":"strict-origin-when-cross-origin"} -----------------------------------------
-
-[INFO] POST /api/register 200 in 911ms
-[INFO] GET /api/user 200 in 61ms
-[INFO] GET / 200 in 114ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 0ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 0ms
+[INFO] GET /api/user 401 in 2ms
+[INFO] GET / 200 in 5ms
+[INFO] POST /api/login 200 in 343ms
+[INFO] GET /api/user 304 in 60ms
 [INFO] GET / 200 in 61ms
-[INFO] 
-========Streaming audio file: 1735767685572-arrasate_finkbeiner_2005_automated_microscope_system_for_determining_factors_that_predict_neuronal_fate.mp3
-[INFO] GET /api/podcasts 200 in 323ms
-[INFO] GET /api/playlists 304 in 323ms
-[INFO] GET /api/audio/stream/1735767685572-arrasate_finkbeiner_2005_automated_microscope_system_for_determining_factors_that_predict_neuronal_fate.mp3 200 in 692ms
-[INFO] 
-========Streaming audio file: 1735767685572-arrasate_finkbeiner_2005_automated_microscope_system_for_determining_factors_that_predict_neuronal_fate.mp3
-[INFO] GET / 200 in 62ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 200 in 173ms
-[INFO] GET / 200 in 62ms
-[INFO] GET / 200 in 72ms
+[INFO] GET /api/podcasts 304 in 170ms
+[INFO] GET /api/playlists 304 in 206ms
 [INFO] GET / 200 in 60ms
-[INFO] GET / 200 in 61ms
+[INFO] Usage check for user: active
+[INFO] GET /api/user/usage/check 200 in 171ms
 [INFO] GET / 200 in 60ms
-[INFO] GET / 200 in 112ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 170ms
-[INFO] GET / 200 in 60ms
-[INFO] GET / 200 in 70ms
-[INFO] GET / 200 in 59ms
-[INFO] GET / 200 in 105ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 172ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 116ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 117ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 115ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 114ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 115ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 116ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 115ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 114ms
-[INFO] GET / 200 in 62ms
-[INFO] GET / 200 in 60ms
-[INFO] 
-========Streaming audio file: 1735767685572-arrasate_finkbeiner_2005_automated_microscope_system_for_determining_factors_that_predict_neuronal_fate.mp3
-[INFO] GET / 200 in 160ms
-[INFO] GET /api/podcasts 304 in 319ms
-[INFO] GET /api/audio/stream/1735767685572-arrasate_finkbeiner_2005_automated_microscope_system_for_determining_factors_that_predict_neuronal_fate.mp3 200 in 407ms
-[INFO] GET / 200 in 60ms
-[INFO] GET / 200 in 60ms
-[INFO] GET / 200 in 117ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 173ms
-[INFO] GET / 200 in 60ms
-[INFO] GET / 200 in 62ms
-[INFO] GET / 200 in 59ms
-[INFO] GET / 200 in 118ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 174ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 121ms
-[INFO] GET / 200 in 60ms
-[INFO] GET / 200 in 60ms
-[INFO] POST /api/logout 200 in 61ms
-[INFO] GET /api/user 401 in 1ms
-[INFO] POST /api/login 200 in 103ms
-[INFO] GET /api/user 304 in 58ms
-[INFO] GET / 200 in 96ms
-[INFO] GET / 200 in 62ms
-[INFO] 
-========Streaming audio file: 1735767685572-arrasate_finkbeiner_2005_automated_microscope_system_for_determining_factors_that_predict_neuronal_fate.mp3
-[INFO] GET /api/audio/stream/1735767685572-arrasate_finkbeiner_2005_automated_microscope_system_for_determining_factors_that_predict_neuronal_fate.mp3 200 in 393ms
-[INFO] GET / 200 in 61ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 171ms
-[INFO] Usage check for user: inactive
-[INFO] GET /api/user/usage/check 304 in 114ms

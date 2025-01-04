@@ -2,6 +2,7 @@ import { useCallback, useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Button } from "../components/ui/button";
 import { useToast } from "../hooks/use-toast";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import { useTTS } from "../hooks/use-tts";
 import { FileText, Upload, Headphones, Plus, Menu, ChevronDown, ChevronUp } from "lucide-react";
 import { Logo } from "../components/Logo";
@@ -33,8 +34,19 @@ export default function HomePage() {
   const queryClient = useQueryClient();
   const { user } = useUser();
 
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
+      if (!selectedCategory) {
+        toast({
+          title: "Category Required", 
+          description: "Please select a podcast category before uploading",
+          variant: "destructive",
+        });
+        return;
+      }
+
       if (hasReachedLimit) {
         toast({
           title: "Usage Limit Reached",
@@ -97,7 +109,7 @@ export default function HomePage() {
         }
       }
     },
-    [toast, setLocation, setIsConverting, setProgress, queryClient, hasReachedLimit],
+    [toast, setLocation, setIsConverting, setProgress, queryClient, hasReachedLimit, selectedCategory],
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -130,6 +142,11 @@ export default function HomePage() {
 
   const faqItems = [
     {
+      id: "multipage",
+      question: "Does it work with long documents?",
+      answer: "Yes! Our service is optimized for documents of any length, including multi-page articles. The AI adapts the conversation naturally across all pages while maintaining context.",
+    },
+    {
       id: "formats",
       question: "What file formats are supported?",
       answer: "We currently support PDF, DOC, DOCX, and TXT files for conversion. All files are processed securely and confidentially.",
@@ -159,19 +176,18 @@ export default function HomePage() {
   if (user) {
     return (
       <div className="min-h-screen bg-black text-white">
-        <div className="max-w-4xl mx-auto px-6 pt-20 md:pt-12">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold mb-4">
+        <div className="max-w-3xl mx-auto px-4 pt-16 md:pt-8">
+          <div className="text-center mb-6">
+            <h1 className="text-3xl font-bold mb-2">
               Transform Your Articles Into Podcasts
             </h1>
-            <p className="text-gray-400">
-              Upload any article and convert it into a natural-sounding podcast
-              in seconds
+            <p className="text-gray-400 text-sm">
+              Upload any article and convert it into a natural-sounding podcast in seconds
             </p>
           </div>
 
           {user && (
-            <div className="mb-8">
+            <div className="mb-6">
               <UsageProgress
                 showUpgradeButton={true}
                 onLimitReached={handleLimitReached}
@@ -179,9 +195,42 @@ export default function HomePage() {
             </div>
           )}
 
+          <div className="mb-6">
+            <h2 className="text-xl font-semibold mb-4">Step 1: Select Category</h2>
+            <div className="max-w-xl mx-auto bg-gray-900/50 p-6 rounded-lg border border-red-500">
+              <p className="text-red-500 text-sm mb-2">Please select a category to continue</p>
+              <Select
+                required
+                onValueChange={(value) => {
+                  if (!value) return;
+                  setSelectedCategory(value);
+                  fetch('/api/set-category', {
+                    method: 'POST',
+                    body: JSON.stringify({ category: value }),
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    credentials: 'include'
+                  });
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select podcast category (required)" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="general">General</SelectItem>
+                  <SelectItem value="kids">Kids</SelectItem>
+                  <SelectItem value="research">Research</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold mb-4">Step 2: Upload Your Article</h2>
           <div
             {...getRootProps()}
-            className={`border-2 border-dashed rounded-lg p-16 mb-12 transition-colors 
+            className={`border-2 border-dashed rounded-lg p-12 mb-6 transition-colors 
               ${
                 hasReachedLimit
                   ? "opacity-50 cursor-not-allowed border-gray-700 hover:border-gray-700"
@@ -217,6 +266,9 @@ export default function HomePage() {
               </p>
               <p className="text-xs text-gray-500 mt-2">
                 Supported formats: PDF, DOC, DOCX, TXT
+              </p>
+              <p className="text-xs text-gray-500 mt-2">
+                ** Please Upload articles greater than 1 page for an effective podcast conversion
               </p>
             </div>
           </div>
@@ -267,6 +319,7 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+    </div>
     );
   }
 

@@ -67,46 +67,95 @@ const GENERATION_CONFIG = {
 };
 
 // System prompts exactly matching Python implementation
+type PodcastCategory = "general" | "kids" | "research";
+
 const SYSTEM_PROMPTS = {
-  WELCOME: `Speaker Joe should Start the podcast by saying this: Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies,
-unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!
+  general: {
+    WELCOME: `Speaker Joe should Start the podcast by saying this: Welcome to Podify, where we explore fascinating topics and stories from around the world. Join us for an engaging and insightful journey through ideas that connect us all!`,
 
-**Guidelines**:
-1. Joe provides detailed technical insights but avoids overusing analogies. Instead, focus on straightforward, clear explanations.
-2. Sarah asks probing, thoughtful questions, occasionally offers her own insights, and challenges Joe to explain concepts simply and conversationally.
-3. Both speakers use natural human speech patterns, including filler words like "um," "ah," "you know," and short pauses.
+    MAIN: `You are generating a podcast conversation between Joe and Sarah aimed at a general audience.
 
-**Focus**:
-- Avoid excessive use of analogies. Use one or two if necessary for clarity but prioritize clear, direct explanations.
-- Include natural conversational flow with interruptions, backtracking, and filler words to make the dialogue feel authentic.
-- Encourage a natural dialogue with varied contributions from both speakers.
+    **Guidelines**:
+    1. Use clear and accessible language that appeals to a diverse audience.
+    2. Incorporate relatable examples and light humor to keep the conversation engaging.
+    3. Maintain a natural and conversational tone, avoiding overly technical or formal language.
 
-**Tone**:
-- Engaging, relatable, and spontaneous.
-- Emphasize human-like emotions, with occasional humor or lighthearted moments.
-- Balance technical depth with conversational relatability, avoiding overly formal language.`,
+    **Focus**:
+    - Discuss a variety of topics, ensuring a balance between entertainment and information.
+    - Use inclusive language and address subjects that resonate with a broad demographic.
+    - Encourage active dialogue with both Joe and Sarah contributing equally.
 
-  MAIN: `You are generating a podcast conversation between Joe and Sarah.
+    **Tone**:
+    - Friendly, curious, and engaging.
+    - Emphasize storytelling and personal anecdotes where applicable.
+    - Maintain a positive and inviting atmosphere throughout.`,
 
-**Guidelines**:
-1. Joe provides detailed technical insights but avoids overusing analogies. Instead, focus on straightforward, clear explanations.
-2. Sarah asks probing, thoughtful questions, occasionally offers her own insights, and challenges Joe to explain concepts simply and conversationally.
-3. Both speakers use natural human speech patterns, including filler words like "you know," and short pauses.
-4. Don't include any sound effects or background music.
+    FAREWELL: `Speaker Joe should End the podcast by saying this: Thank you for joining us on this episode of Podify! If you enjoyed exploring these stories with us, don’t forget to subscribe, share, and leave a review. See you next time for more fascinating conversations and insights!`,
+  },
 
-**Focus**:
-- Avoid excessive use of analogies. Use one or two if necessary for clarity but prioritize clear, direct explanations.
-- Include natural conversational flow with interruptions, backtracking, and filler words to make the dialogue feel authentic.
-- Encourage a natural dialogue with varied contributions from both speakers.
+  kids: {
+    WELCOME: `Speaker Joe should Start the podcast by saying this: Hey kids! Welcome to Podify Kids, where we make learning super fun and exciting! Get ready for cool stories, awesome facts, and tons of laughs as we explore the world together!`,
 
-**Tone**:
-- Engaging, relatable, and spontaneous.
-- Emphasize human-like emotions, with occasional humor or lighthearted moments.
-- Balance technical depth with conversational relatability, avoiding overly formal language.`,
+    MAIN: `You are generating a kid-friendly podcast conversation between Joe and Sarah.
 
-  FAREWELL: `Speaker Joe should End the podcast by saying this: Thank you for joining us on this episode of Science Odyssey, where we explored the groundbreaking research shaping our understanding of the world. 
-If you enjoyed this journey, don't forget to subscribe, leave a review, and share the podcast with fellow science enthusiasts.
-Until next time, keep exploring the wonders of science—your next discovery awaits!`,
+    **Guidelines**:
+    1. Use simple, age-appropriate language that is fun and engaging for kids.
+    2. Incorporate playful elements, like jokes, riddles, and exciting questions to keep kids entertained.
+    3. Use a lively and enthusiastic tone to capture the energy of a children’s podcast.
+
+    **Focus**:
+    - Explain concepts with clear and fun analogies.
+    - Include interactive moments like trivia questions or "imagine this" scenarios to involve the audience.
+    - Ensure the content is educational yet entertaining, covering topics like nature, science, and adventures.
+
+    **Tone**:
+    - Cheerful, playful, and energetic.
+    - Highlight curiosity and wonder to inspire young listeners.
+    - Keep the dialogue dynamic and full of surprises to hold attention.`,
+
+    FAREWELL: `Speaker Joe should End the podcast by saying this: Thanks for hanging out with us, kids! Remember, learning is an adventure, and there’s so much more to discover. Don’t forget to share Podify Kids with your friends and family. See you next time for more fun and excitement—bye for now!`,
+  },
+
+  research: {
+    WELCOME: `Speaker Joe should Start the podcast by saying this: Welcome to Science Odyssey, the podcast where we journey through groundbreaking scientific studies, unraveling the mysteries behind the research that shapes our world. Thanks for tuning in!
+
+    **Guidelines**:
+    1. Joe provides detailed technical insights but avoids overusing analogies. Instead, focus on straightforward, clear explanations.
+    2. Sarah asks probing, thoughtful questions, occasionally offers her own insights, and challenges Joe to explain concepts simply and conversationally.
+    3. Both speakers use natural human speech patterns, including filler words like "um," "ah," "you know," and short pauses.
+
+    **Focus**:
+    - Avoid excessive use of analogies. Use one or two if necessary for clarity but prioritize clear, direct explanations.
+    - Include natural conversational flow with interruptions, backtracking, and filler words to make the dialogue feel authentic.
+    - Encourage a natural dialogue with varied contributions from both speakers.
+
+    **Tone**:
+    - Engaging, relatable, and spontaneous.
+    - Emphasize human-like emotions, with occasional humor or lighthearted moments.
+    - Balance technical depth with conversational relatability, avoiding overly formal language.`,
+
+    MAIN: `You are generating a podcast conversation between Joe and Sarah.
+
+    **Guidelines**:
+    1. Joe provides detailed technical insights but avoids overusing analogies. Instead, focus on straightforward, clear explanations.
+    2. Sarah asks probing, thoughtful questions, occasionally offers her own insights, and challenges Joe to explain concepts simply and conversationally.
+    3. Both speakers use natural human speech patterns, including filler words like "you know," and short pauses.
+    4. Don't include any sound effects or background music.
+
+    **Focus**:
+    - Avoid excessive use of analogies. Use one or two if necessary for clarity but prioritize clear, direct explanations.
+    - Include natural conversational flow with interruptions, backtracking, and filler words to make the dialogue feel authentic.
+    - Encourage a natural dialogue with varied contributions from both speakers.
+
+    **Tone**:
+    - Engaging, relatable, and spontaneous.
+    - Emphasize human-like emotions, with occasional humor or lighthearted moments.
+    - Balance technical depth with conversational relatability, avoiding overly formal language.`,
+
+    FAREWELL: `Speaker Joe should End the podcast by saying this: Thank you for joining us on this episode of Science Odyssey, where we explored the groundbreaking research shaping our understanding of the world. 
+    If you enjoyed this journey, don't forget to subscribe, leave a review, and share the podcast with fellow science enthusiasts.
+    Until next time, keep exploring the wonders of science—your next discovery awaits!`,
+  },
 };
 
 export class TTSService {
@@ -447,9 +496,9 @@ export class TTSService {
             text: trimmedDialogue,
           });
 
-          await logger.debug(
-            `Added conversation part: ${trimmedSpeaker} with ${trimmedDialogue.substring(0, 50)}...`,
-          );
+          // await logger.debug(
+          //   `Added conversation part: ${trimmedSpeaker} with ${trimmedDialogue.substring(0, 50)}...`,
+          // );
         } else {
           await logger.debug(
             `No speaker pattern match found at line ${i + 1}: "${line.substring(0, 50)}..."`,
@@ -652,7 +701,10 @@ export class TTSService {
     }
   }
 
-  async generateConversation(text: string): Promise<{
+  async generateConversation(
+    text: string,
+    category: PodcastCategory = "general",
+  ): Promise<{
     audioBuffer: Buffer;
     duration: number;
     usage: PricingDetails;
@@ -692,19 +744,21 @@ export class TTSService {
           // Dynamic prompting based on chunk position
           let prompt: string;
 
+          const prompts = SYSTEM_PROMPTS[category];
+
           if (index === 0) {
-            prompt = `${SYSTEM_PROMPTS.WELCOME}\n\n${SYSTEM_PROMPTS.MAIN}\n\nJoe: ${chunk}\n\nSarah:`;
+            prompt = `${prompts.WELCOME}\n\n${prompts.MAIN}\n\nJoe: ${chunk}\n\nSarah:`;
             speakerIndex = 0;
           } else if (index === chunks.length - 1) {
             await logger.info([
               "\n\n ==================Last Chunk===================\n",
             ]);
 
-            prompt = `${SYSTEM_PROMPTS.MAIN}\n\n${
+            prompt = `${prompts.MAIN}\n\n${
               lastResponse ? `**Previous Context**:\n${lastResponse}\n\n` : ""
-            }${currentSpeaker}: ${chunk}\n\n${SYSTEM_PROMPTS.FAREWELL}`;
+            }${currentSpeaker}: ${chunk}\n\n${prompts.FAREWELL}`;
           } else {
-            prompt = `${SYSTEM_PROMPTS.MAIN}\n\n${
+            prompt = `${prompts.MAIN}\n\n${
               lastResponse ? `**Previous Context**:\n${lastResponse}\n\n` : ""
             }${currentSpeaker}: ${chunk}`;
           }
@@ -752,215 +806,6 @@ export class TTSService {
 
           // Update progress for conversation generation (0-50%)
           this.emitProgress(((index + 1) / chunks.length) * 50);
-        } catch (error) {
-          await logger.error(
-            `Error processing chunk ${index + 1}: ${error instanceof Error ? error.message : String(error)}`,
-          );
-          throw error;
-        }
-      }
-
-      // Print full conversation for debugging
-      await logger.log("\n--- Full Generated Conversation ---");
-      allConversations.forEach((part) => {
-        logger.log(`${part.speaker}: ${part.text}`);
-      });
-      await logger.log("--- End of Conversation ---\n");
-
-      // Calculate pricing using all generated responses
-      const usage = await this.calculatePricing(
-        text, //text extracted from the article
-        responseTexts, // response text array for each chunk
-        allConversations, // cleaned out conversation array for each chunk
-      );
-
-      if (!usage) {
-        throw new Error("Failed to calculate final usage details");
-      }
-
-      // Generate audio for each conversation part
-      await logger.log("Generating audio files...");
-      const audioFiles: string[] = [];
-
-      for (let i = 0; i < allConversations.length; i++) {
-        const { speaker, text } = allConversations[i];
-
-        // Generate the MultiSpeak
-        const audioFile = await this.synthesizeSpeech(text, speaker, i);
-
-        audioFiles.push(audioFile);
-
-        // Update progress for audio generation (50-100%)
-        this.emitProgress(50 + ((i + 1) / allConversations.length) * 50);
-      }
-
-      //Merge audio files
-      const outputFile = path.join("audio-files", "final_output.mp3");
-      await this.mergeAudioFiles("audio-files", outputFile);
-
-      // Read the final audio file
-      const audioBuffer = await fs.readFile(outputFile);
-
-      // Calculate approximate duration (assuming average speaking rate)
-      const totalCharacters = allConversations.reduce(
-        (sum, part) => sum + part.text.length,
-        0,
-      );
-      const approximateDuration = Math.ceil(totalCharacters / 20); // Rough estimate: 20 characters per second
-
-      // Clean up the audio-files directory after getting the final buffer
-      try {
-        await fs.rm(audioDir, { recursive: true, force: true });
-        await logger.info(
-          "Cleaned up audio-files directory after successful generation",
-        );
-      } catch (cleanupError) {
-        await logger.warn(
-          `Failed to clean up audio-files directory: ${cleanupError instanceof Error ? cleanupError.message : String(cleanupError)}`,
-        );
-      }
-
-      this.emitProgress(100);
-
-      return {
-        audioBuffer,
-        duration: approximateDuration,
-        usage,
-      };
-    } catch (error) {
-      await logger.log(
-        `Error generating conversation: ${error instanceof Error ? error.message : String(error)}`,
-      );
-      throw error;
-    }
-  }
-
-  async generateConversationPages(text: string): Promise<{
-    audioBuffer: Buffer;
-    duration: number;
-    usage: PricingDetails;
-  }> {
-    try {
-      // Ensure audio-files directory exists and is empty
-      const audioDir = "audio-files";
-      try {
-        await fs.rm(audioDir, { recursive: true, force: true });
-      } catch (error) {
-        // Ignore error if directory doesn't exist
-      }
-      await fs.mkdir(audioDir, { recursive: true });
-
-      // Initialize conversation tracking
-      const allConversations: ConversationPart[] = [];
-      let lastResponse = "";
-      let speakerIndex = 0;
-
-      // Initialize progress tracking
-      this.emitProgress(0);
-      await logger.info("\n--- Starting Conversation Generation ---\n");
-
-      const model = this.vertexAI.getGenerativeModel({
-        model: "gemini-1.5-flash-002",
-      }) as GenerativeModel;
-
-      const pages = this.splitTextIntoPages(text);
-      let responseTexts: string[] = []; // Moved initialization here
-
-      // Process each chunk and generate conversation
-      for (let index = 0; index < pages.length; index++) {
-        const page = pages[index];
-        const currentSpeaker = SPEAKERS[speakerIndex];
-
-        try {
-          // Dynamic prompting based on chunk position
-          let prompt: string;
-
-          if (index === 0) {
-            prompt = `${SYSTEM_PROMPTS.WELCOME}\n\n${SYSTEM_PROMPTS.MAIN}\n\nJoe: ${page}\n\nSarah:`;
-            speakerIndex = 0;
-          } else if (index === pages.length - 1) {
-            await logger.info([
-              "\n\n ==================Last Chunk===================\n",
-            ]);
-
-            prompt = `${SYSTEM_PROMPTS.MAIN}\n\n${
-              lastResponse ? `**Previous Context**:\n${lastResponse}\n\n` : ""
-            }${currentSpeaker}: ${page}\n\n${SYSTEM_PROMPTS.FAREWELL}`;
-          } else {
-            prompt = `${SYSTEM_PROMPTS.MAIN}\n\n${
-              lastResponse ? `**Previous Context**:\n${lastResponse}\n\n` : ""
-            }${currentSpeaker}: ${page}`;
-          }
-
-          await logger.info([
-            "\n\n ------------PROMPT to VERTEX AI-----------------\n",
-            prompt,
-            "\n\n ------------END-----------------\n",
-          ]);
-
-          // Generate content using Vertex AI
-          const result = (await model.generateContent({
-            contents: [{ role: "user", parts: [{ text: prompt }] }],
-            generationConfig: GENERATION_CONFIG,
-          })) as GenerationResult;
-
-          // Validate and extract response
-          const rawText =
-            result.response.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (!rawText) {
-            throw new Error("Invalid response from Vertex AI");
-          }
-
-          await logger.info([
-            "\n\n -------RESPONSE FROM VERTEX AI---------\n",
-            rawText,
-            "\n\n ------------END-----------------\n",
-          ]);
-
-          // add the response to the array
-          responseTexts.push(rawText);
-
-          // Process conversation parts
-          const conversationParts = await this.cleanGeneratedText(rawText);
-          await logger.info([
-            `Cleaned Text (Chunk ${index + 1}):`,
-            JSON.stringify(conversationParts, null, 2),
-          ]);
-
-          if (conversationParts.length > 0) {
-            allConversations.push(...conversationParts);
-
-            // Generate summary of conversation so far
-            const conversationText = allConversations
-              .map((part) => `${part.speaker}: ${part.text}`)
-              .join("\n");
-
-            const summaryResult = await model.generateContent({
-              contents: [
-                {
-                  role: "user",
-                  parts: [
-                    {
-                      text: `Summarize this conversation in 3-4 sentences:\n${conversationText}`,
-                    },
-                  ],
-                },
-              ],
-              generationConfig: {
-                maxOutputTokens: 200,
-                temperature: 0.3,
-              },
-            });
-
-            lastResponse =
-              summaryResult.response.candidates?.[0]?.content?.parts?.[0]
-                ?.text || conversationParts[conversationParts.length - 1].text;
-
-            speakerIndex = (speakerIndex + 1) % 2;
-          }
-
-          // Update progress for conversation generation (0-50%)
-          this.emitProgress(((index + 1) / pages.length) * 50);
         } catch (error) {
           await logger.error(
             `Error processing chunk ${index + 1}: ${error instanceof Error ? error.message : String(error)}`,

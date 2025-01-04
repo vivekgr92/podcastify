@@ -68,16 +68,23 @@ function getLimits(subscriptionStatus: string | null | undefined) {
 // Initialize Stripe with proper API version and error handling
 let stripe: Stripe;
 try {
-  if (!process.env.STRIPE_SECRET_KEY) {
-    throw new Error("STRIPE_SECRET_KEY is required");
+  const isDev = process.env.NODE_ENV === "development";
+  const stripeKey = isDev
+    ? process.env.STRIPE_SECRET_KEY_TEST
+    : process.env.STRIPE_SECRET_KEY;
+
+  if (!stripeKey) {
+    throw new Error("Stripe secret key is required");
   }
 
-  stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  stripe = new Stripe(stripeKey, {
     apiVersion: "2024-12-18.acacia",
     typescript: true,
   });
 
-  logger.info("Stripe initialized successfully");
+  logger.info(
+    `Stripe initialized successfully in ${isDev ? "development" : "production"} mode`,
+  );
 } catch (error) {
   const errorMessage = error instanceof Error ? error.message : String(error);
   logger.error(`Failed to initialize Stripe: ${errorMessage}`);
@@ -206,17 +213,18 @@ export function registerRoutes(app: Express) {
       }
 
       // Ensure we have the webhook secret
-      if (!process.env.STRIPE_WEBHOOK_SECRET) {
-        logger.error("Missing STRIPE_WEBHOOK_SECRET environment variable");
+      const isDev = process.env.NODE_ENV === "development";
+      const webhookSecret = isDev
+        ? process.env.STRIPE_WEBHOOK_SECRET_TEST
+        : process.env.STRIPE_WEBHOOK_SECRET;
+
+      if (!webhookSecret) {
+        logger.error("Missing Stripe webhook secret");
         return res.status(500).json({ error: "Webhook secret not configured" });
       }
 
       try {
-        event = stripe.webhooks.constructEvent(
-          req.body,
-          sig,
-          process.env.STRIPE_WEBHOOK_SECRET,
-        );
+        event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
       } catch (err) {
         const error = err instanceof Error ? err.message : String(err);
         logger.error(`Webhook signature verification failed: ${error}`);
@@ -488,26 +496,8 @@ export function registerRoutes(app: Express) {
   }
 
   // Configure multer for file uploads
-  const storage = multer.diskStorage({
-    destination: async (req, file, cb) => {
-      const dir = "./uploads";
-      try {
-        await fs.mkdir(dir, { recursive: true });
-        cb(null, dir);
-      } catch (err) {
-        cb(err as Error, dir);
-      }
-    },
-    filename: (req, file, cb) => {
-      const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-      cb(
-        null,
-        file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname),
-      );
-    },
-  });
-
-  const upload = multer({ storage });
+  // Use memory storage instead of disk
+  const upload = multer({ storage: multer.memoryStorage() });
 
   // Create Setup Intent endpoint
   app.post("/api/create-setup-intent", async (req, res) => {
@@ -573,9 +563,16 @@ export function registerRoutes(app: Express) {
       // Process the uploaded file
       let fileContent: string;
       let numPages = 0;
+      const timestamp = Date.now(); // Define timestamp first
 
       try {
-        const fileBuffer = await fs.readFile(file.path);
+        const fileBuffer = file.buffer;
+
+        // Store original PDF in Object Storage
+        const { Client } = await import("@replit/object-storage");
+        const storage = new Client();
+        const pdfFileName = `${timestamp}-${file.originalname}`;
+        await storage.uploadFromBytes(pdfFileName, fileBuffer);
 
         if (file.mimetype === "application/pdf") {
           const pdfData = await pdfParse(fileBuffer);
@@ -722,8 +719,10 @@ export function registerRoutes(app: Express) {
       }
       // Generate audio only if usage limits allow
       await logger.info("Starting audio generation process");
+      const category = req.session?.podcastCategory || "general";
+      await logger.info(`\n\nCategory: ${category}`);
       const { audioBuffer, duration, usage } =
-        await ttsService.generateConversationPages(fileContent);
+        await ttsService.generateConversation(fileContent, category);
 
       if (!audioBuffer || !duration || !usage) {
         throw new Error(
@@ -776,8 +775,7 @@ export function registerRoutes(app: Express) {
           `Podify Tokens: ${updatedUsage.podifyTokens}/${currentLimits.podifyTokenLimit}`,
         ]);
 
-        // Save the audio file to Object Storage
-        const timestamp = Date.now();
+        // Save the audio file to Object Storage using the same timestamp
         const sanitizedFileName = file.originalname
           .replace(/\.[^/.]+$/, "")
           .replace(/[^a-zA-Z0-9]/g, "_");
@@ -858,22 +856,17 @@ export function registerRoutes(app: Express) {
         error: errorMessage,
         type: isValidationError ? "validation" : "server",
       });
-    } finally {
-      // Clean up the uploaded file
-      if (file?.path) {
-        try {
-          await fs.unlink(file.path);
-        } catch (unlinkError) {
-          const cleanupError =
-            unlinkError instanceof Error
-              ? unlinkError.message
-              : "Unknown error";
-          await logger.error(
-            `Error cleaning up uploaded file: ${cleanupError}`,
-          );
-        }
-      }
     }
+  });
+
+  // Set podcast category
+  app.post("/api/set-category", (req, res) => {
+    if (!req.session) {
+      return res.status(400).json({ error: "No session available" });
+    }
+    const category = req.body.category || "general";
+    req.session.podcastCategory = category;
+    res.json({ success: true, category });
   });
 
   // Stream audio from Object Storage
@@ -935,7 +928,8 @@ export function registerRoutes(app: Express) {
         .select({
           articlesConverted: userUsage.articlesConverted,
           tokensUsed: userUsage.tokensUsed,
-          podifyTokens: userUsage.podifyTokens,          lastConversion: userUsage.lastConversion,
+          podifyTokens: userUsage.podifyTokens,
+          lastConversion: userUsage.lastConversion,
           monthYear: userUsage.monthYear,
         })
         .from(userUsage)
@@ -1640,13 +1634,13 @@ export function registerRoutes(app: Express) {
 
       const validation = insertFeedbackSchema.safeParse({
         ...req.body,
-        userId: req.user.id
+        userId: req.user.id,
       });
 
       if (!validation.success) {
         return res.status(400).json({
           error: "Invalid feedback data",
-          details: validation.error.errors
+          details: validation.error.errors,
         });
       }
 
@@ -1657,22 +1651,21 @@ export function registerRoutes(app: Express) {
           content: validation.data.content,
           rating: validation.data.rating,
           status: "pending",
-          createdAt: new Date()
+          createdAt: new Date(),
         })
         .returning();
 
       res.json({
         message: "Feedback submitted successfully",
-        feedback: newFeedback
+        feedback: newFeedback,
       });
-
     } catch (error) {
       logger.error(
-        `Error submitting feedback: ${error instanceof Error ? error.message : String(error)}`
+        `Error submitting feedback: ${error instanceof Error ? error.message : String(error)}`,
       );
       res.status(500).json({
         error: "Failed to submit feedback",
-        message: error instanceof Error ? error.message : "Unknown error"
+        message: error instanceof Error ? error.message : "Unknown error",
       });
     }
   });
@@ -1691,14 +1684,13 @@ export function registerRoutes(app: Express) {
         .orderBy(desc(feedback.createdAt));
 
       res.json(userFeedback);
-
     } catch (error) {
       logger.error(
-        `Error fetching feedback: ${error instanceof Error ? error.message : String(error)}`
+        `Error fetching feedback: ${error instanceof Error ? error.message : String(error)}`,
       );
       res.status(500).json({
         error: "Failed to fetch feedback",
-        message: error instanceof Error ? error.message : "Unknown error"
+        message: error instanceof Error ? error.message : "Unknown error",
       });
     }
   });

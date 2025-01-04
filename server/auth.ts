@@ -1,7 +1,7 @@
 import passport from "passport";
 import { Strategy as LocalStrategy, IVerifyOptions } from "passport-local";
 import { type Express } from "express";
-import session from "express-session";
+import expressSession from "express-session";
 import createMemoryStore from "memorystore";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
@@ -41,7 +41,7 @@ export function setupAuth(app: Express) {
   const MemoryStore = createMemoryStore(session);
   
   app.use(
-    session({
+    expressSession({
       secret: process.env.REPL_ID || "podcast-app-secret",
       resave: false,
       saveUninitialized: false,
