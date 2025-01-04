@@ -68,18 +68,18 @@ function getLimits(subscriptionStatus: string | null | undefined) {
 // Initialize Stripe with proper API version and error handling
 let stripe: Stripe;
 try {
-  const isDev = process.env.NODE_ENV === 'development';
-  
-  const stripeSecretKey = isDev 
-    ? process.env.STRIPE_SECRET_KEY_TEST 
+  const isDev = process.env.NODE_ENV === "development";
+
+  const stripeSecretKey = isDev
+    ? process.env.STRIPE_SECRET_KEY_TEST
     : process.env.STRIPE_SECRET_KEY;
-    
-  const stripeWebhookSecret = isDev
-    ? process.env.STRIPE_WEBHOOK_SECRET_TEST
-    : process.env.STRIPE_WEBHOOK_SECRET;
-    
+
   if (!stripeSecretKey) {
-    throw new Error(isDev ? "STRIPE_SECRET_KEY_TEST is required" : "STRIPE_SECRET_KEY is required");
+    throw new Error(
+      isDev
+        ? "STRIPE_SECRET_KEY_TEST is required"
+        : "STRIPE_SECRET_KEY is required",
+    );
   }
 
   stripe = new Stripe(stripeSecretKey, {
@@ -215,26 +215,23 @@ export function registerRoutes(app: Express) {
         return res.status(400).json({ error: "Missing stripe signature" });
       }
 
-      const isDev = process.env.NODE_ENV === 'development';
-      const webhookSecret = isDev 
-        ? process.env.STRIPE_WEBHOOK_SECRET_TEST 
+      const isDev = process.env.NODE_ENV === "development";
+      const webhookSecret = isDev
+        ? process.env.STRIPE_WEBHOOK_SECRET_TEST
         : process.env.STRIPE_WEBHOOK_SECRET;
 
       // Ensure we have the webhook secret
       if (!webhookSecret) {
-        logger.error(isDev 
-          ? "Missing STRIPE_WEBHOOK_SECRET_TEST environment variable"
-          : "Missing STRIPE_WEBHOOK_SECRET environment variable"
+        logger.error(
+          isDev
+            ? "Missing STRIPE_WEBHOOK_SECRET_TEST environment variable"
+            : "Missing STRIPE_WEBHOOK_SECRET environment variable",
         );
         return res.status(500).json({ error: "Webhook secret not configured" });
       }
 
       try {
-        event = stripe.webhooks.constructEvent(
-          req.body,
-          sig,
-          webhookSecret,
-        );
+        event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
       } catch (err) {
         const error = err instanceof Error ? err.message : String(err);
         logger.error(`Webhook signature verification failed: ${error}`);
