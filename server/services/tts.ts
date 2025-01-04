@@ -71,7 +71,7 @@ type PodcastCategory = "general" | "kids" | "research";
 
 const SYSTEM_PROMPTS = {
   general: {
-    WELCOME: `Speaker Joe should Start the podcast by saying this: Welcome to Podify, where we explore fascinating topics and stories from around the world. Join us for an engaging and insightful journey through ideas that connect us all!`,
+    WELCOME: `Speaker Joe should Start the podcast by saying this->Joe: Welcome to Podify, where we explore fascinating topics and stories from around the world. Join us for an engaging and insightful journey through ideas that connect us all!`,
 
     MAIN: `You are generating a podcast conversation between Joe and Sarah aimed at a general audience.
 
@@ -79,6 +79,7 @@ const SYSTEM_PROMPTS = {
     1. Use clear and accessible language that appeals to a diverse audience.
     2. Incorporate relatable examples and light humor to keep the conversation engaging.
     3. Maintain a natural and conversational tone, avoiding overly technical or formal language.
+    Both speakers use natural human speech patterns, including filler words like "um," "ah," "you know," and short pauses.
 
     **Focus**:
     - Discuss a variety of topics, ensuring a balance between entertainment and information.
@@ -94,7 +95,7 @@ const SYSTEM_PROMPTS = {
   },
 
   kids: {
-    WELCOME: `Speaker Joe should Start the podcast by saying this: Hey kids! Welcome to Podify Kids, where we make learning super fun and exciting! Get ready for cool stories, awesome facts, and tons of laughs as we explore the world together!`,
+    WELCOME: `Speaker Joe should Start the podcast by saying this->Joe: Hey kids! Welcome to Podify Kids, where we make learning super fun and exciting! Get ready for cool stories, awesome facts, and tons of laughs as we explore the world together!`,
 
     MAIN: `You are generating a kid-friendly podcast conversation between Joe and Sarah.
 
@@ -102,6 +103,7 @@ const SYSTEM_PROMPTS = {
     1. Use simple, age-appropriate language that is fun and engaging for kids.
     2. Incorporate playful elements, like jokes, riddles, and exciting questions to keep kids entertained.
     3. Use a lively and enthusiastic tone to capture the energy of a children’s podcast.
+    4.Both speakers use natural human speech patterns, including filler words like "um," "ah," "you know," and short pauses.
 
     **Focus**:
     - Explain concepts with clear and fun analogies.
@@ -470,8 +472,12 @@ export class TTSService {
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
         // Enhanced regex to handle various markdown formats
+        // const match = line.match(
+        //   /^(?:\*?\*?|\*\*)?([A-Za-z]+)(?:\*?\*?|\*\*)?\s*:\s*(.+)$/,
+        // );
+
         const match = line.match(
-          /^(?:\*?\*?|\*\*)?([A-Za-z]+)(?:\*?\*?|\*\*)?\s*:\s*(.+)$/,
+          /^(?:\*{1,2})?([A-Za-z]+)(?:\*{1,2})?\s*:\s*(.+)$/,
         );
 
         if (match) {
@@ -929,7 +935,7 @@ export class TTSService {
           // Dynamic prompting based on chunk position
           let prompt: string;
 
-          const category = 'general';
+          const category = "general";
           if (index === 0) {
             prompt = `${SYSTEM_PROMPTS[category].WELCOME}\n\n${SYSTEM_PROMPTS[category].MAIN}\n\nJoe: ${page}\n\nSarah:`;
             speakerIndex = 0;
