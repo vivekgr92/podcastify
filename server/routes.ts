@@ -68,23 +68,16 @@ function getLimits(subscriptionStatus: string | null | undefined) {
 // Initialize Stripe with proper API version and error handling
 let stripe: Stripe;
 try {
-  const isDev = process.env.NODE_ENV === "development";
-  const stripeKey = isDev
-    ? process.env.STRIPE_SECRET_KEY_TEST
-    : process.env.STRIPE_SECRET_KEY;
-
-  if (!stripeKey) {
-    throw new Error("Stripe secret key is required");
+  if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error("STRIPE_SECRET_KEY is required");
   }
 
-  stripe = new Stripe(stripeKey, {
+  stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
     apiVersion: "2024-12-18.acacia",
     typescript: true,
   });
 
-  logger.info(
-    `Stripe initialized successfully in ${isDev ? "development" : "production"} mode`,
-  );
+  logger.info("Stripe initialized successfully");
 } catch (error) {
   const errorMessage = error instanceof Error ? error.message : String(error);
   logger.error(`Failed to initialize Stripe: ${errorMessage}`);
@@ -213,18 +206,17 @@ export function registerRoutes(app: Express) {
       }
 
       // Ensure we have the webhook secret
-      const isDev = process.env.NODE_ENV === "development";
-      const webhookSecret = isDev
-        ? process.env.STRIPE_WEBHOOK_SECRET_TEST
-        : process.env.STRIPE_WEBHOOK_SECRET;
-
-      if (!webhookSecret) {
-        logger.error("Missing Stripe webhook secret");
+      if (!process.env.STRIPE_WEBHOOK_SECRET) {
+        logger.error("Missing STRIPE_WEBHOOK_SECRET environment variable");
         return res.status(500).json({ error: "Webhook secret not configured" });
       }
 
       try {
-        event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
+        event = stripe.webhooks.constructEvent(
+          req.body,
+          sig,
+          process.env.STRIPE_WEBHOOK_SECRET,
+        );
       } catch (err) {
         const error = err instanceof Error ? err.message : String(err);
         logger.error(`Webhook signature verification failed: ${error}`);

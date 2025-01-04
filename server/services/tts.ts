@@ -888,6 +888,215 @@ export class TTSService {
       throw error;
     }
   }
+
+  async generateConversationPages(text: string): Promise<{
+    audioBuffer: Buffer;
+    duration: number;
+    usage: PricingDetails;
+  }> {
+    try {
+      // Ensure audio-files directory exists and is empty
+      const audioDir = "audio-files";
+      try {
+        await fs.rm(audioDir, { recursive: true, force: true });
+      } catch (error) {
+        // Ignore error if directory doesn't exist
+      }
+      await fs.mkdir(audioDir, { recursive: true });
+
+      // Initialize conversation tracking
+      const allConversations: ConversationPart[] = [];
+      let lastResponse = "";
+      let speakerIndex = 0;
+
+      // Initialize progress tracking
+      this.emitProgress(0);
+      await logger.info("\n--- Starting Conversation Generation ---\n");
+
+      const model = this.vertexAI.getGenerativeModel({
+        model: "gemini-1.5-flash-002",
+      }) as GenerativeModel;
+
+      const pages = this.splitTextIntoPages(text);
+      let responseTexts: string[] = []; // Moved initialization here
+
+      // Process each chunk and generate conversation
+      for (let index = 0; index < pages.length; index++) {
+        const page = pages[index];
+        const currentSpeaker = SPEAKERS[speakerIndex];
+
+        try {
+          // Dynamic prompting based on chunk position
+          let prompt: string;
+
+          if (index === 0) {
+            prompt = `${SYSTEM_PROMPTS.WELCOME}\n\n${SYSTEM_PROMPTS.MAIN}\n\nJoe: ${page}\n\nSarah:`;
+            speakerIndex = 0;
+          } else if (index === pages.length - 1) {
+            await logger.info([
+              "\n\n ==================Last Chunk===================\n",
+            ]);
+
+            prompt = `${SYSTEM_PROMPTS.MAIN}\n\n${
+              lastResponse ? `**Previous Context**:\n${lastResponse}\n\n` : ""
+            }${currentSpeaker}: ${page}\n\n${SYSTEM_PROMPTS.FAREWELL}`;
+          } else {
+            prompt = `${SYSTEM_PROMPTS.MAIN}\n\n${
+              lastResponse ? `**Previous Context**:\n${lastResponse}\n\n` : ""
+            }${currentSpeaker}: ${page}`;
+          }
+
+          // await logger.info([
+          //   "\n\n ------------PROMPT to VERTEX AI-----------------\n",
+          //   prompt,
+          //   "\n\n ------------END-----------------\n",
+          // ]);
+
+          // Generate content using Vertex AI
+          const result = (await model.generateContent({
+            contents: [{ role: "user", parts: [{ text: prompt }] }],
+            generationConfig: GENERATION_CONFIG,
+          })) as GenerationResult;
+
+          // Validate and extract response
+          const rawText =
+            result.response.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (!rawText) {
+            throw new Error("Invalid response from Vertex AI");
+          }
+
+          // await logger.info([
+          //   "\n\n -------RESPONSE FROM VERTEX AI---------\n",
+          //   rawText,
+          //   "\n\n ------------END-----------------\n",
+          // ]);
+
+          // add the response to the array
+          responseTexts.push(rawText);
+
+          // Process conversation parts
+          const conversationParts = await this.cleanGeneratedText(rawText);
+          await logger.info([
+            `Cleaned Text (Chunk ${index + 1}):`,
+            JSON.stringify(conversationParts, null, 2),
+          ]);
+
+          if (conversationParts.length > 0) {
+            allConversations.push(...conversationParts);
+
+            // Generate summary of conversation so far
+            const conversationText = allConversations
+              .map((part) => `${part.speaker}: ${part.text}`)
+              .join("\n");
+
+            const summaryResult = await model.generateContent({
+              contents: [
+                {
+                  role: "user",
+                  parts: [
+                    {
+                      text: `Summarize this conversation in 3-4 sentences:\n${conversationText}`,
+                    },
+                  ],
+                },
+              ],
+              generationConfig: {
+                maxOutputTokens: 200,
+                temperature: 0.3,
+              },
+            });
+
+            lastResponse =
+              summaryResult.response.candidates?.[0]?.content?.parts?.[0]
+                ?.text || conversationParts[conversationParts.length - 1].text;
+
+            speakerIndex = (speakerIndex + 1) % 2;
+          }
+
+          // Update progress for conversation generation (0-50%)
+          this.emitProgress(((index + 1) / pages.length) * 50);
+        } catch (error) {
+          await logger.error(
+            `Error processing chunk ${index + 1}: ${error instanceof Error ? error.message : String(error)}`,
+          );
+          throw error;
+        }
+      }
+
+      // // Print full conversation for debugging
+      // await logger.log("\n--- Full Generated Conversation ---");
+      // allConversations.forEach((part) => {
+      //   logger.log(`${part.speaker}: ${part.text}`);
+      // });
+      // await logger.log("--- End of Conversation ---\n");
+
+      // Calculate pricing using all generated responses
+      const usage = await this.calculatePricing(
+        text, //text extracted from the article
+        responseTexts, // response text array for each chunk
+        allConversations, // cleaned out conversation array for each chunk
+      );
+
+      if (!usage) {
+        throw new Error("Failed to calculate final usage details");
+      }
+
+      // Generate audio for each conversation part
+      await logger.log("Generating audio files...");
+      const audioFiles: string[] = [];
+
+      for (let i = 0; i < allConversations.length; i++) {
+        const { speaker, text } = allConversations[i];
+
+        // Generate the MultiSpeak
+        const audioFile = await this.synthesizeSpeech(text, speaker, i);
+
+        audioFiles.push(audioFile);
+
+        // Update progress for audio generation (50-100%)
+        this.emitProgress(50 + ((i + 1) / allConversations.length) * 50);
+      }
+
+      //Merge audio files
+      const outputFile = path.join("audio-files", "final_output.mp3");
+      await this.mergeAudioFiles("audio-files", outputFile);
+
+      // Read the final audio file
+      const audioBuffer = await fs.readFile(outputFile);
+
+      // Calculate approximate duration (assuming average speaking rate)
+      const totalCharacters = allConversations.reduce(
+        (sum, part) => sum + part.text.length,
+        0,
+      );
+      const approximateDuration = Math.ceil(totalCharacters / 20); // Rough estimate: 20 characters per second
+
+      // Clean up the audio-files directory after getting the final buffer
+      try {
+        await fs.rm(audioDir, { recursive: true, force: true });
+        await logger.info(
+          "Cleaned up audio-files directory after successful generation",
+        );
+      } catch (cleanupError) {
+        await logger.warn(
+          `Failed to clean up audio-files directory: ${cleanupError instanceof Error ? cleanupError.message : String(cleanupError)}`,
+        );
+      }
+
+      this.emitProgress(100);
+
+      return {
+        audioBuffer,
+        duration: approximateDuration,
+        usage,
+      };
+    } catch (error) {
+      await logger.log(
+        `Error generating conversation: ${error instanceof Error ? error.message : String(error)}`,
+      );
+      throw error;
+    }
+  }
 }
 
 export const ttsService = new TTSService();
