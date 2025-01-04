@@ -19,6 +19,23 @@ type Plan = {
   priceId: string;
 };
 
+const isDev = process.env.NODE_ENV === 'development';
+
+const PRICE_IDS = {
+  basic: {
+    dev: "price_test_basic123",
+    prod: "price_1QdDlMBwEMzOkTIKJikjLbE2"
+  },
+  pro: {
+    dev: "price_test_pro456",
+    prod: "price_1QdDlNBwEMzOkTIKzYG5pwi6"
+  },
+  enterprise: {
+    dev: "price_test_enterprise789",
+    prod: "price_1QdDlNBwEMzOkTIKT3LgtrnV"
+  }
+};
+
 const plans: Plan[] = [
   {
     name: "Basic Plan",
@@ -33,7 +50,7 @@ const plans: Plan[] = [
     ],
     buttonText: "Subscribe Now",
     popular: false,
-    priceId: "price_1QdDlMBwEMzOkTIKJikjLbE2",
+    priceId: isDev ? PRICE_IDS.basic.dev : PRICE_IDS.basic.prod,
   },
   {
     name: "Pro Plan",
@@ -49,7 +66,7 @@ const plans: Plan[] = [
     ],
     buttonText: "Subscribe Now",
     popular: true,
-    priceId: "price_1QdDlNBwEMzOkTIKzYG5pwi6",
+    priceId: isDev ? PRICE_IDS.pro.dev : PRICE_IDS.pro.prod,
   },
   {
     name: "Enterprise Plan",
@@ -66,7 +83,7 @@ const plans: Plan[] = [
     ],
     buttonText: "Subscribe Now",
     popular: false,
-    priceId: "price_1QdDlNBwEMzOkTIKT3LgtrnV",
+    priceId: isDev ? PRICE_IDS.enterprise.dev : PRICE_IDS.enterprise.prod,
   },
 ];
 
