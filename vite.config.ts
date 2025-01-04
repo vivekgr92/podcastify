@@ -24,7 +24,11 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    exclude: ['@tanstack/react-query'],
+    exclude: [
+      '@tanstack/react-query',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-dropdown-menu'
+    ],
   },
   root: path.resolve(__dirname, "client"),
   build: {
