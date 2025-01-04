@@ -6384,3 +6384,734 @@ Usage limits check for user 26:
 [INFO] GET / 200 in 61ms
 [INFO] GET / 200 in 122ms
 [INFO] GET /api/playlists 304 in 177ms
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] GET / 200 in 92ms
+[INFO] GET /@vite/client 304 in 50ms
+[INFO] GET /@react-refresh 304 in 46ms
+[INFO] GET /src/main.tsx 304 in 76ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 161ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
+[INFO] GET /src/lib/queryClient.ts 304 in 15ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 8ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
+[INFO] GET /src/index.css 304 in 762ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 0ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 20ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 2ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 0ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 2ms
+[INFO] GET /src/pages/FeedbackPage.tsx 304 in 1ms
+[INFO] GET /src/components/ui/button.tsx 304 in 1ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-user.ts 304 in 0ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
+[INFO] GET /src/components/ui/select.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
+[INFO] GET /src/components/Logo.tsx 304 in 0ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 1ms
+[INFO] GET /src/lib/utils.ts 304 in 1ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
+[INFO] GET /src/components/ui/card.tsx 304 in 1ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 1ms
+[INFO] GET /src/components/ui/input.tsx 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 0ms
+[INFO] GET /src/components/ui/form.tsx 304 in 1ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 1ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 0ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 1ms
+[INFO] GET /src/components/ui/textarea.tsx 304 in 0ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 1ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
+[INFO] GET /src/components/ui/label.tsx 304 in 0ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
+[INFO] GET /api/user 401 in 3ms
+[INFO] GET / 200 in 5ms
+[INFO] POST /api/login 200 in 461ms
+[INFO] GET /api/user 304 in 63ms
+[INFO] GET / 200 in 104ms
+[INFO] GET / 200 in 125ms
+[INFO] GET /api/playlists 304 in 239ms
+[INFO] GET /api/podcasts 304 in 257ms
+[INFO] GET / 200 in 120ms
+[INFO] Subscription Status for  user: active
+[INFO] Subscription Type for user: Basic Plan:monthly
+[INFO] GET /api/user/usage/check 304 in 177ms
+[INFO] POST /api/set-category 200 in 59ms
+[INFO] Subscription Status for  user: active
+[INFO] Subscription Type for user: Basic Plan:monthly
+[INFO] GET /api/user/usage/check 304 in 293ms
+[INFO] 
+
+ PDF has 2 pages
+[INFO] Calculating estimated pricing and checking usage limits
+[INFO] 
+======= Starting Pricing Calculation ======
+ -Input text length: 2873
+ -Number of Vertex AI responses: 0
+
+[INFO] 
+        Input text length: 2873
+        Input token count: 792
+        System prompt length: 47
+        System token count: 14
+        Total input tokens: 806
+      
+[INFO] 
+---***** Estimated Calculation Summary **** ---
+Total Input Tokens: 806
+Total Output Tokens: 1209
+Total Tokens: 2015
+Total TTS Characters: 4836
+Vertex AI Input Cost: $0.000000
+Vertex AI Output Cost: $0.000001
+TTS Cost: $0.077376
+Total Cost: $0.077377
+[INFO] Estimated Podify Tokens: 39 
+
+Usage limits check for user 26:
+ Current articles: 3/3
+ Current Podify tokens: 195/10000
+ Would exceed article limit: true
+ Would exceed token limit: false
+[WARN] ---------- USAGE LIMIT WARNING ----------
+ User: 26
+ Articles: 3/3 (exceeded)
+ Tokens: 195/10000 (ok)
+ -----------------------------------------
+
+[INFO] POST /api/podcast 403 in 1081ms
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Setting up Vite for development...
+[INFO] Registering routes...
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] Server started successfully on port 4000
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] GET / 200 in 42ms
+[INFO] GET /@vite/client 304 in 26ms
+[INFO] GET /src/main.tsx 304 in 45ms
+[INFO] GET /@react-refresh 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 340ms
+[INFO] GET /src/lib/queryClient.ts 304 in 1ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 2ms
+[INFO] GET /src/index.css 304 in 729ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 1ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 0ms
+[INFO] GET /src/pages/FeedbackPage.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-user.ts 304 in 1ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
+[INFO] GET /src/components/ui/button.tsx 304 in 1ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
+[INFO] GET /src/components/ui/select.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
+[INFO] GET /src/components/Logo.tsx 304 in 1ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 1ms
+[INFO] GET /src/components/ui/input.tsx 304 in 0ms
+[INFO] GET /src/components/ui/form.tsx 304 in 0ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 1ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 0ms
+[INFO] GET /src/lib/utils.ts 304 in 0ms
+[INFO] GET /src/components/ui/card.tsx 304 in 1ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 0ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 0ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 1ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 0ms
+[INFO] GET /src/components/ui/textarea.tsx 304 in 0ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 1ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
+[INFO] GET /src/components/ui/label.tsx 304 in 1ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 0ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 0ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
+[INFO] GET /api/user 401 in 2ms
+[INFO] GET / 200 in 5ms
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] GET / 200 in 46ms
+[INFO] GET /@vite/client 304 in 28ms
+[INFO] GET /@react-refresh 304 in 27ms
+[INFO] GET /src/main.tsx 304 in 34ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 340ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
+[INFO] GET /src/lib/queryClient.ts 304 in 1ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 0ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 1ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 1ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 4ms
+[INFO] GET /src/pages/FeedbackPage.tsx 304 in 1ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 0ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 1ms
+[INFO] GET /src/components/ui/button.tsx 304 in 1ms
+[INFO] GET /src/index.css 304 in 2551ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 1ms
+[INFO] GET /src/hooks/use-user.ts 304 in 2ms
+[INFO] GET /src/components/ui/form.tsx 304 in 2ms
+[INFO] GET /src/components/ui/input.tsx 304 in 6ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 1ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 1ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 2ms
+[INFO] GET /src/lib/utils.ts 304 in 1ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
+[INFO] GET /src/components/Logo.tsx 304 in 1ms
+[INFO] GET /src/components/ui/select.tsx 304 in 1ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 0ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 1ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 3ms
+[INFO] GET /src/components/ui/card.tsx 304 in 2ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 2ms
+[INFO] GET /src/components/ui/textarea.tsx 304 in 2ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 1ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 1ms
+[INFO] GET /src/components/ui/label.tsx 304 in 1ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 1ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 1ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 2ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 0ms
+[INFO] GET /api/user 401 in 5ms
+[INFO] GET / 200 in 40ms
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] GET / 200 in 33ms
+[INFO] GET /@vite/client 304 in 29ms
+[INFO] GET /@react-refresh 304 in 13ms
+[INFO] GET /src/main.tsx 304 in 40ms
+[INFO] GET /@vite-plugin-checker-runtime 304 in 410ms
+[INFO] GET /src/pages/PricingPage.tsx 304 in 59ms
+[INFO] GET /src/lib/queryClient.ts 304 in 1ms
+[INFO] GET /src/pages/LibraryPage.tsx 304 in 1ms
+[INFO] GET /src/pages/AdminPage.tsx 304 in 1ms
+[INFO] GET /src/pages/BillingPage.tsx 304 in 0ms
+[INFO] GET /src/pages/HomePage.tsx 304 in 0ms
+[INFO] GET /src/components/ui/toaster.tsx 304 in 688ms
+[INFO] GET /src/pages/FeedbackPage.tsx 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/node_modules/vite/dist/client/env.mjs 304 in 1ms
+[INFO] GET /src/pages/ProfilePage.tsx 304 in 1ms
+[INFO] GET /src/index.css 304 in 1ms
+[INFO] GET /src/pages/AuthPage.tsx 304 in 1ms
+[INFO] GET /src/components/Sidebar.tsx 304 in 1ms
+[INFO] GET /src/pages/ForgotPasswordPage.tsx 304 in 1ms
+[INFO] GET /src/components/ui/button.tsx 304 in 1ms
+[INFO] GET /src/components/ui/alert-dialog.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-user.ts 304 in 1ms
+[INFO] GET /src/hooks/use-audio.ts 304 in 1ms
+[INFO] GET /src/components/AudioPlayer.tsx 304 in 0ms
+[INFO] GET /src/hooks/use-toast.ts 304 in 0ms
+[INFO] GET /src/lib/utils.ts 304 in 1ms
+[INFO] GET /src/components/PaymentModal.tsx 304 in 0ms
+[INFO] GET /src/components/ui/separator.tsx 304 in 1ms
+[INFO] GET /src/components/LoadingScreen.tsx 304 in 1ms
+[INFO] GET /src/components/ui/card.tsx 304 in 1ms
+[INFO] GET /src/components/ui/tabs.tsx 304 in 1ms
+[INFO] GET /src/components/ui/select.tsx 304 in 1ms
+[INFO] GET /src/hooks/use-tts.ts 304 in 1ms
+[INFO] GET /src/components/Logo.tsx 304 in 1ms
+[INFO] GET /src/components/ui/collapsible.tsx 304 in 0ms
+[INFO] GET /src/components/UsageProgress.tsx 304 in 1ms
+[INFO] GET /src/components/ui/toast.tsx 304 in 1ms
+[INFO] GET /src/components/ui/avatar.tsx 304 in 1ms
+[INFO] GET /src/components/ui/textarea.tsx 304 in 7ms
+[INFO] GET /src/components/ui/input.tsx 304 in 1ms
+[INFO] GET /src/components/ui/form.tsx 304 in 1ms
+[INFO] GET /@fs/home/runner/PodCasterella/db/schema.ts 304 in 1ms
+[INFO] GET /src/components/ui/scroll-area.tsx 304 in 0ms
+[INFO] GET /src/components/ui/slider.tsx 304 in 1ms
+[INFO] GET /src/components/ui/popover.tsx 304 in 1ms
+[INFO] GET /src/components/ui/progress.tsx 304 in 1ms
+[INFO] GET /src/components/ui/dialog.tsx 304 in 1ms
+[INFO] GET /src/components/ui/label.tsx 304 in 0ms
+[INFO] GET /api/user 401 in 2ms
+[INFO] GET / 200 in 4ms
+[INFO] GET / 200 in 3ms
+[INFO] POST /api/login 200 in 366ms
+[INFO] GET /api/user 304 in 95ms
+[INFO] GET / 200 in 140ms
+[INFO] GET / 200 in 84ms
+[INFO] GET /api/podcasts 304 in 223ms
+[INFO] GET /api/playlists 304 in 246ms
+[INFO] GET / 200 in 58ms
+[INFO] Subscription Status for  user: active
+[INFO] Subscription Type for user: Basic Plan:monthly
+[INFO] GET /api/user/usage/check 304 in 165ms
+[INFO] POST /api/set-category 200 in 55ms
+[INFO] Subscription Status for  user: active
+[INFO] Subscription Type for user: Basic Plan:monthly
+[INFO] GET /api/user/usage/check 304 in 111ms
+[INFO] 
+
+ PDF has 2 pages
+[INFO] Calculating estimated pricing and checking usage limits
+[INFO] 
+======= Starting Pricing Calculation ======
+ -Input text length: 2873
+ -Number of Vertex AI responses: 0
+
+[INFO] 
+        Input text length: 2873
+        Input token count: 792
+        System prompt length: 47
+        System token count: 14
+        Total input tokens: 806
+      
+[INFO] 
+---***** Estimated Calculation Summary **** ---
+Total Input Tokens: 806
+Total Output Tokens: 1209
+Total Tokens: 2015
+Total TTS Characters: 4836
+Vertex AI Input Cost: $0.000000
+Vertex AI Output Cost: $0.000001
+TTS Cost: $0.077376
+Total Cost: $0.077377
+[INFO] Estimated Podify Tokens: 39 
+
+Usage limits check for user 26:
+ Current articles: 3/20
+ Current Podify tokens: 195/40000
+ Would exceed article limit: false
+ Would exceed token limit: false
+[INFO] Starting audio generation process
+[INFO] 
+
+Category: kids
+[INFO] 
+--- Starting Conversation Generation ---
+
+[INFO] 
+
+ ------------PROMPT to VERTEX AI-----------------
+ Speaker Joe should Start the podcast by saying this->Joe: Hey kids! Welcome to Podify Kids, where we make learning super fun and exciting! Get ready for cool stories, awesome facts, and tons of laughs as we explore the world together!
+
+You are generating a kid-friendly podcast conversation between Joe and Sarah.
+
+    **Guidelines**:
+    1. Use simple, age-appropriate language that is fun and engaging for kids.
+    2. Incorporate playful elements, like jokes, riddles, and exciting questions to keep kids entertained.
+    3. Use a lively and enthusiastic tone to capture the energy of a children’s podcast.
+    4.Both speakers use natural human speech patterns, including filler words like "um," "ah," "you know," and short pauses.
+
+    **Focus**:
+    - Explain concepts with clear and fun analogies.
+    - Include interactive moments like trivia questions or "imagine this" scenarios to involve the audience.
+    - Ensure the content is educational yet entertaining, covering topics like nature, science, and adventures.
+
+    **Tone**:
+    - Cheerful, playful, and energetic.
+    - Highlight curiosity and wonder to inspire young listeners.
+    - Keep the dialogue dynamic and full of surprises to hold attention.
+
+Joe: TheMagicalWorldofVectors Onceuponatime,inalandfullofwonders,therewasayoungexplorernamedMax.Maxloved toaskquestionsabouteverythingaroundhim.Hewantedtoknowhowthewindblew,howbirds flew,andhowrainfellfromthesky.Buttherewasonethinghedidntquiteunderstandhowall thesethingsmovedandworkedtogether. Oneday,amysterioustravelerarrivedinMaxsvillage.Hehadaglowingmapandabigsmile. HisnamewasVector,andhesaid,Ivecometoshowyouthesecretofhoweverythinginthe worldmoves! Maxwascurious.Whatsthesecret?heasked. Vectorheldupapieceofpaperwithabigarrowdrawnonit.Thisisavector,hesaid.Avector islikeanarrowthattellsustwoveryimportantthings:howstrongaforceisandwhichwayits going. Maxblinked.Butwhatdoyoumean?Canyoushowme? Ofcourse!Vectorsmiled.Letsstartwithsomethingsimple.Imagineyourepushingatoycar. Theforceyouusetopushthecarislikeavector.Thestrengthofthepushishowhardyou push,andthedirectioniswhereyoupushthecarforward,backward,left,orright! Maxseyeslitup.Sothecarmovesbecauseofthestrengthanddirectionofmypush? Exactly!Vectorsaid.Now,letsthinkaboutthewind.Itsblowingthroughthetrees.Thewind isavectortoo!Thestrengthofthewindishowfastitsblowing,andthedirectioniswhichway itsgoingtowardthemountains,ormaybeacrossthefields. Maxwasstartingtounderstand.So,thewindislikeaninvisiblepush! Exactly!Andthatsnotall.Vectorshelpexplainsomanythings.Forexample,whenabirdflies, itusesvectors.Thebirdswingspushtheairtoliftitup,andthewindpushesthebirdforward. Thebirdisalwaysusingforces,orvectors,tomoveintherightway! Maxwasexcited.IthinkIgetit!Vectorsarelikelittlearrowsthatshowhowthingsmoveand whichwaytheygo! Exactly,saidVector.Andguesswhat?Engineers,scientists,andevenathletesusevectorsto understandandcontrolhowthingsmove.Whetheritsbuildingabridge,designingaspaceship, orevenkickingasoccerball,vectorsareeverywhere! Maxrantothevillagesquare,eagertosharewhathedlearned.Hey,everyone!Vectorsare likemagicarrowsthattellushowstrongthingsareandwheretheyregoing.Ifweknowhowto usevectors,wecanunderstandhoweverythingmoves! Fromthatdayon,Maxandhisfriendslookedattheworldinanewway.Theyunderstoodthat forces,likewind,gravity,andeventhewaytheirsoccerballsflewthroughtheair,wereall controlledbyvectors. WhyVectorsAreSoImportant Vectorshelpusunderstandeverythingaroundus.Imagineyoureplayingavideogame,and yourcharacterhastojumporruninacertaindirection.Thedirectionandstrengthofyourjump arevectors!Engineersusevectorstobuildstrongbridgesthatdontfalldown,andastronauts usethemtoguiderocketstothestars. Vectorsarealsousedineverydaylifelikeknowinghowhardtopushadoortoopenit,or figuringouthowfastyourbikeisgoing! Sonexttimeyouseesomethingmovingwhetheritsabird,acar,orevenasoccerballjust remember:theresavectorhelpingitmoveintherightdirection! AndthatshowMaxlearnedthemagicofvectors.Theyhelpedhimseetheworldinawhole newway,filledwitharrowsthatshowedhimhoweverythingaroundhimwasmoving,fromthe tiniestbreezetothebiggestrocketinspace!.
+
+Sarah: 
+
+ ------------END-----------------
+
+[INFO] 
+
+ -------RESPONSE FROM VERTEX AI---------
+ Joe: Hey kids! Welcome to Podify Kids, where we make learning super fun and exciting! Get ready for cool stories, awesome facts, and tons of laughs as we explore the world together! Today, we're diving into the magical world of… VECTORS!
+
+Sarah:  Vectors?  Sounds a bit… pointy!  What *are* vectors, Joe?
+
+Joe:  Haha, you're right, Sarah! They *are* kind of like pointy things… but in a super cool, scientific way! Imagine an arrow. That arrow shows two things: how strong a push or pull is, and which way it's going. That, my friends, is a vector!
+
+Sarah:  Like, if I push my toy car *really* hard… that's a strong vector? And if I push it forward, that's the direction of the vector?
+
+Joe:  Exactly!  You've got it, Sarah!  The harder you push, the longer the arrow – the stronger the vector.  And the direction you push it… that's the arrow's direction.  So a little tiny push is a short arrow, and a super-duper strong push is a long, long arrow!
+
+Sarah:  Wow! So, like, the wind is a vector?
+
+Joe:  Absolutely!  A strong wind is a long, powerful vector blowing maybe towards the west, or maybe towards the mountains!  A gentle breeze is a short, little vector.  It's all about the strength and direction!
+
+Joe:  Okay, imagine this: you're playing soccer. You kick the ball!  That kick is a vector! It has a certain strength – how hard you kicked it – and a direction – where it's flying!
+
+Sarah:  So even a bird flying uses vectors?
+
+Joe:  Yup! Its wings push the air, creating vectors that lift it up and push it forward. It's like the bird is using tiny invisible arrows to fly!  Pretty amazing, huh?
+
+Sarah:  That's mind-blowing!  Okay, quick question for our listeners!  What's a real-world example of a vector?  Think about something you do every day!  Is it pushing a door open?  Throwing a ball?  Riding your bike?  Let us know in the comments!
+
+Joe:  Great question, Sarah!  And you're right, those are all examples of vectors!  Even something as simple as opening a door involves a vector – the force you apply and the direction you push!
+
+Sarah:  So vectors aren't just for scientists and astronauts, huh?
+
+Joe:  Nope!  Engineers use vectors to build bridges and skyscrapers, making sure they're strong enough to stand tall!  Video game designers use vectors to make your character jump and run!  Vectors are everywhere, even if we don't always see them!
+
+Joe:  And that’s it for today’s episode of Podify Kids. Remember kids, vectors are all around us, making the world move!  Don’t forget to subscribe for more fun learning adventures!
+
+Sarah: Bye everyone! And keep exploring!
+ 
+
+ ------------END-----------------
+
+[INFO] Processing 16 lines of text
+[INFO] Successfully extracted 16 conversation parts
+[INFO] Cleaned Text (Chunk 1): [
+  {
+    "speaker": "Joe",
+    "text": "Hey kids! Welcome to Podify Kids, where we make learning super fun and exciting! Get ready for cool stories, awesome facts, and tons of laughs as we explore the world together! Today, we're diving into the magical world of… VECTORS!"
+  },
+  {
+    "speaker": "Sarah",
+    "text": "Vectors?  Sounds a bit… pointy!  What *are* vectors, Joe?"
+  },
+  {
+    "speaker": "Joe",
+    "text": "Haha, you're right, Sarah! They *are* kind of like pointy things… but in a super cool, scientific way! Imagine an arrow. That arrow shows two things: how strong a push or pull is, and which way it's going. That, my friends, is a vector!"
+  },
+  {
+    "speaker": "Sarah",
+    "text": "Like, if I push my toy car *really* hard… that's a strong vector? And if I push it forward, that's the direction of the vector?"
+  },
+  {
+    "speaker": "Joe",
+    "text": "Exactly!  You've got it, Sarah!  The harder you push, the longer the arrow – the stronger the vector.  And the direction you push it… that's the arrow's direction.  So a little tiny push is a short arrow, and a super-duper strong push is a long, long arrow!"
+  },
+  {
+    "speaker": "Sarah",
+    "text": "Wow! So, like, the wind is a vector?"
+  },
+  {
+    "speaker": "Joe",
+    "text": "Absolutely!  A strong wind is a long, powerful vector blowing maybe towards the west, or maybe towards the mountains!  A gentle breeze is a short, little vector.  It's all about the strength and direction!"
+  },
+  {
+    "speaker": "Joe",
+    "text": "Okay, imagine this: you're playing soccer. You kick the ball!  That kick is a vector! It has a certain strength – how hard you kicked it – and a direction – where it's flying!"
+  },
+  {
+    "speaker": "Sarah",
+    "text": "So even a bird flying uses vectors?"
+  },
+  {
+    "speaker": "Joe",
+    "text": "Yup! Its wings push the air, creating vectors that lift it up and push it forward. It's like the bird is using tiny invisible arrows to fly!  Pretty amazing, huh?"
+  },
+  {
+    "speaker": "Sarah",
+    "text": "That's mind-blowing!  Okay, quick question for our listeners!  What's a real-world example of a vector?  Think about something you do every day!  Is it pushing a door open?  Throwing a ball?  Riding your bike?  Let us know in the comments!"
+  },
+  {
+    "speaker": "Joe",
+    "text": "Great question, Sarah!  And you're right, those are all examples of vectors!  Even something as simple as opening a door involves a vector – the force you apply and the direction you push!"
+  },
+  {
+    "speaker": "Sarah",
+    "text": "So vectors aren't just for scientists and astronauts, huh?"
+  },
+  {
+    "speaker": "Joe",
+    "text": "Nope!  Engineers use vectors to build bridges and skyscrapers, making sure they're strong enough to stand tall!  Video game designers use vectors to make your character jump and run!  Vectors are everywhere, even if we don't always see them!"
+  },
+  {
+    "speaker": "Joe",
+    "text": "And that’s it for today’s episode of Podify Kids. Remember kids, vectors are all around us, making the world move!  Don’t forget to subscribe for more fun learning adventures!"
+  },
+  {
+    "speaker": "Sarah",
+    "text": "Bye everyone! And keep exploring!"
+  }
+]
+[INFO] 
+--- Full Generated Conversation ---
+[INFO] Joe: Hey kids! Welcome to Podify Kids, where we make learning super fun and exciting! Get ready for cool stories, awesome facts, and tons of laughs as we explore the world together! Today, we're diving into the magical world of… VECTORS!
+[INFO] Sarah: Vectors?  Sounds a bit… pointy!  What *are* vectors, Joe?
+[INFO] Joe: Haha, you're right, Sarah! They *are* kind of like pointy things… but in a super cool, scientific way! Imagine an arrow. That arrow shows two things: how strong a push or pull is, and which way it's going. That, my friends, is a vector!
+[INFO] Sarah: Like, if I push my toy car *really* hard… that's a strong vector? And if I push it forward, that's the direction of the vector?
+[INFO] Joe: Exactly!  You've got it, Sarah!  The harder you push, the longer the arrow – the stronger the vector.  And the direction you push it… that's the arrow's direction.  So a little tiny push is a short arrow, and a super-duper strong push is a long, long arrow!
+[INFO] Sarah: Wow! So, like, the wind is a vector?
+[INFO] Joe: Absolutely!  A strong wind is a long, powerful vector blowing maybe towards the west, or maybe towards the mountains!  A gentle breeze is a short, little vector.  It's all about the strength and direction!
+[INFO] Joe: Okay, imagine this: you're playing soccer. You kick the ball!  That kick is a vector! It has a certain strength – how hard you kicked it – and a direction – where it's flying!
+[INFO] Sarah: So even a bird flying uses vectors?
+[INFO] Joe: Yup! Its wings push the air, creating vectors that lift it up and push it forward. It's like the bird is using tiny invisible arrows to fly!  Pretty amazing, huh?
+[INFO] Sarah: That's mind-blowing!  Okay, quick question for our listeners!  What's a real-world example of a vector?  Think about something you do every day!  Is it pushing a door open?  Throwing a ball?  Riding your bike?  Let us know in the comments!
+[INFO] Joe: Great question, Sarah!  And you're right, those are all examples of vectors!  Even something as simple as opening a door involves a vector – the force you apply and the direction you push!
+[INFO] Sarah: So vectors aren't just for scientists and astronauts, huh?
+[INFO] Joe: Nope!  Engineers use vectors to build bridges and skyscrapers, making sure they're strong enough to stand tall!  Video game designers use vectors to make your character jump and run!  Vectors are everywhere, even if we don't always see them!
+[INFO] Joe: And that’s it for today’s episode of Podify Kids. Remember kids, vectors are all around us, making the world move!  Don’t forget to subscribe for more fun learning adventures!
+[INFO] Sarah: Bye everyone! And keep exploring!
+[INFO] --- End of Conversation ---
+
+[INFO] 
+======= Starting Pricing Calculation ======
+ -Input text length: 2873
+ -Number of Vertex AI responses: 1
+
+[INFO] 
+        Input text length: 2873
+        Input token count: 792
+        System prompt length: 47
+        System token count: 14
+        Total input tokens: 806
+      
+[INFO] Response 1 details:
+- Length: 2595 characters
+- Output tokens: 673
+[INFO] Total TTS characters calculated: 2550
+[INFO] 
+---***** Final Pricing Calculation Summary **** ---
+Total Input Tokens: 806
+Total Output Tokens: 673
+Total Tokens: 1479
+Total TTS Characters: 2550
+Vertex AI Input Cost: $0.000000
+Vertex AI Output Cost: $0.000000
+TTS Cost: $0.040800
+Total Cost: $0.040801
+[INFO] Generating audio files...
+[INFO] Audio content written to file "audio-files/0.mp3"
+[INFO] Audio content written to file "audio-files/1.mp3"
+[INFO] Audio content written to file "audio-files/2.mp3"
+[INFO] Audio content written to file "audio-files/3.mp3"
+[INFO] Audio content written to file "audio-files/4.mp3"
+[INFO] Audio content written to file "audio-files/5.mp3"
+[INFO] Audio content written to file "audio-files/6.mp3"
+[INFO] Audio content written to file "audio-files/7.mp3"
+[INFO] Audio content written to file "audio-files/8.mp3"
+[INFO] Audio content written to file "audio-files/9.mp3"
+[INFO] Audio content written to file "audio-files/10.mp3"
+[INFO] Audio content written to file "audio-files/11.mp3"
+[INFO] Audio content written to file "audio-files/12.mp3"
+[INFO] Audio content written to file "audio-files/13.mp3"
+[INFO] Audio content written to file "audio-files/14.mp3"
+[INFO] Audio content written to file "audio-files/15.mp3"
+[INFO] Copied intro file podcast.mp3 to audio folder
+[INFO] Merging the following files in order:
+[INFO] 0.mp3
+[INFO] 1.mp3
+[INFO] 2.mp3
+[INFO] 3.mp3
+[INFO] 4.mp3
+[INFO] 5.mp3
+[INFO] 6.mp3
+[INFO] 7.mp3
+[INFO] 8.mp3
+[INFO] 9.mp3
+[INFO] 10.mp3
+[INFO] 11.mp3
+[INFO] 12.mp3
+[INFO] 13.mp3
+[INFO] 14.mp3
+[INFO] 15.mp3
+[INFO] Successfully merged audio saved as audio-files/final_output.mp3
+[INFO] Cleaned up audio-files directory after successful generation
+[INFO] Audio generation completed: Duration: 123s Actual tokens used: 1479 Actual cost: 0.040800739499999995
+[INFO] 
+
+---------- Updated Usage ----------
+ Updated usage for user 26:
+ Articles: 4/20
+ Podify Tokens: 216/40000
+[INFO] Successfully saved audio file (audio/mpeg) to Object Storage: 1736010585631-Kids_Vector.mp3
+[INFO] Successfully created podcast entry with ID: 54
+[INFO] POST /api/podcast 200 in 34733ms
+[INFO] GET / 200 in 99ms
+[INFO] GET /api/podcasts 200 in 169ms
+[INFO] 
+========Streaming audio file: 1736010585631-Kids_Vector.mp3
+[INFO] HEAD /api/audio/stream/1736010585631-Kids_Vector.mp3 200 in 426ms
+[INFO] 
+========Streaming audio file: 1736010585631-Kids_Vector.mp3
+[INFO] GET /api/audio/stream/1736010585631-Kids_Vector.mp3 200 in 357ms
+[INFO] GET / 200 in 57ms
+[INFO] GET / 200 in 57ms
+[INFO] Subscription Status for  user: active
+[INFO] Subscription Type for user: Basic Plan:monthly
+[INFO] GET /api/user/usage/check 200 in 160ms
+[INFO] Subscription Status for  user: active
+[INFO] Subscription Type for user: Basic Plan:monthly
+[INFO] GET /api/user/usage/check 304 in 109ms
+[INFO] GET / 200 in 107ms
+[INFO] GET /api/podcasts 304 in 164ms
+[INFO] 
+========Streaming audio file: 1736010585631-Kids_Vector.mp3
+[INFO] GET /api/audio/stream/1736010585631-Kids_Vector.mp3 200 in 409ms
+[INFO] 
+========Streaming audio file: 1736009183615-Boston_Info.mp3
+[INFO] HEAD /api/audio/stream/1736009183615-Boston_Info.mp3 200 in 299ms
+[INFO] 
+========Streaming audio file: 1736009183615-Boston_Info.mp3
+[INFO] GET /api/audio/stream/1736009183615-Boston_Info.mp3 200 in 352ms
+[INFO] Subscription Status for  user: active
+[INFO] Subscription Type for user: Basic Plan:monthly
+[INFO] GET /api/user/usage/check 304 in 112ms
+[INFO] GET / 200 in 112ms
+[INFO] Subscription Status for  user: active
+[INFO] Subscription Type for user: Basic Plan:monthly
+[INFO] GET /api/user/usage/check 304 in 111ms
+[INFO] Subscription Status for  user: active
+[INFO] Subscription Type for user: Basic Plan:monthly
+[INFO] GET /api/user/usage/check 304 in 110ms
+[INFO] GET / 200 in 57ms
+[INFO] GET / 200 in 97ms
+[INFO] GET /api/podcasts 304 in 163ms
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe
+[INFO] Stripe initialized successfully
+[INFO] ***Starting server initialization...
+
+
+[INFO] Registering routes...
+[INFO] Setting up Vite for development...
+[INFO] Server started successfully on port 4000
+[INFO] Webhook endpoint available at: https://PodCasterella.VivekGopal1.repl.co/api/webhooks/stripe

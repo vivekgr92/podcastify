@@ -63,9 +63,9 @@ const USAGE_LIMITS = {
 } as const;
 
 // Helper to get limits based on subscription status with proper type checking
-function getLimits(subscriptionStatus: string | null | undefined) {
+function getLimits(subscriptionType: string | null | undefined) {
   const defaultLimits = USAGE_LIMITS.free;
-  const normalizedStatus = (subscriptionStatus || "free") as SubscriptionTier;
+  const normalizedStatus = (subscriptionType || "free") as SubscriptionTier;
   const limits = USAGE_LIMITS[normalizedStatus] || defaultLimits;
   return {
     articleLimit: limits.articleLimit,
@@ -665,7 +665,8 @@ export function registerRoutes(app: Express) {
       }
 
       // Calculate estimated total tokens and check usage limits
-      const currentLimits = getLimits(user.subscriptionStatus);
+
+      const currentLimits = getLimits(user.subscriptionType);
 
       let PODIFY_TOKEN_LIMIT = currentLimits.podifyTokenLimit;
       let ARTICLE_LIMIT = currentLimits.articleLimit;
@@ -975,7 +976,11 @@ export function registerRoutes(app: Express) {
       }
 
       const podifyTokensUsed = Number(usage?.podifyTokens || "0");
-      logger.info("Usage check for user: " + req.user.subscriptionStatus);
+      logger.info(
+        "Subscription Status for  user: " + req.user.subscriptionStatus,
+      );
+
+      logger.info("Subscription Type for user: " + req.user.subscriptionType);
 
       const limits = getLimits(req.user.subscriptionType);
       const { articleLimit, podifyTokenLimit } = limits;
@@ -1133,7 +1138,9 @@ export function registerRoutes(app: Express) {
         .where(and(eq(podcasts.id, podcastId), eq(podcasts.userId, user.id)));
 
       // Audio file will be retained in Object Storage
-      await logger.info(`Keeping audio file in storage for podcast ${podcastId}`);
+      await logger.info(
+        `Keeping audio file in storage for podcast ${podcastId}`,
+      );
 
       res.json({
         message: "Podcast deleted successfully",
@@ -1318,7 +1325,7 @@ export function registerRoutes(app: Express) {
         `Total cost: $${pricingDetails.totalCost.toFixed(4)}`,
       ]);
 
-      const limits = getLimits(req.user.subscriptionStatus);
+      const limits = getLimits(req.user.subscriptionType);
       res.json({
         inputTokens: pricingDetails.inputTokens,
         outputTokens: pricingDetails.outputTokens,
